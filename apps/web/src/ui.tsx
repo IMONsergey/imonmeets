@@ -139,11 +139,15 @@ export function Field({
   hint?: string;
 }) {
   const hintId = useId();
+  const labelId = useId();
   const described = (node: ReactNode): ReactNode => {
     if (
-      !isValidElement<{ children?: ReactNode; "aria-describedby"?: string }>(
-        node,
-      )
+      !isValidElement<{
+        children?: ReactNode;
+        "aria-describedby"?: string;
+        "aria-label"?: string;
+        "aria-labelledby"?: string;
+      }>(node)
     )
       return node;
     if (
@@ -151,9 +155,13 @@ export function Field({
       ["input", "textarea", "select"].includes(node.type)
     )
       return cloneElement(node, {
-        "aria-describedby": [node.props["aria-describedby"], hintId]
-          .filter(Boolean)
-          .join(" "),
+        "aria-labelledby":
+          node.props["aria-labelledby"] ??
+          (node.props["aria-label"] ? undefined : labelId),
+        "aria-describedby":
+          [node.props["aria-describedby"], hint ? hintId : undefined]
+            .filter(Boolean)
+            .join(" ") || undefined,
       });
     return node.props.children
       ? cloneElement(node, {
@@ -163,8 +171,8 @@ export function Field({
   };
   return (
     <label className="field">
-      <span>{label}</span>
-      {hint ? Children.map(children, described) : children}
+      <span id={labelId}>{label}</span>
+      {Children.map(children, described)}
       {hint && <small id={hintId}>{hint}</small>}
     </label>
   );

@@ -1,0 +1,295 @@
+{
+  "startedAt": "2026-11-01T11:47:00.958Z",
+  "completedAt": "2026-11-01T11:49:23.949Z",
+  "scenario": "Synthetic browser clients, camera capped at 640x360/15fps; adaptive subscriptions; one conference; no screen sharing or recording",
+  "limitations": "A smoke load on this client/network, not a production maximum. It does not cover physical devices, mobile Safari, long calls, simultaneous rooms or TCP443-only networks.",
+  "levels": [
+    {
+      "participants": 2,
+      "elapsedSeconds": 20.098,
+      "accepted": true,
+      "measurements": [
+        {
+          "index": 1,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 1,
+          "decodedFramesPerSecond": 9.35,
+          "inboundMbps": 0.156,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 167,
+          "rttMaxMs": 350,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 1,
+          "decodedFramesPerSecond": 8.61,
+          "inboundMbps": 0.151,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 155,
+          "rttMaxMs": 824,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "participants": 4,
+      "elapsedSeconds": 20.009,
+      "accepted": true,
+      "measurements": [
+        {
+          "index": 1,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 3,
+          "decodedFramesPerSecond": 8.9,
+          "inboundMbps": 0.369,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 77,
+          "rttMaxMs": 202,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 3,
+          "decodedFramesPerSecond": 33.63,
+          "inboundMbps": 0.482,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 42,
+          "rttMaxMs": 257,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 3,
+          "decodedFramesPerSecond": 33.68,
+          "inboundMbps": 0.467,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 44,
+          "rttMaxMs": 198,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 3,
+          "decodedFramesPerSecond": 33.43,
+          "inboundMbps": 0.482,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 43,
+          "rttMaxMs": 235,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "participants": 8,
+      "elapsedSeconds": 20.047,
+      "accepted": true,
+      "measurements": [
+        {
+          "index": 1,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 7,
+          "decodedFramesPerSecond": 23.54,
+          "inboundMbps": 0.793,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 82,
+          "rttMaxMs": 305,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 7,
+          "decodedFramesPerSecond": 72.88,
+          "inboundMbps": 1.073,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 52,
+          "rttMaxMs": 394,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 7,
+          "decodedFramesPerSecond": 72.18,
+          "inboundMbps": 1.075,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 46,
+          "rttMaxMs": 251,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 7,
+          "decodedFramesPerSecond": 71.78,
+          "inboundMbps": 1.068,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 51,
+          "rttMaxMs": 267,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 7,
+          "decodedFramesPerSecond": 22.25,
+          "inboundMbps": 0.71,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 85,
+          "rttMaxMs": 281,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 7,
+          "decodedFramesPerSecond": 72.93,
+          "inboundMbps": 1.079,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 48,
+          "rttMaxMs": 210,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 7,
+          "decodedFramesPerSecond": 72.93,
+          "inboundMbps": 1.072,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 48,
+          "rttMaxMs": 216,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        },
+        {
+          "index": 8,
+          "connected": true,
+          "audioReceived": true,
+          "videoReceived": true,
+          "incomingVideoTracks": 7,
+          "decodedFramesPerSecond": 67.19,
+          "inboundMbps": 0.973,
+          "packetLossPercent": 0,
+          "jitterMaxMs": 54,
+          "rttMaxMs": 260,
+          "routes": [
+            {
+              "type": "prflx",
+              "relayProtocol": "tls",
+              "transport": "udp"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

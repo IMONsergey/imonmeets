@@ -31,6 +31,9 @@ jobs:
         env:
           TEST_DATABASE_URL: postgres://imonmeets:ci-only-test-password@localhost:5432/imonmeets_test
       - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-pull-encrypted-backup.py
+      - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-offsite-monitor.py
+      - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-prepare-recording.py
+      - run: PYTHONDONTWRITEBYTECODE=1 python3 apps/analysis-worker/test_worker.py
       - run: npm audit --omit=dev --audit-level=high
       - run: npx playwright install --with-deps chromium
       - name: Browser state and accessibility regression checks

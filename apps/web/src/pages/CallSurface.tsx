@@ -23,7 +23,10 @@ import {
   X,
 } from "lucide-react";
 import { Button, ErrorBox, Field, Spinner } from "../ui";
-import { api } from "../api";
+import { api, date } from "../api";
+import type { WaitingRequest } from "../api";
+import { WaitingList } from "./WaitingRoom";
+import { useRoomChat } from "./useRoomChat";
 
 type ManagedParticipant = {
   identity: string;
@@ -75,9 +78,13 @@ function DeviceSelect({
 
 /** LiveKit's conference layout and audio rendering with local controls and Russian chat. */
 export function CallSurface({
+  slug,
+  chatToken,
   notify,
   management,
 }: {
+  slug: string;
+  chatToken?: string;
   notify: (s: string, e?: boolean) => void;
   management?: { workspaceId: string; roomId: string };
 }) {
@@ -89,13 +96,64 @@ export function CallSurface({
   const [participantError, setParticipantError] = useState("");
   const [moderating, setModerating] = useState("");
   const [participantRefresh, setParticipantRefresh] = useState(0);
+  const [waitingRequests, setWaitingRequests] = useState<WaitingRequest[]>();
+  const [waitingError, setWaitingError] = useState("");
   const [message, setMessage] = useState("");
   const [canScreenShare, setCanScreenShare] = useState(false);
   const { chatMessages, send, isSending } = useChat();
+  const persistentChat = useRoomChat(slug, chatToken);
+  const shownMessages = chatToken
+    ? persistentChat.messages.map((entry) => ({
+        id: entry.id,
+        name: entry.name,
+        text: entry.text,
+        timestamp: new Date(entry.createdAt).getTime(),
+      }))
+    : chatMessages.map((entry, index) => ({
+        id: `${entry.timestamp}-${index}`,
+        name: entry.from?.name || "Участник",
+        text: entry.message,
+        timestamp: entry.timestamp,
+      }));
+  const sending = chatToken ? persistentChat.sending : isSending;
   const participants = useParticipants();
   const isRecording = useIsRecording();
   const connection = useConnectionState();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const followMessages = useRef(true);
+  useEffect(() => {
+    if (!management) return;
+    const controller = new AbortController();
+    let inFlight = false;
+    const load = async () => {
+      if (inFlight) return;
+      inFlight = true;
+      try {
+        const data = await api<{ requests: WaitingRequest[] }>(
+          `/workspaces/${management.workspaceId}/rooms/${management.roomId}/waiting`,
+          undefined,
+          undefined,
+          { signal: controller.signal },
+        );
+        if (!controller.signal.aborted) {
+          setWaitingRequests(
+            data.requests.filter((request) => request.status === "waiting"),
+          );
+          setWaitingError("");
+        }
+      } catch (e) {
+        if (!controller.signal.aborted) setWaitingError((e as Error).message);
+      } finally {
+        inFlight = false;
+      }
+    };
+    void load();
+    const timer = setInterval(() => void load(), 5000);
+    return () => {
+      controller.abort();
+      clearInterval(timer);
+    };
+  }, [management?.workspaceId, management?.roomId, participantRefresh]);
   useEffect(() => {
     if (!participantsOpen || !management) return;
     const controller = new AbortController();
@@ -139,16 +197,34 @@ export function CallSurface({
     );
   }, []);
   useEffect(() => {
-    if (chatOpen)
+    if (chatOpen) followMessages.current = true;
+  }, [chatOpen]);
+  useEffect(() => {
+    if (chatOpen && followMessages.current)
       bottomRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
       });
-  }, [chatMessages, chatOpen]);
+  }, [shownMessages.at(-1)?.id, chatOpen]);
   const error = (e: Error) =>
     notify(`Не удалось включить устройство: ${e.message}`, true);
   return (
     <div className="conference-shell">
+      {!!waitingRequests?.length && !participantsOpen && (
+        <div className="call-waiting-notice" role="status">
+          <Users size={17} />
+          <span>Ожидают входа: {waitingRequests.length}</span>
+          <button
+            onClick={() => {
+              setParticipantsOpen(true);
+              setChatOpen(false);
+              setSettingsOpen(false);
+            }}
+          >
+            Открыть зал ожидания
+          </button>
+        </div>
+      )}
       {isRecording && (
         <div className="call-recording-notice" role="status">
           <span aria-hidden="true">●</span> Идет запись встречи. Ваши звук,
@@ -182,31 +258,44 @@ export function CallSurface({
               </button>
             </div>
             <p className="chat-privacy">
-              Сообщения доступны участникам во время встречи. История не
-              сохраняется.
+              {chatToken
+                ? "Сообщения сохраняются в пространстве и доступны его участникам после встречи."
+                : "Сообщения доступны участникам во время встречи. История не сохраняется."}
             </p>
+            {chatToken && <ErrorBox error={persistentChat.error} />}
             <div
               className="chat-messages"
               role="log"
               aria-label="Сообщения встречи"
               aria-live="polite"
+              onScroll={(event) => {
+                const list = event.currentTarget;
+                followMessages.current =
+                  list.scrollHeight - list.scrollTop - list.clientHeight < 90;
+              }}
             >
-              {chatMessages.length ? (
-                chatMessages.map((entry, index) => (
-                  <div
-                    className="chat-message"
-                    key={`${entry.timestamp}-${index}`}
-                  >
+              {chatToken &&
+                (persistentChat.hasEarlier || shownMessages.length >= 500) && (
+                  <p className="chat-history-note">
+                    Показаны последние сообщения.
+                  </p>
+                )}
+              {chatToken && persistentChat.loading && <Spinner />}
+              {shownMessages.length ? (
+                shownMessages.map((entry) => (
+                  <div className="chat-message" key={entry.id}>
                     <div>
-                      <strong>{entry.from?.name || "Участник"}</strong>
-                      <time>
-                        {new Intl.DateTimeFormat("ru", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }).format(new Date(entry.timestamp))}
+                      <strong>{entry.name}</strong>
+                      <time dateTime={new Date(entry.timestamp).toISOString()}>
+                        {chatToken
+                          ? date(new Date(entry.timestamp).toISOString())
+                          : new Intl.DateTimeFormat("ru", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }).format(new Date(entry.timestamp))}
                       </time>
                     </div>
-                    <p>{entry.message}</p>
+                    <p>{entry.text}</p>
                   </div>
                 ))
               ) : (
@@ -221,10 +310,15 @@ export function CallSurface({
               className="chat-compose"
               onSubmit={async (e) => {
                 e.preventDefault();
-                if (!message.trim() || isSending) return;
+                if (!message.trim() || sending) return;
+                const sentText = message.trim();
+                followMessages.current = true;
                 try {
-                  await send(message.trim());
-                  setMessage("");
+                  if (chatToken) await persistentChat.send(sentText);
+                  else await send(sentText);
+                  setMessage((current) =>
+                    current.trim() === sentText ? "" : current,
+                  );
                 } catch (e) {
                   notify(
                     `Сообщение не отправлено: ${(e as Error).message}`,
@@ -243,7 +337,7 @@ export function CallSurface({
               <button
                 aria-label="Отправить сообщение"
                 type="submit"
-                disabled={isSending || !message.trim()}
+                disabled={sending || !message.trim()}
               >
                 <Send size={17} />
               </button>
@@ -267,6 +361,13 @@ export function CallSurface({
             </div>
             {management ? (
               <>
+                <WaitingList
+                  requests={waitingRequests}
+                  error={waitingError}
+                  management={management}
+                  onRefresh={() => setParticipantRefresh((value) => value + 1)}
+                  notify={notify}
+                />
                 <p className="chat-privacy">
                   Можно выключить микрофон участника. Включить его снова может
                   только сам участник.
@@ -381,6 +482,9 @@ export function CallSurface({
         >
           <Users size={16} />
           <span>Участники ({participants.length})</span>
+          {!!waitingRequests?.length && (
+            <small className="waiting-count">{waitingRequests.length}</small>
+          )}
         </button>
         <div className="meeting-main-controls">
           <TrackToggle
@@ -427,7 +531,7 @@ export function CallSurface({
           >
             <MessageSquare size={18} />
             <span>Чат</span>
-            {chatMessages.length > 0 && <small>{chatMessages.length}</small>}
+            {shownMessages.length > 0 && <small>{shownMessages.length}</small>}
           </Button>
           <Button
             className={settingsOpen ? "control-selected" : ""}

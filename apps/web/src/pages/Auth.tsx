@@ -11,6 +11,8 @@ import {
 import type { Config, User, Workspace } from "../api";
 import { Brand, Button, ErrorBox, Field, Link, go } from "../ui";
 import type { Session } from "../ui";
+import { DataSettings } from "./DataSettings";
+import { AuthenticatorSettings } from "./AuthenticatorSettings";
 export function Auth({
   path,
   config,
@@ -28,6 +30,8 @@ export function Auth({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [needsVerification, setNeedsVerification] = useState(false);
+  const [twoFactor, setTwoFactor] = useState(false);
+  const [recoveryCode, setRecoveryCode] = useState(false);
   const [email, setEmail] = useState(session?.user.email ?? "");
   const [confirmed, setConfirmed] = useState(
     Boolean(session?.user.emailVerified),
@@ -45,6 +49,8 @@ export function Auth({
     setError("");
     setSuccess("");
     setNeedsVerification(false);
+    setTwoFactor(false);
+    setRecoveryCode(false);
     getReturnTo();
   }, [path]);
   useEffect(() => {
@@ -84,7 +90,16 @@ export function Auth({
     setError("");
     const values = new FormData(e.currentTarget);
     try {
-      if (isForgot) {
+      if (twoFactor) {
+        await api(
+          recoveryCode
+            ? "/auth/two-factor/verify-backup-code"
+            : "/auth/two-factor/verify-totp",
+          { code: String(values.get("code") ?? "").trim(), trustDevice: false },
+        );
+        await onSession();
+        go(takeReturnTo());
+      } else if (isForgot) {
         await api("/auth/request-password-reset", {
           email,
           redirectTo: authCallbackURL("/reset-password"),
@@ -139,10 +154,18 @@ export function Auth({
           );
         }
       } else {
-        await api("/auth/sign-in/email", {
-          email,
-          password: values.get("password"),
-        });
+        const result = await api<{ twoFactorRedirect?: boolean }>(
+          "/auth/sign-in/email",
+          {
+            email,
+            password: values.get("password"),
+          },
+        );
+        if (result.twoFactorRedirect) {
+          setTwoFactor(true);
+          setRecoveryCode(false);
+          return;
+        }
         await onSession();
         go(takeReturnTo());
       }
@@ -165,17 +188,21 @@ export function Auth({
       setBusy(false);
     }
   }
-  const title = registrationClosed
-    ? "Регистрация закрыта"
-    : isRegister
-      ? "Создать аккаунт"
-      : isForgot
-        ? "Восстановить доступ"
-        : isReset
-          ? "Новый пароль"
-          : isVerify
-            ? "Подтвердите вашу почту"
-            : "Войти";
+  const title = twoFactor
+    ? recoveryCode
+      ? "Резервный код"
+      : "Подтвердите вход"
+    : registrationClosed
+      ? "Регистрация закрыта"
+      : isRegister
+        ? "Создать аккаунт"
+        : isForgot
+          ? "Восстановить доступ"
+          : isReset
+            ? "Новый пароль"
+            : isVerify
+              ? "Подтвердите вашу почту"
+              : "Войти";
   return (
     <div className="auth-layout">
       <header className="auth-header">
@@ -195,21 +222,25 @@ export function Auth({
           )}
           <h1>{title}</h1>
           <p>
-            {registrationClosed
-              ? "Новые аккаунты пока не создаются. Если у вас уже есть аккаунт, войдите."
-              : isRegister
-                ? "Создайте аккаунт и пригласите вашу команду."
-                : isForgot
-                  ? reviewMode
-                    ? "В этой версии восстановить доступ можно через администратора."
-                    : "Отправим ссылку для смены пароля на вашу почту."
-                  : isReset
-                    ? "Придумайте надежный пароль от 10 символов."
-                    : isVerify
-                      ? reviewMode
-                        ? "Для подтверждения адреса обратитесь к администратору."
-                        : "Подтвержденный адрес нужен для приглашений и безопасной работы."
-                      : "Введите адрес почты и пароль вашего аккаунта."}
+            {twoFactor
+              ? recoveryCode
+                ? "Введите один из сохраненных резервных кодов. После входа этот код больше не будет действовать."
+                : "Введите шестизначный код из приложения-аутентификатора."
+              : registrationClosed
+                ? "Новые аккаунты пока не создаются. Если у вас уже есть аккаунт, войдите."
+                : isRegister
+                  ? "Создайте аккаунт и пригласите вашу команду."
+                  : isForgot
+                    ? reviewMode
+                      ? "В этой версии восстановить доступ можно через администратора."
+                      : "Отправим ссылку для смены пароля на вашу почту."
+                    : isReset
+                      ? "Придумайте надежный пароль от 10 символов."
+                      : isVerify
+                        ? reviewMode
+                          ? "Для подтверждения адреса обратитесь к администратору."
+                          : "Подтвержденный адрес нужен для приглашений и безопасной работы."
+                        : "Введите адрес почты и пароль вашего аккаунта."}
           </p>
           {confirmed && isVerify && (
             <div className="success-box">
@@ -245,18 +276,37 @@ export function Auth({
               onSubmit={submit}
               aria-describedby={error ? "auth-form-error" : undefined}
             >
-              {isRegister && (
-                <Field label="Ваше имя">
+              {twoFactor ? (
+                <Field
+                  label={recoveryCode ? "Резервный код" : "Код из приложения"}
+                >
                   <input
-                    name="name"
+                    key={recoveryCode ? "recovery" : "totp"}
+                    name="code"
+                    autoFocus
                     required
-                    maxLength={100}
-                    autoComplete="name"
-                    placeholder="Как к вам обращаться"
+                    inputMode={recoveryCode ? "text" : "numeric"}
+                    pattern={recoveryCode ? undefined : "[0-9]{6}"}
+                    maxLength={recoveryCode ? 128 : 6}
+                    autoComplete="one-time-code"
+                    spellCheck={false}
+                    placeholder={recoveryCode ? "Резервный код" : "000000"}
                   />
                 </Field>
+              ) : (
+                isRegister && (
+                  <Field label="Ваше имя">
+                    <input
+                      name="name"
+                      required
+                      maxLength={100}
+                      autoComplete="name"
+                      placeholder="Как к вам обращаться"
+                    />
+                  </Field>
+                )
               )}
-              {!isReset && (
+              {!isReset && !twoFactor && (
                 <Field label="Рабочая почта">
                   <input
                     type="email"
@@ -268,7 +318,7 @@ export function Auth({
                   />
                 </Field>
               )}
-              {!isForgot && !isVerify && (
+              {!isForgot && !isVerify && !twoFactor && (
                 <Field
                   label={isReset ? "Новый пароль" : "Пароль"}
                   hint={isRegister ? "Не менее 10 символов" : undefined}
@@ -292,6 +342,7 @@ export function Auth({
                 !isForgot &&
                 !isReset &&
                 !isVerify &&
+                !twoFactor &&
                 !reviewMode && (
                   <div className="forgot-link">
                     <Link to="/forgot-password">Забыли пароль?</Link>
@@ -309,17 +360,47 @@ export function Auth({
                   emailRequestUnavailable ? "auth-delivery-note" : undefined
                 }
               >
-                {isRegister
-                  ? "Создать аккаунт"
-                  : isForgot
-                    ? "Отправить ссылку"
-                    : isReset
-                      ? "Сохранить пароль"
-                      : isVerify
-                        ? "Отправить письмо"
-                        : "Войти в пространство"}
+                {twoFactor
+                  ? "Подтвердить вход"
+                  : isRegister
+                    ? "Создать аккаунт"
+                    : isForgot
+                      ? "Отправить ссылку"
+                      : isReset
+                        ? "Сохранить пароль"
+                        : isVerify
+                          ? "Отправить письмо"
+                          : "Войти в пространство"}
                 <ArrowRight size={18} />
               </Button>
+              {twoFactor && (
+                <div className="mfa-login-options">
+                  <Button
+                    type="button"
+                    className="text-button"
+                    disabled={busy}
+                    onClick={() => {
+                      setRecoveryCode((value) => !value);
+                      setError("");
+                    }}
+                  >
+                    {recoveryCode
+                      ? "Использовать приложение"
+                      : "Использовать резервный код"}
+                  </Button>
+                  <Button
+                    type="button"
+                    className="text-button"
+                    disabled={busy}
+                    onClick={() => {
+                      setTwoFactor(false);
+                      setError("");
+                    }}
+                  >
+                    Вернуться ко входу
+                  </Button>
+                </div>
+              )}
               {emailRequestUnavailable && (
                 <p className="form-note" id="auth-delivery-note">
                   {reviewMode
@@ -354,7 +435,7 @@ export function Auth({
               Я подтвердил адрес
             </Button>
           )}
-          {!registrationClosed && (
+          {!registrationClosed && !twoFactor && (
             <div className="auth-switch">
               {isRegister ? (
                 <>
@@ -389,20 +470,29 @@ export function Onboarding({
   onWorkspace,
   user,
   logout,
+  notify,
 }: {
   refresh: () => Promise<Session>;
   onWorkspace: (id: string) => void;
   user: User;
   logout: () => void;
+  notify: (text: string, error?: boolean) => void;
 }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   return (
     <div className="onboarding">
       <header>
         <Brand />
         <div className="onboarding-account">
           <span>{user.name}</span>
+          <Button
+            className="text-button"
+            onClick={() => setAccountOpen((value) => !value)}
+          >
+            {accountOpen ? "Назад" : "Мой аккаунт"}
+          </Button>
           <Button className="text-button" onClick={logout}>
             <LogOut size={17} />
             Выйти
@@ -410,53 +500,67 @@ export function Onboarding({
         </div>
       </header>
       <div className="onboarding-card">
-        <h1>Создать рабочее пространство</h1>
-        <p>
-          Создайте пространство для вашей команды. Здесь будут ваши встречи,
-          комнаты и записи.
-        </p>
-        <ErrorBox error={error} id="workspace-form-error" focus />
-        <form
-          aria-describedby={error ? "workspace-form-error" : undefined}
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (busy) return;
-            setError("");
-            setBusy(true);
-            try {
-              const name = new FormData(e.currentTarget).get("name");
-              const { workspace } = await api<{ workspace: Workspace }>(
-                "/workspaces",
-                { name },
-              );
-              await refresh();
-              onWorkspace(workspace.id);
-              go("/");
-            } catch (e) {
-              setError((e as Error).message);
-            } finally {
-              setBusy(false);
-            }
-          }}
-        >
-          <Field label="Название пространства">
-            <input
-              name="name"
-              autoFocus
-              required
-              minLength={2}
-              maxLength={100}
-              placeholder="Например, Дизайн-команда"
+        {accountOpen ? (
+          <>
+            <DataSettings user={user} notify={notify} />
+            <AuthenticatorSettings
+              user={user}
+              refresh={refresh}
+              notify={notify}
             />
-          </Field>
-          <Button type="submit" className="primary full" busy={busy}>
-            Создать пространство
-            <ArrowRight size={18} />
-          </Button>
-        </form>
-        <p className="onboarding-foot">
-          Вы станете владельцем пространства и сможете пригласить участников.
-        </p>
+          </>
+        ) : (
+          <>
+            <h1>Создать рабочее пространство</h1>
+            <p>
+              Создайте пространство для вашей команды. Здесь будут ваши встречи,
+              комнаты и записи.
+            </p>
+            <ErrorBox error={error} id="workspace-form-error" focus />
+            <form
+              aria-describedby={error ? "workspace-form-error" : undefined}
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (busy) return;
+                setError("");
+                setBusy(true);
+                try {
+                  const name = new FormData(e.currentTarget).get("name");
+                  const { workspace } = await api<{ workspace: Workspace }>(
+                    "/workspaces",
+                    { name },
+                  );
+                  await refresh();
+                  onWorkspace(workspace.id);
+                  go("/");
+                } catch (e) {
+                  setError((e as Error).message);
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            >
+              <Field label="Название пространства">
+                <input
+                  name="name"
+                  autoFocus
+                  required
+                  minLength={2}
+                  maxLength={100}
+                  placeholder="Например, Дизайн-команда"
+                />
+              </Field>
+              <Button type="submit" className="primary full" busy={busy}>
+                Создать пространство
+                <ArrowRight size={18} />
+              </Button>
+            </form>
+            <p className="onboarding-foot">
+              Вы станете владельцем пространства и сможете пригласить
+              участников.
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

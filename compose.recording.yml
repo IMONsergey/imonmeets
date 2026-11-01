@@ -1,0 +1,141 @@
+# Optional overlay. Preparation and acceptance: docs/recording-deployment.md.
+# The host data directory MUST be a separately mounted, <= 1.1 GiB filesystem.
+# The bootstrap script checks this on the host; the container checks it again on
+# every start so a missing mount after reboot cannot fill the host filesystem.
+services:
+  recording-storage:
+    image: chrislusf/seaweedfs:4.51@sha256:f7a49e3f3972ebed5be2ed4befa4a0c68eb7bdddba6e692d42729ceb545134b8
+    user: "1000:1000"
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        blocks=$$(stat -f -c %b /data)
+        block_size=$$(stat -f -c %S /data)
+        bytes=$$((blocks * block_size))
+        if [ "$$bytes" -lt 536870912 ] || [ "$$bytes" -gt 1181116006 ]; then
+          echo 'Recording storage must use the dedicated bounded filesystem' >&2
+          exit 1
+        fi
+        test -w /data
+        exec /entrypoint.sh "$$@"
+      - imon-recording-storage
+    command:
+      - mini
+      - -dir=/data
+      - -ip=recording-storage
+      - -ip.bind=0.0.0.0
+      - -s3.port=8333
+      - -s3.config=/run/imon-recording/s3.json
+      - -s3.iam=false
+      - -s3.autoCreateBucket=false
+      - -s3.allowDeleteBucketNotEmpty=false
+      - -s3.port.iceberg=0
+      - -s3.port.lance=0
+      - -s3.concurrentUploadLimitMB=64
+      - -s3.concurrentFileUploadLimit=4
+      - -s3.readerCacheSizeMB=32
+      - -s3.allowedOrigins=${APP_URL:?Set APP_URL}
+      - -bucket=imon-recordings
+      - -webdav=false
+      - -admin.ui=false
+      - -master.telemetry=false
+      - -master.volumeSizeLimitMB=128
+      - -master.volumePreallocate=false
+      - -master.garbageThreshold=0.2
+      - -master.vacuumIntervalSeconds=300
+      - -volume.max=5
+      - -volume.compactionMBps=8
+      - -volume.maintenanceMBps=8
+      - -filer.disableDirListing=true
+      - -filer.exposeDirectoryData=false
+      - -filer.ui.deleteDir=false
+    ports:
+      - "127.0.0.1:8333:8333"
+    volumes:
+      - type: bind
+        source: ${RECORDING_DATA_PATH:?Run scripts/prepare-recording.py first}
+        target: /data
+        bind: { create_host_path: false }
+      - type: bind
+        source: ./deploy/recording-private/s3.json
+        target: /run/imon-recording/s3.json
+        read_only: true
+        bind: { create_host_path: false }
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    pids_limit: 128
+    cpus: 0.5
+    mem_limit: 512m
+    memswap_limit: 512m
+    restart: unless-stopped
+    stop_grace_period: 30s
+    healthcheck:
+      # A healthy private endpoint denies anonymous bucket listing.
+      test:
+        [
+          CMD-SHELL,
+          "wget -S -O /dev/null http://127.0.0.1:8333/ 2>&1 | grep -q ' 403 '",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  egress:
+    image: livekit/egress:v1.15.0@sha256:ac244a40268ce1dd1510fbff6eb529609ec68aceff1602343f79be8ca08c355b
+    # Upstream image user egress has UID 1001, GID 0 at this pinned digest.
+    user: "1001:0"
+    entrypoint:
+      - /tini
+      - --
+      - /bin/bash
+      - -ec
+      - mkdir -p /home/egress/.cache/xdgr /home/egress/.config/pulse /home/egress/tmp; exec /entrypoint.sh
+    environment:
+      EGRESS_CONFIG_FILE: /run/imon-recording/egress.yaml
+      HOME: /home/egress
+      XDG_RUNTIME_DIR: /home/egress/.cache/xdgr
+    volumes:
+      - type: bind
+        source: ./deploy/recording-private/egress.yaml
+        target: /run/imon-recording/egress.yaml
+        read_only: true
+        bind: { create_host_path: false }
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+      - /home/egress:size=128m,uid=1001,gid=0,mode=0700
+      - /home/egress/tmp:size=512m,uid=1001,gid=0,mode=0700
+    shm_size: 256m
+    security_opt:
+      - no-new-privileges:true
+      - seccomp=./deploy/egress-chrome-seccomp.json
+    cap_drop: [ALL]
+    pids_limit: 512
+    cpus: 2.0
+    mem_limit: 4g
+    memswap_limit: 4g
+    restart: unless-stopped
+    # SIGTERM lets an active capture finish and upload; force-stop only after
+    # the configured 30-minute limit plus upload/drain headroom.
+    stop_grace_period: 32m
+    depends_on:
+      redis: { condition: service_healthy }
+      livekit: { condition: service_started }
+      recording-storage: { condition: service_healthy }
+    healthcheck:
+      test:
+        [CMD, curl, --fail, --silent, --max-time, "3", http://127.0.0.1:8080/]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }

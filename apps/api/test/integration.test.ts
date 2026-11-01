@@ -262,7 +262,7 @@ test(
         await request(
           "POST",
           `/api/workspaces/${w.id}/rooms`,
-          { title: "Guest room", allowGuests: true },
+          { title: "Guest room", allowGuests: true, waitingRoom: false },
           owner,
         )
       ).json().room;

@@ -3,6 +3,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { build } from "vite";
 import { chromium, expect } from "@playwright/test";
+import "./suite.browser.test";
 
 // All requests are intercepted. This exercises the production React bundle and
 // browser state, without a server, production account, email or media connection.

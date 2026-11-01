@@ -1,6 +1,7 @@
 .git
 .env
 deploy/turn-private/
+deploy/recording-private/
 ops-state/
 .env.*
 node_modules

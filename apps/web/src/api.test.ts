@@ -226,3 +226,47 @@ test("a stale protected response cannot invalidate a newly authenticated session
     Reflect.deleteProperty(globalThis, "window");
   }
 });
+
+test("room-scoped credentials use headers and their expiration does not sign the account out", async (t) => {
+  const events: string[] = [];
+  const target = new EventTarget();
+  target.addEventListener(AUTH_CHANGED_EVENT, (event) =>
+    events.push((event as CustomEvent).detail.reason),
+  );
+  Object.defineProperty(globalThis, "window", {
+    value: target,
+    configurable: true,
+  });
+  t.mock.method(
+    globalThis,
+    "fetch",
+    async (url: unknown, init?: RequestInit) => {
+      assert.equal(String(url).includes("private-room-token"), false);
+      assert.equal(
+        new Headers(init?.headers).get("x-imon-room-session"),
+        "private-room-token",
+      );
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "ROOM_SESSION_EXPIRED",
+            message: "Переподключитесь к встрече.",
+          },
+        }),
+        { status: 401 },
+      );
+    },
+  );
+  try {
+    await assert.rejects(
+      api("/rooms/fixture/chat", undefined, undefined, {
+        headers: { "x-imon-room-session": "private-room-token" },
+        sessionErrors: false,
+      }),
+      (error) => error instanceof ApiError && error.status === 401,
+    );
+    assert.deepEqual(events, []);
+  } finally {
+    Reflect.deleteProperty(globalThis, "window");
+  }
+});

@@ -7,7 +7,10 @@ import {
   CheckCircle2,
   Clock3,
   Copy,
+  CreditCard,
+  Database,
   Film,
+  FileText,
   Mail,
   Mic,
   Plus,
@@ -34,6 +37,10 @@ import {
 } from "../ui";
 import type { PageProps, Session } from "../ui";
 import { PageHeading } from "./Meetings";
+import { DataSettings, WorkspaceOwnership } from "./DataSettings";
+import { AuthenticatorSettings } from "./AuthenticatorSettings";
+import { Transcript } from "./Transcript";
+import { PlanSettings } from "./Billing";
 const recordingLabels: Record<Recording["status"], string> = {
   starting: "Запускается",
   active: "Идет запись",
@@ -45,6 +52,13 @@ export function Recordings({ workspace, config, notify }: PageProps) {
   const [recordings, setRecordings] = useState<Recording[]>();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
+  const [deleting, setDeleting] = useState<Recording>();
+  const [transcript, setTranscript] = useState<Recording>();
+  const [deleteError, setDeleteError] = useState("");
+  const [downloadReady, setDownloadReady] = useState<{
+    id: string;
+    url: string;
+  }>();
   const load = useCallback(
     () =>
       api<{ recordings: Recording[] }>(`/workspaces/${workspace.id}/recordings`)
@@ -60,8 +74,10 @@ export function Recordings({ workspace, config, notify }: PageProps) {
   }, [load]);
   useEffect(() => {
     if (
-      recordings?.some((r) =>
-        ["starting", "active", "ending"].includes(r.status),
+      recordings?.some(
+        (r) =>
+          ["starting", "active", "ending"].includes(r.status) ||
+          r.deletionPending,
       )
     ) {
       const timer = setInterval(() => void load(), 10000);
@@ -127,60 +143,83 @@ export function Recordings({ workspace, config, notify }: PageProps) {
                       <> · {(r.sizeBytes / 1024 / 1024).toFixed(1)} МБ</>
                     )}
                   </p>
+                  {r.expiresAt && (
+                    <small className="recording-retention">
+                      Хранится до {date(r.expiresAt)}
+                    </small>
+                  )}
                   {r.error && <small className="danger-text">{r.error}</small>}
                 </div>
                 <span
                   className={`workspace-status ${r.status === "complete" ? "success" : r.status === "failed" ? "error" : r.status === "active" ? "info" : "neutral"}`}
                 >
                   {r.status === "active" && <span className="status-dot" />}
-                  {recordingLabels[r.status]}
+                  {r.deletionPending ? "Удаляется" : recordingLabels[r.status]}
                 </span>
                 <div className="workspace-row-actions">
-                  {r.status === "complete" && config.recordingConfigured && (
-                    <Button
-                      busy={busy === r.id}
-                      onClick={async () => {
-                        setBusy(r.id);
-                        try {
-                          const response = await fetch(
-                            `/api/workspaces/${workspace.id}/recordings/${r.id}/download`,
-                            { credentials: "include" },
+                  {r.status === "complete" &&
+                    !r.deletionPending &&
+                    (config.transcriptionConfigured || r.hasTranscript) && (
+                      <Button onClick={() => setTranscript(r)}>
+                        <FileText size={17} />
+                        Расшифровка
+                      </Button>
+                    )}
+                  {r.status === "complete" &&
+                    !r.deletionPending &&
+                    config.recordingConfigured && (
+                      <Button
+                        busy={busy === r.id}
+                        onClick={async () => {
+                          const downloadWindow = window.open(
+                            "about:blank",
+                            "_blank",
                           );
-                          if (!response.ok)
-                            throw new Error(
-                              "Не удалось получить ссылку на запись.",
+                          if (downloadWindow) downloadWindow.opener = null;
+                          setBusy(r.id);
+                          try {
+                            const data = await api<{ url: string }>(
+                              `/workspaces/${workspace.id}/recordings/${r.id}/download`,
                             );
-                          if (
-                            response.headers
-                              .get("Content-Type")
-                              ?.includes("json")
-                          ) {
-                            const data = await response.json();
-                            if (!data.url)
+                            const url = new URL(data.url);
+                            if (
+                              url.protocol !== "https:" &&
+                              !(
+                                location.protocol === "http:" &&
+                                url.protocol === "http:"
+                              )
+                            )
                               throw new Error(
-                                "Ссылка на запись пока недоступна.",
+                                "Получена некорректная ссылка на запись.",
                               );
-                            window.open(
-                              data.url,
-                              "_blank",
-                              "noopener,noreferrer",
-                            );
-                          } else
-                            window.open(
-                              response.url,
-                              "_blank",
-                              "noopener,noreferrer",
-                            );
-                        } catch (e) {
-                          notify((e as Error).message, true);
-                        } finally {
-                          setBusy("");
-                        }
-                      }}
+                            if (downloadWindow)
+                              downloadWindow.location.replace(url.toString());
+                            else
+                              setDownloadReady({
+                                id: r.id,
+                                url: url.toString(),
+                              });
+                          } catch (e) {
+                            downloadWindow?.close();
+                            notify((e as Error).message, true);
+                          } finally {
+                            setBusy("");
+                          }
+                        }}
+                      >
+                        <ArrowDownToLine size={17} />
+                        Скачать
+                      </Button>
+                    )}
+                  {downloadReady?.id === r.id && !r.deletionPending && (
+                    <a
+                      className="button"
+                      href={downloadReady.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      <ArrowDownToLine size={17} />
-                      Скачать
-                    </Button>
+                      Открыть файл
+                    </a>
                   )}
                   {config.recordingConfigured &&
                     r.canManage &&
@@ -207,6 +246,19 @@ export function Recordings({ workspace, config, notify }: PageProps) {
                         Остановить
                       </Button>
                     )}
+                  {r.canManage && ["complete", "failed"].includes(r.status) && (
+                    <Button
+                      className="icon-button danger-quiet"
+                      disabled={r.deletionPending || !!busy}
+                      aria-label={`Удалить запись: ${r.roomTitle}`}
+                      onClick={() => {
+                        setDeleting(r);
+                        setDeleteError("");
+                      }}
+                    >
+                      <Trash2 size={17} />
+                    </Button>
+                  )}
                 </div>
               </div>
             ))}
@@ -230,6 +282,59 @@ export function Recordings({ workspace, config, notify }: PageProps) {
           />
         )}
       </div>
+      {deleting && (
+        <Modal
+          title="Удалить запись?"
+          onClose={() => {
+            if (!busy) setDeleting(undefined);
+          }}
+        >
+          <p className="modal-intro">
+            Запись встречи «{deleting.roomTitle}» от {date(deleting.startedAt)}{" "}
+            будет удалена из хранилища. Скачайте нужную копию перед удалением.
+          </p>
+          <ErrorBox error={deleteError} focus />
+          <div className="modal-actions">
+            <Button disabled={!!busy} onClick={() => setDeleting(undefined)}>
+              Отмена
+            </Button>
+            <Button
+              className="danger"
+              busy={busy === deleting.id}
+              onClick={async () => {
+                setBusy(deleting.id);
+                try {
+                  await api(
+                    `/workspaces/${workspace.id}/recordings/${deleting.id}`,
+                    undefined,
+                    "DELETE",
+                    { timeoutMs: 30_000 },
+                  );
+                  setDownloadReady(undefined);
+                  setDeleting(undefined);
+                  await load();
+                  notify("Запись удаляется из хранилища");
+                } catch (e) {
+                  setDeleteError((e as Error).message);
+                } finally {
+                  setBusy("");
+                }
+              }}
+            >
+              Удалить запись
+            </Button>
+          </div>
+        </Modal>
+      )}
+      {transcript && (
+        <Transcript
+          recording={transcript}
+          workspace={workspace}
+          config={config}
+          notify={notify}
+          onClose={() => setTranscript(undefined)}
+        />
+      )}
     </div>
   );
 }
@@ -773,11 +878,33 @@ export function AccountSettings({
   notify,
 }: PageProps & { user: User; refresh: () => Promise<Session> }) {
   const [busy, setBusy] = useState("");
-  const [section, setSection] = useState("profile");
+  const readSection = () => {
+    const requested =
+      new URLSearchParams(location.search).get("section") ?? "profile";
+    return [
+      "profile",
+      "security",
+      "workspace",
+      "plan",
+      "data",
+      "devices",
+      "services",
+    ].includes(requested)
+      ? requested
+      : "profile";
+  };
+  const [section, setSection] = useState(readSection);
+  useEffect(() => {
+    const changed = () => setSection(readSection());
+    addEventListener("popstate", changed);
+    return () => removeEventListener("popstate", changed);
+  }, []);
   const settingsSections = [
     { id: "profile", label: "Профиль", icon: Users },
     { id: "security", label: "Безопасность", icon: ShieldCheck },
     { id: "workspace", label: "Пространство", icon: Users },
+    { id: "plan", label: "Тариф", icon: CreditCard },
+    { id: "data", label: "Мои данные", icon: Database },
     { id: "devices", label: "Видео и звук", icon: Video },
     { id: "services", label: "Сервисы", icon: Settings },
   ];
@@ -834,7 +961,13 @@ export function AccountSettings({
               className={section === id ? "selected" : ""}
               aria-current={section === id ? "page" : undefined}
               aria-controls={`settings-${id}`}
-              onClick={() => setSection(id)}
+              onClick={() => {
+                setSection(id);
+                const query = new URLSearchParams(location.search);
+                query.set("section", id);
+                if (id !== "plan") query.delete("payment");
+                history.replaceState({}, "", `/settings?${query}`);
+              }}
             >
               <Icon size={17} />
               <span>{label}</span>
@@ -974,7 +1107,30 @@ export function AccountSettings({
                 Обновить пароль
               </Button>
             </form>
-            {section === "security" && <SessionSettings notify={notify} />}
+            {section === "security" && (
+              <>
+                <AuthenticatorSettings
+                  user={user}
+                  refresh={refresh}
+                  notify={notify}
+                />
+                <SessionSettings notify={notify} />
+              </>
+            )}
+          </section>
+          <section
+            className="panel workspace-settings-panel"
+            id="settings-data"
+            hidden={section !== "data"}
+          >
+            {section === "data" && <DataSettings user={user} notify={notify} />}
+          </section>
+          <section
+            className="panel workspace-settings-panel"
+            id="settings-plan"
+            hidden={section !== "plan"}
+          >
+            {section === "plan" && <PlanSettings workspace={workspace} />}
           </section>
           <section
             className="panel workspace-settings-panel"
@@ -1075,9 +1231,34 @@ export function AccountSettings({
               "Видео, звук, чат и демонстрация экрана",
             )}
             {capability(
+              "Зал ожидания",
+              true,
+              "Организатор разрешает вход во встречу",
+            )}
+            {capability(
+              "История чата",
+              true,
+              "Сообщения сохраняются в пространстве",
+            )}
+            {capability(
+              "Двухфакторная аутентификация",
+              true,
+              "Коды из приложения и резервные коды для входа",
+            )}
+            {capability(
               "Записи встреч",
               config.recordingConfigured,
               "Сервис записи и защищенное хранилище",
+            )}
+            {capability(
+              "Расшифровки",
+              Boolean(config.transcriptionConfigured),
+              "Текстовая версия готовых записей встреч",
+            )}
+            {capability(
+              "Резюме AI",
+              Boolean(config.summaryConfigured),
+              "Краткие итоги по тексту встречи с обязательной проверкой результата",
             )}
             {capability(
               "Почтовые уведомления",
@@ -1181,6 +1362,13 @@ export function AccountSettings({
                 Создать пространство
               </Button>
             </form>
+            {section === "workspace" && (
+              <WorkspaceOwnership
+                workspace={workspace}
+                refresh={refresh}
+                notify={notify}
+              />
+            )}
           </section>
         </div>
       </div>

@@ -209,6 +209,16 @@
   .onboarding-account > span {
     display: none;
   }
+  .onboarding > header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .onboarding-account {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+  }
   .auth-form-side {
     padding: 42px 24px 56px;
   }
@@ -222,4 +232,11 @@
   .onboarding .onboarding-card {
     margin-top: 48px;
   }
+}
+.mfa-login-options {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: 16px;
+  gap: 4px;
 }

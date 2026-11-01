@@ -27,7 +27,16 @@ if [ -f /etc/imonmeets/backup-recipient.pem ]; then
   bundle_tmp="$(mktemp backups/.bundle.XXXXXX)"
   encrypted_tmp="$(mktemp backups/.encrypted.XXXXXX)"
   trap 'rm -f "$backup_tmp" "$bundle_tmp" "$encrypted_tmp"' EXIT
-  tar -czf "$bundle_tmp" "$backup_path" backups/latest.json .env
+  bundle_files=("$backup_path" backups/latest.json .env)
+  recording_credentials="deploy/recording-private/credentials.json"
+  if [ -e "$recording_credentials" ] || [ -L "$recording_credentials" ]; then
+    if [ ! -f "$recording_credentials" ] || [ -L "$recording_credentials" ]; then
+      printf 'Recording recovery credentials must be a regular file, not a symlink.\n' >&2
+      exit 1
+    fi
+    bundle_files+=("$recording_credentials")
+  fi
+  tar -czf "$bundle_tmp" "${bundle_files[@]}"
   openssl cms -encrypt -binary -aes-256-cbc -outform DER \
     -in "$bundle_tmp" -out "$encrypted_tmp" /etc/imonmeets/backup-recipient.pem
   test -s "$encrypted_tmp"

@@ -15,6 +15,29 @@ for (const host of [api, rtc]) {
 if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(cert))
   throw new Error("Invalid TLS_CERT_NAME");
 
+const recordingProxy =
+  process.env.S3_BUCKET === "imon-recordings"
+    ? `    location = /imon-recordings { return 404; }
+    location = /imon-recordings/ { return 404; }
+    location ^~ /imon-recordings/ {
+        limit_except GET { deny all; }
+        proxy_pass http://127.0.0.1:8333;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-Port 8443;
+        proxy_connect_timeout 5s;
+        proxy_read_timeout 120s;
+        proxy_buffering off;
+        access_log off;
+        add_header Cache-Control "private, no-store" always;
+        add_header Referrer-Policy "no-referrer" always;
+        add_header X-Content-Type-Options "nosniff" always;
+    }
+`
+    : "";
+
 const acme = `server {
     listen ${ip}:80;
     server_name ${api} ${rtc};
@@ -41,7 +64,8 @@ server {
     ssl_protocols TLSv1.2 TLSv1.3;
     access_log off;
     client_max_body_size 128k;
-    location /api/ {
+${process.env.OFFSITE_EXPORT_ENABLED === "true" ? "    include /etc/nginx/snippets/imonmeets-offsite.conf;\n" : ""}
+${recordingProxy}    location /api/ {
         proxy_pass http://127.0.0.1:3540;
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;

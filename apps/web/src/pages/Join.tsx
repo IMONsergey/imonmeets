@@ -22,6 +22,12 @@ import {
 import type { Config, Recording, Room, User } from "../api";
 import { Brand, Button, Empty, ErrorBox, Link, Spinner, go } from "../ui";
 import { CallSurface } from "./CallSurface";
+import {
+  readWaitingGrant,
+  saveWaitingGrant,
+  WaitingGuest,
+} from "./WaitingRoom";
+import type { WaitingGrant } from "./WaitingRoom";
 type PublicRoom = {
   room: Pick<
     Room,
@@ -30,6 +36,7 @@ type PublicRoom = {
     | "startsAt"
     | "durationMinutes"
     | "allowGuests"
+    | "waitingRoom"
     | "maxParticipants"
     | "status"
   >;
@@ -38,12 +45,15 @@ type PublicRoom = {
   roomId?: string;
 };
 type JoinGrant = {
+  status?: "joined";
   token: string;
   serverUrl: string;
   roomName: string;
   canManage: boolean;
   roomId?: string;
   workspaceId?: string;
+  chatToken?: string;
+  identity?: string;
 };
 type JoinProps = {
   slug: string;
@@ -64,6 +74,10 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [grant, setGrant] = useState<JoinGrant>();
+  const [waiting, setWaiting] = useState<WaitingGrant | undefined>(() =>
+    readWaitingGrant(slug, user?.id),
+  );
+  const joinRequest = useRef(0);
   const [choices, setChoices] = useState<LocalUserChoices>();
   const [left, setLeft] = useState(false);
   const [exitReason, setExitReason] = useState<DisconnectReason>();
@@ -73,6 +87,7 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
     mounted.current = true;
     return () => {
       mounted.current = false;
+      joinRequest.current++;
     };
   }, []);
   const [recording, setRecording] = useState<Recording>();
@@ -165,26 +180,45 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
     left,
     actionBusy,
   ]);
-  async function enter(values: LocalUserChoices) {
+  async function enter(values: LocalUserChoices, waitingToken?: string) {
     if (!values.username.trim()) {
       setError("Укажите ваше имя перед входом.");
       return;
     }
     setBusy(true);
     setError("");
+    const request = ++joinRequest.current;
     try {
-      const next = await api<JoinGrant>(
+      const next = await api<JoinGrant | WaitingGrant>(
         `/rooms/${encodeURIComponent(slug)}/join`,
-        { name: values.username.trim() },
+        {
+          name: values.username.trim(),
+          ...(waitingToken ? { waitingToken } : {}),
+        },
       );
-      if (!mounted.current) return;
+      if (!mounted.current || request !== joinRequest.current) return;
       setChoices(values);
+      if (next.status === "waiting") {
+        const pending = {
+          ...next,
+          name: values.username.trim(),
+          accountId: user?.id ?? null,
+        };
+        saveWaitingGrant(slug, pending);
+        setWaiting(pending);
+        return;
+      }
+      saveWaitingGrant(slug);
+      setWaiting(undefined);
       setGrant(next);
       setLeft(false);
     } catch (e) {
-      setError((e as Error).message);
+      if (mounted.current && request === joinRequest.current) {
+        setError((e as Error).message);
+        if (waitingToken) throw e;
+      }
     } finally {
-      setBusy(false);
+      if (mounted.current && request === joinRequest.current) setBusy(false);
     }
   }
   if (grant && !left)
@@ -315,6 +349,8 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
           className="live-room"
         >
           <CallSurface
+            slug={slug}
+            chatToken={grant.chatToken}
             notify={notify}
             management={
               grant.canManage && grant.workspaceId && grant.roomId
@@ -338,6 +374,29 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
           <div className="full-loader">
             <Spinner />
           </div>
+        ) : waiting && info?.room.status !== "closed" ? (
+          <WaitingGuest
+            key={waiting.requestId}
+            slug={slug}
+            grant={waiting}
+            onCancel={() => {
+              joinRequest.current++;
+              setBusy(false);
+              saveWaitingGrant(slug);
+              setWaiting(undefined);
+              setError("");
+            }}
+            onAdmitted={async (waitingToken) => {
+              const values = choices ?? {
+                username: waiting.name ?? user?.name ?? "Участник",
+                audioEnabled: false,
+                videoEnabled: false,
+                audioDeviceId: "default",
+                videoDeviceId: "default",
+              };
+              await enter(values, waitingToken);
+            }}
+          />
         ) : left ? (
           <div className="standalone-card">
             <div className="empty-icon">
@@ -498,7 +557,11 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
                   }
                   userLabel="Ваше имя"
                   joinLabel={
-                    busy ? "Подключаемся..." : "Присоединиться к встрече"
+                    busy
+                      ? "Подключаемся..."
+                      : info.room.waitingRoom && !info.canManage
+                        ? "Запросить вход"
+                        : "Присоединиться к встрече"
                   }
                   micLabel="Микрофон"
                   camLabel="Камера"
@@ -512,7 +575,9 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
                 )}
                 <p className="prejoin-note">
                   <ShieldCheck size={14} />
-                  Имя будет видно другим участникам встречи.
+                  {info.room.waitingRoom && !info.canManage
+                    ? "Организатор разрешает вход из зала ожидания."
+                    : "Имя будет видно другим участникам встречи."}
                 </p>
               </div>
             ) : null}

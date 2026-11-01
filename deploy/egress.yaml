@@ -1,0 +1,36 @@
+# Public template, not a runnable secret file. scripts/prepare-recording.py
+# replaces only the two quoted placeholders and writes a private 0400 copy.
+# Sources and capacity limits: docs/recording-deployment.md.
+api_key: "__LIVEKIT_API_KEY__"
+api_secret: "__LIVEKIT_API_SECRET__"
+ws_url: ws://livekit:7880
+insecure: true
+redis:
+  address: redis:6379
+health_port: 8080
+template_port: 7980
+prometheus_port: 0
+debug_handler_port: 0
+enable_chrome_sandbox: true
+disallow_local_storage: true
+video_encoder_threads: 2
+logging:
+  level: warn
+  json: true
+cpu_cost:
+  max_cpu_utilization: 0.9
+  room_composite_cpu_cost: 1.5
+  memory_source: cgroup
+  max_memory: 3.5
+  memory_cost: 2.0
+session_limits:
+  file_output_max_duration: 30m
+  file_output_max_size: 367001600
+  stream_output_max_duration: 30m
+  segment_output_max_duration: 30m
+  image_output_max_duration: 30m
+debug:
+  enable_profiling: false
+  enable_track_logging: false
+  enable_stream_logging: false
+  enable_chrome_logging: false

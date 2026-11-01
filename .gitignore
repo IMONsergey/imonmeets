@@ -16,5 +16,6 @@ deploy/livekit.public.yaml
 deploy/nginx.public.conf
 deploy/nginx.acme.generated.conf
 deploy/turn-private/
+deploy/recording-private/
 ops-state/
 __pycache__/

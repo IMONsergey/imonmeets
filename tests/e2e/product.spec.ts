@@ -1,4 +1,5 @@
 import { writeFile } from "node:fs/promises";
+import { createHmac } from "node:crypto";
 import {
   test,
   expect,
@@ -9,6 +10,56 @@ import {
 const base = process.env.BASE_URL || "http://localhost:3540";
 const mail = process.env.MAILPIT_URL || "http://localhost:3541";
 const password = "Browser-test-password-9027";
+test.use({ trace: "off", screenshot: "off", video: "off" });
+
+function authenticatorCode(secret: string) {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+  let bits = "";
+  for (const char of secret.replace(/=+$/, "").toUpperCase()) {
+    const value = alphabet.indexOf(char);
+    if (value < 0) throw new Error("Invalid synthetic authenticator seed");
+    bits += value.toString(2).padStart(5, "0");
+  }
+  const bytes = [];
+  for (let index = 0; index + 8 <= bits.length; index += 8)
+    bytes.push(Number.parseInt(bits.slice(index, index + 8), 2));
+  const counter = Buffer.alloc(8);
+  counter.writeBigUInt64BE(BigInt(Math.floor(Date.now() / 30000)));
+  const digest = createHmac("sha1", Buffer.from(bytes))
+    .update(counter)
+    .digest();
+  const offset = digest[digest.length - 1]! & 15;
+  return String((digest.readUInt32BE(offset) & 0x7fffffff) % 1000000).padStart(
+    6,
+    "0",
+  );
+}
+
+async function submitLogin(page: Page) {
+  // Several independent accounts share the runner's IP. Respect the real
+  // authentication throttle instead of disabling it for acceptance tests.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const pending = page.waitForResponse(
+      (r) =>
+        r.url().endsWith("/api/auth/sign-in/email") &&
+        r.request().method() === "POST",
+    );
+    await page
+      .getByRole("button", { name: "Войти в пространство", exact: true })
+      .click();
+    const response = await pending;
+    if (response.status() !== 429 || attempt === 1) {
+      expect(response.status()).toBe(200);
+      return;
+    }
+    const retryAfter = Number(response.headers()["x-retry-after"] || 10);
+    expect(retryAfter).toBeGreaterThanOrEqual(0);
+    expect(retryAfter).toBeLessThanOrEqual(15);
+    await new Promise((resolve) =>
+      setTimeout(resolve, (retryAfter + 1) * 1000),
+    );
+  }
+}
 
 async function verificationLink(
   request: APIRequestContext,
@@ -159,10 +210,24 @@ test("verified account, workspace, scheduled room, guest video and durable close
   await guest.goto(`${base}/join/${room.slug}`);
   await guest.getByPlaceholder("Ваше имя", { exact: true }).fill("Гость IMON");
   await guest
-    .getByRole("button", { name: "Присоединиться к встрече", exact: true })
+    .getByRole("button", { name: "Запросить вход", exact: true })
+    .click();
+  await expect(
+    guest.getByRole("heading", { name: "Ждем разрешения организатора" }),
+  ).toBeVisible();
+  await expect(page.locator(".lk-participant-tile")).toHaveCount(1);
+  await expect(guest.locator(".lk-participant-tile")).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Участники встречи", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Разрешить вход: Гость IMON", exact: true })
     .click();
   await expect(page.locator(".lk-participant-tile")).toHaveCount(2);
   await expect(guest.locator(".lk-participant-tile")).toHaveCount(2);
+  await page
+    .getByRole("button", { name: "Участники встречи", exact: true })
+    .click();
   await expect
     .poll(
       () =>
@@ -254,6 +319,18 @@ test("verified account, workspace, scheduled room, guest video and durable close
       .getByRole("log", { name: "Сообщения встречи" })
       .getByText("Проверка сообщения между участниками", { exact: true }),
   ).toBeVisible();
+  // A new media/chat session after a full page reload still receives durable history.
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Присоединиться к встрече", exact: true })
+    .click();
+  await expect(page.locator(".lk-participant-tile")).toHaveCount(2);
+  await page.getByRole("button", { name: "Чат встречи", exact: true }).click();
+  await expect(
+    page
+      .getByRole("log", { name: "Сообщения встречи" })
+      .getByText("Проверка сообщения между участниками", { exact: true }),
+  ).toBeVisible();
   await page.screenshot({
     path: "test-results/call-two-participants.png",
     fullPage: true,
@@ -335,11 +412,114 @@ test("password recovery revokes the old session and accepts the new password", a
   await page.goto("/login");
   await page.getByLabel("Рабочая почта").fill(email);
   await page.getByLabel("Пароль", { exact: true }).fill(newPassword);
-  await page
-    .getByRole("button", { name: "Войти в пространство", exact: true })
-    .click();
+  await submitLogin(page);
   await expect(
     page.getByRole("button", { name: "Создать пространство", exact: true }),
   ).toBeVisible();
   expect((await page.request.get(`${base}/api/me`)).status()).toBe(200);
+});
+
+test("real TOTP enrollment, login challenge, one-use recovery code and account erasure", async ({
+  page,
+  request,
+}) => {
+  const email = `mfa-${Date.now()}@example.test`;
+  const created = await page.request.post(`${base}/api/auth/sign-up/email`, {
+    headers: { origin: base },
+    data: {
+      email,
+      password,
+      name: "Проверка второго фактора",
+      callbackURL: `${base}/verify-email?success=1`,
+    },
+  });
+  expect(created.status()).toBe(200);
+  await page.goto(await verificationLink(request, email));
+  await page.goto("/");
+  await page.getByRole("button", { name: "Мой аккаунт", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Настроить второй фактор", exact: true })
+    .click();
+  await page.getByLabel("Текущий пароль", { exact: true }).fill(password);
+  await page.getByRole("button", { name: "Продолжить", exact: true }).click();
+  const secret = await page
+    .getByLabel("Ключ для ручного ввода", { exact: true })
+    .inputValue();
+  await page
+    .getByLabel("Код из приложения", { exact: true })
+    .fill(authenticatorCode(secret));
+  await page
+    .getByRole("button", { name: "Подтвердить код", exact: true })
+    .click();
+  await expect(
+    page.getByText("Второй фактор включен", { exact: true }),
+  ).toBeVisible();
+  const backup = (
+    await page.locator(".backup-code-list code").first().innerText()
+  ).trim();
+  await page.getByLabel("Я сохранил резервные коды", { exact: true }).check();
+  await page.getByRole("button", { name: "Готово", exact: true }).click();
+  await page.getByRole("button", { name: "Выйти", exact: true }).click();
+  await page.getByLabel("Рабочая почта", { exact: true }).fill(email);
+  await page.getByLabel("Пароль", { exact: true }).fill(password);
+  await submitLogin(page);
+  await expect(
+    page.getByLabel("Код из приложения", { exact: true }),
+  ).toBeVisible();
+  expect((await page.request.get(`${base}/api/me`)).status()).toBe(401);
+  await page
+    .getByRole("button", { name: "Использовать резервный код", exact: true })
+    .click();
+  await page.getByLabel("Резервный код", { exact: true }).fill(backup);
+  await page
+    .getByRole("button", { name: "Подтвердить вход", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Мой аккаунт", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Выйти", exact: true }).click();
+  await page.getByLabel("Рабочая почта", { exact: true }).fill(email);
+  await page.getByLabel("Пароль", { exact: true }).fill(password);
+  await submitLogin(page);
+  await page
+    .getByRole("button", { name: "Использовать резервный код", exact: true })
+    .click();
+  await page.getByLabel("Резервный код", { exact: true }).fill(backup);
+  await page
+    .getByRole("button", { name: "Подтвердить вход", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toBeVisible();
+  expect((await page.request.get(`${base}/api/me`)).status()).toBe(401);
+  await page
+    .getByRole("button", { name: "Использовать приложение", exact: true })
+    .click();
+  await page
+    .getByLabel("Код из приложения", { exact: true })
+    .fill(authenticatorCode(secret));
+  await page
+    .getByRole("button", { name: "Подтвердить вход", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Мой аккаунт", exact: true }).click();
+  const exported = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Скачать мои данные", exact: true })
+    .click();
+  expect((await exported).suggestedFilename()).toMatch(
+    /^imonmeets-data-.*\.json$/,
+  );
+  await page
+    .getByRole("button", { name: "Удалить аккаунт", exact: true })
+    .click();
+  await page.getByLabel("Текущий пароль", { exact: true }).fill(password);
+  await page
+    .getByLabel("Введите DELETE для подтверждения", { exact: true })
+    .fill("DELETE");
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Удалить навсегда", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Войти в пространство", exact: true }),
+  ).toBeVisible();
+  expect((await page.request.get(`${base}/api/me`)).status()).toBe(401);
 });

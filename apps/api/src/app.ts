@@ -25,9 +25,18 @@ import { applyRecordingInfo, matchesRecording } from "./recordings.js";
 import { postgresLimiter, requireBudget, type RateLimiter } from "./limits.js";
 import { mediaRoomName } from "./media.js";
 import { clientIp, proxySecretMatches, rateLimitIp } from "./proxy.js";
+import { registerSuite, admissionForJoin, createChatSession } from "./suite.js";
+import { registerAnalysis } from "./analysis.js";
+import { registerBilling, workspaceLimits } from "./billing.js";
 
 type Row = QueryResultRow;
-type User = { id: string; name: string; email: string; emailVerified: boolean };
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  twoFactorEnabled?: boolean | null;
+};
 const hash = (s: string) => createHash("sha256").update(s).digest("hex");
 const slug = () => randomBytes(24).toString("base64url");
 const roomFields = z
@@ -37,6 +46,7 @@ const roomFields = z
     startsAt: z.iso.datetime({ offset: true }).nullable().optional(),
     durationMinutes: z.number().int().min(5).max(1440).optional(),
     allowGuests: z.boolean().optional(),
+    waitingRoom: z.boolean().optional(),
     maxParticipants: z.number().int().min(2).max(100).optional(),
   })
   .strict();
@@ -49,6 +59,7 @@ const roomJson = (r: Row) => ({
   startsAt: r.starts_at,
   durationMinutes: r.duration_minutes,
   allowGuests: r.allow_guests,
+  waitingRoom: r.waiting_room,
   maxParticipants: r.max_participants,
   status: r.status,
   createdBy: r.created_by,
@@ -63,6 +74,10 @@ const recordingJson = (r: Row) => ({
   endedAt: r.ended_at,
   sizeBytes: r.size_bytes === null ? null : Number(r.size_bytes),
   error: r.error,
+  expiresAt: r.expires_at ?? null,
+  deletionPending: Boolean(r.deletion_requested_at && !r.deleted_at),
+  deletedAt: r.deleted_at ?? null,
+  hasTranscript: Boolean(r.has_transcript),
 });
 const workspaceJson = (r: Row) => ({
   id: r.id,
@@ -86,6 +101,7 @@ export async function createApp(
     media?: Media;
     logger?: boolean;
     limiter?: RateLimiter;
+    paymentRequest?: typeof fetch;
   } = {},
 ) {
   const pool = options.pool || createPool(c.databaseUrl),
@@ -185,7 +201,9 @@ export async function createApp(
       );
     if (
       ["POST", "PUT", "PATCH", "DELETE"].includes(req.method) &&
-      req.url.split("?")[0] !== "/api/livekit/webhook"
+      !["/api/livekit/webhook", "/api/billing/yookassa/webhook"].includes(
+        req.url.split("?")[0]!,
+      )
     ) {
       assert(
         validOrigin(req.headers.origin, c.appUrl),
@@ -432,6 +450,41 @@ export async function createApp(
       }
       const headers = fromNodeHeaders(req.headers);
       headers.set("x-imon-client-ip", clientIp(req, c.originProxySecret));
+      const sensitiveAction = [
+        "/api/auth/two-factor/verify-totp",
+        "/api/auth/two-factor/disable",
+        "/api/auth/change-password",
+        "/api/auth/reset-password",
+      ].includes(authPath);
+      const previousSession = sensitiveAction
+        ? await auth.api.getSession({ headers })
+        : null;
+      const oldSessionIds =
+        previousSession &&
+        [
+          "/api/auth/two-factor/verify-totp",
+          "/api/auth/two-factor/disable",
+        ].includes(authPath)
+          ? (
+              await pool.query('SELECT id FROM "session" WHERE "userId"=$1', [
+                previousSession.user.id,
+              ])
+            ).rows.map((row) => row.id)
+          : [];
+      let passwordResetUser: string | undefined;
+      if (
+        authPath === "/api/auth/reset-password" &&
+        req.body &&
+        typeof req.body === "object" &&
+        "token" in req.body &&
+        typeof req.body.token === "string"
+      )
+        passwordResetUser = (
+          await pool.query(
+            'SELECT value FROM "verification" WHERE identifier=$1',
+            [`reset-password:${req.body.token}`],
+          )
+        ).rows[0]?.value;
       const response = await auth.handler(
         new Request(new URL(req.url, c.appUrl), {
           method: req.method,
@@ -446,6 +499,41 @@ export async function createApp(
       const cookies = response.headers.getSetCookie();
       if (cookies.length) reply.header("set-cookie", cookies);
       const body = await response.text();
+      if (response.ok && previousSession && oldSessionIds.length) {
+        const currentUser = (
+          await pool.query(
+            'SELECT "twoFactorEnabled" FROM "user" WHERE id=$1',
+            [previousSession.user.id],
+          )
+        ).rows[0];
+        if (
+          authPath === "/api/auth/two-factor/disable" ||
+          (!previousSession.user.twoFactorEnabled &&
+            currentUser?.twoFactorEnabled)
+        ) {
+          await pool.query(
+            'DELETE FROM "session" WHERE "userId"=$1 AND id=ANY($2::text[])',
+            [previousSession.user.id, oldSessionIds],
+          );
+          await pool.query(
+            `DELETE FROM "verification" WHERE value=$1 AND (identifier LIKE '2fa-%' OR identifier LIKE 'trust-device-%')`,
+            [previousSession.user.id],
+          );
+        }
+      }
+      if (
+        response.ok &&
+        ["/api/auth/change-password", "/api/auth/reset-password"].includes(
+          authPath,
+        )
+      ) {
+        const changedId = previousSession?.user.id ?? passwordResetUser;
+        if (changedId)
+          await pool.query(
+            `DELETE FROM "verification" WHERE value=$1 AND (identifier LIKE '2fa-%' OR identifier LIKE 'trust-device-%')`,
+            [changedId],
+          );
+      }
       const action = req.url.split("?")[0]!.slice("/api/auth/".length);
       if (
         [
@@ -457,6 +545,11 @@ export async function createApp(
           "verify-email",
           "send-verification-email",
           "request-password-reset",
+          "two-factor/enable",
+          "two-factor/verify-totp",
+          "two-factor/verify-backup-code",
+          "two-factor/disable",
+          "two-factor/generate-backup-codes",
         ].includes(action)
       ) {
         let actorId: string | null = null;
@@ -487,6 +580,14 @@ export async function createApp(
     emailDelivery: c.emailDelivery,
     mediaConfigured: c.mediaConfigured,
     recordingConfigured: c.recordingConfigured,
+    waitingRoomConfigured: true,
+    persistentChatConfigured: true,
+    mfaConfigured: true,
+    recordingRetentionDays: c.recordingRetentionDays,
+    chatRetentionDays: c.chatRetentionDays,
+    billingEnabled: c.billingConfigured,
+    transcriptionConfigured: c.transcriptionConfigured,
+    summaryConfigured: c.summaryConfigured,
   }));
   app.get("/api/health", async (_req, reply) => {
     try {
@@ -515,6 +616,7 @@ export async function createApp(
         name: u.name,
         email: u.email,
         emailVerified: u.emailVerified,
+        twoFactorEnabled: Boolean(u.twoFactorEnabled),
       },
       workspaces: r.rows.map(workspaceJson),
     };
@@ -693,6 +795,10 @@ export async function createApp(
         "INSERT INTO im_members(id,workspace_id,user_id,role) VALUES($1,$2,$3,'owner')",
         [randomUUID(), id, u.id],
       );
+      await db.query(
+        "INSERT INTO im_workspace_plans(workspace_id) VALUES($1)",
+        [id],
+      );
       await audit(db, id, u.id, "workspace.created", id);
       return { workspace: workspaceJson({ ...r.rows[0], role: "owner" }) };
     });
@@ -711,7 +817,7 @@ export async function createApp(
         [workspaceId],
       ),
       pool.query(
-        "SELECT count(*)::int AS n FROM im_recordings WHERE workspace_id=$1",
+        "SELECT count(*)::int AS n FROM im_recordings WHERE workspace_id=$1 AND deleted_at IS NULL",
         [workspaceId],
       ),
     ]);
@@ -741,19 +847,27 @@ export async function createApp(
     const b = roomFields.parse(req.body);
     return transaction(pool, async (db) => {
       await lockWorkspace(db, workspaceId!, u.id);
+      const planLimits = await workspaceLimits(db, c, workspaceId!);
       const count = await db.query(
         "SELECT count(*)::int AS n FROM im_rooms WHERE workspace_id=$1",
         [workspaceId],
       );
       assert(
-        count.rows[0].n < c.limits.rooms,
+        count.rows[0].n < planLimits.rooms,
         409,
         "ROOM_LIMIT",
         "Достигнут лимит комнат пространства.",
       );
       await requireBudget(limiter, `room-create:${u.id}`, 30, 3600, db);
+      assert(
+        (b.maxParticipants ?? Math.min(25, planLimits.participants)) <=
+          planLimits.participants,
+        409,
+        "PLAN_PARTICIPANT_LIMIT",
+        "Превышен лимит участников вашего тарифа.",
+      );
       const r = await db.query(
-        "INSERT INTO im_rooms(id,workspace_id,slug,title,description,starts_at,duration_minutes,allow_guests,max_participants,created_by) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *",
+        "INSERT INTO im_rooms(id,workspace_id,slug,title,description,starts_at,duration_minutes,allow_guests,max_participants,created_by,waiting_room) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *",
         [
           randomUUID(),
           workspaceId,
@@ -763,8 +877,9 @@ export async function createApp(
           b.startsAt ?? null,
           b.durationMinutes ?? 60,
           b.allowGuests ?? true,
-          b.maxParticipants ?? 25,
+          b.maxParticipants ?? Math.min(25, planLimits.participants),
           u.id,
+          b.waitingRoom ?? true,
         ],
       );
       await audit(db, workspaceId!, u.id, "room.created", r.rows[0].id);
@@ -776,7 +891,7 @@ export async function createApp(
       { workspaceId, roomId } = params(req),
       m = await membership(workspaceId!, u.id),
       b = roomFields.partial().parse(req.body);
-    return transaction(pool, async (db) => {
+    const mutation = await transaction(pool, async (db) => {
       const currentMember = await lockWorkspace(db, workspaceId!, u.id);
       const r = await scopedRoom(workspaceId!, roomId!, db, true);
       assert(
@@ -794,8 +909,15 @@ export async function createApp(
         "ROOM_CAPACITY_LOCKED",
         "Лимит участников нельзя менять после начала звонка. Создайте новую комнату.",
       );
+      const planLimits = await workspaceLimits(db, c, workspaceId!);
+      assert(
+        (b.maxParticipants ?? r.max_participants) <= planLimits.participants,
+        409,
+        "PLAN_PARTICIPANT_LIMIT",
+        "Превышен лимит участников вашего тарифа.",
+      );
       const result = await db.query(
-        "UPDATE im_rooms SET title=$3,description=$4,starts_at=$5,duration_minutes=$6,allow_guests=$7,max_participants=$8 WHERE workspace_id=$1 AND id=$2 RETURNING *",
+        "UPDATE im_rooms SET title=$3,description=$4,starts_at=$5,duration_minutes=$6,allow_guests=$7,max_participants=$8,waiting_room=$9 WHERE workspace_id=$1 AND id=$2 RETURNING *",
         [
           workspaceId,
           roomId,
@@ -805,11 +927,29 @@ export async function createApp(
           b.durationMinutes ?? r.duration_minutes,
           b.allowGuests ?? r.allow_guests,
           b.maxParticipants ?? r.max_participants,
+          b.waitingRoom ?? r.waiting_room,
         ],
       );
+      const tightened =
+        (b.waitingRoom === true && !r.waiting_room) ||
+        (b.allowGuests === false && r.allow_guests);
+      if (tightened) {
+        await retireMedia(db, r);
+        result.rows[0] = (
+          await db.query(
+            "UPDATE im_rooms SET media_generation=media_generation+1,media_started=false WHERE id=$1 RETURNING *",
+            [roomId],
+          )
+        ).rows[0];
+      }
       await audit(db, workspaceId!, u.id, "room.updated", roomId!);
-      return { room: roomJson(result.rows[0]) };
+      return { room: roomJson(result.rows[0]), accessReset: tightened };
     });
+    const mediaPending =
+      mutation.accessReset && c.mediaConfigured
+        ? !(await drainRetirements(workspaceId, 4))
+        : false;
+    return { ...mutation, mediaPending };
   });
   app.post(
     "/api/workspaces/:workspaceId/rooms/:roomId/rotate-link",
@@ -817,7 +957,7 @@ export async function createApp(
       const u = (await user(req))!,
         { workspaceId, roomId } = params(req),
         m = await membership(workspaceId!, u.id);
-      return transaction(pool, async (db) => {
+      const mutation = await transaction(pool, async (db) => {
         const currentMember = await lockWorkspace(db, workspaceId!, u.id);
         const r = await scopedRoom(workspaceId!, roomId!, db, true);
         assert(
@@ -827,12 +967,17 @@ export async function createApp(
           "Недостаточно прав.",
         );
         const result = await db.query(
-          "UPDATE im_rooms SET slug=$3 WHERE workspace_id=$1 AND id=$2 RETURNING *",
+          "UPDATE im_rooms SET slug=$3,media_generation=media_generation+1,media_started=false WHERE workspace_id=$1 AND id=$2 RETURNING *",
           [workspaceId, roomId, slug()],
         );
+        await retireMedia(db, r);
         await audit(db, workspaceId!, u.id, "room.link_rotated", roomId!);
         return { room: roomJson(result.rows[0]) };
       });
+      const mediaPending = c.mediaConfigured
+        ? !(await drainRetirements(workspaceId, 4))
+        : false;
+      return { ...mutation, accessReset: true, mediaPending };
     },
   );
   app.post("/api/workspaces/:workspaceId/rooms/:roomId/close", async (req) => {
@@ -919,6 +1064,7 @@ export async function createApp(
         startsAt: r.starts_at,
         durationMinutes: r.duration_minutes,
         allowGuests: r.allow_guests,
+        waitingRoom: r.waiting_room,
         maxParticipants: r.max_participants,
         status: r.status,
       },
@@ -931,7 +1077,13 @@ export async function createApp(
     { config: { rateLimit: false } },
     async (req) => {
       const b = z
-        .object({ name: z.string().trim().min(1).max(80).optional() })
+        .object({
+          name: z.string().trim().min(1).max(100).optional(),
+          waitingToken: z
+            .string()
+            .regex(/^[A-Za-z0-9_-]{43}$/)
+            .optional(),
+        })
         .strict()
         .parse(req.body ?? {});
       assert(
@@ -960,14 +1112,28 @@ export async function createApp(
         );
         assert(r.status === "open", 409, "ROOM_CLOSED", "Встреча закрыта.");
         assert(u || b.name, 400, "NAME_REQUIRED", "Укажите ваше имя.");
+        const admission = await admissionForJoin(
+          db,
+          r,
+          u,
+          manage,
+          u?.name || b.name!,
+          b.waitingToken,
+          limiter,
+        );
+        if (admission.pending) return admission.pending;
+        const identity = u
+          ? `user:${u.id}:${randomUUID()}`
+          : `guest:${randomUUID()}`;
+        const planLimits = await workspaceLimits(db, c, r.workspace_id);
         await db.query("SELECT pg_advisory_xact_lock(73621906)");
         let token: string;
         try {
           token = await media.token(
             mediaRoomName(r as { id: string; media_generation: number }),
-            u ? `user:${u.id}:${randomUUID()}` : `guest:${randomUUID()}`,
-            u?.name || b.name!,
-            r.max_participants,
+            identity,
+            admission.name,
+            Math.min(r.max_participants, planLimits.participants),
           );
         } catch {
           throw new ApiError(
@@ -991,8 +1157,23 @@ export async function createApp(
           "room.join_granted",
           r.id,
         );
+        const chatToken = await createChatSession(
+          db,
+          r,
+          u,
+          identity,
+          admission.name,
+        );
+        if (admission.requestId)
+          await db.query(
+            "UPDATE im_waiting_requests SET used_at=now() WHERE id=$1",
+            [admission.requestId],
+          );
         return {
+          status: "joined",
           token,
+          chatToken,
+          identity,
           serverUrl: c.livekit.url,
           roomName: mediaRoomName(
             r as { id: string; media_generation: number },
@@ -1334,7 +1515,9 @@ export async function createApp(
         [inv.workspace_id, u.id],
       );
       assert(
-        existing.rowCount || count.rows[0].n < c.limits.members,
+        existing.rowCount ||
+          count.rows[0].n <
+            (await workspaceLimits(db, c, inv.workspace_id)).members,
         409,
         "MEMBER_LIMIT",
         "Достигнут лимит участников пространства.",
@@ -1427,7 +1610,7 @@ export async function createApp(
     return {
       recordings: (
         await pool.query(
-          "SELECT rec.*,r.title AS room_title,r.created_by FROM im_recordings rec JOIN im_rooms r ON r.id=rec.room_id WHERE rec.workspace_id=$1 ORDER BY rec.started_at DESC",
+          "SELECT rec.*,r.title AS room_title,r.created_by,EXISTS(SELECT 1 FROM im_recording_analysis a WHERE a.recording_id=rec.id AND a.expires_at>now()) AS has_transcript FROM im_recordings rec JOIN im_rooms r ON r.id=rec.room_id WHERE rec.workspace_id=$1 AND rec.deleted_at IS NULL ORDER BY rec.started_at DESC",
           [workspaceId],
         )
       ).rows.map((r) => ({
@@ -1463,6 +1646,19 @@ export async function createApp(
           [roomId],
         );
         assert(!active.rowCount, 409, "RECORDING_ACTIVE", "Запись уже идет.");
+        const planLimit = await workspaceLimits(db, c, workspaceId!);
+        const workspaceActive = (
+          await db.query(
+            "SELECT count(*)::int AS n FROM im_recordings WHERE workspace_id=$1 AND status IN ('starting','active','ending')",
+            [workspaceId],
+          )
+        ).rows[0].n;
+        assert(
+          workspaceActive < planLimit.activeRecordings,
+          409,
+          "PLAN_RECORDING_LIMIT",
+          "Достигнут лимит одновременных записей тарифа.",
+        );
         await db.query("SELECT pg_advisory_xact_lock(73621905)");
         const total = await db.query(
           "SELECT count(*)::int AS n FROM im_recordings WHERE status IN ('starting','active','ending')",
@@ -1476,13 +1672,14 @@ export async function createApp(
         const id = randomUUID(),
           objectKey = `recordings/${workspaceId}/${id}.mp4`;
         const result = await db.query(
-          "INSERT INTO im_recordings(id,workspace_id,room_id,status,object_key,media_name) VALUES($1,$2,$3,'starting',$4,$5) RETURNING *",
+          "INSERT INTO im_recordings(id,workspace_id,room_id,status,object_key,media_name,expires_at) VALUES($1,$2,$3,'starting',$4,$5,now()+($6*interval '1 day')) RETURNING *",
           [
             id,
             workspaceId,
             roomId,
             objectKey,
             mediaRoomName(r as { id: string; media_generation: number }),
+            c.recordingRetentionDays,
           ],
         );
         await audit(db, workspaceId!, u.id, "recording.requested", id);
@@ -1641,7 +1838,7 @@ export async function createApp(
       );
       const r = (
         await pool.query(
-          "SELECT * FROM im_recordings WHERE workspace_id=$1 AND id=$2",
+          "SELECT * FROM im_recordings WHERE workspace_id=$1 AND id=$2 AND deletion_requested_at IS NULL AND deleted_at IS NULL AND (expires_at IS NULL OR expires_at>now())",
           [workspaceId, recordingId],
         )
       ).rows[0];
@@ -1655,6 +1852,24 @@ export async function createApp(
       return { url: await media.download(r.object_key) };
     },
   );
+  const suiteDependencies = {
+    c,
+    pool,
+    media,
+    limiter,
+    user,
+    membership,
+    lockWorkspace,
+    scopedRoom,
+    roomAccess,
+    audit,
+    retireMedia,
+    drainRetirements,
+    paymentRequest: options.paymentRequest,
+  };
+  await registerSuite(app, suiteDependencies);
+  await registerBilling(app, suiteDependencies);
+  await registerAnalysis(app, suiteDependencies);
   // Scoped parser preserves the exact signed request bytes before any JSON parsing.
   await app.register(async (webhook) => {
     webhook.removeContentTypeParser("application/json");

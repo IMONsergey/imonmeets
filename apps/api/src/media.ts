@@ -5,9 +5,16 @@ import {
   WebhookReceiver,
   EncodedFileOutput,
   EncodedFileType,
+  EncodingOptions,
+  AudioCodec,
+  VideoCodec,
   S3Upload,
 } from "livekit-server-sdk";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import type { Config } from "./config.js";
 export function createMedia(c: Config) {
@@ -30,6 +37,18 @@ export function createMedia(c: Config) {
     forcePathStyle: c.s3.forcePathStyle,
     credentials: { accessKeyId: c.s3.accessKey, secretAccessKey: c.s3.secret },
   });
+  const publicS3 =
+    c.s3.publicEndpoint === c.s3.endpoint
+      ? s3
+      : new S3Client({
+          region: c.s3.region,
+          endpoint: c.s3.publicEndpoint,
+          forcePathStyle: c.s3.forcePathStyle,
+          credentials: {
+            accessKeyId: c.s3.accessKey,
+            secretAccessKey: c.s3.secret,
+          },
+        });
   return {
     rooms,
     egress,
@@ -86,12 +105,30 @@ export function createMedia(c: Config) {
       return egress.startRoomCompositeEgress(
         roomId,
         { file: output },
-        { layout: "grid" },
+        {
+          layout: "grid",
+          // Deliberately bounded shared-host profile. The worker separately
+          // enforces 30 minutes / 350 MiB and a single active recording.
+          encodingOptions: new EncodingOptions({
+            width: 1280,
+            height: 720,
+            framerate: 15,
+            videoCodec: VideoCodec.H264_MAIN,
+            videoBitrate: 1200,
+            audioCodec: AudioCodec.AAC,
+            audioBitrate: 64,
+            audioFrequency: 48000,
+            keyFrameInterval: 4,
+          }),
+        },
       );
+    },
+    async delete(key: string) {
+      await s3.send(new DeleteObjectCommand({ Bucket: c.s3.bucket, Key: key }));
     },
     async download(key: string) {
       return getSignedUrl(
-        s3,
+        publicS3,
         new GetObjectCommand({ Bucket: c.s3.bucket, Key: key }),
         { expiresIn: 60 },
       );

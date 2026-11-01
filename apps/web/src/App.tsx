@@ -64,7 +64,10 @@ export default function App() {
   const refreshAbort = useRef<AbortController | null>(null);
   const refreshPending = useRef<Promise<Session> | null>(null);
   const [workspaceId, setWorkspaceId] = useState(
-    () => readLocalPreference("imon.workspace") ?? "",
+    () =>
+      new URLSearchParams(location.search).get("workspace") ??
+      readLocalPreference("imon.workspace") ??
+      "",
   );
   const reviewMode =
     config?.emailDelivery === "capture" && config.registrationEnabled === false;
@@ -103,6 +106,10 @@ export default function App() {
   useEffect(() => {
     const onPop = () => {
       setPath(location.pathname);
+      const requestedWorkspace = new URLSearchParams(location.search).get(
+        "workspace",
+      );
+      if (requestedWorkspace) setWorkspaceId(requestedWorkspace);
       if (accountMenu.current) accountMenu.current.open = false;
     };
     addEventListener("popstate", onPop);
@@ -364,6 +371,7 @@ export default function App() {
         onWorkspace={setWorkspaceId}
         user={session.user}
         logout={logout}
+        notify={notify}
       />
     );
   else

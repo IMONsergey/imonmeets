@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { twoFactor } from "better-auth/plugins";
 import nodemailer from "nodemailer";
 import type { Pool } from "pg";
 import { postgresLimiter } from "./limits.js";
@@ -31,6 +32,18 @@ export function createAuth(c: Config, pool: Pool) {
     basePath: "/api/auth",
     secret: c.authSecret,
     database: pool,
+    plugins: [
+      twoFactor({
+        issuer: "IMON Meets",
+        skipVerificationOnEnable: false,
+        backupCodeOptions: { storeBackupCodes: "encrypted" },
+        accountLockout: {
+          enabled: true,
+          maxFailedAttempts: 8,
+          durationSeconds: 900,
+        },
+      }),
+    ],
     trustedOrigins: [c.appUrl],
     emailAndPassword: {
       enabled: true,

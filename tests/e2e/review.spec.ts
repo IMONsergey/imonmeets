@@ -281,10 +281,26 @@ test("public review: verified login, calendar export, two-way call and durable r
       .getByPlaceholder("Ваше имя", { exact: true })
       .fill("Гость проверки");
     await guest
-      .getByRole("button", { name: "Присоединиться к встрече", exact: true })
+      .getByRole("button", { name: "Запросить вход", exact: true })
+      .click();
+    await expect(
+      guest.getByRole("heading", { name: "Ждем разрешения организатора" }),
+    ).toBeVisible();
+    await expect(page.locator(".lk-participant-tile")).toHaveCount(1);
+    await page
+      .getByRole("button", { name: "Участники встречи", exact: true })
+      .click();
+    await page
+      .getByRole("button", {
+        name: "Разрешить вход: Гость проверки",
+        exact: true,
+      })
       .click();
     await expectTwoVideos(page);
     await expectTwoVideos(guest);
+    await page
+      .getByRole("button", { name: "Участники встречи", exact: true })
+      .click();
     await expect(
       guest.getByRole("button", { name: "Завершить для всех", exact: true }),
     ).toHaveCount(0);

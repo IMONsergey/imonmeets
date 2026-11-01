@@ -57,10 +57,63 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
       throw new Error(`${name} must be a positive integer`);
     return value;
   };
+  const analysis = {
+    workerUrl: env.ANALYSIS_WORKER_URL || "",
+    workerSecret: env.ANALYSIS_WORKER_SECRET || "",
+    enabled: env.TRANSCRIPTION_ENABLED === "true",
+    summaryEnabled: env.AI_SUMMARY_ENABLED === "true",
+  };
+  const transcriptionConfigured =
+    analysis.enabled &&
+    recordingConfigured &&
+    Boolean(analysis.workerUrl) &&
+    analysis.workerSecret.length >= 32;
+  const billing = {
+    commercial:
+      env.BILLING_MODE === "commercial" || env.BILLING_ENABLED === "true",
+    shopId: env.YOOKASSA_SHOP_ID || "",
+    secretKey: env.YOOKASSA_SECRET_KEY || "",
+    testMode: env.YOOKASSA_TEST_MODE !== "false",
+    amountKopecks: positive("BILLING_PRO_PRICE_KOPECKS", 149000),
+    receipt: env.YOOKASSA_VAT_CODE
+      ? {
+          vatCode: Number(env.YOOKASSA_VAT_CODE),
+          ...(env.YOOKASSA_TAX_SYSTEM_CODE
+            ? { taxSystemCode: Number(env.YOOKASSA_TAX_SYSTEM_CODE) }
+            : {}),
+        }
+      : undefined,
+    freeLimits: {
+      rooms: positive("BILLING_FREE_ROOMS", 20),
+      members: positive("BILLING_FREE_MEMBERS", 10),
+      participants: positive("BILLING_FREE_PARTICIPANTS", 25),
+      activeRecordings: 1,
+    },
+    proLimits: {
+      rooms: positive("MAX_ROOMS_PER_WORKSPACE", 200),
+      members: positive("MAX_MEMBERS_PER_WORKSPACE", 100),
+      participants: positive("MAX_PARTICIPANTS_PER_ROOM", 100),
+      activeRecordings: positive("MAX_ACTIVE_RECORDINGS", 2),
+    },
+  };
+  const billingConfigured =
+    env.BILLING_ENABLED === "true" &&
+    /^\d{1,20}$/.test(billing.shopId) &&
+    billing.secretKey.length >= 16 &&
+    (billing.testMode ||
+      (Boolean(billing.receipt) && env.COMMERCIAL_TERMS_APPROVED === "true"));
+  if (billingConfigured && billing.amountKopecks < 100)
+    throw new Error("Billing amount must be at least one ruble");
   return {
+    analysis,
+    transcriptionConfigured,
+    summaryConfigured: transcriptionConfigured && analysis.summaryEnabled,
+    billing,
+    billingConfigured,
     limits: {
       workspaces: positive("MAX_WORKSPACES_PER_USER", 10),
       rooms: positive("MAX_ROOMS_PER_WORKSPACE", 200),
+      participants: positive("MAX_PARTICIPANTS_PER_ROOM", 100),
       members: positive("MAX_MEMBERS_PER_WORKSPACE", 100),
       invitations: positive("MAX_PENDING_INVITATIONS", 100),
       inviteHourly: positive("INVITATIONS_PER_USER_HOUR", 20),
@@ -69,6 +122,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
       recordings: positive("MAX_ACTIVE_RECORDINGS", 2),
       activeRooms: positive("MAX_ACTIVE_ROOMS", 20),
     },
+    recordingRetentionDays: Math.min(
+      365,
+      positive("RECORDING_RETENTION_DAYS", 14),
+    ),
+    chatRetentionDays: Math.min(365, positive("CHAT_RETENTION_DAYS", 90)),
     dev,
     appUrl,
     authSecret,
@@ -106,6 +164,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
       bucket: env.S3_BUCKET || "",
       region: env.S3_REGION || "us-east-1",
       endpoint: env.S3_ENDPOINT || undefined,
+      publicEndpoint: env.S3_PUBLIC_ENDPOINT || env.S3_ENDPOINT || undefined,
       accessKey: env.S3_ACCESS_KEY_ID || "",
       secret: env.S3_SECRET_ACCESS_KEY || "",
       forcePathStyle: env.S3_FORCE_PATH_STYLE === "true",

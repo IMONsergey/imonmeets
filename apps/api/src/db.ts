@@ -1,4 +1,7 @@
 import { Pool, type PoolClient } from "pg";
+import { suiteSchema } from "./suite-schema.js";
+import { analysisSchema } from "./analysis-schema.js";
+import { billingSchema } from "./billing-schema.js";
 export const schema = `
 CREATE TABLE IF NOT EXISTS im_rate_limits(key text PRIMARY KEY,count integer NOT NULL,expires_at timestamptz NOT NULL);
 CREATE INDEX IF NOT EXISTS im_rate_expiry ON im_rate_limits(expires_at);
@@ -25,6 +28,9 @@ CREATE INDEX IF NOT EXISTS im_audit_room_actor ON im_audit(resource_id,actor_id)
 UPDATE im_rooms r SET media_started=true WHERE media_generation=0 AND EXISTS(SELECT 1 FROM im_audit a WHERE a.resource_id=r.id AND a.event='room.join_granted');
 INSERT INTO im_media_retirements(name,workspace_id) SELECT CASE WHEN media_generation=0 THEN id ELSE id||'-g'||media_generation END,workspace_id FROM im_rooms WHERE status='closed' AND media_closed=false ON CONFLICT DO NOTHING;
 CREATE TABLE IF NOT EXISTS im_webhook_events (id text PRIMARY KEY,created_at timestamptz NOT NULL DEFAULT now());
+${suiteSchema}
+${billingSchema}
+${analysisSchema}
 `;
 export async function transaction<T>(
   pool: Pool,

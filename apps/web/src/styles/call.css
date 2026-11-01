@@ -468,6 +468,7 @@
   border-top: 1px solid #323236;
 }
 .participant-count {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -961,4 +962,118 @@
   .meeting-controls .leave-meeting svg {
     display: block;
   }
+}
+.waiting-guest {
+  text-align: center;
+}
+.waiting-guest h1 {
+  font-size: 24px;
+  line-height: 1.35;
+}
+.waiting-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 24px 0;
+  padding: 14px;
+  border: 1px solid #c9dbff;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.waiting-guest .form-note {
+  margin: 18px 0;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.waiting-guest .form-note svg {
+  vertical-align: -3px;
+  margin-right: 4px;
+}
+.call-waiting-notice {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #183662;
+  color: #fff;
+  font-size: 13px;
+}
+.call-waiting-notice button {
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 5px;
+  background: #265796;
+  color: #fff;
+  text-decoration: underline;
+}
+.waiting-list {
+  padding: 16px;
+  border-bottom: 1px solid #42424b;
+  background: #25252b;
+}
+.waiting-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.waiting-list-heading h3 {
+  margin: 0;
+  font-size: 14px;
+}
+.waiting-list-heading > span,
+.waiting-count {
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: #0b5cff;
+  color: #fff;
+  font-size: 11px;
+}
+.participant-count > .waiting-count {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  font-size: 9px;
+}
+.waiting-list > p {
+  margin: 12px 0 0;
+  color: #b8b8c2;
+  font-size: 12px;
+}
+.waiting-person {
+  padding-top: 14px;
+}
+.waiting-person strong,
+.waiting-person small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.waiting-person strong {
+  font-size: 13px;
+}
+.waiting-person small {
+  margin-top: 3px;
+  color: #b8b8c2;
+  font-size: 11px;
+}
+.waiting-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.waiting-actions .button {
+  min-height: 36px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+.chat-history-note {
+  color: #b8b8c2;
+  font-size: 11px;
+  text-align: center;
 }

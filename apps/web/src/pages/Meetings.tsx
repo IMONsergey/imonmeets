@@ -12,6 +12,7 @@ import {
   Film,
   Globe2,
   Link2,
+  MessageSquare,
   Pencil,
   Plus,
   Search,
@@ -40,6 +41,7 @@ import {
   go,
 } from "../ui";
 import type { PageProps } from "../ui";
+import { ChatHistory } from "./ChatHistory";
 
 function CalendarExport({
   room,
@@ -432,7 +434,10 @@ function RoomEditor({
   workspace: Workspace;
   room?: Room;
   onClose: () => void;
-  onSaved: (r: Room) => void;
+  onSaved: (
+    r: Room,
+    access?: { accessReset?: boolean; mediaPending?: boolean },
+  ) => void;
   scheduledByDefault?: boolean;
 }) {
   const [busy, setBusy] = useState(false);
@@ -441,7 +446,14 @@ function RoomEditor({
     !!room?.startsAt || scheduledByDefault,
   );
   const [guests, setGuests] = useState(room?.allowGuests ?? true);
+  const [waitingRoom, setWaitingRoom] = useState(
+    room ? Boolean(room.waitingRoom) : true,
+  );
   const localDate = room?.startsAt ? localDateTimeInput(room.startsAt) : "";
+  const resetsAccess = Boolean(
+    room &&
+    ((waitingRoom && !room.waitingRoom) || (!guests && room.allowGuests)),
+  );
   return (
     <Modal
       title={room ? "Изменить встречу" : "Новая встреча"}
@@ -456,11 +468,26 @@ function RoomEditor({
         onSubmit={async (e) => {
           e.preventDefault();
           if (busy) return;
+          if (
+            resetsAccess &&
+            !confirm(
+              "Изменить доступ к встрече? Текущие участники будут отключены. Для продолжения им потребуется войти заново с новыми правилами доступа.",
+            )
+          )
+            return;
           const data = new FormData(e.currentTarget);
           setError("");
           setBusy(true);
           try {
-            const { room: saved } = await api<{ room: Room }>(
+            const {
+              room: saved,
+              accessReset,
+              mediaPending,
+            } = await api<{
+              room: Room;
+              accessReset?: boolean;
+              mediaPending?: boolean;
+            }>(
               `/workspaces/${workspace.id}/rooms${room ? "/" + room.id : ""}`,
               {
                 title: data.get("title"),
@@ -474,10 +501,11 @@ function RoomEditor({
                 durationMinutes: Number(data.get("durationMinutes")),
                 maxParticipants: Number(data.get("maxParticipants")),
                 allowGuests: guests,
+                waitingRoom,
               },
               room ? "PATCH" : "POST",
             );
-            onSaved(saved);
+            onSaved(saved, { accessReset, mediaPending });
           } catch (e) {
             setError((e as Error).message);
           } finally {
@@ -578,6 +606,23 @@ function RoomEditor({
             <small>Гостям не понадобится аккаунт</small>
           </span>
         </label>
+        <label className="checkbox-row">
+          <input
+            type="checkbox"
+            checked={waitingRoom}
+            onChange={(e) => setWaitingRoom(e.target.checked)}
+          />
+          <span>
+            Зал ожидания
+            <small>Организатор разрешает вход участников и гостей</small>
+          </span>
+        </label>
+        {resetsAccess && (
+          <p className="form-note">
+            Сохранение этих настроек прервет текущие подключения. Участникам
+            потребуется войти заново.
+          </p>
+        )}
         <div className="modal-actions">
           <Button type="button" onClick={onClose}>
             Отмена
@@ -661,7 +706,9 @@ function ShareRoom({
       )}
       <p className="form-note">
         {room.allowGuests
-          ? "Любой человек с этой ссылкой сможет войти, указав свое имя."
+          ? room.waitingRoom
+            ? "Человек с этой ссылкой сможет запросить вход. Организатор разрешит или отклонит его запрос."
+            : "Любой человек с этой ссылкой сможет войти, указав свое имя."
           : "Отправьте ссылку коллегам, которые состоят в вашем пространстве."}
       </p>
       <ErrorBox error={error} />
@@ -673,18 +720,25 @@ function ShareRoom({
             onClick={async () => {
               if (
                 !confirm(
-                  "Заменить ссылку? Предыдущая ссылка перестанет давать новые разрешения на вход.",
+                  "Заменить ссылку? Предыдущая ссылка перестанет работать, текущие участники будут отключены. Для продолжения им потребуется новая ссылка.",
                 )
               )
                 return;
               setBusy(true);
               try {
-                const { room: newRoom } = await api<{ room: Room }>(
+                const { room: newRoom, mediaPending } = await api<{
+                  room: Room;
+                  mediaPending?: boolean;
+                }>(
                   `/workspaces/${workspace.id}/rooms/${room.id}/rotate-link`,
                   {},
                 );
                 onUpdate(newRoom);
-                notify("Создана новая ссылка");
+                notify(
+                  mediaPending
+                    ? "Ссылка заменена. Отключение прежних подключений еще выполняется."
+                    : "Создана новая ссылка. Передайте ее участникам.",
+                );
               } catch (e) {
                 setError((e as Error).message);
               } finally {
@@ -716,6 +770,7 @@ export function Rooms({
   );
   const [editor, setEditor] = useState<Room | true>();
   const [sharing, setSharing] = useState<Room>();
+  const [historyRoom, setHistoryRoom] = useState<Room>();
   const [busy, setBusy] = useState("");
   const load = useCallback(
     () =>
@@ -855,6 +910,12 @@ export function Rooms({
                       )}{" "}
                       {room.allowGuests ? "Вход по ссылке" : "Только команда"}
                     </span>
+                    {room.waitingRoom && (
+                      <span>
+                        <ShieldCheck size={14} />
+                        Зал ожидания
+                      </span>
+                    )}
                     <span>
                       <Users size={14} />
                       До {room.maxParticipants}
@@ -862,6 +923,14 @@ export function Rooms({
                   </div>
                 </div>
                 <div className="row-actions">
+                  <Button
+                    className="icon-button"
+                    title="История чата"
+                    aria-label={`История чата: ${room.title}`}
+                    onClick={() => setHistoryRoom(room)}
+                  >
+                    <MessageSquare size={18} />
+                  </Button>
                   {room.status === "open" && (
                     <>
                       <CalendarExport room={room} notify={notify} compact />
@@ -965,11 +1034,26 @@ export function Rooms({
           workspace={workspace}
           room={editor === true ? undefined : editor}
           onClose={() => setEditor(undefined)}
-          onSaved={() => {
+          onSaved={(_room, access) => {
             setEditor(undefined);
             void load();
-            notify(editor === true ? "Комната создана" : "Изменения сохранены");
+            notify(
+              access?.mediaPending
+                ? "Доступ обновлен. Отключение прежних подключений еще выполняется."
+                : access?.accessReset
+                  ? "Доступ обновлен. Участникам потребуется войти заново."
+                  : editor === true
+                    ? "Комната создана"
+                    : "Изменения сохранены",
+            );
           }}
+        />
+      )}
+      {historyRoom && (
+        <ChatHistory
+          workspace={workspace}
+          room={historyRoom}
+          onClose={() => setHistoryRoom(undefined)}
         />
       )}
       {sharing && (

@@ -4,20 +4,24 @@ Own your meeting experience: accounts, workspaces, scheduled rooms and real vide
 
 **Public review:** [imonmeets.vercel.app](https://imonmeets.vercel.app), with a dedicated review account. Public signup is closed while external email is being configured. See the [Vercel deployment guide](docs/vercel-review.md) for topology and access limitations.
 
-**Status: working preview, hardened and tested on 2026-11-01.** The public deployment has HTTPS/WSS and a dedicated API/media host. This revision adds persistent shared rate limits, resource quotas, session controls, safe member revocation, media retirement retries, authenticated TURN and automated backup/restore checks. Public registration still requires external email delivery; recording remains disabled until Egress and private storage pass acceptance. See the [remediation record](docs/audit-remediation-2026-11-01.md), [operational runbook](docs/operations.md), [verification](docs/verification.md) and [launch roadmap](docs/roadmap.md).
+**Status: working preview, hardened and tested on 2026-11-01.** The public deployment has HTTPS/WSS and a dedicated API/media host. This revision implements waiting-room admission, persistent chat, TOTP MFA, account data controls, plan enforcement, recording retention and optional payment/analysis integrations. Isolated PostgreSQL and real browser/media checks have passed; external service acceptance is tracked separately. Public registration remains closed pending external email delivery. Recording is being commissioned and its runtime flag remains off until Egress, private storage and the full lifecycle pass acceptance. AI processing and payment collection remain gated by their service configuration. Start with the [Russian product guide](docs/product-guide.ru.md), [verification record](docs/verification.md) and [launch roadmap](docs/roadmap.md).
 
 ## Product
 
-- Email/password accounts, email verification, password recovery and session management through Better Auth.
-- Workspaces, renaming, owner/admin/member roles, owner-controlled role changes, invitations bound to verified email, and member removal with pending invitation revocation.
-- Account profile and password settings, a safe session list, individual session revocation and sign-out of other sessions.
-- Instant and scheduled rooms, descriptions, participant limits, guest links, link rotation and permanent room closure.
+- Email/password accounts, email verification, password recovery and session management through Better Auth; TOTP MFA with locally generated QR codes and one-use recovery codes.
+- Workspaces, renaming, owner/admin/member roles, owner-controlled role changes, invitations bound to verified email, ownership transfer and guarded workspace deletion.
+- Account profile and password settings, individual session revocation, sign-out of other sessions, personal data export and password-confirmed account deletion.
+- Instant and scheduled rooms, descriptions, participant limits, guest links, link rotation and permanent room closure. New rooms enable a waiting room by default, with organizer admission, rejection and guest cancellation.
 - Calendar export (.ics) with UTC event times, local timezone display and safe text handling.
-- Independent camera/microphone preview, microphone level indication, video/audio, screen sharing, participant roster, moderator microphone muting and meeting chat through LiveKit's real React components.
-- Recording API, signed webhooks, persistent states and private S3 downloads when an Egress worker and storage are configured. Disabled by default; live capture/storage is a separate acceptance gate.
+- Independent camera/microphone preview, microphone level indication, video/audio, screen sharing, participant roster and moderator microphone muting through LiveKit's real React components.
+- PostgreSQL-backed meeting chat with retry-safe sending, pagination, post-call history and retention. Messages survive a new media session after a page reload.
+- Recording API, signed webhooks, persistent states, private S3 downloads, deletion and retention. Disabled by default; actual Egress capture, storage and cleanup require separate acceptance.
+- Optional private CPU transcription and local AI summaries, with explicit opt-in, bounded jobs, cancellation, retention and text export. The implementation is present; AI is currently off.
+- Current plan and usage, server-enforced limits and durable payment entitlements. Optional YooKassa checkout supports manual 30-day renewal and server-verified payment status; collection stays disabled until a merchant account is configured.
+- A source-distributed [embedding SDK](packages/sdk/README.md) for guest admission and persistent chat, to combine with a custom LiveKit meeting view. It is not yet published to npm.
 - Russian responsive interface, account and device settings, honest empty states.
 
-Payment collection, subscription entitlements, persistent chat history, transcripts, AI summaries, calendar OAuth, SSO and waiting rooms are on the roadmap. The application does not claim to implement them yet.
+Calendar OAuth and enterprise SSO remain on the roadmap. Automatic recurring charges are not implemented; renewal is manual. Registration reopening, recording activation, live payments and AI execution each require their provider or worker acceptance before being advertised as available. See the [feature and API reference](apps/api/FEATURES.md) for implemented behavior and configuration gates.
 
 ## Architecture
 
@@ -87,14 +91,18 @@ PLAYWRIGHT_CHANNEL=chrome npm run test:e2e
 
 ## Access and security decisions
 
-Every application resource is checked against workspace membership. Guests get only a room-specific media grant. Invitation acceptance requires the matching verified address, an unexpired token and atomic one-time consumption. Mutating browser requests require the exact configured origin. Authentication is rate limited and uses HttpOnly session cookies; production requires HTTPS.
+Every application resource is checked against workspace membership. Guest media and chat grants are scoped to the admitted room session; waiting requests do not receive a media grant. Invitation acceptance requires the matching verified address, an unexpired token and atomic one-time consumption. Mutating browser requests require the exact configured origin. Authentication is rate limited and uses HttpOnly session cookies; production requires HTTPS.
 
 LiveKit is configured with `room.auto_create: false`. Only the API may create the media room after checking application state while holding its row lock. Closing a room persists closure, retires its media room and retries failed deletion with a durable queue. Removing a member rotates affected room generations and guest links, so previously issued grants cannot rejoin the replacement room. This disconnects all participants in affected rooms; they need the new link. A new guest link still grants anonymous guest access when enabled. This configuration is essential: self-hosted LiveKit does not automatically revoke a previously issued client token, and connected clients may receive refreshed tokens. A five-minute initial token lifetime is not a session revocation mechanism.
 
-Recording states are reconciled using the Egress ID and exact output key. Unknown start outcomes retain their reservation for reconciliation/operator review. A signed webhook cannot arbitrarily mark another recording complete. Download links are private, authorized by workspace and expire after 60 seconds. Recording remains off until capacity, consent, storage and full lifecycle tests are complete.
+Recording states are reconciled using the Egress ID and exact output key. Unknown start outcomes retain their reservation for reconciliation/operator review. A signed webhook cannot arbitrarily mark another recording complete. Download links are private, authorized by workspace and expire after 60 seconds. Recording remains off during commissioning until Egress, storage and full lifecycle acceptance is recorded. Short media load checks do not establish commercial capacity.
 
 ## Documentation
 
+- [Russian product guide](docs/product-guide.ru.md)
+- [API setup and configuration](apps/api/README.md)
+- [Admission, MFA, data controls, billing and analysis API](apps/api/FEATURES.md)
+- [Embedding SDK and integration boundary](packages/sdk/README.md)
 - [Product and API contract](docs/spec.md)
 - [Implementation plan](docs/implementation-plan.md)
 - [Deployment, backup and recovery](docs/deployment.md)
@@ -103,6 +111,10 @@ Recording states are reconciled using the Egress ID and exact output key. Unknow
 - [Verification record](docs/verification.md)
 - [Audit remediation and remaining launch gates](docs/audit-remediation-2026-11-01.md)
 - [TURN, automated backup and operations](docs/operations.md)
+- [External email activation](docs/email-activation.md)
+- [Offsite backups and emergency alerts](docs/offsite-backup-and-alerts.md)
+- [Recording deployment and acceptance](docs/recording-deployment.md)
+- [Private recording storage](docs/recording-storage.md)
 - [Third-party components](THIRD_PARTY_NOTICES.md)
 
 ## License

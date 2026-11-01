@@ -9,6 +9,7 @@ export type User = {
   name: string;
   email: string;
   emailVerified: boolean;
+  twoFactorEnabled?: boolean;
 };
 export type Room = {
   id: string;
@@ -19,6 +20,7 @@ export type Room = {
   startsAt: string | null;
   durationMinutes: number;
   allowGuests: boolean;
+  waitingRoom?: boolean;
   maxParticipants: number;
   status: "open" | "closed";
   createdBy: string;
@@ -34,6 +36,9 @@ export type Recording = {
   sizeBytes: number | null;
   error: string | null;
   canManage?: boolean;
+  expiresAt?: string | null;
+  deletionPending?: boolean;
+  hasTranscript?: boolean;
 };
 export type Config = {
   appName: string;
@@ -43,6 +48,8 @@ export type Config = {
   emailDelivery: "capture" | "external";
   mediaConfigured: boolean;
   recordingConfigured: boolean;
+  transcriptionConfigured?: boolean;
+  summaryConfigured?: boolean;
 };
 export type Member = {
   id: string;
@@ -57,6 +64,20 @@ export type Invitation = {
   role: "admin" | "member";
   expiresAt: string;
 };
+export type ChatMessage = {
+  id: string;
+  identity: string;
+  name: string;
+  text: string;
+  createdAt: string;
+};
+export type WaitingRequest = {
+  id: string;
+  name: string;
+  createdAt: string;
+  expiresAt: string;
+  status: "waiting" | "admitted" | "denied";
+};
 
 export const AUTH_CHANGED_EVENT = "imon:auth-changed";
 export const AUTH_STORAGE_KEY = "imon.auth.change";
@@ -65,6 +86,20 @@ const INTENT_PREFIX = "imon.auth.intent.";
 const INTENT_ID_KEY = "imon.auth.intentId";
 const INTENT_TTL = 24 * 60 * 60 * 1000;
 const preferenceFallback = new Map<string, string>();
+const authErrorMessages: Record<string, string> = {
+  INVALID_PASSWORD: "Неверный текущий пароль.",
+  INVALID_CODE: "Неверный код. Проверьте приложение и повторите попытку.",
+  INVALID_BACKUP_CODE: "Резервный код не подходит или уже использован.",
+  INVALID_TWO_FACTOR_COOKIE:
+    "Время подтверждения истекло. Вернитесь ко входу и введите почту и пароль заново.",
+  OTP_HAS_EXPIRED: "Код истек. Используйте новый код.",
+  ACCOUNT_TEMPORARILY_LOCKED:
+    "Слишком много неверных кодов. Подтверждение временно заблокировано, повторите позже.",
+  TOO_MANY_ATTEMPTS_REQUEST_NEW_CODE:
+    "Слишком много попыток. Повторите подтверждение позднее.",
+  TOTP_ALREADY_ENABLED:
+    "Приложение-аутентификатор уже подключено. Обновите настройки аккаунта.",
+};
 let currentIntentId: string | null = null;
 let authEpoch = 0;
 export function markAuthStateChanged(): void {
@@ -245,7 +280,12 @@ export async function api<T>(
   path: string,
   body?: unknown,
   method?: string,
-  options: { signal?: AbortSignal; timeoutMs?: number } = {},
+  options: {
+    signal?: AbortSignal;
+    timeoutMs?: number;
+    headers?: Record<string, string>;
+    sessionErrors?: boolean;
+  } = {},
 ): Promise<T> {
   const requestAuthEpoch = authEpoch;
   const controller = new AbortController();
@@ -261,8 +301,10 @@ export async function api<T>(
     const response = await fetch(`/api${path}`, {
       method: method ?? (body === undefined ? "GET" : "POST"),
       credentials: "include",
-      headers:
-        body === undefined ? undefined : { "Content-Type": "application/json" },
+      headers: {
+        ...options.headers,
+        ...(body === undefined ? {} : { "Content-Type": "application/json" }),
+      },
       body: body === undefined ? undefined : JSON.stringify(body),
       signal: controller.signal,
     });
@@ -280,19 +322,27 @@ export async function api<T>(
     if (!response.ok) {
       if (
         response.status === 401 &&
+        options.sessionErrors !== false &&
         !path.startsWith("/auth/") &&
         requestAuthEpoch === authEpoch
       )
         notifyAuthChange("unauthorized");
       else if (
         response.status === 403 &&
+        options.sessionErrors !== false &&
         !path.startsWith("/auth/") &&
         path !== "/me" &&
         ["NOT_MEMBER", "FORBIDDEN"].includes(data.error?.code)
       )
         notifyAuthChange("refresh");
       throw new ApiError(
-        data.error?.message ??
+        (response.status === 429
+          ? "Слишком много попыток. Подождите немного и повторите запрос."
+          : undefined) ??
+          (path.startsWith("/auth/")
+            ? authErrorMessages[data.error?.code ?? data.code]
+            : undefined) ??
+          data.error?.message ??
           data.message ??
           "Не удалось выполнить запрос. Попробуйте еще раз.",
         response.status,
@@ -306,6 +356,9 @@ export async function api<T>(
         "/auth/change-password",
         "/auth/reset-password",
         "/auth/sign-in/email",
+        "/auth/two-factor/verify-totp",
+        "/auth/two-factor/verify-backup-code",
+        "/auth/two-factor/disable",
       ].includes(path)
     )
       notifyAuthChange("refresh");
