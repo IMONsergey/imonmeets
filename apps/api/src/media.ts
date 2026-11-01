@@ -40,6 +40,12 @@ export function createMedia(c: Config) {
       name: string,
       maxParticipants: number,
     ) {
+      const active = await rooms.listRooms();
+      if (
+        !active.some((room) => room.name === roomId) &&
+        active.length >= c.limits.activeRooms
+      )
+        throw new Error("Media room capacity reached");
       await rooms.createRoom({
         name: roomId,
         maxParticipants,
@@ -93,3 +99,9 @@ export function createMedia(c: Config) {
   };
 }
 export type Media = ReturnType<typeof createMedia>;
+
+export function mediaRoomName(room: { id: string; media_generation?: number }) {
+  return room.media_generation
+    ? `${room.id}-g${room.media_generation}`
+    : room.id;
+}

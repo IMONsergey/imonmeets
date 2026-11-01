@@ -15,12 +15,14 @@
     "dev:web": "npm run dev -w @imonmeets/web",
     "build": "npm run build -w @imonmeets/web && npm run build -w @imonmeets/api",
     "typecheck": "npm run typecheck --workspaces && tsc -p tsconfig.e2e.json",
-    "test": "npm run test -w @imonmeets/api && node --import tsx apps/web/src/calendar.test.ts",
+    "test": "npm run test -w @imonmeets/api && npm run test:web",
     "migrate": "npm run migrate -w @imonmeets/api",
     "start": "npm run start -w @imonmeets/api",
     "test:e2e": "playwright test",
     "format": "prettier --write apps tests playwright.config.ts package.json compose.yml docs README.md",
-    "format:check": "prettier --check apps tests playwright.config.ts package.json compose.yml docs README.md"
+    "format:check": "prettier --check apps tests playwright.config.ts package.json compose.yml docs README.md",
+    "test:web": "node --import tsx --test apps/web/src/api.test.ts apps/web/src/calendar.test.ts",
+    "test:ui": "node --import tsx apps/web/src/app.browser.test.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",

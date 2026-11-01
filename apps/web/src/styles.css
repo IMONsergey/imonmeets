@@ -59,6 +59,10 @@ a {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
+/* Route headings receive programmatic focus for screen readers. */
+main h1[tabindex="-1"]:focus {
+  outline: none;
+}
 input:focus,
 textarea:focus,
 select:focus {

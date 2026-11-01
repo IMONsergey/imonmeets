@@ -361,6 +361,47 @@
   height: 100%;
   background: #111113;
 }
+.call-recording-notice {
+  padding: 9px 16px;
+  color: #fff;
+  background: #762728;
+  font-size: 13px;
+}
+.call-recording-notice span {
+  margin-right: 8px;
+  color: #ffb5b5;
+}
+.meeting-controls button.participant-count {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.meeting-participants {
+  overflow-y: auto;
+}
+.meeting-participants > .button {
+  margin: 8px 16px;
+}
+.call-participant-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e0e0e6;
+}
+.call-participant-row strong {
+  overflow-wrap: anywhere;
+}
+.call-participant-row small {
+  display: block;
+  margin-top: 4px;
+  color: #6e6e73;
+}
+.call-participant-row button {
+  font-size: 12px;
+}
 .conference-body {
   display: flex;
   flex: 1;
@@ -747,6 +788,12 @@
     gap: 12px;
   }
   .participant-count {
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+    padding: 4px;
+  }
+  .participant-count > span {
     display: none;
   }
   .meeting-main-controls {
@@ -884,5 +931,34 @@
     width: max-content;
     max-width: calc(100% - 32px);
     font-size: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .meeting-controls {
+    gap: 0;
+    padding-inline: 4px;
+  }
+  .meeting-main-controls {
+    min-width: 0;
+    gap: 0;
+    justify-content: space-evenly;
+  }
+  .meeting-main-controls > .lk-button,
+  .meeting-main-controls > .button,
+  .meeting-controls .participant-count,
+  .meeting-controls .leave-meeting {
+    flex-shrink: 0;
+    min-width: 44px;
+    max-width: 44px;
+    padding-inline: 4px;
+  }
+  .meeting-main-controls > .lk-button > span,
+  .meeting-main-controls > .button > span,
+  .meeting-controls .leave-meeting > span {
+    display: none;
+  }
+  .meeting-controls .leave-meeting svg {
+    display: block;
   }
 }

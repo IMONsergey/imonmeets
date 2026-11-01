@@ -225,6 +225,24 @@ test("verified account, workspace, scheduled room, guest video and durable close
     "test-results/rtc-stats.json",
     JSON.stringify(rtcStats, null, 2),
   );
+  await page
+    .getByRole("button", { name: "Участники встречи", exact: true })
+    .click();
+  const muteGuest = page.getByRole("button", {
+    name: "Выключить микрофон: Гость IMON",
+    exact: true,
+  });
+  await expect(muteGuest).toBeEnabled();
+  await muteGuest.click();
+  await expect(muteGuest).toBeDisabled();
+  const guestMicrophone = guest.getByRole("button", {
+    name: "Включить или выключить микрофон",
+    exact: true,
+  });
+  await expect(guestMicrophone).toHaveAttribute("data-lk-enabled", "false");
+  await guestMicrophone.click();
+  await expect(guestMicrophone).toHaveAttribute("data-lk-enabled", "true");
+  await expect(muteGuest).toBeEnabled();
   await page.getByRole("button", { name: "Чат встречи", exact: true }).click();
   await guest.getByRole("button", { name: "Чат встречи", exact: true }).click();
   await page
@@ -248,7 +266,7 @@ test("verified account, workspace, scheduled room, guest video and durable close
     .getByRole("button", { name: "Завершить для всех", exact: true })
     .click();
   await expect(
-    guest.getByRole("heading", { name: "До следующей встречи." }),
+    guest.getByRole("heading", { name: "Встреча завершена" }),
   ).toBeVisible();
   const closed = await request.post(`${base}/api/rooms/${room.slug}/join`, {
     headers: { origin: base },

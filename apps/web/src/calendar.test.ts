@@ -159,3 +159,23 @@ test("local form values round-trip in browser timezone and reject missing DST ho
     else process.env.TZ = previous;
   }
 });
+
+test("editing other fields preserves the later fall-DST instant and subminute precision", () => {
+  const previous = process.env.TZ;
+  process.env.TZ = "America/New_York";
+  try {
+    const original = "2026-11-01T06:30:45.123Z";
+    assert.equal(localDateTimeInput(original), "2026-11-01T01:30");
+    assert.equal(
+      parseLocalMeetingStart("2026-11-01T01:30", original),
+      original,
+    );
+    assert.equal(
+      parseLocalMeetingStart("2026-11-01T02:30", original),
+      "2026-11-01T07:30:00.000Z",
+    );
+  } finally {
+    if (previous === undefined) delete process.env.TZ;
+    else process.env.TZ = previous;
+  }
+});

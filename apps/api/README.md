@@ -72,3 +72,50 @@ TEST_DATABASE_URL=postgres://... npm test --workspace @imonmeets/api
 ```
 
 Integration tests create and drop a randomly named isolated PostgreSQL schema and use Better Auth migrations, real credentials, actual session cookies and application routes. The supplied test database role must create schemas. They cover registration/session lifecycle, strict Origin rejection, cross-tenant room access, role boundaries, invitation email mismatch/unverified ownership/replay, owner protection, link rotation, closed rooms, guest display names and five-minute JWT room grants. LiveKit room RPCs are stubbed in this API test; unsigned webhooks are rejected using the real verifier. Real two-browser media checks are a separate deployment acceptance gate. Tests are skipped explicitly when `TEST_DATABASE_URL` is absent; this is not a claim of database verification.
+
+## Admission, security and account administration
+
+Run the explicit migration before deploying this release. It adds shared PostgreSQL admission counters, media generations/retirement jobs, a minimal room-access ledger and membership-revocation markers. There is no Redis dependency for application authentication limits. Both Better Auth's atomic `customStorage.consume` and API request admission use PostgreSQL counters. Application auth traffic is limited to 30 requests/minute per IP; joins to 20/minute; other API traffic to 300/minute. Better Auth's stricter endpoint rules remain in effect. Keys normalize IPv6 to a /64 and hash identifying values before storage. If admission storage is unavailable, requests fail closed with 503. Expired counters are removed by maintenance; this is a cost/abuse ceiling, not a subscription system.
+
+SMTP admission is reserved before Better Auth enters signup's database transaction, avoiding a nested pool checkout in its email callback. Recipients have a five-message/hour budget, and all SMTP requests share a daily budget. SMTP connection/greeting/socket timeouts are 10/10/20 seconds. A delivery attempt may consume budget even if the provider fails; manual invitation links remain usable. Server-only trusted provisioning that calls Better Auth directly must establish its own controlled admission; it is not a public registration bypass.
+
+| Variable                    | Default | Purpose                                                                                      |
+| --------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| `MAX_WORKSPACES_PER_USER`   | 10      | Owned workspaces per user                                                                    |
+| `MAX_ROOMS_PER_WORKSPACE`   | 200     | Total rooms in a workspace, including closed rooms                                           |
+| `MAX_MEMBERS_PER_WORKSPACE` | 100     | Members admitted to a workspace                                                              |
+| `MAX_PENDING_INVITATIONS`   | 100     | Unexpired, unconsumed workspace invitations                                                  |
+| `INVITATIONS_PER_USER_HOUR` | 20      | Invitations created by one user per hour                                                     |
+| `EMAILS_PER_WORKSPACE_DAY`  | 100     | Workspace invitation delivery/admission budget per day                                       |
+| `EMAILS_PER_DAY`            | 500     | Global SMTP admission budget per day                                                         |
+| `MAX_ACTIVE_ROOMS`          | 20      | Actual concurrently allocated LiveKit rooms; checked under a global PostgreSQL advisory lock |
+| `MAX_ACTIVE_RECORDINGS`     | 2       | Global starting/active/ending recording reservations                                         |
+
+Workspace/room creation is additionally limited to 10/30 creations per user per hour. Resource admission and authority checks run under consistent workspace-first transaction locks. Membership removal, role edits and room management therefore cannot rely on a stale pretransaction role. Changing `maxParticipants` after a room has issued its first grant returns 409 `ROOM_CAPACITY_LOCKED`; create a new room for a different capacity. Quotas are deliberately finite and require operator adjustment or data lifecycle work at their ceiling. They do not promise unlimited usage.
+
+### Sessions and roles
+
+- `GET /api/sessions` returns `{sessions:[{id,createdAt,updatedAt,expiresAt,ipAddress,userAgent,current}]}` for the authenticated verified user. It never exposes session tokens.
+- `DELETE /api/sessions/:id` revokes that user's other session through Better Auth. The current session returns 409; use normal sign-out for it.
+- `POST /api/sessions/revoke-others` revokes all other sessions through Better Auth.
+- `PATCH /api/workspaces/:workspaceId` with `{name}` permits owner/admin rename and returns `{workspace}`.
+- `PATCH /api/workspaces/:workspaceId/members/:memberId` with `{role:'admin'|'member'}` permits only the owner to change a nonowner role and returns `{member}`.
+- `GET /api/security-events?before=<id>` returns that user's recorded events; owner/admin `GET /api/workspaces/:workspaceId/audit?before=<id>` returns workspace events. Both return `{events,nextCursor}`, at most 100 rows. Authentication outcomes exclude credentials, URL query tokens and response cookies. A complete compliance event/retention product is not implied.
+
+Password changes through the public auth handler force `revokeOtherSessions:true`, irrespective of the submitted optional flag. Password-reset session revocation remains enabled. This governs application sessions; it is not a claim that every logout/password change independently revokes previously issued media grants.
+
+### Membership removal and media access reset
+
+Removing a member deletes every pending invitation for their email. Creating a fresh invitation replaces earlier pending invitations to that address, and acceptance consumes siblings atomically. A later deliberate new invitation may restore membership.
+
+`DELETE /api/workspaces/:workspaceId/members/:memberId` returns `{ok:true,affectedRooms,accessReset,mediaPending}`. For rooms where that user received an authenticated grant, the transaction advances a persisted media generation, rotates the guest URL and queues retirement of the old LiveKit namespace. Existing callers in those affected rooms must rejoin; guests need the newly shared link. Other rooms are unaffected. The room-access ledger and legacy join audit identify affected rooms. Old namespaces are never reused after restart. **LiveKit room auto-creation must remain disabled.**
+
+Retirement jobs are durably leased with `FOR UPDATE SKIP LOCKED`, ordered by next attempt, processed four at a time, and retried with bounded exponential backoff. A request attempts at most one batch; background cycles process up to twelve jobs independently of Egress reconciliation. `mediaPending:true` means application revocation is persisted but external disconnection is still pending; it must not be described as completed. Room closure likewise persists first and returns 503 when its media retirement remains pending.
+
+An authenticated removed member cannot obtain new workspace grants. This is not a permanent personal ban from a guest-enabled public room: someone with a newly shared guest URL may still join anonymously under that room policy.
+
+### Meeting moderation and recording limits
+
+Managers (owner/admin/room creator) can `GET /api/workspaces/:workspaceId/rooms/:roomId/participants` for `{participants:[{identity,name,isGuest,microphoneMuted,cameraEnabled,screenSharing}]}` and `PATCH /api/workspaces/:workspaceId/rooms/:roomId/participants/:identity/microphone` with `{muted:true}`. The latter mutes published microphone tracks and returns `{ok:true}`. It never remotely unmutes a microphone or claims an individual participant ban.
+
+Recording reservation and external start are serialized against room closure and generation changes. The recorded media namespace is snapshotted, preventing callbacks for an old generation from attaching to a new call. Closed/revoked requests canceled before contacting Egress become failed; uncertain external outcomes retain their reservation for reconciliation. Both legacy and modern Egress request output formats use exact private object-key correlation. `LIMIT_REACHED` with a matching output remains downloadable as complete with a duration-limit warning; absent/mismatched output fails. This release does not invent proof of nonexistence for an unobservable Egress job: unresolved reservations still require operator investigation and must not be cleared blindly.

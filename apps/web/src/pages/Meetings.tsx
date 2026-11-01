@@ -189,7 +189,10 @@ export function Dashboard({
   const load = useCallback(
     () =>
       api<{ rooms: Room[] }>(`/workspaces/${workspace.id}/rooms`)
-        .then(setOverview)
+        .then((value) => {
+          setOverview(value);
+          setError("");
+        })
         .catch((e) => setError(e.message)),
     [workspace.id],
   );
@@ -308,6 +311,9 @@ export function Dashboard({
           </Link>
         </div>
         <div className="agenda-navigation">
+          <Button className="small" onClick={() => void load()}>
+            Обновить
+          </Button>
           <Button className="small" onClick={() => setSelectedDate(new Date())}>
             <CalendarDays size={14} />
             Сегодня
@@ -363,6 +369,13 @@ export function Dashboard({
                 </div>
               </article>
             ))
+          ) : error ? (
+            <Empty
+              icon={CalendarDays}
+              title="Не удалось загрузить расписание"
+              text="Повторите запрос."
+              action={<Button onClick={() => void load()}>Повторить</Button>}
+            />
           ) : (
             <Empty
               icon={CalendarDays}
@@ -453,7 +466,10 @@ function RoomEditor({
                 title: data.get("title"),
                 description: data.get("description"),
                 startsAt: scheduled
-                  ? parseLocalMeetingStart(data.get("startsAt") as string)
+                  ? parseLocalMeetingStart(
+                      data.get("startsAt") as string,
+                      room?.startsAt,
+                    )
                   : null,
                 durationMinutes: Number(data.get("durationMinutes")),
                 maxParticipants: Number(data.get("maxParticipants")),
@@ -581,12 +597,14 @@ function ShareRoom({
   onClose,
   onUpdate,
   notify,
+  canManage,
 }: {
   room: Room;
   workspace: Workspace;
   onClose: () => void;
   onUpdate: (r: Room) => void;
   notify: (s: string, e?: boolean) => void;
+  canManage: boolean;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -648,33 +666,35 @@ function ShareRoom({
       </p>
       <ErrorBox error={error} />
       <div className="modal-actions">
-        <Button
-          className="text-button"
-          busy={busy}
-          onClick={async () => {
-            if (
-              !confirm(
-                "Заменить ссылку? Предыдущая ссылка перестанет давать новые разрешения на вход.",
+        {canManage && room.status === "open" && (
+          <Button
+            className="text-button"
+            busy={busy}
+            onClick={async () => {
+              if (
+                !confirm(
+                  "Заменить ссылку? Предыдущая ссылка перестанет давать новые разрешения на вход.",
+                )
               )
-            )
-              return;
-            setBusy(true);
-            try {
-              const { room: newRoom } = await api<{ room: Room }>(
-                `/workspaces/${workspace.id}/rooms/${room.id}/rotate-link`,
-                {},
-              );
-              onUpdate(newRoom);
-              notify("Создана новая ссылка");
-            } catch (e) {
-              setError((e as Error).message);
-            } finally {
-              setBusy(false);
-            }
-          }}
-        >
-          Заменить ссылку
-        </Button>
+                return;
+              setBusy(true);
+              try {
+                const { room: newRoom } = await api<{ room: Room }>(
+                  `/workspaces/${workspace.id}/rooms/${room.id}/rotate-link`,
+                  {},
+                );
+                onUpdate(newRoom);
+                notify("Создана новая ссылка");
+              } catch (e) {
+                setError((e as Error).message);
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            Заменить ссылку
+          </Button>
+        )}
         <Button onClick={onClose}>Готово</Button>
       </div>
     </Modal>
@@ -700,7 +720,10 @@ export function Rooms({
   const load = useCallback(
     () =>
       api<{ rooms: Room[] }>(`/workspaces/${workspace.id}/rooms`)
-        .then((r) => setRooms(r.rooms))
+        .then((r) => {
+          setRooms(r.rooms);
+          setError("");
+        })
         .catch((e) => setError(e.message)),
     [workspace.id],
   );
@@ -755,6 +778,7 @@ export function Rooms({
         </div>
       )}
       <ErrorBox error={error} />
+      <Button onClick={() => void load()}>Обновить список</Button>
       <div className="panel">
         <div className="list-toolbar">
           <div className="tabs">
@@ -903,6 +927,13 @@ export function Rooms({
               </article>
             ))}
           </div>
+        ) : error ? (
+          <Empty
+            icon={Video}
+            title="Не удалось загрузить встречи"
+            text="Повторите запрос."
+            action={<Button onClick={() => void load()}>Повторить</Button>}
+          />
         ) : (
           <Empty
             icon={query ? Search : Video}
@@ -944,6 +975,7 @@ export function Rooms({
       {sharing && (
         <ShareRoom
           room={sharing}
+          canManage={canManage(sharing)}
           workspace={workspace}
           onClose={() => setSharing(undefined)}
           onUpdate={(r) => {

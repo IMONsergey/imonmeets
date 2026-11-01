@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   CalendarDays,
@@ -11,7 +11,14 @@ import {
 } from "lucide-react";
 import { LiveKitRoom, PreJoin } from "@livekit/components-react";
 import type { LocalUserChoices } from "@livekit/components-react";
-import { api, date } from "../api";
+import { DisconnectReason } from "livekit-client";
+import {
+  api,
+  date,
+  rememberReturnTo,
+  readLocalPreference,
+  writeLocalPreference,
+} from "../api";
 import type { Config, Recording, Room, User } from "../api";
 import { Brand, Button, Empty, ErrorBox, Link, Spinner, go } from "../ui";
 import { CallSurface } from "./CallSurface";
@@ -38,23 +45,36 @@ type JoinGrant = {
   roomId?: string;
   workspaceId?: string;
 };
-export function Join({
-  slug,
-  config,
-  user,
-  notify,
-}: {
+type JoinProps = {
   slug: string;
   config: Config;
   user?: User;
   notify: (s: string, e?: boolean) => void;
-}) {
+};
+export function Join(props: JoinProps) {
+  return (
+    <MeetingJoin
+      key={`${props.slug}:${props.user?.id ?? "guest"}`}
+      {...props}
+    />
+  );
+}
+function MeetingJoin({ slug, config, user, notify }: JoinProps) {
   const [info, setInfo] = useState<PublicRoom>();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [grant, setGrant] = useState<JoinGrant>();
   const [choices, setChoices] = useState<LocalUserChoices>();
   const [left, setLeft] = useState(false);
+  const [exitReason, setExitReason] = useState<DisconnectReason>();
+  const [checkingReturn, setCheckingReturn] = useState(false);
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const [recording, setRecording] = useState<Recording>();
   const [recordingStatus, setRecordingStatus] = useState<
     "loading" | "ready" | "error"
@@ -63,13 +83,31 @@ export function Join({
   const load = useCallback(
     () =>
       api<PublicRoom>(`/rooms/${encodeURIComponent(slug)}`)
-        .then(setInfo)
+        .then((value) => {
+          if (mounted.current) {
+            setInfo(value);
+            setError("");
+          }
+        })
         .catch((e) => setError(e.message)),
     [slug],
   );
   useEffect(() => {
-    void load();
-  }, [load]);
+    let cancelled = false;
+    api<PublicRoom>(`/rooms/${encodeURIComponent(slug)}`)
+      .then((value) => {
+        if (!cancelled) {
+          setInfo(value);
+          setError("");
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) setError(e.message);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
   useEffect(() => {
     if (
       !grant?.canManage ||
@@ -139,6 +177,7 @@ export function Join({
         `/rooms/${encodeURIComponent(slug)}/join`,
         { name: values.username.trim() },
       );
+      if (!mounted.current) return;
       setChoices(values);
       setGrant(next);
       setLeft(false);
@@ -240,6 +279,7 @@ export function Join({
                       {},
                     );
                     setLeft(true);
+                    setExitReason(DisconnectReason.ROOM_DELETED);
                     setGrant(undefined);
                   } catch (e) {
                     notify((e as Error).message, true);
@@ -263,15 +303,25 @@ export function Join({
           audio={
             choices?.audioEnabled ? { deviceId: choices.audioDeviceId } : false
           }
-          onDisconnected={() => {
+          onDisconnected={(reason) => {
             setLeft(true);
+            setExitReason((current) =>
+              current === DisconnectReason.ROOM_DELETED ? current : reason,
+            );
             setGrant(undefined);
           }}
           onError={(e) => notify(`Ошибка связи: ${e.message}`, true)}
           data-lk-theme="default"
           className="live-room"
         >
-          <CallSurface notify={notify} />
+          <CallSurface
+            notify={notify}
+            management={
+              grant.canManage && grant.workspaceId && grant.roomId
+                ? { workspaceId: grant.workspaceId, roomId: grant.roomId }
+                : undefined
+            }
+          />
         </LiveKitRoom>
       </div>
     );
@@ -293,18 +343,52 @@ export function Join({
             <div className="empty-icon">
               <CheckCircle2 size={29} />
             </div>
-            <h1>До следующей встречи.</h1>
-            <p>Вы вышли из комнаты. Спасибо за разговор.</p>
-            <Button
-              className="primary full"
-              onClick={() => {
-                setLeft(false);
-                void load();
-              }}
-            >
-              Вернуться во встречу
-              <ArrowRight size={17} />
-            </Button>
+            <h1>
+              {exitReason === DisconnectReason.ROOM_DELETED
+                ? "Встреча завершена"
+                : exitReason === DisconnectReason.PARTICIPANT_REMOVED
+                  ? "Вы отключены от встречи"
+                  : "Вы вышли из встречи"}
+            </h1>
+            <p>
+              {exitReason === DisconnectReason.ROOM_DELETED
+                ? "Организатор завершил встречу или обновил доступ к комнате. Для продолжения попросите актуальную ссылку."
+                : exitReason === DisconnectReason.PARTICIPANT_REMOVED
+                  ? "Организатор удалил вас из комнаты."
+                  : exitReason !== undefined &&
+                      exitReason !== DisconnectReason.CLIENT_INITIATED
+                    ? "Соединение прервано. Проверьте сеть и попробуйте подключиться снова."
+                    : "Камера и микрофон отключены."}
+            </p>
+            <ErrorBox error={error} />
+            {exitReason !== DisconnectReason.ROOM_DELETED &&
+              exitReason !== DisconnectReason.PARTICIPANT_REMOVED && (
+                <Button
+                  className="primary full"
+                  busy={checkingReturn}
+                  onClick={async () => {
+                    setCheckingReturn(true);
+                    setError("");
+                    try {
+                      const current = await api<PublicRoom>(
+                        `/rooms/${encodeURIComponent(slug)}`,
+                      );
+                      if (!mounted.current) return;
+                      setInfo(current);
+                      if (current.room.status === "closed")
+                        setExitReason(DisconnectReason.ROOM_DELETED);
+                      else setLeft(false);
+                    } catch (e) {
+                      setError((e as Error).message);
+                    } finally {
+                      setCheckingReturn(false);
+                    }
+                  }}
+                >
+                  Вернуться во встречу
+                  <ArrowRight size={17} />
+                </Button>
+              )}
             <Link className="back-link" to="/">
               На главную
             </Link>
@@ -328,6 +412,40 @@ export function Join({
               </div>
             </div>
             <ErrorBox error={error} />
+            {!info && error && (
+              <div className="standalone-card">
+                <p>
+                  Проверьте ссылку. Для приватной встречи войдите в аккаунт
+                  участника пространства.
+                </p>
+                <Button
+                  onClick={() => {
+                    setError("");
+                    void load();
+                  }}
+                >
+                  Повторить проверку
+                </Button>
+                <Button
+                  className="primary"
+                  busy={busy}
+                  onClick={async () => {
+                    setBusy(true);
+                    rememberReturnTo(location.pathname + location.search);
+                    try {
+                      if (user) await api("/auth/sign-out", {});
+                      go("/login");
+                    } catch (e) {
+                      setError((e as Error).message);
+                    } finally {
+                      setBusy(false);
+                    }
+                  }}
+                >
+                  {user ? "Войти с другой почтой" : "Войти в аккаунт"}
+                </Button>
+              </div>
+            )}
             {info?.room.status === "closed" ? (
               <div className="standalone-card">
                 <Empty
@@ -366,13 +484,13 @@ export function Join({
                   defaults={{
                     username:
                       user?.name ??
-                      localStorage.getItem("imon.displayName") ??
+                      readLocalPreference("imon.displayName") ??
                       "",
                     audioEnabled: true,
                     videoEnabled: true,
                   }}
                   onSubmit={(values) => {
-                    localStorage.setItem("imon.displayName", values.username);
+                    writeLocalPreference("imon.displayName", values.username);
                     void enter(values);
                   }}
                   onError={(e) =>
@@ -403,7 +521,7 @@ export function Join({
                 Уже есть аккаунт?{" "}
                 <button
                   onClick={() => {
-                    sessionStorage.setItem("imon.returnTo", location.pathname);
+                    rememberReturnTo(location.pathname + location.search);
                     go("/login");
                   }}
                 >

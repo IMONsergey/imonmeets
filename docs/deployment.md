@@ -48,7 +48,7 @@ SSH forwarding the app and Mailpit ports lets an operator inspect the interface 
 
 `RECORDING_ENABLED=false` is the default. Recording requires a separate Egress worker, the same LiveKit Valkey/Redis-compatible coordination service, a media route reachable from the worker, a private S3-compatible bucket and matching server-side credentials. The included deployment has no Egress worker. A worker needs its own verified internal signaling/media route; the host-browser test does not establish Egress reachability.
 
-Start from the [official Egress deployment documentation](https://docs.livekit.io/transport/self-hosting/egress/). The researched compatible release is `livekit/egress:v1.15.0`; pin and record its digest when deployed. Egress is resource intensive. A dedicated worker is preferable on this shared host; measure capacity and enforce a global recording admission limit before enabling recordings for customers. The current API prevents parallel active recordings in the same room, which is not a fleet-wide resource budget.
+Start from the [official Egress deployment documentation](https://docs.livekit.io/transport/self-hosting/egress/). The researched compatible release is `livekit/egress:v1.15.0`; pin and record its digest when deployed. Egress is resource intensive. A dedicated worker is preferable on this shared host. The API prevents parallel active recordings in one room and enforces the application-wide `MAX_ACTIVE_RECORDINGS` limit, which defaults to 2. This admission cap is not a measured capacity guarantee: validate the actual worker, shared-host headroom and concurrent capture workload before enabling recordings for customers. See [operations](operations.md) for configuration, backup procedures and remaining launch switches.
 
 Configure LiveKit signed webhooks to `POST /api/livekit/webhook` using a known API key. The receiver requires the original raw body and validates its signature. Keep S3 storage private. Use short-lived download URLs from the application, not public object ACLs. The API returns `{url}` for authorized downloads; links expire after 60 seconds.
 
@@ -60,7 +60,7 @@ Verify start, active, stop, complete, failed, restart, duplicate/out-of-order we
 bash scripts/backup.sh
 ```
 
-The script writes a custom-format `pg_dump`, restricts local permissions and validates its catalog. Copy backups to an encrypted off-host destination with a defined retention policy. A backup on the same disk is not disaster recovery. Record media/object-store retention separately. Store encrypted secrets/config backups separately from source and data backups.
+The script writes a custom-format `pg_dump`, restricts local permissions and validates its catalog. With an installed recipient certificate it also encrypts a recovery bundle containing the dump, checksum manifest and `.env`. Keep this encrypted bundle outside the source repository, and keep its private decryption key separately from the server. Copy backups to an off-host destination with a defined retention policy; a backup on the same disk is not disaster recovery. Record media/object-store retention separately. See the [operations runbook](operations.md) for the actual timer, receiver and recovery-key boundaries.
 
 Restore first into an isolated database/Compose project. Inspect the dump before applying it:
 

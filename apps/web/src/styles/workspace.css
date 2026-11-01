@@ -567,3 +567,53 @@
     padding: 26px 22px;
   }
 }
+.workspace-microphone-check,
+.workspace-sessions {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.workspace-microphone-check p,
+.workspace-session p {
+  color: var(--muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.workspace-microphone-check meter {
+  display: block;
+  width: 100%;
+  height: 18px;
+  margin: 12px 0;
+}
+.workspace-session {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.workspace-session > div {
+  min-width: 0;
+}
+.workspace-session small {
+  color: var(--muted);
+}
+.workspace-row-actions select {
+  max-width: 160px;
+}
+#settings-workspace h3 {
+  margin-top: 28px;
+}
+.workspace-invite-card > .full {
+  margin-top: 12px;
+}
+@media (max-width: 600px) {
+  .workspace-session {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .workspace-row-actions {
+    flex-wrap: wrap;
+  }
+}

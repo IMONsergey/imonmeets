@@ -13,6 +13,7 @@ import { createAuth } from "../src/auth.js";
 import { createApp } from "../src/app.js";
 import { loadConfig } from "../src/config.js";
 import { schema } from "../src/db.js";
+import { postgresLimiter } from "../src/limits.js";
 import { createMedia } from "../src/media.js";
 
 // Every run uses an isolated PostgreSQL schema, dropped in finally. Never clears a shared schema.
@@ -43,6 +44,7 @@ test(
       media.rooms.createRoom = async () =>
         ({}) as Awaited<ReturnType<typeof media.rooms.createRoom>>;
       media.rooms.deleteRoom = async () => {};
+      media.rooms.listRooms = async () => [];
       app = await createApp(config, { pool, logger: false, media });
       const api = app;
       async function request(
@@ -438,6 +440,234 @@ test(
       assert.equal(nonCreatorRecording.canManage, false);
       assert.equal(nonCreatorRecording.object_key, undefined);
       assert.equal(nonCreatorRecording.egress_id, undefined);
+      // Atomic shared admission: independent limiter instances cannot oversubscribe.
+      const budgetKey = `atomic-${randomUUID()}`;
+      const admissions = await Promise.all(
+        Array.from({ length: 40 }, (_, i) =>
+          postgresLimiter(pool).consume(budgetKey, 7, 60),
+        ),
+      );
+      assert.equal(admissions.filter((a) => a.allowed).length, 7);
+      // Capacity updates are honest once a media room has started.
+      assert.equal(
+        (
+          await request(
+            "PATCH",
+            `/api/workspaces/${w.id}/rooms/${guestRoom.id}`,
+            { maxParticipants: 5 },
+            owner,
+          )
+        ).statusCode,
+        409,
+      );
+      // Session identifiers are safe app IDs; no raw auth token reaches the DTO.
+      const sessionList = await request(
+        "GET",
+        "/api/sessions",
+        undefined,
+        owner,
+      );
+      assert.equal(sessionList.statusCode, 200, sessionList.body);
+      const currentSession = sessionList
+        .json()
+        .sessions.find((s: { current: boolean }) => s.current);
+      assert.ok(currentSession);
+      assert.equal(currentSession.token, undefined);
+      assert.equal(
+        (
+          await request(
+            "DELETE",
+            `/api/sessions/${currentSession.id}`,
+            undefined,
+            owner,
+          )
+        ).statusCode,
+        409,
+      );
+      assert.equal(
+        (
+          await request(
+            "DELETE",
+            `/api/sessions/${currentSession.id}`,
+            undefined,
+            member,
+          )
+        ).statusCode,
+        404,
+      );
+      const renamed = await request(
+        "PATCH",
+        `/api/workspaces/${w.id}`,
+        { name: "Renamed team" },
+        owner,
+      );
+      assert.equal(renamed.json().workspace.name, "Renamed team");
+      assert.equal(
+        (
+          await request(
+            "PATCH",
+            `/api/workspaces/${w.id}`,
+            { name: "Forbidden" },
+            member,
+          )
+        ).statusCode,
+        403,
+      );
+      const memberId = roster.members.find(
+        (m: { email: string }) => m.email === "member@example.com",
+      ).id;
+      assert.equal(
+        (
+          await request(
+            "PATCH",
+            `/api/workspaces/${w.id}/members/${memberId}`,
+            { role: "admin" },
+            member,
+          )
+        ).statusCode,
+        403,
+      );
+      assert.equal(
+        (
+          await request(
+            "PATCH",
+            `/api/workspaces/${w.id}/members/${memberId}`,
+            { role: "admin" },
+            owner,
+          )
+        ).json().member.role,
+        "admin",
+      );
+      assert.equal(
+        (
+          await request(
+            "PATCH",
+            `/api/workspaces/${w.id}/members/${ownerMember.id}`,
+            { role: "member" },
+            owner,
+          )
+        ).statusCode,
+        403,
+      );
+      // A role read before a blocked mutation cannot survive a committed demotion.
+      const blocker = await pool.connect();
+      await blocker.query("BEGIN");
+      await blocker.query(
+        "SELECT id FROM im_workspaces WHERE id=$1 FOR UPDATE",
+        [w.id],
+      );
+      await blocker.query("UPDATE im_members SET role='member' WHERE id=$1", [
+        memberId,
+      ]);
+      const staleEdit = request(
+        "PATCH",
+        `/api/workspaces/${w.id}/rooms/${room.id}`,
+        { title: "Stale authority" },
+        member,
+      );
+      await new Promise((resolve) => setTimeout(resolve, 40));
+      await blocker.query("COMMIT");
+      blocker.release();
+      assert.equal((await staleEdit).statusCode, 403);
+      // Quotas serialize concurrent room creations under the workspace lock.
+      const before = (
+        await request("GET", `/api/workspaces/${w.id}/rooms`, undefined, owner)
+      ).json().rooms.length;
+      config.limits.rooms = before + 1;
+      const concurrentRooms = await Promise.all([
+        request(
+          "POST",
+          `/api/workspaces/${w.id}/rooms`,
+          { title: "Quota A" },
+          owner,
+        ),
+        request(
+          "POST",
+          `/api/workspaces/${w.id}/rooms`,
+          { title: "Quota B" },
+          owner,
+        ),
+      ]);
+      assert.deepEqual(
+        concurrentRooms.map((r) => r.statusCode).sort(),
+        [200, 409],
+      );
+      config.limits.rooms = 200;
+      // Persist legacy sibling invitations: removal revokes every pending link for the address.
+      const staleToken = "legacy-pending-token-at-least-32-characters";
+      await pool.query(
+        "INSERT INTO im_invitations(id,workspace_id,email,role,token_hash,expires_at,created_by) VALUES($1,$2,$3,'member',$4,now()+interval '1 day',$5)",
+        [
+          randomUUID(),
+          w.id,
+          "member@example.com",
+          createHash("sha256").update(staleToken).digest("hex"),
+          ownerId,
+        ],
+      );
+      // Member has an actual grant in the guest-enabled room, so its namespace must retire.
+      assert.equal(
+        (await request("POST", `/api/rooms/${guestRoom.slug}/join`, {}, member))
+          .statusCode,
+        200,
+      );
+      const removed = await request(
+        "DELETE",
+        `/api/workspaces/${w.id}/members/${memberId}`,
+        undefined,
+        owner,
+      );
+      assert.equal(removed.statusCode, 200, removed.body);
+      assert.equal(removed.json().affectedRooms, 1);
+      assert.equal(removed.json().accessReset, true);
+      assert.equal(
+        (
+          await request(
+            "POST",
+            "/api/invitations/accept",
+            { token: staleToken },
+            member,
+          )
+        ).statusCode,
+        404,
+      );
+      assert.equal(
+        (await request("GET", `/api/rooms/${guestRoom.slug}`)).statusCode,
+        404,
+      );
+      const afterReset = (
+        await request("GET", `/api/workspaces/${w.id}/rooms`, undefined, owner)
+      )
+        .json()
+        .rooms.find((r: { id: string }) => r.id === guestRoom.id);
+      const freshGrant = await request(
+        "POST",
+        `/api/rooms/${afterReset.slug}/join`,
+        {},
+        owner,
+      );
+      assert.equal(freshGrant.statusCode, 200, freshGrant.body);
+      assert.notEqual(freshGrant.json().roomName, guestRoom.id);
+      assert.equal(
+        (
+          await request(
+            "POST",
+            `/api/rooms/${afterReset.slug}/join`,
+            {},
+            member,
+          )
+        ).statusCode,
+        403,
+      );
+      // Anonymous access to the newly shared guest URL is still an explicit room policy.
+      assert.equal(
+        (
+          await request("POST", `/api/rooms/${afterReset.slug}/join`, {
+            name: "Fresh guest",
+          })
+        ).statusCode,
+        200,
+      );
       assert.equal(
         (await request("POST", "/api/auth/sign-out", {}, owner)).statusCode,
         200,

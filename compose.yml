@@ -1,7 +1,13 @@
 name: imonmeets
 
+x-logs: &logs
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 x-app: &app
-  image: imonmeets-app:0.1.0
+  image: ${APP_IMAGE:-imonmeets-app:0.1.0}
   build: .
   environment:
     NODE_ENV: ${APP_ENV:-development}
@@ -31,7 +37,18 @@ x-app: &app
     S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
     S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
     S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-false}
+    MAX_WORKSPACES_PER_USER: ${MAX_WORKSPACES_PER_USER:-10}
+    MAX_ROOMS_PER_WORKSPACE: ${MAX_ROOMS_PER_WORKSPACE:-200}
+    MAX_MEMBERS_PER_WORKSPACE: ${MAX_MEMBERS_PER_WORKSPACE:-100}
+    MAX_PENDING_INVITATIONS: ${MAX_PENDING_INVITATIONS:-100}
+    INVITATIONS_PER_USER_HOUR: ${INVITATIONS_PER_USER_HOUR:-20}
+    EMAILS_PER_WORKSPACE_DAY: ${EMAILS_PER_WORKSPACE_DAY:-100}
+    EMAILS_PER_DAY: ${EMAILS_PER_DAY:-500}
+    MAX_ACTIVE_RECORDINGS: ${MAX_ACTIVE_RECORDINGS:-2}
+    MAX_ACTIVE_ROOMS: ${MAX_ACTIVE_ROOMS:-20}
   init: true
+  logging: *logs
+  pids_limit: 128
   security_opt: [no-new-privileges:true]
   cap_drop: [ALL]
   read_only: true
@@ -39,6 +56,8 @@ x-app: &app
 
 services:
   db:
+    logging: *logs
+    pids_limit: 128
     image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
     environment:
       POSTGRES_USER: imonmeets
@@ -58,6 +77,8 @@ services:
       retries: 20
 
   redis:
+    logging: *logs
+    pids_limit: 64
     image: valkey/valkey:8.1-alpine@sha256:2602ace2be6569bc2bbb06f873776516ab9089821525be34f4305c67eb9db02a
     command:
       [
@@ -81,6 +102,8 @@ services:
       retries: 10
 
   livekit:
+    logging: *logs
+    pids_limit: 256
     image: livekit/livekit-server:v1.13.11@sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20
     environment:
       LIVEKIT_KEYS: "${LIVEKIT_API_KEY:?Generate .env first}: ${LIVEKIT_API_SECRET:?Generate .env first}"
@@ -102,6 +125,8 @@ services:
     cap_drop: [ALL]
 
   mailpit:
+    logging: *logs
+    pids_limit: 64
     image: axllent/mailpit:v1.32.0@sha256:0790692be935ea4420d085694f7985b1f692ca6a8771ab0e0bd8ba75ac180498
     ports: ["127.0.0.1:3541:8025"]
     restart: unless-stopped

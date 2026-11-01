@@ -36,3 +36,23 @@ export function clientIp(
   }
   return request.ip;
 }
+
+export function rateLimitIp(ip: string) {
+  if (isIP(ip) !== 6) return ip;
+  if (ip.toLowerCase().startsWith("::ffff:") && isIP(ip.slice(7)) === 4)
+    return ip.slice(7);
+  const [left = "", right = ""] = ip.toLowerCase().split("::");
+  const a = left ? left.split(":") : [],
+    b = right ? right.split(":") : [];
+  const parts = [
+    ...a,
+    ...Array(Math.max(0, 8 - a.length - b.length)).fill("0"),
+    ...b,
+  ];
+  return (
+    parts
+      .slice(0, 4)
+      .map((p) => parseInt(p, 16).toString(16))
+      .join(":") + "::/64"
+  );
+}

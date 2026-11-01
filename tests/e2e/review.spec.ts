@@ -289,6 +289,26 @@ test("public review: verified login, calendar export, two-way call and durable r
       guest.getByRole("button", { name: "Завершить для всех", exact: true }),
     ).toHaveCount(0);
 
+    // Exercise the real moderation RPC and the participant's own recovery.
+    await page
+      .getByRole("button", { name: "Участники встречи", exact: true })
+      .click();
+    const muteGuest = page.getByRole("button", {
+      name: "Выключить микрофон: Гость проверки",
+      exact: true,
+    });
+    await expect(muteGuest).toBeEnabled();
+    await muteGuest.click();
+    await expect(muteGuest).toBeDisabled();
+    const guestMicrophone = guest.getByRole("button", {
+      name: "Включить или выключить микрофон",
+      exact: true,
+    });
+    await expect(guestMicrophone).toHaveAttribute("data-lk-enabled", "false");
+    await guestMicrophone.click();
+    await expect(guestMicrophone).toHaveAttribute("data-lk-enabled", "true");
+    await expect(muteGuest).toBeEnabled();
+
     await page
       .getByRole("button", { name: "Чат встречи", exact: true })
       .click();
@@ -326,12 +346,12 @@ test("public review: verified login, calendar export, two-way call and durable r
       .getByRole("button", { name: "Завершить для всех", exact: true })
       .click();
     await expect(
-      page.getByRole("heading", { name: "До следующей встречи.", exact: true }),
+      page.getByRole("heading", { name: "Встреча завершена", exact: true }),
     ).toBeVisible();
     closed = true;
     await expect(
       guest.getByRole("heading", {
-        name: "До следующей встречи.",
+        name: "Встреча завершена",
         exact: true,
       }),
     ).toBeVisible();

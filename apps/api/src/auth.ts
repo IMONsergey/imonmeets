@@ -1,14 +1,18 @@
 import { betterAuth } from "better-auth";
 import nodemailer from "nodemailer";
 import type { Pool } from "pg";
+import { postgresLimiter } from "./limits.js";
 import type { Config } from "./config.js";
-export function createMailer(c: Config) {
+export function createMailer(c: Config, pool: Pool) {
   const transport = c.emailConfigured
     ? nodemailer.createTransport({
         host: c.smtp.host,
         port: c.smtp.port,
         secure: c.smtp.secure,
         requireTLS: c.smtp.requireTLS,
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 20000,
         auth: c.smtp.user
           ? { user: c.smtp.user, pass: c.smtp.pass }
           : undefined,
@@ -20,7 +24,7 @@ export function createMailer(c: Config) {
   };
 }
 export function createAuth(c: Config, pool: Pool) {
-  const send = createMailer(c);
+  const send = createMailer(c, pool);
   return betterAuth({
     appName: "IMON Meets",
     baseURL: c.appUrl,
@@ -55,7 +59,19 @@ export function createAuth(c: Config, pool: Pool) {
             )
         : undefined,
     },
-    rateLimit: { enabled: true, window: 60, max: 30 },
+    rateLimit: {
+      enabled: true,
+      window: 60,
+      max: 30,
+      customStorage: {
+        consume: (key, rule) =>
+          postgresLimiter(pool).consume(
+            `better-auth:${key}`,
+            rule.max,
+            rule.window,
+          ),
+      },
+    },
     session: { expiresIn: 60 * 60 * 24 * 7, updateAge: 60 * 60 * 24 },
     advanced: {
       useSecureCookies: c.appUrl.startsWith("https://"),

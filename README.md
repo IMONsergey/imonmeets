@@ -4,19 +4,16 @@ Own your meeting experience: accounts, workspaces, scheduled rooms and real vide
 
 **Public review:** [imonmeets.vercel.app](https://imonmeets.vercel.app), with a dedicated review account. Public signup is closed while external email is being configured. See the [Vercel deployment guide](docs/vercel-review.md) for topology and access limitations.
 
-**Status: version 0.1.0 passed local acceptance on 2026-11-01.** Registration, verified accounts, two-browser video/chat, permanent room closure and password recovery were exercised against the deployed services. The default deployment remains local to the server. Public DNS, HTTPS/WSS, TURN, external email and recording infrastructure need their own configuration and acceptance checks before customer launch. See [verification](docs/verification.md), [deployment](docs/deployment.md) and [launch roadmap](docs/roadmap.md).
-
-![IMON Meets dashboard](docs/screenshots/dashboard-desktop.png)
-
-[Mobile interface](docs/screenshots/dashboard-mobile.png) · [Actual two-browser test call](docs/screenshots/call-two-participants.png). The green video patterns are Chrome's synthetic camera feeds used by the automated test.
+**Status: working preview, hardened and tested on 2026-11-01.** The public deployment has HTTPS/WSS and a dedicated API/media host. This revision adds persistent shared rate limits, resource quotas, session controls, safe member revocation, media retirement retries, authenticated TURN and automated backup/restore checks. Public registration still requires external email delivery; recording remains disabled until Egress and private storage pass acceptance. See the [remediation record](docs/audit-remediation-2026-11-01.md), [operational runbook](docs/operations.md), [verification](docs/verification.md) and [launch roadmap](docs/roadmap.md).
 
 ## Product
 
 - Email/password accounts, email verification, password recovery and session management through Better Auth.
-- Workspaces, owner/admin/member roles, invitations bound to verified email, member removal.
+- Workspaces, renaming, owner/admin/member roles, owner-controlled role changes, invitations bound to verified email, and member removal with pending invitation revocation.
+- Account profile and password settings, a safe session list, individual session revocation and sign-out of other sessions.
 - Instant and scheduled rooms, descriptions, participant limits, guest links, link rotation and permanent room closure.
 - Calendar export (.ics) with UTC event times, local timezone display and safe text handling.
-- Device preview, video/audio, screen sharing and meeting chat through LiveKit's real React components.
+- Independent camera/microphone preview, microphone level indication, video/audio, screen sharing, participant roster, moderator microphone muting and meeting chat through LiveKit's real React components.
 - Recording API, signed webhooks, persistent states and private S3 downloads when an Egress worker and storage are configured. Disabled by default; live capture/storage is a separate acceptance gate.
 - Russian responsive interface, account and device settings, honest empty states.
 
@@ -92,7 +89,7 @@ PLAYWRIGHT_CHANNEL=chrome npm run test:e2e
 
 Every application resource is checked against workspace membership. Guests get only a room-specific media grant. Invitation acceptance requires the matching verified address, an unexpired token and atomic one-time consumption. Mutating browser requests require the exact configured origin. Authentication is rate limited and uses HttpOnly session cookies; production requires HTTPS.
 
-LiveKit is configured with `room.auto_create: false`. Only the API may create the media room after checking application state while holding its row lock. Closing a room persists closure, deletes its media room and retries failed deletion. This configuration is essential: self-hosted LiveKit does not automatically revoke a previously issued client token, and connected clients may receive refreshed tokens. A five-minute initial token lifetime is not a session revocation mechanism.
+LiveKit is configured with `room.auto_create: false`. Only the API may create the media room after checking application state while holding its row lock. Closing a room persists closure, retires its media room and retries failed deletion with a durable queue. Removing a member rotates affected room generations and guest links, so previously issued grants cannot rejoin the replacement room. This disconnects all participants in affected rooms; they need the new link. A new guest link still grants anonymous guest access when enabled. This configuration is essential: self-hosted LiveKit does not automatically revoke a previously issued client token, and connected clients may receive refreshed tokens. A five-minute initial token lifetime is not a session revocation mechanism.
 
 Recording states are reconciled using the Egress ID and exact output key. Unknown start outcomes retain their reservation for reconciliation/operator review. A signed webhook cannot arbitrarily mark another recording complete. Download links are private, authorized by workspace and expire after 60 seconds. Recording remains off until capacity, consent, storage and full lifecycle tests are complete.
 
@@ -104,6 +101,8 @@ Recording states are reconciled using the Egress ID and exact output key. Unknow
 - [Vercel review deployment](docs/vercel-review.md)
 - [Commercial launch roadmap](docs/roadmap.md)
 - [Verification record](docs/verification.md)
+- [Audit remediation and remaining launch gates](docs/audit-remediation-2026-11-01.md)
+- [TURN, automated backup and operations](docs/operations.md)
 - [Third-party components](THIRD_PARTY_NOTICES.md)
 
 ## License

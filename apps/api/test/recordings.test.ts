@@ -39,3 +39,35 @@ test("correlation requires exact recording object key, including before file res
   assert.equal(matchesRecording(info, key), true);
   assert.equal(matchesRecording(info, "recordings/workspace/next.mp4"), false);
 });
+
+test("limit-reached preserves a matching recorded file and warns about truncation", () => {
+  const complete = new EgressInfo({
+    status: EgressStatus.EGRESS_LIMIT_REACHED,
+    fileResults: [{ filename: key, size: 40n }],
+  });
+  assert.equal(
+    recordingTransition("active", complete, key)?.status,
+    "complete",
+  );
+  assert.match(recordingTransition("active", complete, key)!.error!, /лимиту/);
+  assert.equal(
+    recordingTransition(
+      "active",
+      new EgressInfo({ status: EgressStatus.EGRESS_LIMIT_REACHED }),
+      key,
+    )?.status,
+    "failed",
+  );
+});
+test("modern egress request correlates by exact output path", () => {
+  const info = new EgressInfo({
+    request: {
+      case: "egress",
+      value: {
+        outputs: [{ config: { case: "file", value: { filepath: key } } }],
+      },
+    },
+  });
+  assert.equal(matchesRecording(info, key), true);
+  assert.equal(matchesRecording(info, "different"), false);
+});

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Pool } from "pg";
-import { clientIp, proxySecretMatches } from "../src/proxy.js";
+import { clientIp, proxySecretMatches, rateLimitIp } from "../src/proxy.js";
 import { loadConfig } from "../src/config.js";
 import { createApp } from "../src/app.js";
 
@@ -49,7 +49,15 @@ test("proxy guard rejects missing/forged secret and rate limits validated client
     connectionString: config.databaseUrl,
     connectionTimeoutMillis: 100,
   });
-  const app = await createApp(config, { pool, logger: false });
+  const counts = new Map<string, number>();
+  const limiter = {
+    async consume(key: string, max: number) {
+      const count = (counts.get(key) ?? 0) + 1;
+      counts.set(key, count);
+      return { allowed: count <= max, retryAfter: count <= max ? null : 60 };
+    },
+  };
+  const app = await createApp(config, { pool, logger: false, limiter });
   try {
     assert.equal((await app.inject({ url: "/api/config" })).statusCode, 403);
     const forged = await app.inject({
@@ -91,8 +99,39 @@ test("proxy guard rejects missing/forged secret and rate limits validated client
       503,
     );
     assert.equal((await join("not-an-ip")).statusCode, 503);
+    const oversized = await app.inject({
+      method: "POST",
+      url: "/api/workspaces",
+      headers: {
+        origin: config.appUrl,
+        "x-imon-proxy-secret": secret,
+        "content-type": "application/json",
+      },
+      payload: JSON.stringify({ name: "x".repeat(1024 * 1024 + 100) }),
+    });
+    assert.equal(oversized.statusCode, 413);
+    const unsupported = await app.inject({
+      method: "POST",
+      url: "/api/workspaces",
+      headers: {
+        origin: config.appUrl,
+        "x-imon-proxy-secret": secret,
+        "content-type": "application/xml",
+      },
+      payload: "<workspace/>",
+    });
+    assert.equal(unsupported.statusCode, 415);
   } finally {
     await app.close();
     await pool.end();
   }
+});
+
+test("IPv6 addresses share a canonical subnet rate budget", () => {
+  assert.equal(
+    rateLimitIp("2001:db8:0000:0000::1"),
+    rateLimitIp("2001:db8::beef"),
+  );
+  assert.notEqual(rateLimitIp("2001:db8:0:1::1"), rateLimitIp("2001:db8::1"));
+  assert.equal(rateLimitIp("::ffff:192.0.2.1"), "192.0.2.1");
 });

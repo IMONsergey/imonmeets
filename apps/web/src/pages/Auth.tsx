@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, LogOut } from "lucide-react";
-import { api } from "../api";
+import {
+  api,
+  ApiError,
+  authCallbackURL,
+  getReturnTo,
+  takeReturnTo,
+} from "../api";
 import type { Config, User, Workspace } from "../api";
 import { Brand, Button, ErrorBox, Field, Link, go } from "../ui";
 import type { Session } from "../ui";
@@ -21,7 +27,11 @@ export function Auth({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [needsVerification, setNeedsVerification] = useState(false);
   const [email, setEmail] = useState(session?.user.email ?? "");
+  const [confirmed, setConfirmed] = useState(
+    Boolean(session?.user.emailVerified),
+  );
   const isRegister = path === "/register",
     isForgot = path === "/forgot-password",
     isReset = path === "/reset-password",
@@ -34,7 +44,33 @@ export function Auth({
   useEffect(() => {
     setError("");
     setSuccess("");
+    setNeedsVerification(false);
+    getReturnTo();
   }, [path]);
+  useEffect(() => {
+    if (!isVerify) return;
+    let active = true;
+    void onSession()
+      .then((result) => {
+        if (!active) return;
+        setConfirmed(result.user.emailVerified);
+        setEmail(result.user.email);
+      })
+      .catch((error) => {
+        if (!active) return;
+        setConfirmed(false);
+        if (
+          !(error instanceof ApiError) ||
+          (error.status !== 401 &&
+            error.code !== "EMAIL_UNVERIFIED" &&
+            error.code !== "REQUEST_ABORTED")
+        )
+          setError((error as Error).message);
+      });
+    return () => {
+      active = false;
+    };
+  }, [isVerify, onSession, session?.user.id]);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (busy) return;
@@ -51,7 +87,7 @@ export function Auth({
       if (isForgot) {
         await api("/auth/request-password-reset", {
           email,
-          redirectTo: `${location.origin}/reset-password`,
+          redirectTo: authCallbackURL("/reset-password"),
         });
         setSuccess(
           "Если аккаунт с таким адресом существует, мы отправили письмо со ссылкой для восстановления.",
@@ -72,7 +108,7 @@ export function Auth({
       } else if (isVerify) {
         await api("/auth/send-verification-email", {
           email,
-          callbackURL: location.origin + "/verify-email?success=1",
+          callbackURL: authCallbackURL(),
         });
         setSuccess(
           "Письмо отправлено. Откройте ссылку в почте, затем вернитесь сюда.",
@@ -84,16 +120,22 @@ export function Auth({
           name: values.get("name"),
           email,
           password: values.get("password"),
-          callbackURL: location.origin + "/verify-email?success=1",
+          callbackURL: authCallbackURL(),
         });
         try {
           await onSession();
-          const next = sessionStorage.getItem("imon.returnTo") ?? "/";
-          sessionStorage.removeItem("imon.returnTo");
-          go(next);
-        } catch {
+          go(takeReturnTo());
+        } catch (error) {
+          if (
+            error instanceof ApiError &&
+            error.status !== 401 &&
+            error.code !== "EMAIL_UNVERIFIED"
+          )
+            throw error;
           setSuccess(
-            "Аккаунт создан. Подтвердите адрес по ссылке в письме, затем войдите.",
+            config.emailVerificationRequired
+              ? "Аккаунт создан. Подтвердите адрес по ссылке в письме, затем войдите."
+              : "Аккаунт создан. Войдите с вашим адресом почты и паролем.",
           );
         }
       } else {
@@ -102,12 +144,23 @@ export function Auth({
           password: values.get("password"),
         });
         await onSession();
-        const next = sessionStorage.getItem("imon.returnTo") ?? "/";
-        sessionStorage.removeItem("imon.returnTo");
-        go(next);
+        go(takeReturnTo());
       }
     } catch (e) {
-      setError((e as Error).message);
+      if (
+        e instanceof ApiError &&
+        ["EMAIL_NOT_VERIFIED", "EMAIL_UNVERIFIED"].includes(e.code ?? "")
+      ) {
+        setNeedsVerification(true);
+        setError("Подтвердите адрес почты, чтобы войти в аккаунт.");
+      } else if (
+        e instanceof ApiError &&
+        e.code === "INVALID_EMAIL_OR_PASSWORD"
+      ) {
+        setError(
+          "Неверный адрес почты или пароль. Проверьте данные и попробуйте снова.",
+        );
+      } else setError((e as Error).message);
     } finally {
       setBusy(false);
     }
@@ -158,12 +211,19 @@ export function Auth({
                         : "Подтвержденный адрес нужен для приглашений и безопасной работы."
                       : "Введите адрес почты и пароль вашего аккаунта."}
           </p>
-          {new URLSearchParams(location.search).get("success") && isVerify && (
+          {confirmed && isVerify && (
             <div className="success-box">
               Адрес подтвержден. Обновите данные аккаунта или войдите.
             </div>
           )}
-          <ErrorBox error={error} />
+          <ErrorBox error={error} id="auth-form-error" focus />
+          {needsVerification && (
+            <p className="form-note">
+              <Link to="/verify-email">
+                Подтвердить почту или запросить новое письмо
+              </Link>
+            </p>
+          )}
           {registrationClosed ? (
             <div className="registration-closed">
               <p>Нужен доступ? Обратитесь к администратору пространства.</p>
@@ -171,13 +231,20 @@ export function Auth({
                 Перейти ко входу <ArrowRight size={18} />
               </Link>
             </div>
+          ) : confirmed && isVerify ? (
+            <Button className="primary full" onClick={() => go(takeReturnTo())}>
+              Продолжить
+            </Button>
           ) : success ? (
             <div className="success-box">
               <CheckCircle2 size={21} />
               <span>{success}</span>
             </div>
           ) : (
-            <form onSubmit={submit}>
+            <form
+              onSubmit={submit}
+              aria-describedby={error ? "auth-form-error" : undefined}
+            >
               {isRegister && (
                 <Field label="Ваше имя">
                   <input
@@ -262,16 +329,21 @@ export function Auth({
               )}
             </form>
           )}
-          {isVerify && session && (
+          {isVerify && !confirmed && (
             <Button
               className="full"
               busy={busy}
               onClick={async () => {
                 setBusy(true);
                 try {
-                  await onSession();
-                  notify("Данные аккаунта обновлены");
-                  go(sessionStorage.getItem("imon.returnTo") ?? "/");
+                  const result = await onSession();
+                  if (!result.user.emailVerified)
+                    throw new Error(
+                      "Адрес пока не подтвержден. Откройте ссылку из письма и повторите проверку.",
+                    );
+                  setConfirmed(true);
+                  notify("Адрес почты подтвержден");
+                  go(takeReturnTo());
                 } catch (e) {
                   setError((e as Error).message);
                 } finally {
@@ -297,7 +369,12 @@ export function Auth({
                 <>
                   Впервые здесь? <Link to="/register">Создать аккаунт</Link>
                 </>
-              ) : null}
+              ) : (
+                <>
+                  Регистрация новых аккаунтов сейчас закрыта.{" "}
+                  <Link to="/register">Условия доступа</Link>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -338,10 +415,13 @@ export function Onboarding({
           Создайте пространство для вашей команды. Здесь будут ваши встречи,
           комнаты и записи.
         </p>
-        <ErrorBox error={error} />
+        <ErrorBox error={error} id="workspace-form-error" focus />
         <form
+          aria-describedby={error ? "workspace-form-error" : undefined}
           onSubmit={async (e) => {
             e.preventDefault();
+            if (busy) return;
+            setError("");
             setBusy(true);
             try {
               const name = new FormData(e.currentTarget).get("name");

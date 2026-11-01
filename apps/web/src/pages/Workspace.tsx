@@ -18,7 +18,7 @@ import {
   Users,
   Video,
 } from "lucide-react";
-import { api, date, initials } from "../api";
+import { api, date, initials, rememberReturnTo, takeReturnTo } from "../api";
 import type { Invitation, Member, Recording, User, Workspace } from "../api";
 import {
   Brand,
@@ -48,7 +48,10 @@ export function Recordings({ workspace, config, notify }: PageProps) {
   const load = useCallback(
     () =>
       api<{ recordings: Recording[] }>(`/workspaces/${workspace.id}/recordings`)
-        .then((r) => setRecordings(r.recordings))
+        .then((r) => {
+          setRecordings(r.recordings);
+          setError("");
+        })
         .catch((e) => setError(e.message)),
     [workspace.id],
   );
@@ -71,7 +74,9 @@ export function Recordings({ workspace, config, notify }: PageProps) {
         eyebrow=""
         title="Записи встреч"
         text="Облачные записи встреч вашего пространства."
-      />
+      >
+        <Button onClick={() => void load()}>Обновить</Button>
+      </PageHeading>
       <ErrorBox error={error} />
       {!config.recordingConfigured && (
         <div className="workspace-notice">
@@ -206,6 +211,13 @@ export function Recordings({ workspace, config, notify }: PageProps) {
               </div>
             ))}
           </div>
+        ) : error ? (
+          <Empty
+            icon={Film}
+            title="Не удалось загрузить записи"
+            text="Повторите запрос."
+            action={<Button onClick={() => void load()}>Повторить</Button>}
+          />
         ) : (
           <Empty
             icon={Film}
@@ -244,7 +256,10 @@ export function Team({
       api<{ members: Member[]; invitations: Invitation[] }>(
         `/workspaces/${workspace.id}/members`,
       )
-        .then(setData)
+        .then((value) => {
+          setData(value);
+          setError("");
+        })
         .catch((e) => setError(e.message)),
     [workspace.id],
   );
@@ -259,6 +274,7 @@ export function Team({
         title="Управление участниками"
         text={workspace.name}
       >
+        <Button onClick={() => void load()}>Обновить</Button>
         {manage && (
           <Button
             className="primary"
@@ -287,6 +303,13 @@ export function Team({
           <div className="workspace-loading">
             <Spinner />
           </div>
+        ) : !data && error ? (
+          <Empty
+            icon={Users}
+            title="Не удалось загрузить команду"
+            text="Повторите запрос."
+            action={<Button onClick={() => void load()}>Повторить</Button>}
+          />
         ) : (
           <div className="workspace-member-list">
             <div
@@ -315,6 +338,39 @@ export function Team({
                 </div>
                 <span className="workspace-role">{roleLabel[member.role]}</span>
                 <div className="workspace-row-actions">
+                  {workspace.role === "owner" && member.role !== "owner" && (
+                    <select
+                      aria-label={`Роль участника ${member.name}`}
+                      value={member.role}
+                      disabled={busy === member.id}
+                      onChange={async (e) => {
+                        const role = e.target.value;
+                        if (
+                          !confirm(
+                            `Изменить роль ${member.name} на «${roleLabel[role as "admin" | "member"]}»?`,
+                          )
+                        )
+                          return;
+                        setBusy(member.id);
+                        try {
+                          await api(
+                            `/workspaces/${workspace.id}/members/${member.id}`,
+                            { role },
+                            "PATCH",
+                          );
+                          await load();
+                          notify("Роль обновлена");
+                        } catch (e) {
+                          notify((e as Error).message, true);
+                        } finally {
+                          setBusy("");
+                        }
+                      }}
+                    >
+                      <option value="member">Участник</option>
+                      <option value="admin">Администратор</option>
+                    </select>
+                  )}
                   {manage &&
                     member.role !== "owner" &&
                     member.userId !== user.id &&
@@ -326,18 +382,25 @@ export function Team({
                         aria-label={`Удалить участника ${member.name}`}
                         onClick={async () => {
                           if (
-                            !confirm(`Удалить ${member.name} из пространства?`)
+                            !confirm(
+                              `Удалить ${member.name} из пространства? Встречи, для которых ему выдавался доступ, будут прерваны для всех участников. Их гостевые ссылки изменятся. Остальным понадобится войти заново по новой ссылке. Это не запрещает анонимный вход по новой гостевой ссылке.`,
+                            )
                           )
                             return;
                           setBusy(member.id);
                           try {
-                            await api(
+                            const result = await api<{
+                              affectedRooms: number;
+                              mediaPending?: boolean;
+                            }>(
                               `/workspaces/${workspace.id}/members/${member.id}`,
                               undefined,
                               "DELETE",
                             );
                             await load();
-                            notify("Участник удален");
+                            notify(
+                              `Участник удален. Доступ обновлен для встреч: ${result.affectedRooms}.${result.mediaPending ? " Отключение прежних подключений еще выполняется." : ""}`,
+                            );
                           } catch (e) {
                             notify((e as Error).message, true);
                           } finally {
@@ -510,6 +573,198 @@ export function Team({
   );
 }
 
+function MicrophoneCheck() {
+  const [active, setActive] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [level, setLevel] = useState(0);
+  const resources = useRef<{
+    stream?: MediaStream;
+    context?: AudioContext;
+    frame?: number;
+  }>({});
+  const request = useRef(0);
+  const stop = useCallback(() => {
+    request.current++;
+    const current = resources.current;
+    current.stream?.getTracks().forEach((track) => track.stop());
+    if (current.frame !== undefined) cancelAnimationFrame(current.frame);
+    void current.context?.close();
+    resources.current = {};
+  }, []);
+  useEffect(() => stop, [stop]);
+  return (
+    <div className="workspace-microphone-check">
+      <h3>Проверка микрофона</h3>
+      <p>
+        Произнесите несколько слов. Индикатор показывает уровень входящего
+        звука; звук не записывается и не отправляется.
+      </p>
+      <ErrorBox error={error} />
+      <meter min={0} max={100} value={level} aria-label="Уровень микрофона" />
+      <Button
+        busy={busy}
+        onClick={async () => {
+          if (active) {
+            stop();
+            setActive(false);
+            setLevel(0);
+            return;
+          }
+          setBusy(true);
+          setError("");
+          const id = ++request.current;
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+              audio: true,
+              video: false,
+            });
+            if (id !== request.current) {
+              stream.getTracks().forEach((track) => track.stop());
+              return;
+            }
+            resources.current.stream = stream;
+            const context = new AudioContext();
+            resources.current.context = context;
+            await context.resume();
+            if (id !== request.current) return;
+            const analyser = context.createAnalyser();
+            analyser.fftSize = 256;
+            context.createMediaStreamSource(stream).connect(analyser);
+            const samples = new Uint8Array(analyser.fftSize);
+            const measure = () => {
+              if (id !== request.current) return;
+              analyser.getByteTimeDomainData(samples);
+              const rms = Math.sqrt(
+                samples.reduce(
+                  (sum, value) => sum + ((value - 128) / 128) ** 2,
+                  0,
+                ) / samples.length,
+              );
+              setLevel(Math.min(100, Math.round(rms * 400)));
+              resources.current.frame = requestAnimationFrame(measure);
+            };
+            setActive(true);
+            measure();
+          } catch {
+            if (id === request.current) {
+              stop();
+              setActive(false);
+              setError(
+                "Микрофон недоступен. Проверьте подключение и разрешение браузера.",
+              );
+            }
+          } finally {
+            if (id === request.current || !resources.current.stream)
+              setBusy(false);
+          }
+        }}
+      >
+        {active ? <Square size={16} /> : <Mic size={16} />}
+        {active ? "Остановить проверку микрофона" : "Проверить микрофон"}
+      </Button>
+    </div>
+  );
+}
+
+type AccountSession = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  expiresAt: string;
+  ipAddress: string | null;
+  userAgent: string | null;
+  current: boolean;
+};
+function SessionSettings({
+  notify,
+}: {
+  notify: (s: string, e?: boolean) => void;
+}) {
+  const [sessions, setSessions] = useState<AccountSession[]>();
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState("");
+  const load = useCallback(async () => {
+    setError("");
+    try {
+      setSessions(
+        (await api<{ sessions: AccountSession[] }>("/sessions")).sessions,
+      );
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }, []);
+  useEffect(() => {
+    void load();
+  }, [load]);
+  return (
+    <section className="workspace-sessions">
+      <div className="workspace-section-heading">
+        <h3>Активные сеансы</h3>
+        <Button onClick={() => void load()}>Обновить</Button>
+      </div>
+      <ErrorBox error={error} />
+      {!sessions && !error && <Spinner />}
+      {sessions?.map((session) => (
+        <div className="workspace-session" key={session.id}>
+          <div>
+            <strong>{session.current ? "Этот браузер" : "Другой сеанс"}</strong>
+            <p>{session.userAgent || "Браузер не указан"}</p>
+            <small>
+              {session.ipAddress || "Адрес не указан"} · Последняя активность:{" "}
+              {date(session.updatedAt)}
+            </small>
+          </div>
+          {!session.current && (
+            <Button
+              busy={busy === session.id}
+              onClick={async () => {
+                setBusy(session.id);
+                try {
+                  await api(
+                    `/sessions/${encodeURIComponent(session.id)}`,
+                    undefined,
+                    "DELETE",
+                  );
+                  await load();
+                  notify("Сеанс завершен");
+                } catch (e) {
+                  notify((e as Error).message, true);
+                } finally {
+                  setBusy("");
+                }
+              }}
+            >
+              Завершить
+            </Button>
+          )}
+        </div>
+      ))}
+      {sessions?.some((session) => !session.current) && (
+        <Button
+          busy={busy === "others"}
+          onClick={async () => {
+            if (!confirm("Завершить все сеансы, кроме текущего браузера?"))
+              return;
+            setBusy("others");
+            try {
+              await api("/sessions/revoke-others", {});
+              await load();
+              notify("Другие сеансы завершены");
+            } catch (e) {
+              notify((e as Error).message, true);
+            } finally {
+              setBusy("");
+            }
+          }}
+        >
+          Завершить другие сеансы
+        </Button>
+      )}
+    </section>
+  );
+}
+
 export function AccountSettings({
   user,
   workspace,
@@ -522,6 +777,7 @@ export function AccountSettings({
   const settingsSections = [
     { id: "profile", label: "Профиль", icon: Users },
     { id: "security", label: "Безопасность", icon: ShieldCheck },
+    { id: "workspace", label: "Пространство", icon: Users },
     { id: "devices", label: "Видео и звук", icon: Video },
     { id: "services", label: "Сервисы", icon: Settings },
   ];
@@ -718,6 +974,7 @@ export function AccountSettings({
                 Обновить пароль
               </Button>
             </form>
+            {section === "security" && <SessionSettings notify={notify} />}
           </section>
           <section
             className="panel workspace-settings-panel"
@@ -758,7 +1015,7 @@ export function AccountSettings({
                 try {
                   const stream = await navigator.mediaDevices.getUserMedia({
                     video: true,
-                    audio: true,
+                    audio: false,
                   });
                   if (requestId !== previewRequestRef.current) {
                     stream.getTracks().forEach((track) => track.stop());
@@ -770,7 +1027,7 @@ export function AccountSettings({
                   setDevices(await navigator.mediaDevices.enumerateDevices());
                 } catch {
                   setDeviceError(
-                    "Нет доступа к камере или микрофону. Проверьте разрешения браузера и подключение устройств.",
+                    "Нет доступа к камере. Проверьте разрешение браузера и подключение устройства. Микрофон можно проверить отдельно.",
                   );
                 } finally {
                   setBusy("");
@@ -778,8 +1035,9 @@ export function AccountSettings({
               }}
             >
               {preview ? <Square size={16} /> : <Video size={17} />}{" "}
-              {preview ? "Выключить предпросмотр" : "Проверить устройства"}
+              {preview ? "Выключить предпросмотр" : "Проверить камеру"}
             </Button>
+            {section === "devices" && <MicrophoneCheck />}
             {devices && (
               <div className="workspace-device-list">
                 {devices
@@ -794,7 +1052,6 @@ export function AccountSettings({
                         <Mic size={14} />
                       )}
                       <span>{d.label || "Устройство без названия"}</span>
-                      <CheckCircle2 size={14} />
                     </div>
                   ))}
               </div>
@@ -836,6 +1093,95 @@ export function AccountSettings({
               Подключение сервисов выполняет администратор сервера.
             </p>
           </section>
+          <section
+            className="panel workspace-settings-panel"
+            id="settings-workspace"
+            hidden={section !== "workspace"}
+          >
+            <div className="workspace-section-heading">
+              <h2>Пространство</h2>
+              <Users size={18} />
+            </div>
+            <p className="workspace-settings-description">
+              {workspace.name} · {roleLabel[workspace.role]}
+            </p>
+            {workspace.role !== "member" && (
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  setBusy("workspace");
+                  try {
+                    await api(
+                      `/workspaces/${workspace.id}`,
+                      { name: new FormData(e.currentTarget).get("name") },
+                      "PATCH",
+                    );
+                    await refresh();
+                    notify("Название пространства обновлено");
+                  } catch (e) {
+                    notify((e as Error).message, true);
+                  } finally {
+                    setBusy("");
+                  }
+                }}
+              >
+                <Field label="Название пространства">
+                  <input
+                    name="name"
+                    defaultValue={workspace.name}
+                    required
+                    maxLength={100}
+                  />
+                </Field>
+                <Button
+                  className="primary"
+                  type="submit"
+                  busy={busy === "workspace"}
+                >
+                  Сохранить название
+                </Button>
+              </form>
+            )}
+            <h3>Новое пространство</h3>
+            <p className="form-note">
+              Отдельная команда со своими встречами и участниками. Вы станете
+              владельцем.
+            </p>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                setBusy("new-workspace");
+                try {
+                  await api("/workspaces", {
+                    name: new FormData(form).get("name"),
+                  });
+                  await refresh();
+                  form.reset();
+                  notify(
+                    "Пространство создано. Выберите его в меню пространств.",
+                  );
+                } catch (e) {
+                  notify((e as Error).message, true);
+                } finally {
+                  setBusy("");
+                }
+              }}
+            >
+              <Field label="Название нового пространства">
+                <input
+                  name="name"
+                  required
+                  maxLength={100}
+                  placeholder="Название команды"
+                />
+              </Field>
+              <Button type="submit" busy={busy === "new-workspace"}>
+                <Plus size={16} />
+                Создать пространство
+              </Button>
+            </form>
+          </section>
         </div>
       </div>
     </div>
@@ -853,11 +1199,26 @@ export function Invite({
   notify: (s: string, e?: boolean) => void;
   onWorkspace: (id: string) => void;
 }) {
-  const [token] = useState(
+  const [token, setToken] = useState(
     () => new URLSearchParams(location.hash.slice(1)).get("token") ?? "",
   );
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    const update = () => {
+      setToken(new URLSearchParams(location.hash.slice(1)).get("token") ?? "");
+      setError("");
+    };
+    addEventListener("hashchange", update);
+    addEventListener("popstate", update);
+    return () => {
+      removeEventListener("hashchange", update);
+      removeEventListener("popstate", update);
+    };
+  }, []);
+  useEffect(() => {
+    if (token) rememberReturnTo(`/invite#token=${encodeURIComponent(token)}`);
+  }, [token]);
   return (
     <div className="workspace-invite-page">
       <Brand />
@@ -882,10 +1243,7 @@ export function Invite({
             <Button
               className="primary full"
               onClick={() => {
-                sessionStorage.setItem(
-                  "imon.returnTo",
-                  location.pathname + location.hash,
-                );
+                rememberReturnTo(location.pathname + location.hash);
                 go("/login");
               }}
             >
@@ -901,10 +1259,7 @@ export function Invite({
             <Button
               className="primary full"
               onClick={() => {
-                sessionStorage.setItem(
-                  "imon.returnTo",
-                  location.pathname + location.hash,
-                );
+                rememberReturnTo(location.pathname + location.hash);
                 go("/verify-email");
               }}
             >
@@ -932,6 +1287,7 @@ export function Invite({
                     { token },
                   );
                   await refresh();
+                  takeReturnTo();
                   onWorkspace(workspace.id);
                   history.replaceState({}, "", "/");
                   go("/");
@@ -947,6 +1303,27 @@ export function Invite({
               <ArrowRight size={17} />
             </Button>
           </>
+        )}
+        {session && token && (
+          <Button
+            className="full"
+            busy={busy}
+            onClick={async () => {
+              setBusy(true);
+              setError("");
+              try {
+                rememberReturnTo(`/invite#token=${encodeURIComponent(token)}`);
+                await api("/auth/sign-out", {});
+                go("/login");
+              } catch (e) {
+                setError((e as Error).message);
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            Войти с другой почтой
+          </Button>
         )}
         <Link to="/" className="back-link">
           <ArrowLeft size={15} />

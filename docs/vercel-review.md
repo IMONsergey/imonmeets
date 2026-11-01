@@ -67,11 +67,13 @@ Before enabling customer registration, configure real external SMTP, set `EMAIL_
 
 Before exposing this deployment, all five previously generated synthetic browser-test account passwords were rotated through the normal reset flow, which invalidates their old sessions. Those accounts were retained, not deleted. The owner and QA review accounts use separately generated credentials in private operator-controlled files outside the repository.
 
-## Verification
+## Original review verification
+
+This section records the original review deployment at `64b4419`, before the hardening and TURN work. For current results and remaining gates, see the [remediation record](audit-remediation-2026-11-01.md) and [operations runbook](operations.md).
 
 The host-run public review test passed **1/1 in 13.2 seconds** after the generated-file permission correction. It used the canonical Vercel URL and checked the flow below. Because its browsers ran on the same machine as LiveKit, that pass does not prove external media reachability.
 
-An independent Chrome 156 attempt through the environment's HTTP egress proxy reached HTTPS, login, calendar export and WSS, but failed ICE with `could not establish pc connection`. Direct TCP checks from that environment immediately returned `ECONNREFUSED` on both 8443 and 7881, although HTTPS through its proxy reached the same 8443 origin. This supports an environment network restriction but does not prove the exact ICE failure cause or external media readiness. Successful external audio/video remains a publication limitation. External SMTP, Egress/S3 recording, TURN/TLS on 443 and restrictive-network operation have not been accepted. Registration remains closed; external mail delivery, recording and TURN remain disabled.
+An independent Chrome 156 attempt through the environment's HTTP egress proxy reached HTTPS, login, calendar export and WSS, but failed ICE with `could not establish pc connection`. Direct TCP checks from that environment immediately returned `ECONNREFUSED` on both 8443 and 7881, although HTTPS through its proxy reached the same 8443 origin. This supports an environment network restriction but does not prove the exact ICE failure cause or external media readiness. At that revision, successful external audio/video remained a publication limitation. External SMTP, Egress/S3 recording, TURN/TLS on 443 and restrictive-network operation had not been accepted. Registration was closed; external mail delivery, recording and TURN were disabled.
 
 The TLS certificate is valid. Certbot renewal dry run and the custom `nginx -t`/reload deploy hook passed. Canonical `/api/config` returned 200 even with a forged client-supplied proxy-secret header, confirming Vercel's overwrite; the direct-origin endpoint without the secret returned 403. Both responses were `Cache-Control: no-store` and exposed no proxy-secret response header. The latest API suite passed 9 tests with no skips, the calendar suite passed 7, and type, build and formatting checks passed. Historical local results and the scope of each check are preserved in [verification.md](verification.md).
 

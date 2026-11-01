@@ -1,5 +1,7 @@
 .git
 .env
+deploy/turn-private/
+ops-state/
 .env.*
 node_modules
 **/node_modules

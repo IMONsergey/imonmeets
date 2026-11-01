@@ -142,7 +142,14 @@ export function localDateTimeInput(value: string): string {
     .slice(0, 16);
 }
 
-export function parseLocalMeetingStart(value: string): string {
+export function parseLocalMeetingStart(
+  value: string,
+  original?: string | null,
+): string {
+  // A datetime-local input cannot distinguish the two occurrences of a fall-DST
+  // hour. Preserve the original instant (and seconds) when its display is unchanged.
+  if (original && value && localDateTimeInput(original) === value)
+    return original;
   const parsed = new Date(value);
   // A missing spring-DST hour must not silently move the scheduled meeting.
   if (

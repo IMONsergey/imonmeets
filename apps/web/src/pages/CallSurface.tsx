@@ -8,6 +8,7 @@ import {
   useConnectionState,
   useMediaDeviceSelect,
   useParticipants,
+  useIsRecording,
 } from "@livekit/components-react";
 import { ConnectionState, Track } from "livekit-client";
 import {
@@ -21,7 +22,17 @@ import {
   Video,
   X,
 } from "lucide-react";
-import { Button, Field } from "../ui";
+import { Button, ErrorBox, Field, Spinner } from "../ui";
+import { api } from "../api";
+
+type ManagedParticipant = {
+  identity: string;
+  name: string;
+  isGuest: boolean;
+  microphoneMuted: boolean;
+  cameraEnabled: boolean;
+  screenSharing: boolean;
+};
 
 function DeviceSelect({
   kind,
@@ -65,17 +76,63 @@ function DeviceSelect({
 /** LiveKit's conference layout and audio rendering with local controls and Russian chat. */
 export function CallSurface({
   notify,
+  management,
 }: {
   notify: (s: string, e?: boolean) => void;
+  management?: { workspaceId: string; roomId: string };
 }) {
   const [chatOpen, setChatOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [participantsOpen, setParticipantsOpen] = useState(false);
+  const [managedParticipants, setManagedParticipants] =
+    useState<ManagedParticipant[]>();
+  const [participantError, setParticipantError] = useState("");
+  const [moderating, setModerating] = useState("");
+  const [participantRefresh, setParticipantRefresh] = useState(0);
   const [message, setMessage] = useState("");
   const [canScreenShare, setCanScreenShare] = useState(false);
   const { chatMessages, send, isSending } = useChat();
   const participants = useParticipants();
+  const isRecording = useIsRecording();
   const connection = useConnectionState();
   const bottomRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!participantsOpen || !management) return;
+    const controller = new AbortController();
+    let inFlight = false;
+    const load = async () => {
+      if (inFlight) return;
+      inFlight = true;
+      try {
+        const data = await api<{ participants: ManagedParticipant[] }>(
+          `/workspaces/${management.workspaceId}/rooms/${management.roomId}/participants`,
+          undefined,
+          undefined,
+          { signal: controller.signal },
+        );
+        if (!controller.signal.aborted) {
+          setManagedParticipants(data.participants);
+          setParticipantError("");
+        }
+      } catch (e) {
+        if (!controller.signal.aborted)
+          setParticipantError((e as Error).message);
+      } finally {
+        inFlight = false;
+      }
+    };
+    void load();
+    const timer = setInterval(() => void load(), 5000);
+    return () => {
+      controller.abort();
+      clearInterval(timer);
+    };
+  }, [
+    participantsOpen,
+    management?.workspaceId,
+    management?.roomId,
+    participantRefresh,
+  ]);
   useEffect(() => {
     setCanScreenShare(
       typeof navigator.mediaDevices?.getDisplayMedia === "function",
@@ -92,6 +149,12 @@ export function CallSurface({
     notify(`Не удалось включить устройство: ${e.message}`, true);
   return (
     <div className="conference-shell">
+      {isRecording && (
+        <div className="call-recording-notice" role="status">
+          <span aria-hidden="true">●</span> Идет запись встречи. Ваши звук,
+          видео и демонстрация экрана могут быть сохранены.
+        </div>
+      )}
       <div className="conference-body">
         <div className="conference-video">
           <VideoConference />
@@ -187,6 +250,107 @@ export function CallSurface({
             </form>
           </aside>
         )}
+        {participantsOpen && (
+          <aside
+            className="meeting-chat meeting-participants"
+            aria-label="Участники встречи"
+          >
+            <div className="chat-heading">
+              <h2>Участники ({participants.length})</h2>
+              <button
+                className="icon-button"
+                aria-label="Закрыть список участников"
+                onClick={() => setParticipantsOpen(false)}
+              >
+                <X size={18} />
+              </button>
+            </div>
+            {management ? (
+              <>
+                <p className="chat-privacy">
+                  Можно выключить микрофон участника. Включить его снова может
+                  только сам участник.
+                </p>
+                <ErrorBox error={participantError} />
+                <Button
+                  onClick={() => setParticipantRefresh((value) => value + 1)}
+                >
+                  Обновить участников
+                </Button>
+                {!managedParticipants && !participantError && <Spinner />}
+                {managedParticipants?.map((participant) => (
+                  <div
+                    className="call-participant-row"
+                    key={participant.identity}
+                  >
+                    <div>
+                      <strong>{participant.name || "Участник"}</strong>
+                      <small>
+                        {participant.isGuest
+                          ? "Гость"
+                          : "Участник пространства"}
+                        {participant.screenSharing
+                          ? " · Демонстрация экрана"
+                          : ""}
+                      </small>
+                    </div>
+                    <Button
+                      disabled={
+                        participant.microphoneMuted ||
+                        !!moderating ||
+                        !!participantError
+                      }
+                      busy={moderating === participant.identity}
+                      aria-label={`Выключить микрофон: ${participant.name || "Участник"}`}
+                      onClick={async () => {
+                        setModerating(participant.identity);
+                        try {
+                          await api(
+                            `/workspaces/${management.workspaceId}/rooms/${management.roomId}/participants/${encodeURIComponent(participant.identity)}/microphone`,
+                            { muted: true },
+                            "PATCH",
+                          );
+                          setParticipantRefresh((value) => value + 1);
+                          notify("Микрофон участника выключен");
+                        } catch (e) {
+                          notify((e as Error).message, true);
+                        } finally {
+                          setModerating("");
+                        }
+                      }}
+                    >
+                      {participant.microphoneMuted
+                        ? "Микрофон выключен"
+                        : "Выключить микрофон"}
+                    </Button>
+                  </div>
+                ))}
+              </>
+            ) : (
+              participants.map((participant) => (
+                <div
+                  className="call-participant-row"
+                  key={participant.identity}
+                >
+                  <div>
+                    <strong>
+                      {participant.name || "Участник"}
+                      {participant.isLocal ? " (вы)" : ""}
+                    </strong>
+                    <small>
+                      {participant.isMicrophoneEnabled
+                        ? "Микрофон включен"
+                        : "Микрофон выключен"}
+                      {participant.isScreenShareEnabled
+                        ? " · Демонстрация экрана"
+                        : ""}
+                    </small>
+                  </div>
+                </div>
+              ))
+            )}
+          </aside>
+        )}
       </div>
       {settingsOpen && (
         <div className="call-device-panel">
@@ -205,10 +369,19 @@ export function CallSurface({
         </div>
       )}
       <div className="meeting-controls">
-        <span className="participant-count">
+        <button
+          className="participant-count"
+          aria-label="Участники встречи"
+          aria-pressed={participantsOpen}
+          onClick={() => {
+            setParticipantsOpen(!participantsOpen);
+            setChatOpen(false);
+            setSettingsOpen(false);
+          }}
+        >
           <Users size={16} />
           <span>Участники ({participants.length})</span>
-        </span>
+        </button>
         <div className="meeting-main-controls">
           <TrackToggle
             showIcon={false}
@@ -247,7 +420,10 @@ export function CallSurface({
             className={chatOpen ? "control-selected" : ""}
             aria-label="Чат встречи"
             aria-pressed={chatOpen}
-            onClick={() => setChatOpen(!chatOpen)}
+            onClick={() => {
+              setChatOpen(!chatOpen);
+              setParticipantsOpen(false);
+            }}
           >
             <MessageSquare size={18} />
             <span>Чат</span>
@@ -263,7 +439,7 @@ export function CallSurface({
             <span>Настройки</span>
           </Button>
         </div>
-        <DisconnectButton className="leave-meeting">
+        <DisconnectButton className="leave-meeting" aria-label="Выйти">
           <DoorOpen size={18} />
           <span>Выйти</span>
         </DisconnectButton>

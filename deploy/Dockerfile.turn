@@ -1,0 +1,7 @@
+FROM coturn/coturn:4.18.0-r0@sha256:bbefd3e1fdfdc0d58770fe01b581fd8b00d9f3a5580d00acb77cf719a6bc78e3
+USER root
+# The upstream binary requests file capabilities. Our listeners use unprivileged
+# ports, so copy without extended attributes and keep the capability set empty.
+RUN cp /usr/bin/turnserver /usr/bin/turnserver-imon && chmod 0755 /usr/bin/turnserver-imon
+USER 1000:1000
+ENTRYPOINT ["/usr/bin/turnserver-imon"]

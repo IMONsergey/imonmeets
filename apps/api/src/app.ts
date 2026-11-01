@@ -6,6 +6,7 @@ import { randomBytes, randomUUID, createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
+import { TrackSource } from "livekit-server-sdk";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
 import { createAuth, createMailer } from "./auth.js";
 import type { Config } from "./config.js";
@@ -21,7 +22,9 @@ import {
 } from "./policy.js";
 import { createMedia, type Media } from "./media.js";
 import { applyRecordingInfo, matchesRecording } from "./recordings.js";
-import { clientIp, proxySecretMatches } from "./proxy.js";
+import { postgresLimiter, requireBudget, type RateLimiter } from "./limits.js";
+import { mediaRoomName } from "./media.js";
+import { clientIp, proxySecretMatches, rateLimitIp } from "./proxy.js";
 
 type Row = QueryResultRow;
 type User = { id: string; name: string; email: string; emailVerified: boolean };
@@ -78,12 +81,18 @@ function params(r: FastifyRequest) {
 }
 export async function createApp(
   c: Config,
-  options: { pool?: Pool; media?: Media; logger?: boolean } = {},
+  options: {
+    pool?: Pool;
+    media?: Media;
+    logger?: boolean;
+    limiter?: RateLimiter;
+  } = {},
 ) {
   const pool = options.pool || createPool(c.databaseUrl),
     auth = createAuth(c, pool),
     media = options.media || createMedia(c),
-    sendMail = createMailer(c);
+    sendMail = createMailer(c, pool),
+    limiter = options.limiter ?? postgresLimiter(pool);
   const app = Fastify({
     logger: options.logger ?? true,
     bodyLimit: 1024 * 1024,
@@ -92,7 +101,7 @@ export async function createApp(
   });
   await app.register(rateLimit, {
     global: false,
-    keyGenerator: (req) => clientIp(req, c.originProxySecret),
+    keyGenerator: (req) => rateLimitIp(clientIp(req, c.originProxySecret)),
     errorResponseBuilder: () =>
       new ApiError(
         429,
@@ -120,10 +129,36 @@ export async function createApp(
       return reply.code(429).send({
         error: { code: "RATE_LIMIT", message: "Слишком много запросов." },
       });
+    const statusCode = (e as { statusCode?: number }).statusCode;
+    if (statusCode === 413 || statusCode === 415)
+      return reply.code(statusCode).send({
+        error: {
+          code:
+            statusCode === 413 ? "PAYLOAD_TOO_LARGE" : "UNSUPPORTED_MEDIA_TYPE",
+          message:
+            statusCode === 413
+              ? "Слишком большой запрос."
+              : "Неподдерживаемый формат запроса.",
+        },
+      });
     if ((e as { statusCode?: number }).statusCode === 400)
       return reply.code(400).send({
         error: { code: "INVALID_REQUEST", message: "Некорректный запрос." },
       });
+    if (
+      ["55P03", "57014", "40001", "40P01"].includes(
+        (e as { code?: string }).code ?? "",
+      )
+    )
+      return reply
+        .code(503)
+        .header("Retry-After", "2")
+        .send({
+          error: {
+            code: "RETRY_REQUIRED",
+            message: "Запрос занят другой операцией. Повторите позже.",
+          },
+        });
     req.log.error({ err: e }, "Request failed");
     return reply.code(500).send({
       error: {
@@ -159,7 +194,47 @@ export async function createApp(
         "Источник запроса не разрешен.",
       );
     }
+    const path = req.url.split("?")[0]!;
+    if (
+      path.startsWith("/api/") &&
+      path !== "/api/health" &&
+      path !== "/api/livekit/webhook"
+    ) {
+      const ip = rateLimitIp(clientIp(req, c.originProxySecret));
+      try {
+        const budget = path.startsWith("/api/auth/")
+          ? { key: "auth", max: 30 }
+          : path.endsWith("/join")
+            ? { key: "join", max: 20 }
+            : { key: "api", max: 300 };
+        const result = await limiter.consume(
+          `${budget.key}:${ip}`,
+          budget.max,
+          60,
+        );
+        if (!result.allowed) {
+          reply.header("Retry-After", String(result.retryAfter ?? 60));
+          throw new ApiError(
+            429,
+            "RATE_LIMIT",
+            "Слишком много запросов. Повторите позже.",
+          );
+        }
+      } catch (e) {
+        if (e instanceof ApiError) throw e;
+        throw new ApiError(
+          503,
+          "LIMITER_UNAVAILABLE",
+          "Сервис временно недоступен. Повторите позже.",
+        );
+      }
+    }
   });
+  function authHeaders(req: FastifyRequest) {
+    const headers = fromNodeHeaders(req.headers);
+    headers.set("x-imon-client-ip", clientIp(req, c.originProxySecret));
+    return headers;
+  }
   async function user(
     req: FastifyRequest,
     required = true,
@@ -194,6 +269,83 @@ export async function createApp(
     );
     return r.rows[0] as Row & { role: Role };
   }
+  async function lockWorkspace(
+    db: PoolClient,
+    workspaceId: string,
+    userId: string,
+  ) {
+    const found = await db.query(
+      "SELECT id FROM im_workspaces WHERE id=$1 FOR NO KEY UPDATE",
+      [workspaceId],
+    );
+    assert(
+      found.rowCount,
+      404,
+      "WORKSPACE_NOT_FOUND",
+      "Рабочее пространство не найдено.",
+    );
+    return membership(workspaceId, userId, db);
+  }
+  async function retireMedia(db: PoolClient, room: Row) {
+    await db.query(
+      "INSERT INTO im_media_retirements(name,workspace_id) VALUES($1,$2) ON CONFLICT DO NOTHING",
+      [
+        mediaRoomName(room as { id: string; media_generation: number }),
+        room.workspace_id,
+      ],
+    );
+  }
+  async function drainRetirements(
+    workspaceId?: string,
+    maxJobs = 12,
+    onlyName?: string,
+  ) {
+    if (!c.mediaConfigured) return false;
+    const jobs = await transaction(pool, async (db) => {
+      const rows = await db.query(
+        "SELECT name FROM im_media_retirements WHERE next_attempt_at<=now() AND ($1::text IS NULL OR workspace_id=$1) AND ($3::text IS NULL OR name=$3) ORDER BY next_attempt_at,name LIMIT $2 FOR UPDATE SKIP LOCKED",
+        [workspaceId ?? null, maxJobs, onlyName ?? null],
+      );
+      for (const row of rows.rows)
+        await db.query(
+          "UPDATE im_media_retirements SET attempts=attempts+1,next_attempt_at=now()+interval '60 seconds' WHERE name=$1",
+          [row.name],
+        );
+      return rows.rows;
+    });
+    for (let i = 0; i < jobs.length; i += 4)
+      await Promise.all(
+        jobs.slice(i, i + 4).map(async (job) => {
+          try {
+            try {
+              await media.rooms.deleteRoom(job.name);
+            } catch (e) {
+              if ((e as { code?: string }).code !== "not_found") throw e;
+            }
+            await transaction(pool, async (db) => {
+              await db.query(
+                "UPDATE im_rooms SET media_closed=true WHERE status='closed' AND CASE WHEN media_generation=0 THEN id ELSE id||'-g'||media_generation END=$1",
+                [job.name],
+              );
+              await db.query("DELETE FROM im_media_retirements WHERE name=$1", [
+                job.name,
+              ]);
+            });
+          } catch {
+            await pool.query(
+              "UPDATE im_media_retirements SET next_attempt_at=now()+LEAST(600,power(2,LEAST(attempts,8))*5)*interval '1 second',last_error='LiveKit room deletion failed' WHERE name=$1",
+              [job.name],
+            );
+          }
+        }),
+      );
+    return !(
+      await pool.query(
+        "SELECT 1 FROM im_media_retirements WHERE ($1::text IS NULL OR workspace_id=$1) AND ($2::text IS NULL OR name=$2) LIMIT 1",
+        [workspaceId ?? null, onlyName ?? null],
+      )
+    ).rowCount;
+  }
   async function scopedRoom(
     workspaceId: string,
     roomId: string,
@@ -222,7 +374,7 @@ export async function createApp(
   app.route({
     method: ["GET", "POST"],
     url: "/api/auth/*",
-    config: { rateLimit: { max: 30, timeWindow: "1 minute" } },
+    config: { rateLimit: false },
     handler: async (req, reply) => {
       if (
         !c.emailConfigured &&
@@ -234,6 +386,50 @@ export async function createApp(
           "EMAIL_UNAVAILABLE",
           "Отправка почты не настроена.",
         );
+      if (
+        req.url.split("?")[0] === "/api/auth/change-password" &&
+        req.body &&
+        typeof req.body === "object"
+      )
+        req.body = { ...req.body, revokeOtherSessions: true };
+      const authPath = req.url.split("?")[0]!;
+      assert(
+        !authPath.includes("%"),
+        400,
+        "INVALID_AUTH_PATH",
+        "Некорректный путь запроса.",
+      );
+      if (
+        c.emailConfigured &&
+        req.method === "POST" &&
+        [
+          "/api/auth/sign-up/email",
+          "/api/auth/send-verification-email",
+          "/api/auth/request-password-reset",
+        ].includes(authPath) &&
+        !(authPath === "/api/auth/sign-up/email" && !c.registrationEnabled)
+      ) {
+        const candidate = z
+          .object({ email: z.email().max(254) })
+          .safeParse(req.body);
+        if (candidate.success)
+          await transaction(pool, async (db) => {
+            await requireBudget(
+              limiter,
+              `smtp:recipient:${candidate.data.email.toLowerCase()}`,
+              5,
+              3600,
+              db,
+            );
+            await requireBudget(
+              limiter,
+              "smtp:global",
+              c.limits.globalEmailDaily,
+              86400,
+              db,
+            );
+          });
+      }
       const headers = fromNodeHeaders(req.headers);
       headers.set("x-imon-client-ip", clientIp(req, c.originProxySecret));
       const response = await auth.handler(
@@ -249,7 +445,38 @@ export async function createApp(
       });
       const cookies = response.headers.getSetCookie();
       if (cookies.length) reply.header("set-cookie", cookies);
-      return reply.send(await response.text());
+      const body = await response.text();
+      const action = req.url.split("?")[0]!.slice("/api/auth/".length);
+      if (
+        [
+          "sign-in/email",
+          "sign-up/email",
+          "sign-out",
+          "change-password",
+          "reset-password",
+          "verify-email",
+          "send-verification-email",
+          "request-password-reset",
+        ].includes(action)
+      ) {
+        let actorId: string | null = null;
+        try {
+          const parsed = JSON.parse(body) as { user?: { id?: unknown } };
+          if (typeof parsed.user?.id === "string") actorId = parsed.user.id;
+        } catch {}
+        try {
+          await audit(
+            pool,
+            null,
+            actorId,
+            `auth.${action}.${response.status}`,
+            null,
+          );
+        } catch (e) {
+          req.log.error({ err: e }, "Authentication audit write failed");
+        }
+      }
+      return reply.send(body);
     },
   });
   app.get("/api/config", async () => ({
@@ -263,7 +490,9 @@ export async function createApp(
   }));
   app.get("/api/health", async (_req, reply) => {
     try {
-      await pool.query("SELECT 1 FROM im_workspaces LIMIT 1");
+      await pool.query(
+        'SELECT (SELECT 1 FROM im_workspaces LIMIT 1),(SELECT 1 FROM "user" LIMIT 1),(SELECT 1 FROM "session" LIMIT 1),(SELECT 1 FROM "account" LIMIT 1),(SELECT 1 FROM "verification" LIMIT 1),(SELECT 1 FROM im_rate_limits LIMIT 1)',
+      );
       return {
         status: "ok",
         database: true,
@@ -290,6 +519,152 @@ export async function createApp(
       workspaces: r.rows.map(workspaceJson),
     };
   });
+  app.get("/api/security-events", async (req) => {
+    const u = (await user(req))!;
+    const query = z
+      .object({ before: z.coerce.number().int().positive().optional() })
+      .parse(req.query);
+    const rows = (
+      await pool.query(
+        'SELECT id,event,resource_id AS "resourceId",created_at AS "createdAt" FROM im_audit WHERE actor_id=$1 AND ($2::bigint IS NULL OR id<$2) ORDER BY id DESC LIMIT 100',
+        [u.id, query.before ?? null],
+      )
+    ).rows;
+    return {
+      events: rows,
+      nextCursor: rows.length === 100 ? String(rows.at(-1)!.id) : null,
+    };
+  });
+  app.get("/api/workspaces/:workspaceId/audit", async (req) => {
+    const u = (await user(req))!,
+      { workspaceId } = params(req),
+      m = await membership(workspaceId!, u.id);
+    assert(m.role !== "member", 403, "FORBIDDEN", "Недостаточно прав.");
+    const query = z
+      .object({ before: z.coerce.number().int().positive().optional() })
+      .parse(req.query);
+    const rows = (
+      await pool.query(
+        'SELECT id,actor_id AS "actorId",event,resource_id AS "resourceId",created_at AS "createdAt" FROM im_audit WHERE workspace_id=$1 AND ($2::bigint IS NULL OR id<$2) ORDER BY id DESC LIMIT 100',
+        [workspaceId, query.before ?? null],
+      )
+    ).rows;
+    return {
+      events: rows,
+      nextCursor: rows.length === 100 ? String(rows.at(-1)!.id) : null,
+    };
+  });
+  app.get("/api/sessions", async (req) => {
+    const u = (await user(req))!,
+      current = await auth.api.getSession({
+        headers: authHeaders(req),
+      });
+    const rows = await pool.query(
+      'SELECT id,"createdAt","updatedAt","expiresAt","ipAddress","userAgent" FROM "session" WHERE "userId"=$1 AND "expiresAt">now() ORDER BY "createdAt" DESC',
+      [u.id],
+    );
+    return {
+      sessions: rows.rows.map((row) => ({
+        ...row,
+        current: row.id === current?.session.id,
+      })),
+    };
+  });
+  app.post("/api/sessions/revoke-others", async (req) => {
+    const u = (await user(req))!;
+    await auth.api.revokeOtherSessions({
+      headers: authHeaders(req),
+    });
+    await audit(pool, null, u.id, "auth.sessions_revoked", u.id);
+    return { ok: true };
+  });
+  app.delete("/api/sessions/:id", async (req) => {
+    const u = (await user(req))!,
+      current = await auth.api.getSession({
+        headers: authHeaders(req),
+      });
+    const row = (
+      await pool.query(
+        'SELECT id,token FROM "session" WHERE id=$1 AND "userId"=$2',
+        [params(req).id, u.id],
+      )
+    ).rows[0];
+    assert(row, 404, "SESSION_NOT_FOUND", "Сеанс не найден.");
+    assert(
+      row.id !== current?.session.id,
+      409,
+      "CURRENT_SESSION",
+      "Для завершения текущего сеанса выйдите из аккаунта.",
+    );
+    await auth.api.revokeSession({
+      headers: authHeaders(req),
+      body: { token: row.token },
+    });
+    await audit(pool, null, u.id, "auth.session_revoked", row.id);
+    return { ok: true };
+  });
+  app.patch("/api/workspaces/:workspaceId", async (req) => {
+    const u = (await user(req))!,
+      { workspaceId } = params(req),
+      body = z
+        .object({ name: z.string().trim().min(1).max(100) })
+        .strict()
+        .parse(req.body);
+    return transaction(pool, async (db) => {
+      const m = await lockWorkspace(db, workspaceId!, u.id);
+      assert(m.role !== "member", 403, "FORBIDDEN", "Недостаточно прав.");
+      const row = (
+        await db.query(
+          "UPDATE im_workspaces SET name=$2 WHERE id=$1 RETURNING *",
+          [workspaceId, body.name],
+        )
+      ).rows[0];
+      await audit(db, workspaceId!, u.id, "workspace.updated", workspaceId!);
+      return { workspace: workspaceJson({ ...row, role: m.role }) };
+    });
+  });
+  app.patch("/api/workspaces/:workspaceId/members/:memberId", async (req) => {
+    const u = (await user(req))!,
+      { workspaceId, memberId } = params(req),
+      body = z
+        .object({ role: z.enum(["admin", "member"]) })
+        .strict()
+        .parse(req.body);
+    return transaction(pool, async (db) => {
+      const m = await lockWorkspace(db, workspaceId!, u.id);
+      assert(
+        m.role === "owner",
+        403,
+        "FORBIDDEN",
+        "Только владелец может менять роли.",
+      );
+      const target = (
+        await db.query(
+          "SELECT * FROM im_members WHERE workspace_id=$1 AND id=$2 FOR UPDATE",
+          [workspaceId, memberId],
+        )
+      ).rows[0];
+      assert(target, 404, "MEMBER_NOT_FOUND", "Участник не найден.");
+      assert(
+        target.role !== "owner",
+        403,
+        "OWNER_PROTECTED",
+        "Нельзя менять роль владельца.",
+      );
+      await db.query(
+        "UPDATE im_members SET role=$3 WHERE workspace_id=$1 AND id=$2",
+        [workspaceId, memberId, body.role],
+      );
+      await audit(db, workspaceId!, u.id, "member.role_changed", memberId!);
+      const row = (
+        await db.query(
+          'SELECT m.id,m.user_id AS "userId",u.name,u.email,m.role FROM im_members m JOIN "user" u ON u.id=m.user_id WHERE m.workspace_id=$1 AND m.id=$2',
+          [workspaceId, memberId],
+        )
+      ).rows[0];
+      return { member: row };
+    });
+  });
   app.post("/api/workspaces", async (req) => {
     const u = (await user(req))!,
       b = z
@@ -297,6 +672,18 @@ export async function createApp(
         .strict()
         .parse(req.body);
     return transaction(pool, async (db) => {
+      await db.query('SELECT id FROM "user" WHERE id=$1 FOR UPDATE', [u.id]);
+      const count = await db.query(
+        "SELECT count(*)::int AS n FROM im_members WHERE user_id=$1 AND role='owner'",
+        [u.id],
+      );
+      assert(
+        count.rows[0].n < c.limits.workspaces,
+        409,
+        "WORKSPACE_LIMIT",
+        "Достигнут лимит рабочих пространств.",
+      );
+      await requireBudget(limiter, `workspace-create:${u.id}`, 10, 3600, db);
       const id = randomUUID();
       const r = await db.query(
         "INSERT INTO im_workspaces(id,name) VALUES($1,$2) RETURNING *",
@@ -353,6 +740,18 @@ export async function createApp(
     await membership(workspaceId!, u.id);
     const b = roomFields.parse(req.body);
     return transaction(pool, async (db) => {
+      await lockWorkspace(db, workspaceId!, u.id);
+      const count = await db.query(
+        "SELECT count(*)::int AS n FROM im_rooms WHERE workspace_id=$1",
+        [workspaceId],
+      );
+      assert(
+        count.rows[0].n < c.limits.rooms,
+        409,
+        "ROOM_LIMIT",
+        "Достигнут лимит комнат пространства.",
+      );
+      await requireBudget(limiter, `room-create:${u.id}`, 30, 3600, db);
       const r = await db.query(
         "INSERT INTO im_rooms(id,workspace_id,slug,title,description,starts_at,duration_minutes,allow_guests,max_participants,created_by) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *",
         [
@@ -378,14 +777,23 @@ export async function createApp(
       m = await membership(workspaceId!, u.id),
       b = roomFields.partial().parse(req.body);
     return transaction(pool, async (db) => {
+      const currentMember = await lockWorkspace(db, workspaceId!, u.id);
       const r = await scopedRoom(workspaceId!, roomId!, db, true);
       assert(
-        canManage(m.role, r.created_by, u.id),
+        canManage(currentMember.role, r.created_by, u.id),
         403,
         "FORBIDDEN",
         "Недостаточно прав.",
       );
       assert(r.status === "open", 409, "ROOM_CLOSED", "Встреча закрыта.");
+      assert(
+        b.maxParticipants === undefined ||
+          b.maxParticipants === r.max_participants ||
+          !r.media_started,
+        409,
+        "ROOM_CAPACITY_LOCKED",
+        "Лимит участников нельзя менять после начала звонка. Создайте новую комнату.",
+      );
       const result = await db.query(
         "UPDATE im_rooms SET title=$3,description=$4,starts_at=$5,duration_minutes=$6,allow_guests=$7,max_participants=$8 WHERE workspace_id=$1 AND id=$2 RETURNING *",
         [
@@ -410,9 +818,10 @@ export async function createApp(
         { workspaceId, roomId } = params(req),
         m = await membership(workspaceId!, u.id);
       return transaction(pool, async (db) => {
+        const currentMember = await lockWorkspace(db, workspaceId!, u.id);
         const r = await scopedRoom(workspaceId!, roomId!, db, true);
         assert(
-          canManage(m.role, r.created_by, u.id),
+          canManage(currentMember.role, r.created_by, u.id),
           403,
           "FORBIDDEN",
           "Недостаточно прав.",
@@ -432,9 +841,10 @@ export async function createApp(
       m = await membership(workspaceId!, u.id);
     // Room lock serializes close with grant issuance. Persist closed even if media fails; retry close disconnects again.
     const room = await transaction(pool, async (db) => {
+      const currentMember = await lockWorkspace(db, workspaceId!, u.id);
       const r = await scopedRoom(workspaceId!, roomId!, db, true);
       assert(
-        canManage(m.role, r.created_by, u.id),
+        canManage(currentMember.role, r.created_by, u.id),
         403,
         "FORBIDDEN",
         "Недостаточно прав.",
@@ -443,30 +853,23 @@ export async function createApp(
         "UPDATE im_rooms SET status='closed' WHERE workspace_id=$1 AND id=$2 RETURNING *",
         [workspaceId, roomId],
       );
+      await retireMedia(db, r);
       await audit(db, workspaceId!, u.id, "room.closed", roomId!);
       return result.rows[0];
     });
-    if (c.mediaConfigured) {
-      try {
-        await media.rooms.deleteRoom(roomId!);
-        await pool.query(
-          "UPDATE im_rooms SET media_closed=true WHERE id=$1 AND status='closed'",
-          [roomId],
-        );
-      } catch (e) {
-        if ((e as { code?: string }).code === "not_found")
-          await pool.query(
-            "UPDATE im_rooms SET media_closed=true WHERE id=$1 AND status='closed'",
-            [roomId],
-          );
-        else
-          throw new ApiError(
-            503,
-            "MEDIA_DISCONNECT_FAILED",
-            "Встреча закрыта. Отключение участников не удалось; повторите закрытие.",
-          );
-      }
-    }
+    if (
+      c.mediaConfigured &&
+      !(await drainRetirements(
+        workspaceId,
+        4,
+        mediaRoomName(room as { id: string; media_generation: number }),
+      ))
+    )
+      throw new ApiError(
+        503,
+        "MEDIA_DISCONNECT_PENDING",
+        "Встреча закрыта. Отключение участников ожидает повторной попытки.",
+      );
     return { room: roomJson(room) };
   });
   async function roomAccess(
@@ -492,6 +895,18 @@ export async function createApp(
           )
         ).rows[0]
       : undefined;
+    if (u && !m) {
+      const removed = await db.query(
+        "SELECT 1 FROM im_removed_members WHERE workspace_id=$1 AND user_id=$2",
+        [r.workspace_id, u.id],
+      );
+      assert(
+        !removed.rowCount,
+        403,
+        "MEMBERSHIP_REVOKED",
+        "Доступ к пространству отозван.",
+      );
+    }
     assert(m || r.allow_guests, 404, "ROOM_NOT_FOUND", "Встреча не найдена.");
     return { u, r, m, manage: canManage(m?.role, r.created_by, u?.id) };
   }
@@ -513,7 +928,7 @@ export async function createApp(
   });
   app.post(
     "/api/rooms/:slug/join",
-    { config: { rateLimit: { max: 20, timeWindow: "1 minute" } } },
+    { config: { rateLimit: false } },
     async (req) => {
       const b = z
         .object({ name: z.string().trim().min(1).max(80).optional() })
@@ -527,6 +942,16 @@ export async function createApp(
       );
       const joiningUser = await user(req, false);
       return transaction(pool, async (db) => {
+        const discovered = (
+          await db.query("SELECT workspace_id FROM im_rooms WHERE slug=$1", [
+            params(req).slug,
+          ])
+        ).rows[0];
+        assert(discovered, 404, "ROOM_NOT_FOUND", "Встреча не найдена.");
+        await db.query(
+          "SELECT id FROM im_workspaces WHERE id=$1 FOR NO KEY UPDATE",
+          [discovered.workspace_id],
+        );
         const { u, r, m, manage } = await roomAccess(
           req,
           db,
@@ -535,10 +960,11 @@ export async function createApp(
         );
         assert(r.status === "open", 409, "ROOM_CLOSED", "Встреча закрыта.");
         assert(u || b.name, 400, "NAME_REQUIRED", "Укажите ваше имя.");
+        await db.query("SELECT pg_advisory_xact_lock(73621906)");
         let token: string;
         try {
           token = await media.token(
-            r.id,
+            mediaRoomName(r as { id: string; media_generation: number }),
             u ? `user:${u.id}:${randomUUID()}` : `guest:${randomUUID()}`,
             u?.name || b.name!,
             r.max_participants,
@@ -550,6 +976,14 @@ export async function createApp(
             "Сервер видеосвязи недоступен. Повторите позже.",
           );
         }
+        await db.query("UPDATE im_rooms SET media_started=true WHERE id=$1", [
+          r.id,
+        ]);
+        if (u)
+          await db.query(
+            "INSERT INTO im_room_access(room_id,user_id) VALUES($1,$2) ON CONFLICT(room_id,user_id) DO UPDATE SET last_granted_at=now()",
+            [r.id, u.id],
+          );
         await audit(
           db,
           r.workspace_id,
@@ -560,10 +994,129 @@ export async function createApp(
         return {
           token,
           serverUrl: c.livekit.url,
-          roomName: r.id,
+          roomName: mediaRoomName(
+            r as { id: string; media_generation: number },
+          ),
           canManage: manage,
           ...(m ? { roomId: r.id, workspaceId: r.workspace_id } : {}),
         };
+      });
+    },
+  );
+  app.get(
+    "/api/workspaces/:workspaceId/rooms/:roomId/participants",
+    async (req) => {
+      const u = (await user(req))!,
+        { workspaceId, roomId } = params(req);
+      return transaction(pool, async (db) => {
+        const m = await lockWorkspace(db, workspaceId!, u.id),
+          r = await scopedRoom(workspaceId!, roomId!, db, true);
+        assert(
+          canManage(m.role, r.created_by, u.id),
+          403,
+          "FORBIDDEN",
+          "Недостаточно прав.",
+        );
+        assert(
+          c.mediaConfigured,
+          503,
+          "MEDIA_UNAVAILABLE",
+          "Видеосвязь не настроена.",
+        );
+        let participants: Awaited<
+          ReturnType<typeof media.rooms.listParticipants>
+        >;
+        try {
+          participants = await media.rooms.listParticipants(
+            mediaRoomName(r as { id: string; media_generation: number }),
+          );
+        } catch (e) {
+          if ((e as { code?: string }).code === "not_found") participants = [];
+          else
+            throw new ApiError(
+              503,
+              "MEDIA_UNAVAILABLE",
+              "Сервер видеосвязи недоступен.",
+            );
+        }
+        return {
+          participants: participants.map((p) => ({
+            identity: p.identity,
+            name: p.name,
+            isGuest: p.identity.startsWith("guest:"),
+            microphoneMuted: !p.tracks.some(
+              (t) => t.source === TrackSource.MICROPHONE && !t.muted,
+            ),
+            cameraEnabled: p.tracks.some(
+              (t) => t.source === TrackSource.CAMERA && !t.muted,
+            ),
+            screenSharing: p.tracks.some(
+              (t) => t.source === TrackSource.SCREEN_SHARE && !t.muted,
+            ),
+          })),
+        };
+      });
+    },
+  );
+  app.patch(
+    "/api/workspaces/:workspaceId/rooms/:roomId/participants/:identity/microphone",
+    async (req) => {
+      const u = (await user(req))!,
+        { workspaceId, roomId, identity } = params(req);
+      z.object({ muted: z.literal(true) })
+        .strict()
+        .parse(req.body);
+      return transaction(pool, async (db) => {
+        const m = await lockWorkspace(db, workspaceId!, u.id),
+          r = await scopedRoom(workspaceId!, roomId!, db, true);
+        assert(
+          canManage(m.role, r.created_by, u.id),
+          403,
+          "FORBIDDEN",
+          "Недостаточно прав.",
+        );
+        assert(
+          c.mediaConfigured,
+          503,
+          "MEDIA_UNAVAILABLE",
+          "Видеосвязь не настроена.",
+        );
+        assert(r.status === "open", 409, "ROOM_CLOSED", "Встреча закрыта.");
+        try {
+          const name = mediaRoomName(
+              r as { id: string; media_generation: number },
+            ),
+            participant = await media.rooms.getParticipant(name, identity!);
+          for (const track of participant.tracks.filter(
+            (t) => t.source === TrackSource.MICROPHONE && !t.muted,
+          ))
+            await media.rooms.mutePublishedTrack(
+              name,
+              identity!,
+              track.sid,
+              true,
+            );
+        } catch (e) {
+          if ((e as { code?: string }).code === "not_found")
+            throw new ApiError(
+              404,
+              "PARTICIPANT_NOT_FOUND",
+              "Участник не найден.",
+            );
+          throw new ApiError(
+            503,
+            "MEDIA_UNAVAILABLE",
+            "Не удалось отключить микрофон.",
+          );
+        }
+        await audit(
+          db,
+          workspaceId!,
+          u.id,
+          "participant.microphone_muted",
+          roomId!,
+        );
+        return { ok: true };
       });
     },
   );
@@ -602,9 +1155,10 @@ export async function createApp(
     const token = slug();
     const result = await transaction(pool, async (db) => {
       // Serialize role changes and invite creation on workspace to prevent stale authority.
-      await db.query("SELECT id FROM im_workspaces WHERE id=$1 FOR UPDATE", [
-        workspaceId,
-      ]);
+      await db.query(
+        "SELECT id FROM im_workspaces WHERE id=$1 FOR NO KEY UPDATE",
+        [workspaceId],
+      );
       const m = await membership(workspaceId!, u.id, db);
       assert(
         canInvite(m.role, b.role),
@@ -621,6 +1175,44 @@ export async function createApp(
         409,
         "ALREADY_MEMBER",
         "Этот пользователь уже в команде.",
+      );
+      await requireBudget(
+        limiter,
+        `invite-user:${u.id}`,
+        c.limits.inviteHourly,
+        3600,
+        db,
+      );
+      await requireBudget(
+        limiter,
+        `invite-workspace:${workspaceId}`,
+        c.limits.emailDaily,
+        86400,
+        db,
+      );
+      if (c.emailConfigured) {
+        await requireBudget(limiter, `smtp:recipient:${b.email}`, 5, 3600, db);
+        await requireBudget(
+          limiter,
+          "smtp:global",
+          c.limits.globalEmailDaily,
+          86400,
+          db,
+        );
+      }
+      const count = await db.query(
+        "SELECT count(*)::int AS n FROM im_invitations WHERE workspace_id=$1 AND consumed_at IS NULL AND expires_at>now()",
+        [workspaceId],
+      );
+      assert(
+        count.rows[0].n < c.limits.invitations,
+        409,
+        "INVITATION_LIMIT",
+        "Достигнут лимит приглашений.",
+      );
+      await db.query(
+        "DELETE FROM im_invitations WHERE workspace_id=$1 AND email=$2 AND consumed_at IS NULL",
+        [workspaceId, b.email],
       );
       const r = await db.query(
         "INSERT INTO im_invitations(id,workspace_id,email,role,token_hash,expires_at,created_by) VALUES($1,$2,$3,$4,$5,now()+interval '7 days',$6) RETURNING *",
@@ -649,9 +1241,10 @@ export async function createApp(
       const u = (await user(req))!,
         { workspaceId, invitationId } = params(req);
       return transaction(pool, async (db) => {
-        await db.query("SELECT id FROM im_workspaces WHERE id=$1 FOR UPDATE", [
-          workspaceId,
-        ]);
+        await db.query(
+          "SELECT id FROM im_workspaces WHERE id=$1 FOR NO KEY UPDATE",
+          [workspaceId],
+        );
         const m = await membership(workspaceId!, u.id, db),
           r = await db.query(
             "SELECT * FROM im_invitations WHERE id=$1 AND workspace_id=$2",
@@ -709,9 +1302,10 @@ export async function createApp(
         "INVITATION_INVALID",
         "Приглашение недействительно или истекло.",
       );
-      await db.query("SELECT id FROM im_workspaces WHERE id=$1 FOR UPDATE", [
-        discovered.workspace_id,
-      ]);
+      await db.query(
+        "SELECT id FROM im_workspaces WHERE id=$1 FOR NO KEY UPDATE",
+        [discovered.workspace_id],
+      );
       const r = await db.query(
           "SELECT * FROM im_invitations WHERE token_hash=$1 FOR UPDATE",
           [hash(b.token)],
@@ -731,13 +1325,31 @@ export async function createApp(
         "INVITATION_EMAIL_MISMATCH",
         "Войдите с адресом, на который отправлено приглашение.",
       );
+      const count = await db.query(
+        "SELECT count(*)::int AS n FROM im_members WHERE workspace_id=$1",
+        [inv.workspace_id],
+      );
+      const existing = await db.query(
+        "SELECT 1 FROM im_members WHERE workspace_id=$1 AND user_id=$2",
+        [inv.workspace_id, u.id],
+      );
+      assert(
+        existing.rowCount || count.rows[0].n < c.limits.members,
+        409,
+        "MEMBER_LIMIT",
+        "Достигнут лимит участников пространства.",
+      );
+      await db.query(
+        "DELETE FROM im_removed_members WHERE workspace_id=$1 AND user_id=$2",
+        [inv.workspace_id, u.id],
+      );
       await db.query(
         "INSERT INTO im_members(id,workspace_id,user_id,role) VALUES($1,$2,$3,$4) ON CONFLICT(workspace_id,user_id) DO NOTHING",
         [randomUUID(), inv.workspace_id, u.id, inv.role],
       );
       await db.query(
-        "UPDATE im_invitations SET consumed_at=now() WHERE id=$1",
-        [inv.id],
+        "UPDATE im_invitations SET consumed_at=now() WHERE workspace_id=$1 AND email=$2 AND consumed_at IS NULL",
+        [inv.workspace_id, inv.email],
       );
       const w = await db.query(
         "SELECT w.*,m.role FROM im_workspaces w JOIN im_members m ON m.workspace_id=w.id WHERE w.id=$1 AND m.user_id=$2",
@@ -750,10 +1362,11 @@ export async function createApp(
   app.delete("/api/workspaces/:workspaceId/members/:memberId", async (req) => {
     const u = (await user(req))!,
       { workspaceId, memberId } = params(req);
-    return transaction(pool, async (db) => {
-      await db.query("SELECT id FROM im_workspaces WHERE id=$1 FOR UPDATE", [
-        workspaceId,
-      ]);
+    const removal = await transaction(pool, async (db) => {
+      await db.query(
+        "SELECT id FROM im_workspaces WHERE id=$1 FOR NO KEY UPDATE",
+        [workspaceId],
+      );
       const m = await membership(workspaceId!, u.id, db),
         r = await db.query(
           "SELECT * FROM im_members WHERE workspace_id=$1 AND id=$2 FOR UPDATE",
@@ -766,13 +1379,46 @@ export async function createApp(
         "FORBIDDEN",
         "Недостаточно прав для удаления участника.",
       );
+      const target = r.rows[0];
+      const targetUser = (
+        await db.query('SELECT email FROM "user" WHERE id=$1', [target.user_id])
+      ).rows[0];
+      await db.query(
+        "DELETE FROM im_invitations WHERE workspace_id=$1 AND lower(email)=lower($2)",
+        [workspaceId, targetUser.email],
+      );
+      await db.query(
+        "INSERT INTO im_removed_members(workspace_id,user_id) VALUES($1,$2) ON CONFLICT DO NOTHING",
+        [workspaceId, target.user_id],
+      );
+      const affected = await db.query(
+        "SELECT r.* FROM im_rooms r WHERE r.workspace_id=$1 AND r.status='open' AND (EXISTS(SELECT 1 FROM im_room_access a WHERE a.room_id=r.id AND a.user_id=$2) OR EXISTS(SELECT 1 FROM im_audit a WHERE a.resource_id=r.id AND a.actor_id=$2 AND a.event='room.join_granted')) ORDER BY r.id FOR UPDATE",
+        [workspaceId, target.user_id],
+      );
+      for (const room of affected.rows) {
+        await retireMedia(db, room);
+        await db.query(
+          "UPDATE im_rooms SET media_generation=media_generation+1,media_started=false,slug=$2 WHERE id=$1",
+          [room.id, slug()],
+        );
+        await audit(db, workspaceId!, u.id, "room.access_reset", room.id);
+      }
       await db.query("DELETE FROM im_members WHERE workspace_id=$1 AND id=$2", [
         workspaceId,
         memberId,
       ]);
       await audit(db, workspaceId!, u.id, "member.removed", memberId!);
-      return { ok: true };
+      return {
+        ok: true,
+        affectedRooms: affected.rowCount ?? 0,
+        accessReset: !!affected.rowCount,
+      };
     });
+    const mediaPending =
+      removal.affectedRooms > 0
+        ? !(await drainRetirements(workspaceId, 4))
+        : false;
+    return { ...removal, mediaPending };
   });
   app.get("/api/workspaces/:workspaceId/recordings", async (req) => {
     const u = (await user(req))!,
@@ -803,9 +1449,10 @@ export async function createApp(
         "Запись не настроена. Нужны Egress и хранилище.",
       );
       const recording = await transaction(pool, async (db) => {
+        const currentMember = await lockWorkspace(db, workspaceId!, u.id);
         const r = await scopedRoom(workspaceId!, roomId!, db, true);
         assert(
-          canManage(m.role, r.created_by, u.id),
+          canManage(currentMember.role, r.created_by, u.id),
           403,
           "FORBIDDEN",
           "Недостаточно прав.",
@@ -816,20 +1463,62 @@ export async function createApp(
           [roomId],
         );
         assert(!active.rowCount, 409, "RECORDING_ACTIVE", "Запись уже идет.");
+        await db.query("SELECT pg_advisory_xact_lock(73621905)");
+        const total = await db.query(
+          "SELECT count(*)::int AS n FROM im_recordings WHERE status IN ('starting','active','ending')",
+        );
+        assert(
+          total.rows[0].n < c.limits.recordings,
+          409,
+          "RECORDING_CAPACITY",
+          "Свободных ресурсов для записи нет.",
+        );
         const id = randomUUID(),
           objectKey = `recordings/${workspaceId}/${id}.mp4`;
         const result = await db.query(
-          "INSERT INTO im_recordings(id,workspace_id,room_id,status,object_key) VALUES($1,$2,$3,'starting',$4) RETURNING *",
-          [id, workspaceId, roomId, objectKey],
+          "INSERT INTO im_recordings(id,workspace_id,room_id,status,object_key,media_name) VALUES($1,$2,$3,'starting',$4,$5) RETURNING *",
+          [
+            id,
+            workspaceId,
+            roomId,
+            objectKey,
+            mediaRoomName(r as { id: string; media_generation: number }),
+          ],
         );
         await audit(db, workspaceId!, u.id, "recording.requested", id);
         return { ...result.rows[0], room_title: r.title };
       });
-      let egressId: string | undefined;
+      let egressId: string | undefined,
+        startAttempted = false;
       try {
-        const info = await media.start(roomId!, recording.object_key);
-        egressId = info.egressId;
         const result = await transaction(pool, async (db) => {
+          const currentMember = await lockWorkspace(db, workspaceId!, u.id);
+          const room = await scopedRoom(workspaceId!, roomId!, db, true);
+          assert(
+            canManage(currentMember.role, room.created_by, u.id),
+            403,
+            "FORBIDDEN",
+            "Недостаточно прав.",
+          );
+          if (
+            room.status !== "open" ||
+            mediaRoomName(room as { id: string; media_generation: number }) !==
+              recording.media_name
+          ) {
+            const failed = (
+              await db.query(
+                "UPDATE im_recordings SET status='failed',ended_at=now(),error='Встреча закрыта до запуска записи.' WHERE id=$1 RETURNING *",
+                [recording.id],
+              )
+            ).rows[0];
+            return failed;
+          }
+          startAttempted = true;
+          const info = await media.start(
+            recording.media_name,
+            recording.object_key,
+          );
+          egressId = info.egressId;
           const row = (
             await db.query(
               "SELECT * FROM im_recordings WHERE id=$1 FOR UPDATE",
@@ -845,6 +1534,13 @@ export async function createApp(
           }),
         };
       } catch (e) {
+        if (!startAttempted) {
+          await pool.query(
+            "UPDATE im_recordings SET status='failed',ended_at=now(),error='Запуск отменен до обращения к Egress.' WHERE id=$1 AND status='starting'",
+            [recording.id],
+          );
+          throw e;
+        }
         // RPC timeouts or persistence failures may leave an active external job. Keep the
         // unique active reservation until a signed webhook or reconciliation resolves it.
         req.log.error(
@@ -882,6 +1578,7 @@ export async function createApp(
         "Запись не настроена.",
       );
       return transaction(pool, async (db) => {
+        const currentMember = await lockWorkspace(db, workspaceId!, u.id);
         const r = (
           await db.query(
             "SELECT rec.*,r.title AS room_title,r.created_by FROM im_recordings rec JOIN im_rooms r ON r.id=rec.room_id WHERE rec.workspace_id=$1 AND rec.id=$2 FOR UPDATE OF rec",
@@ -890,7 +1587,7 @@ export async function createApp(
         ).rows[0];
         assert(r, 404, "RECORDING_NOT_FOUND", "Запись не найдена.");
         assert(
-          canManage(m.role, r.created_by, u.id),
+          canManage(currentMember.role, r.created_by, u.id),
           403,
           "FORBIDDEN",
           "Недостаточно прав.",
@@ -1006,7 +1703,7 @@ export async function createApp(
           if (!r) {
             const pending = (
               await db.query(
-                "SELECT * FROM im_recordings WHERE room_id=$1 AND status='starting' AND egress_id IS NULL FOR UPDATE",
+                "SELECT * FROM im_recordings WHERE COALESCE(media_name,room_id)=$1 AND status='starting' AND egress_id IS NULL FOR UPDATE",
                 [info.roomName],
               )
             ).rows;
@@ -1035,9 +1732,10 @@ export async function createApp(
         }
         if (event.room?.name) {
           const room = (
-            await db.query("SELECT workspace_id FROM im_rooms WHERE id=$1", [
-              event.room.name,
-            ])
+            await db.query(
+              "SELECT workspace_id FROM im_rooms WHERE CASE WHEN media_generation=0 THEN id ELSE id||'-g'||media_generation END=$1",
+              [event.room.name],
+            )
           ).rows[0];
           if (room)
             await audit(
@@ -1072,22 +1770,9 @@ export async function createApp(
     if (!c.mediaConfigured || closing) return;
     closing = true;
     try {
-      const pending = await pool.query(
-        "SELECT id FROM im_rooms WHERE status='closed' AND media_closed=false LIMIT 100",
-      );
-      for (const r of pending.rows) {
-        try {
-          await media.rooms.deleteRoom(r.id);
-        } catch (e) {
-          if ((e as { code?: string }).code !== "not_found") continue;
-        }
-        await pool.query(
-          "UPDATE im_rooms SET media_closed=true WHERE id=$1 AND status='closed'",
-          [r.id],
-        );
-      }
+      await drainRetirements();
     } catch (e) {
-      app.log.error({ err: e }, "Closed-room reconciliation failed");
+      app.log.error({ err: e }, "Media retirement retry failed");
     } finally {
       closing = false;
     }
@@ -1108,7 +1793,7 @@ export async function createApp(
           (!rec.egress_id
             ? jobs.find(
                 (job) =>
-                  job.roomName === rec.room_id &&
+                  job.roomName === (rec.media_name ?? rec.room_id) &&
                   matchesRecording(job, rec.object_key),
               )
             : undefined);
@@ -1150,6 +1835,11 @@ export async function createApp(
   closeRetryTimer.unref();
   const recordingRetryTimer = setInterval(() => {
     void retryRecordings();
+    void pool
+      .query(
+        "DELETE FROM im_rate_limits WHERE expires_at<now()-interval '1 day'",
+      )
+      .catch(() => {});
   }, 30000);
   recordingRetryTimer.unref();
   app.addHook("onReady", async () => {

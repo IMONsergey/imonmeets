@@ -21,6 +21,11 @@ export function matchesRecording(info: EgressInfo, key: string) {
       (request.output.case === "file" && request.output.value.filepath === key)
     );
   }
+  if (info.request.case === "egress")
+    return info.request.value.outputs.some(
+      (output) =>
+        output.config.case === "file" && output.config.value.filepath === key,
+    );
   return false;
 }
 export function recordingTransition(
@@ -46,8 +51,17 @@ export function recordingTransition(
         : { status: "failed", error: "Egress завершен без ожидаемого файла." };
     case EgressStatus.EGRESS_FAILED:
     case EgressStatus.EGRESS_ABORTED:
-    case EgressStatus.EGRESS_LIMIT_REACHED:
       return { status: "failed", error: "Egress завершился с ошибкой." };
+    case EgressStatus.EGRESS_LIMIT_REACHED:
+      return matchingOutput(info, key)
+        ? {
+            status: "complete",
+            error: "Запись завершена по лимиту длительности.",
+          }
+        : {
+            status: "failed",
+            error: "Лимит записи достигнут, ожидаемый файл отсутствует.",
+          };
     default:
       return null;
   }

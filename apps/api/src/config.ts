@@ -51,7 +51,24 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
       env.S3_SECRET_ACCESS_KEY &&
       env.S3_REGION,
     );
+  const positive = (name: string, fallback: number) => {
+    const value = Number(env[name] ?? fallback);
+    if (!Number.isSafeInteger(value) || value < 1)
+      throw new Error(`${name} must be a positive integer`);
+    return value;
+  };
   return {
+    limits: {
+      workspaces: positive("MAX_WORKSPACES_PER_USER", 10),
+      rooms: positive("MAX_ROOMS_PER_WORKSPACE", 200),
+      members: positive("MAX_MEMBERS_PER_WORKSPACE", 100),
+      invitations: positive("MAX_PENDING_INVITATIONS", 100),
+      inviteHourly: positive("INVITATIONS_PER_USER_HOUR", 20),
+      emailDaily: positive("EMAILS_PER_WORKSPACE_DAY", 100),
+      globalEmailDaily: positive("EMAILS_PER_DAY", 500),
+      recordings: positive("MAX_ACTIVE_RECORDINGS", 2),
+      activeRooms: positive("MAX_ACTIVE_ROOMS", 20),
+    },
     dev,
     appUrl,
     authSecret,

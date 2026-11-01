@@ -1,4 +1,13 @@
-import { useEffect, useRef } from "react";
+import {
+  Children,
+  Component,
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useId,
+  useRef,
+} from "react";
+import { createPortal } from "react-dom";
 import type { ReactNode } from "react";
 import { LoaderCircle, Video, X } from "lucide-react";
 import type { Config, User, Workspace } from "./api";
@@ -65,6 +74,7 @@ export function Button({
     <button
       {...props}
       disabled={busy || props.disabled}
+      aria-busy={busy || undefined}
       className={`button ${className}`}
     >
       {busy ? <Spinner /> : null}
@@ -72,9 +82,27 @@ export function Button({
     </button>
   );
 }
-export function ErrorBox({ error }: { error: string }) {
+export function ErrorBox({
+  error,
+  id,
+  focus = false,
+}: {
+  error: string;
+  id?: string;
+  focus?: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (error && focus) ref.current?.focus();
+  }, [error, focus]);
   return error ? (
-    <div role="alert" className="error-box">
+    <div
+      role="alert"
+      className="error-box"
+      id={id}
+      ref={ref}
+      tabIndex={focus ? -1 : undefined}
+    >
       {error}
     </div>
   ) : null;
@@ -110,11 +138,34 @@ export function Field({
   children: ReactNode;
   hint?: string;
 }) {
+  const hintId = useId();
+  const described = (node: ReactNode): ReactNode => {
+    if (
+      !isValidElement<{ children?: ReactNode; "aria-describedby"?: string }>(
+        node,
+      )
+    )
+      return node;
+    if (
+      typeof node.type === "string" &&
+      ["input", "textarea", "select"].includes(node.type)
+    )
+      return cloneElement(node, {
+        "aria-describedby": [node.props["aria-describedby"], hintId]
+          .filter(Boolean)
+          .join(" "),
+      });
+    return node.props.children
+      ? cloneElement(node, {
+          children: Children.map(node.props.children, described),
+        })
+      : node;
+  };
   return (
     <label className="field">
       <span>{label}</span>
-      {children}
-      {hint && <small>{hint}</small>}
+      {hint ? Children.map(children, described) : children}
+      {hint && <small id={hintId}>{hint}</small>}
     </label>
   );
 }
@@ -128,20 +179,65 @@ export function Modal({
   onClose: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const priorFocus = useRef<HTMLElement | null>(
+    typeof document === "undefined"
+      ? null
+      : (document.activeElement as HTMLElement | null),
+  );
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+  const descriptionId = useId();
   useEffect(() => {
-    const prior = document.activeElement as HTMLElement | null;
-    ref.current?.querySelector<HTMLElement>("input,button,select")?.focus();
+    const intro = ref.current?.querySelector<HTMLElement>(".modal-intro");
+    if (intro) {
+      intro.id ||= descriptionId;
+      ref.current?.setAttribute("aria-describedby", intro.id);
+    } else ref.current?.removeAttribute("aria-describedby");
+  });
+  useEffect(() => {
+    const prior = priorFocus.current;
+    const backdrop = ref.current?.parentElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const backgrounds = Array.from(document.body.children).filter(
+      (element): element is HTMLElement =>
+        element instanceof HTMLElement && element !== backdrop,
+    );
+    const previous = backgrounds.map((element) => ({
+      element,
+      inert: element.inert,
+      ariaHidden: element.getAttribute("aria-hidden"),
+    }));
+    backgrounds.forEach((element) => {
+      element.inert = true;
+      element.setAttribute("aria-hidden", "true");
+    });
+    (
+      ref.current?.querySelector<HTMLElement>(
+        "input:not(:disabled),select:not(:disabled),textarea:not(:disabled)",
+      ) ?? ref.current?.querySelector<HTMLElement>("button:not(:disabled)")
+    )?.focus();
     const key = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeRef.current();
+      }
       if (e.key === "Tab") {
         const controls = Array.from(
           ref.current?.querySelectorAll<HTMLElement>(
-            "button:not(:disabled),input,select,textarea,a[href]",
+            "button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),a[href],[tabindex='0']",
           ) ?? [],
         );
-        if (!controls.length) return;
-        const first = controls[0],
-          last = controls[controls.length - 1];
+        const visible = controls.filter(
+          (control) => control.getClientRects().length > 0,
+        );
+        if (!visible.length) {
+          e.preventDefault();
+          ref.current?.focus();
+          return;
+        }
+        const first = visible[0],
+          last = visible[visible.length - 1];
         if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
           last.focus();
@@ -154,10 +250,17 @@ export function Modal({
     document.addEventListener("keydown", key);
     return () => {
       document.removeEventListener("keydown", key);
-      prior?.focus();
+      document.body.style.overflow = previousOverflow;
+      previous.forEach(({ element, inert, ariaHidden }) => {
+        element.inert = inert;
+        if (ariaHidden === null) element.removeAttribute("aria-hidden");
+        else element.setAttribute("aria-hidden", ariaHidden);
+      });
+      if (prior?.isConnected) prior.focus();
     };
-  }, [onClose]);
-  return (
+  }, []);
+  if (typeof document === "undefined") return null;
+  return createPortal(
     <div
       className="modal-backdrop"
       onMouseDown={(e) => {
@@ -170,6 +273,7 @@ export function Modal({
         aria-modal="true"
         aria-label={title}
         ref={ref}
+        tabIndex={-1}
       >
         <div className="modal-heading">
           <h2>{title}</h2>
@@ -183,8 +287,36 @@ export function Modal({
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
+}
+
+export class AppErrorBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    if (this.state.failed)
+      return (
+        <main className="full-loader">
+          <Brand />
+          <h1>Не удалось отобразить страницу</h1>
+          <p>Перезагрузите страницу или вернитесь на главную.</p>
+          <Button onClick={() => location.reload()}>
+            Перезагрузить страницу
+          </Button>
+          <a href="/" className="button primary">
+            На главную
+          </a>
+        </main>
+      );
+    return this.props.children;
+  }
 }
 export function Brand({ light = false }: { light?: boolean }) {
   return (
