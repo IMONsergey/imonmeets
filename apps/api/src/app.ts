@@ -28,6 +28,7 @@ import { clientIp, proxySecretMatches, rateLimitIp } from "./proxy.js";
 import { registerSuite, admissionForJoin, createChatSession } from "./suite.js";
 import { registerAnalysis } from "./analysis.js";
 import { registerBilling, workspaceLimits } from "./billing.js";
+import { framePolicy, isEmbedPath } from "./embedding.js";
 
 type Row = QueryResultRow;
 type User = {
@@ -184,14 +185,18 @@ export async function createApp(
     });
   });
   app.addHook("onRequest", async (req, reply) => {
+    const path = req.url.split("?")[0]!;
+    const framing = framePolicy(path, c.embedAllowedOrigins);
     reply.header("X-Content-Type-Options", "nosniff");
-    reply.header("X-Frame-Options", "DENY");
+    if (!framing.enabled) reply.header("X-Frame-Options", "DENY");
+    reply.header("Content-Security-Policy", framing.policy);
     reply.header("Referrer-Policy", "no-referrer");
-    if (req.url.startsWith("/api/")) reply.header("Cache-Control", "no-store");
+    if (path.startsWith("/api/") || isEmbedPath(path))
+      reply.header("Cache-Control", "no-store");
     if (
       c.originProxySecret &&
-      req.url.startsWith("/api/") &&
-      req.url.split("?")[0] !== "/api/health"
+      (path.startsWith("/api/") || isEmbedPath(path)) &&
+      path !== "/api/health"
     )
       assert(
         proxySecretMatches(req, c.originProxySecret),
@@ -212,7 +217,6 @@ export async function createApp(
         "Источник запроса не разрешен.",
       );
     }
-    const path = req.url.split("?")[0]!;
     if (
       path.startsWith("/api/") &&
       path !== "/api/health" &&
@@ -574,6 +578,7 @@ export async function createApp(
   });
   app.get("/api/config", async () => ({
     appName: "IMON Meets",
+    embedAllowedOrigins: c.embedAllowedOrigins,
     registrationEnabled: c.registrationEnabled,
     emailVerificationRequired: !c.dev,
     emailConfigured: c.emailConfigured,
@@ -589,6 +594,20 @@ export async function createApp(
     transcriptionConfigured: c.transcriptionConfigured,
     summaryConfigured: c.summaryConfigured,
   }));
+  // Public SDK code may be imported by an allowed host. Account/API responses
+  // never opt into CORS; the iframe talks to its own origin without cookies.
+  app.addHook("onSend", async (req, reply, payload) => {
+    const path = req.url.split("?")[0]!;
+    if (isEmbedPath(path)) reply.header("Cache-Control", "no-store");
+    if (
+      ["GET", "HEAD"].includes(req.method) &&
+      /^\/sdk\/v1\/(?:embed|embed-protocol|index)\.js$/.test(path)
+    ) {
+      reply.header("Access-Control-Allow-Origin", "*");
+      reply.header("Cache-Control", "public, max-age=300");
+    }
+    return payload;
+  });
   app.get("/api/health", async (_req, reply) => {
     try {
       await pool.query(

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>IMON Meets: встроенная встреча</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f5f5f7;
+        color: #232333;
+        font:
+          15px/1.5 system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 1200px;
+        margin: 24px auto;
+        padding: 0 16px;
+      }
+      form {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      label {
+        display: grid;
+        gap: 5px;
+        flex: 1 1 200px;
+      }
+      input,
+      button {
+        font: inherit;
+        padding: 10px 12px;
+        border: 1px solid #d6d6df;
+        border-radius: 6px;
+      }
+      button {
+        background: #0b5cff;
+        color: #fff;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      #meeting {
+        overflow: hidden;
+        border-radius: 8px;
+        background: #fff;
+      }
+      #status {
+        min-height: 1.5em;
+      }
+      footer {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        margin-top: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Видеовстреча</h1>
+      <p>
+        Разместите эту страницу на разрешенном HTTPS-домене. Вставьте обычную
+        гостевую ссылку IMON Meets.
+      </p>
+      <form id="setup">
+        <label
+          >Ссылка на встречу<input
+            id="link"
+            type="url"
+            placeholder="https://imonmeets.vercel.app/join/..."
+            required
+        /></label>
+        <label
+          >Ваше имя<input id="name" maxlength="80" autocomplete="name"
+        /></label>
+        <button type="submit">Открыть встречу</button>
+      </form>
+      <p id="status" role="status"></p>
+      <div id="meeting"></div>
+      <footer>
+        <button id="leave" type="button" disabled>Выйти</button>
+        <button id="remove" type="button" disabled>Закрыть виджет</button>
+        <a id="fallback" hidden target="_blank" rel="noopener noreferrer"
+          >Открыть отдельно</a
+        >
+      </footer>
+    </main>
+    <script type="module">
+      // Change this trusted import when using your own IMON Meets deployment.
+      import { mountMeeting } from "https://imonmeets.vercel.app/sdk/v1/embed.js";
+      const appOrigin = "https://imonmeets.vercel.app";
+      const status = document.getElementById("status");
+      const leave = document.getElementById("leave"),
+        remove = document.getElementById("remove");
+      const fallback = document.getElementById("fallback");
+      let widget;
+      document.getElementById("setup").addEventListener("submit", (event) => {
+        event.preventDefault();
+        let url;
+        try {
+          url = new URL(document.getElementById("link").value);
+        } catch {
+          status.textContent = "Проверьте ссылку.";
+          return;
+        }
+        const slug = /^\/join\/([A-Za-z0-9_-]{16,128})\/?$/.exec(
+          url.pathname,
+        )?.[1];
+        if (url.origin !== appOrigin || !slug || url.username || url.password) {
+          status.textContent = "Нужна ссылка на встречу из этого сервиса.";
+          return;
+        }
+        widget?.destroy();
+        fallback.href = `${appOrigin}/join/${slug}`;
+        fallback.hidden = false;
+        status.textContent = "Подключаем виджет...";
+        leave.disabled = false;
+        remove.disabled = false;
+        widget = mountMeeting({
+          container: document.getElementById("meeting"),
+          appUrl: appOrigin,
+          room: slug,
+          name: document.getElementById("name").value,
+          onEvent(event) {
+            if (event.type === "ready")
+              status.textContent = "Проверьте имя и устройства перед входом.";
+            else if (event.type === "state" && event.state === "waiting")
+              status.textContent = "Ждем разрешения организатора.";
+            else if (event.type === "state" && event.state === "joined")
+              status.textContent = "Вы во встрече.";
+            else if (event.type === "state" && event.state === "left")
+              status.textContent = "Вы вышли из встречи.";
+          },
+        });
+        widget.ready.catch(() => {
+          status.textContent =
+            "Виджет недоступен. Проверьте разрешенный домен или откройте встречу отдельно.";
+        });
+      });
+      leave.addEventListener("click", () => widget?.leave());
+      remove.addEventListener("click", () => {
+        widget?.destroy();
+        widget = undefined;
+        leave.disabled = true;
+        remove.disabled = true;
+        status.textContent = "Виджет закрыт.";
+      });
+      addEventListener("pagehide", () => widget?.destroy());
+    </script>
+  </body>
+</html>

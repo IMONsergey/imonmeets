@@ -27,6 +27,7 @@ import { api, date } from "../api";
 import type { WaitingRequest } from "../api";
 import { WaitingList } from "./WaitingRoom";
 import { useRoomChat } from "./useRoomChat";
+import type { MeetingEmbedState } from "../../../../packages/sdk/embed-protocol.js";
 
 type ManagedParticipant = {
   identity: string;
@@ -82,11 +83,15 @@ export function CallSurface({
   chatToken,
   notify,
   management,
+  request = api,
+  onConnectionStateChange,
 }: {
   slug: string;
   chatToken?: string;
   notify: (s: string, e?: boolean) => void;
   management?: { workspaceId: string; roomId: string };
+  request?: typeof api;
+  onConnectionStateChange?: (state: MeetingEmbedState) => void;
 }) {
   const [chatOpen, setChatOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -101,7 +106,7 @@ export function CallSurface({
   const [message, setMessage] = useState("");
   const [canScreenShare, setCanScreenShare] = useState(false);
   const { chatMessages, send, isSending } = useChat();
-  const persistentChat = useRoomChat(slug, chatToken);
+  const persistentChat = useRoomChat(slug, chatToken, request);
   const shownMessages = chatToken
     ? persistentChat.messages.map((entry) => ({
         id: entry.id,
@@ -119,6 +124,14 @@ export function CallSurface({
   const participants = useParticipants();
   const isRecording = useIsRecording();
   const connection = useConnectionState();
+  useEffect(() => {
+    if (connection === ConnectionState.Connected)
+      onConnectionStateChange?.("joined");
+    else if (connection === ConnectionState.Reconnecting)
+      onConnectionStateChange?.("reconnecting");
+    else if (connection === ConnectionState.Connecting)
+      onConnectionStateChange?.("connecting");
+  }, [connection, onConnectionStateChange]);
   const bottomRef = useRef<HTMLDivElement>(null);
   const followMessages = useRef(true);
   useEffect(() => {

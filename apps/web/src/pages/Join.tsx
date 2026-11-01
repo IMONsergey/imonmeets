@@ -28,6 +28,7 @@ import {
   WaitingGuest,
 } from "./WaitingRoom";
 import type { WaitingGrant } from "./WaitingRoom";
+import type { MeetingEmbedState } from "../../../../packages/sdk/embed-protocol.js";
 type PublicRoom = {
   room: Pick<
     Room,
@@ -60,6 +61,11 @@ type JoinProps = {
   config: Config;
   user?: User;
   notify: (s: string, e?: boolean) => void;
+  request?: typeof api;
+  embedded?: boolean;
+  initialName?: string;
+  leaveRequest?: number;
+  onStateChange?: (state: MeetingEmbedState) => void;
 };
 export function Join(props: JoinProps) {
   return (
@@ -69,13 +75,23 @@ export function Join(props: JoinProps) {
     />
   );
 }
-function MeetingJoin({ slug, config, user, notify }: JoinProps) {
+function MeetingJoin({
+  slug,
+  config,
+  user,
+  notify,
+  request = api,
+  embedded = false,
+  initialName = "",
+  leaveRequest = 0,
+  onStateChange,
+}: JoinProps) {
   const [info, setInfo] = useState<PublicRoom>();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [grant, setGrant] = useState<JoinGrant>();
   const [waiting, setWaiting] = useState<WaitingGrant | undefined>(() =>
-    readWaitingGrant(slug, user?.id),
+    embedded ? undefined : readWaitingGrant(slug, user?.id),
   );
   const joinRequest = useRef(0);
   const [choices, setChoices] = useState<LocalUserChoices>();
@@ -83,6 +99,15 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
   const [exitReason, setExitReason] = useState<DisconnectReason>();
   const [checkingReturn, setCheckingReturn] = useState(false);
   const mounted = useRef(true);
+  const handledLeave = useRef(0);
+  const stateChange = useRef(onStateChange);
+  stateChange.current = onStateChange;
+  const saveWaiting = useCallback(
+    (value?: WaitingGrant) => {
+      if (!embedded) saveWaitingGrant(slug, value);
+    },
+    [embedded, slug],
+  );
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -90,6 +115,50 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
       joinRequest.current++;
     };
   }, []);
+  useEffect(() => {
+    if (!leaveRequest || handledLeave.current === leaveRequest) return;
+    handledLeave.current = leaveRequest;
+    joinRequest.current++;
+    setBusy(false);
+    setLeft(true);
+    setExitReason(DisconnectReason.CLIENT_INITIATED);
+    setGrant(undefined);
+    setChoices(undefined);
+    setWaiting(undefined);
+    saveWaiting();
+    if (waiting)
+      void request(
+        `/rooms/${encodeURIComponent(slug)}/waiting`,
+        { waitingToken: waiting.waitingToken },
+        "DELETE",
+      ).catch(() => {
+        // The admission request expires server-side if the network is lost.
+      });
+  }, [leaveRequest, waiting, request, slug, saveWaiting]);
+  useEffect(() => {
+    if (left) stateChange.current?.("left");
+    else if (waiting) stateChange.current?.("waiting");
+    else if (grant || busy) stateChange.current?.("connecting");
+    else if (info) stateChange.current?.("prejoin");
+  }, [left, waiting, grant, busy, info]);
+  useEffect(() => {
+    if (!embedded || !waiting) return;
+    const cancelOnUnload = () => {
+      // Frame removal ends local media immediately. Admission cancellation is
+      // best-effort during unload; the server also expires abandoned requests.
+      void fetch(`/api/rooms/${encodeURIComponent(slug)}/waiting`, {
+        method: "DELETE",
+        credentials: "omit",
+        keepalive: true,
+        redirect: "error",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ waitingToken: waiting.waitingToken }),
+      }).catch(() => {});
+    };
+    addEventListener("pagehide", cancelOnUnload);
+    return () => removeEventListener("pagehide", cancelOnUnload);
+  }, [embedded, waiting, slug]);
   const [recording, setRecording] = useState<Recording>();
   const [recordingStatus, setRecordingStatus] = useState<
     "loading" | "ready" | "error"
@@ -97,7 +166,7 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
   const [actionBusy, setActionBusy] = useState(false);
   const load = useCallback(
     () =>
-      api<PublicRoom>(`/rooms/${encodeURIComponent(slug)}`)
+      request<PublicRoom>(`/rooms/${encodeURIComponent(slug)}`)
         .then((value) => {
           if (mounted.current) {
             setInfo(value);
@@ -105,11 +174,11 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
           }
         })
         .catch((e) => setError(e.message)),
-    [slug],
+    [slug, request],
   );
   useEffect(() => {
     let cancelled = false;
-    api<PublicRoom>(`/rooms/${encodeURIComponent(slug)}`)
+    request<PublicRoom>(`/rooms/${encodeURIComponent(slug)}`)
       .then((value) => {
         if (!cancelled) {
           setInfo(value);
@@ -122,7 +191,7 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, request]);
   useEffect(() => {
     if (
       !grant?.canManage ||
@@ -187,16 +256,24 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
     }
     setBusy(true);
     setError("");
-    const request = ++joinRequest.current;
+    const requestId = ++joinRequest.current;
     try {
-      const next = await api<JoinGrant | WaitingGrant>(
+      const next = await request<JoinGrant | WaitingGrant>(
         `/rooms/${encodeURIComponent(slug)}/join`,
         {
           name: values.username.trim(),
           ...(waitingToken ? { waitingToken } : {}),
         },
       );
-      if (!mounted.current || request !== joinRequest.current) return;
+      if (!mounted.current || requestId !== joinRequest.current) {
+        if (embedded && next.status === "waiting")
+          void request(
+            `/rooms/${encodeURIComponent(slug)}/waiting`,
+            { waitingToken: next.waitingToken },
+            "DELETE",
+          ).catch(() => {});
+        return;
+      }
       setChoices(values);
       if (next.status === "waiting") {
         const pending = {
@@ -204,21 +281,21 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
           name: values.username.trim(),
           accountId: user?.id ?? null,
         };
-        saveWaitingGrant(slug, pending);
+        saveWaiting(pending);
         setWaiting(pending);
         return;
       }
-      saveWaitingGrant(slug);
+      saveWaiting();
       setWaiting(undefined);
-      setGrant(next);
+      setGrant(embedded ? { ...next, canManage: false } : next);
       setLeft(false);
     } catch (e) {
-      if (mounted.current && request === joinRequest.current) {
+      if (mounted.current && requestId === joinRequest.current) {
         setError((e as Error).message);
         if (waitingToken) throw e;
       }
     } finally {
-      if (mounted.current && request === joinRequest.current) setBusy(false);
+      if (mounted.current && requestId === joinRequest.current) setBusy(false);
     }
   }
   if (grant && !left)
@@ -345,6 +422,7 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
             setGrant(undefined);
           }}
           onError={(e) => notify(`Ошибка связи: ${e.message}`, true)}
+          onConnected={() => stateChange.current?.("joined")}
           data-lk-theme="default"
           className="live-room"
         >
@@ -352,6 +430,8 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
             slug={slug}
             chatToken={grant.chatToken}
             notify={notify}
+            request={request}
+            onConnectionStateChange={onStateChange}
             management={
               grant.canManage && grant.workspaceId && grant.roomId
                 ? { workspaceId: grant.workspaceId, roomId: grant.roomId }
@@ -364,9 +444,13 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
   return (
     <div className="join-page">
       <header>
-        <Link to="/">
+        {embedded ? (
           <Brand />
-        </Link>
+        ) : (
+          <Link to="/">
+            <Brand />
+          </Link>
+        )}
         <span className="join-header-label">Вход во встречу</span>
       </header>
       <main className="join-main">
@@ -379,10 +463,12 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
             key={waiting.requestId}
             slug={slug}
             grant={waiting}
+            request={request}
+            persist={!embedded}
             onCancel={() => {
               joinRequest.current++;
               setBusy(false);
-              saveWaitingGrant(slug);
+              saveWaiting();
               setWaiting(undefined);
               setError("");
             }}
@@ -429,7 +515,7 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
                     setCheckingReturn(true);
                     setError("");
                     try {
-                      const current = await api<PublicRoom>(
+                      const current = await request<PublicRoom>(
                         `/rooms/${encodeURIComponent(slug)}`,
                       );
                       if (!mounted.current) return;
@@ -448,9 +534,11 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
                   <ArrowRight size={17} />
                 </Button>
               )}
-            <Link className="back-link" to="/">
-              На главную
-            </Link>
+            {!embedded && (
+              <Link className="back-link" to="/">
+                На главную
+              </Link>
+            )}
           </div>
         ) : (
           <>
@@ -474,8 +562,9 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
             {!info && error && (
               <div className="standalone-card">
                 <p>
-                  Проверьте ссылку. Для приватной встречи войдите в аккаунт
-                  участника пространства.
+                  {embedded
+                    ? "Проверьте ссылку. Для этой встречи должен быть разрешен гостевой вход."
+                    : "Проверьте ссылку. Для приватной встречи войдите в аккаунт участника пространства."}
                 </p>
                 <Button
                   onClick={() => {
@@ -485,24 +574,26 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
                 >
                   Повторить проверку
                 </Button>
-                <Button
-                  className="primary"
-                  busy={busy}
-                  onClick={async () => {
-                    setBusy(true);
-                    rememberReturnTo(location.pathname + location.search);
-                    try {
-                      if (user) await api("/auth/sign-out", {});
-                      go("/login");
-                    } catch (e) {
-                      setError((e as Error).message);
-                    } finally {
-                      setBusy(false);
-                    }
-                  }}
-                >
-                  {user ? "Войти с другой почтой" : "Войти в аккаунт"}
-                </Button>
+                {!embedded && (
+                  <Button
+                    className="primary"
+                    busy={busy}
+                    onClick={async () => {
+                      setBusy(true);
+                      rememberReturnTo(location.pathname + location.search);
+                      try {
+                        if (user) await api("/auth/sign-out", {});
+                        go("/login");
+                      } catch (e) {
+                        setError((e as Error).message);
+                      } finally {
+                        setBusy(false);
+                      }
+                    }}
+                  >
+                    {user ? "Войти с другой почтой" : "Войти в аккаунт"}
+                  </Button>
+                )}
               </div>
             )}
             {info?.room.status === "closed" ? (
@@ -512,9 +603,11 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
                   title="Эта встреча завершена"
                   text="Организатор закрыл комнату. Попросите у него ссылку на новую встречу."
                   action={
-                    <Link to="/" className="button">
-                      На главную
-                    </Link>
+                    !embedded ? (
+                      <Link to="/" className="button">
+                        На главную
+                      </Link>
+                    ) : undefined
                   }
                 />
               </div>
@@ -525,9 +618,11 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
                   title="Видеосвязь пока недоступна"
                   text="Администратор еще подключает сервер видеосвязи. Комната сохранена, попробуйте войти позднее."
                   action={
-                    <Link to="/" className="button">
-                      На главную
-                    </Link>
+                    !embedded ? (
+                      <Link to="/" className="button">
+                        На главную
+                      </Link>
+                    ) : undefined
                   }
                 />
               </div>
@@ -542,14 +637,16 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
                 <PreJoin
                   defaults={{
                     username:
+                      (embedded ? initialName : undefined) ??
                       user?.name ??
                       readLocalPreference("imon.displayName") ??
                       "",
-                    audioEnabled: true,
-                    videoEnabled: true,
+                    audioEnabled: !embedded,
+                    videoEnabled: !embedded,
                   }}
                   onSubmit={(values) => {
-                    writeLocalPreference("imon.displayName", values.username);
+                    if (!embedded)
+                      writeLocalPreference("imon.displayName", values.username);
                     void enter(values);
                   }}
                   onError={(e) =>
@@ -581,7 +678,7 @@ function MeetingJoin({ slug, config, user, notify }: JoinProps) {
                 </p>
               </div>
             ) : null}
-            {!user && info && (
+            {!embedded && !user && info && (
               <p className="join-account-link">
                 Уже есть аккаунт?{" "}
                 <button

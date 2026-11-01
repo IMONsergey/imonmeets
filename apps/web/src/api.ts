@@ -50,6 +50,7 @@ export type Config = {
   recordingConfigured: boolean;
   transcriptionConfigured?: boolean;
   summaryConfigured?: boolean;
+  embedAllowedOrigins?: string[];
 };
 export type Member = {
   id: string;
@@ -285,6 +286,7 @@ export async function api<T>(
     timeoutMs?: number;
     headers?: Record<string, string>;
     sessionErrors?: boolean;
+    credentials?: RequestCredentials;
   } = {},
 ): Promise<T> {
   const requestAuthEpoch = authEpoch;
@@ -300,7 +302,9 @@ export async function api<T>(
   try {
     const response = await fetch(`/api${path}`, {
       method: method ?? (body === undefined ? "GET" : "POST"),
-      credentials: "include",
+      credentials: options.credentials ?? "include",
+      cache: "no-store",
+      redirect: "error",
       headers: {
         ...options.headers,
         ...(body === undefined ? {} : { "Content-Type": "application/json" }),
@@ -383,6 +387,35 @@ export async function api<T>(
     options.signal?.removeEventListener("abort", cancel);
   }
 }
+/** The embedded guest view never inherits a signed-in account's cookies. */
+export const guestApi: typeof api = (path, body, method, options) => {
+  const verb = method ?? (body === undefined ? "GET" : "POST");
+  const match =
+    /^\/rooms\/[A-Za-z0-9_-]{16,128}(?:\/(join|waiting-status|waiting|chat))?(?:\?(?:after|before)=\d{1,19})?$/.exec(
+      path,
+    );
+  const allowed =
+    (path === "/config" && verb === "GET") ||
+    (match &&
+      ((!match[1] && verb === "GET") ||
+        (["join", "waiting-status"].includes(match[1] ?? "") &&
+          verb === "POST") ||
+        (match[1] === "waiting" && verb === "DELETE") ||
+        (match[1] === "chat" && ["GET", "POST"].includes(verb))));
+  if (!allowed)
+    return Promise.reject(
+      new ApiError(
+        "Этот запрос недоступен гостевому виджету.",
+        403,
+        "EMBED_REQUEST_REJECTED",
+      ),
+    );
+  return api(path, body, method, {
+    ...options,
+    credentials: "omit",
+    sessionErrors: false,
+  });
+};
 export class ApiError extends Error {
   constructor(
     message: string,

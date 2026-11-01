@@ -7,10 +7,14 @@
     ".": {
       "types": "./index.d.ts",
       "import": "./index.js"
+    },
+    "./embed": {
+      "types": "./embed.d.ts",
+      "import": "./embed.js"
     }
   },
   "scripts": {
-    "test": "node --test index.test.js"
+    "test": "node --test --test-isolation=none index.test.js embed.test.js"
   },
   "engines": {
     "node": ">=24"

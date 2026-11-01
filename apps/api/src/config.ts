@@ -1,3 +1,5 @@
+import { parseEmbedAllowedOrigins } from "./embedding.js";
+
 export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
   const dev =
     env.NODE_ENV !== "production" && env.DEV_ALLOW_UNVERIFIED_EMAIL === "true";
@@ -105,6 +107,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
   if (billingConfigured && billing.amountKopecks < 100)
     throw new Error("Billing amount must be at least one ruble");
   return {
+    embedAllowedOrigins: parseEmbedAllowedOrigins(
+      env.EMBED_ALLOWED_ORIGINS,
+      env.NODE_ENV === "production",
+    ),
     analysis,
     transcriptionConfigured,
     summaryConfigured: transcriptionConfigured && analysis.summaryEnabled,

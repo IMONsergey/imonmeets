@@ -65,7 +65,19 @@ server {
     access_log off;
     client_max_body_size 128k;
 ${process.env.OFFSITE_EXPORT_ENABLED === "true" ? "    include /etc/nginx/snippets/imonmeets-offsite.conf;\n" : ""}
-${recordingProxy}    location /api/ {
+${recordingProxy}    location /embed/ {
+        limit_except GET { deny all; }
+        proxy_pass http://127.0.0.1:3540;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $http_x_forwarded_for;
+        proxy_set_header X-Imon-Client-IP '';
+        proxy_connect_timeout 5s;
+        proxy_read_timeout 30s;
+        proxy_buffering off;
+    }
+    location /api/ {
         proxy_pass http://127.0.0.1:3540;
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;

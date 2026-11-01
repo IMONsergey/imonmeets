@@ -16,6 +16,15 @@ The API binds `127.0.0.1:3540` by default. The web development server should pro
 
 ## Required configuration
 
+Guest embedding is disabled by default. `EMBED_ALLOWED_ORIGINS` accepts at most
+20 exact HTTPS origins separated by commas; development also accepts loopback
+HTTP. Only `/embed/:slug` may be framed, with a server-generated `frame-ancestors`
+policy. Account pages and API responses retain `DENY` and `frame-ancestors 'none'`.
+The Vercel and Nginx routes must proxy the guest HTML to this backend so the
+policy has one source of truth. The HTML and Vercel assets must come from the
+same source build. Public `/sdk/v1/*.js` modules permit anonymous CORS reads;
+API CORS remains closed. See [the SDK guide](../../packages/sdk/README.md).
+
 | Variable                     | Meaning                                                                                                                                                            |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `DATABASE_URL`               | PostgreSQL connection URL, required                                                                                                                                |

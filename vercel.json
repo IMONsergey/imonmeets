@@ -6,13 +6,41 @@
   "outputDirectory": "apps/web/dist",
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/sdk/v1/(embed|embed-protocol|index)\\.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=300"
+      },
+      "continue": true
+    },
+    {
+      "src": "/((?!embed/[A-Za-z0-9_-]{16,128}/?$).*)",
       "headers": {
         "X-Content-Type-Options": "nosniff",
         "X-Frame-Options": "DENY",
+        "Content-Security-Policy": "frame-ancestors 'none'; object-src 'none'; base-uri 'self'",
         "Referrer-Policy": "no-referrer"
       },
       "continue": true
+    },
+    {
+      "src": "/embed/([A-Za-z0-9_-]{16,128})/?",
+      "dest": "https://imonmeets-api.94-249-186-240.sslip.io:8443/embed/$1",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "no-referrer",
+        "Cache-Control": "no-store",
+        "x-vercel-enable-rewrite-caching": "0"
+      },
+      "transforms": [
+        {
+          "type": "request.headers",
+          "op": "set",
+          "target": { "key": "x-imon-proxy-secret" },
+          "args": "$ORIGIN_PROXY_SECRET",
+          "env": ["ORIGIN_PROXY_SECRET"]
+        }
+      ]
     },
     {
       "src": "/api/(.*)",

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   api,
+  guestApi,
   ApiError,
   authCallbackURL,
   getReturnTo,
@@ -36,6 +37,54 @@ Object.defineProperties(globalThis, {
   location: { value: fixtureLocation, configurable: true },
   localStorage: { value: local, configurable: true },
   sessionStorage: { value: session, configurable: true },
+});
+
+test("embedded guest requests omit ambient cookies and cannot reach account or management APIs", async (t) => {
+  const calls: { url: unknown; options?: RequestInit }[] = [];
+  t.mock.method(
+    globalThis,
+    "fetch",
+    async (url: unknown, options?: RequestInit) => {
+      calls.push({ url, options });
+      return Response.json({ ok: true });
+    },
+  );
+  const room = "room_12345678901234567890";
+  await guestApi("/config");
+  await guestApi(`/rooms/${room}`);
+  await guestApi(`/rooms/${room}/join`, { name: "Guest" });
+  await guestApi(`/rooms/${room}/waiting-status`, { waitingToken: "opaque" });
+  await guestApi(
+    `/rooms/${room}/waiting`,
+    { waitingToken: "opaque" },
+    "DELETE",
+  );
+  await guestApi(`/rooms/${room}/chat?after=1`, undefined, "GET", {
+    credentials: "include",
+  });
+  assert.equal(calls.length, 6);
+  for (const call of calls) {
+    assert.equal(call.options?.credentials, "omit");
+    assert.equal(call.options?.redirect, "error");
+    assert.equal(call.options?.cache, "no-store");
+  }
+  for (const path of [
+    "/me",
+    "/auth/sign-in/email",
+    "/workspaces/a/rooms",
+    `/rooms/${room}/../me`,
+    `/rooms/${room}/chat?token=secret`,
+    "/config?x=1",
+    "//evil.invalid/rooms",
+  ]) {
+    await assert.rejects(
+      guestApi(path),
+      (error) =>
+        error instanceof ApiError && error.code === "EMBED_REQUEST_REJECTED",
+    );
+  }
+  await assert.rejects(guestApi(`/rooms/${room}`, {}, "DELETE"));
+  assert.equal(calls.length, 6);
 });
 
 test("auth destinations reject cross-origin, protocol-relative, control and auth-loop paths", () => {

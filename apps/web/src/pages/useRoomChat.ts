@@ -2,7 +2,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../api";
 import type { ChatMessage } from "../api";
 
-export function useRoomChat(slug: string, token?: string) {
+export function useRoomChat(
+  slug: string,
+  token?: string,
+  request: typeof api = api,
+) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(Boolean(token));
@@ -42,7 +46,7 @@ export function useRoomChat(slug: string, token?: string) {
       try {
         // Read bounded pages; further history catches up on the next poll.
         for (let page = 0; page < 3; page++) {
-          const response = await api<{
+          const response = await request<{
             messages: ChatMessage[];
             nextCursor: string | null;
             hasEarlier?: boolean;
@@ -80,7 +84,7 @@ export function useRoomChat(slug: string, token?: string) {
       controller.abort();
       clearInterval(timer);
     };
-  }, [slug, token, refresh, merge]);
+  }, [slug, token, refresh, merge, request]);
   const send = async (text: string) => {
     if (!token)
       throw new Error("Сеанс чата не найден. Переподключитесь к встрече.");
@@ -91,7 +95,7 @@ export function useRoomChat(slug: string, token?: string) {
     pending.current = draft;
     setSending(true);
     try {
-      const result = await api<{ message: ChatMessage }>(
+      const result = await request<{ message: ChatMessage }>(
         `/rooms/${encodeURIComponent(slug)}/chat`,
         { text, clientId: draft.id },
         "POST",

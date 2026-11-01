@@ -5,6 +5,51 @@
   background: var(--surface, #fff);
   color: var(--text, #232333);
 }
+.embed-page {
+  min-height: 100dvh;
+  background: var(--surface, #fff);
+}
+.embed-page .join-page > header {
+  min-height: 56px;
+  padding: 12px 24px;
+}
+.embed-page .join-page .join-main {
+  padding: 28px 24px 36px;
+}
+.embed-page .join-intro {
+  margin-bottom: 24px;
+}
+.embed-page .join-intro h1 {
+  font-size: 24px;
+}
+.embed-unavailable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 32px 24px;
+  text-align: center;
+}
+.embed-unavailable h1 {
+  margin: 8px 0 0;
+  font-size: 24px;
+}
+.embed-unavailable p {
+  max-width: 480px;
+  margin: 0;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.embed-notice {
+  position: fixed;
+  z-index: 1000;
+  bottom: 90px;
+  left: 16px;
+  right: 16px;
+  max-width: 520px;
+  margin: auto;
+}
 .join-page > header {
   min-height: 76px;
   height: auto;

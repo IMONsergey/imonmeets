@@ -51,11 +51,15 @@ export function WaitingGuest({
   grant,
   onAdmitted,
   onCancel,
+  request = api,
+  persist = true,
 }: {
   slug: string;
   grant: WaitingGrant;
   onAdmitted: (token: string) => Promise<void>;
   onCancel: () => void;
+  request?: typeof api;
+  persist?: boolean;
 }) {
   const [status, setStatus] = useState<"waiting" | "denied" | "expired">(
     "waiting",
@@ -74,7 +78,7 @@ export function WaitingGuest({
       if (inFlight || joining) return;
       inFlight = true;
       try {
-        const result = await api<{
+        const result = await request<{
           status: "waiting" | "admitted" | "denied" | "expired";
           expiresAt: string;
         }>(
@@ -93,7 +97,7 @@ export function WaitingGuest({
             joining = false;
           }
         } else if (result.status !== "waiting") {
-          saveWaitingGrant(slug);
+          if (persist) saveWaitingGrant(slug);
           setStatus(result.status);
         }
       } catch (e) {
@@ -108,7 +112,7 @@ export function WaitingGuest({
       controller.abort();
       clearInterval(timer);
     };
-  }, [slug, grant.waitingToken, status, refresh]);
+  }, [slug, grant.waitingToken, status, refresh, request, persist]);
   return (
     <div className="standalone-card waiting-guest">
       <div className="empty-icon">
@@ -156,13 +160,13 @@ export function WaitingGuest({
           setCancelling(true);
           setError("");
           try {
-            await api(
+            await request(
               `/rooms/${encodeURIComponent(slug)}/waiting`,
               { waitingToken: grant.waitingToken },
               "DELETE",
               { sessionErrors: false },
             );
-            saveWaitingGrant(slug);
+            if (persist) saveWaitingGrant(slug);
             onCancel();
           } catch (e) {
             setError((e as Error).message);
