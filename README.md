@@ -4,11 +4,11 @@ Own your meeting experience: accounts, workspaces, scheduled rooms and real vide
 
 **Public review:** [imonmeets.vercel.app](https://imonmeets.vercel.app), with a dedicated review account. Public signup is closed while external email is being configured. See the [Vercel deployment guide](docs/vercel-review.md) for topology and access limitations.
 
-**Status: published preview, code release [5880571](https://github.com/IMONsergey/imonmeets/commit/5880571d0f639e2a8aaeddbf8c7cfcdc749c1c8f), 2026-11-01.** [GitHub CI passed](https://github.com/IMONsergey/imonmeets/actions/runs/41307413745), Vercel production is READY, the backend migration is applied, and the public API is healthy. This release adds waiting-room admission, persistent chat, TOTP MFA, account data controls, plan enforcement, recording retention and optional payment/analysis integrations. Recording is enabled with private S3 storage and three-day retention; its full lifecycle passed isolated acceptance with real Egress and S3. The public-deployment review passed, including guest admission, two-party media, chat, calendar export and closed-room token rejection. The real recording lifecycle also passed against the published deployment: UI start/stop, private MP4, authorized full/range download, anonymous-access denial, zero remaining S3 objects and confirmed database cleanup. Public registration remains closed pending external email delivery. Payment collection, transcription and AI summaries remain disabled. Start with the [Russian product guide](docs/product-guide.ru.md) and the [release audit](docs/release-audit-2026-11-01.md) for evidence and current limits.
+**Текущее состояние, 1 ноября 2026 года: опубликованная предварительная версия.** Backend работает на [`91aae88`](https://github.com/IMONsergey/imonmeets/commit/91aae88); гостевой виджет, аудио, видео, допуск и чат приняты через публичный адрес. Операционные изменения [`22f4a1b`](https://github.com/IMONsergey/imonmeets/commit/22f4a1b) прошли [CI](https://github.com/IMONsergey/imonmeets/actions/runs/41315164049), включая новые тесты резервных копий и готовности запуска. Полные результаты и границы проверки: [актуальный отчет](docs/continuation-2026-11-01.md).
 
-The latest backup, `imonmeets-20261101T124303Z.dump` for `5880571`, was automatically copied to the Mac over verified HTTPS with a matching SHA256. Private decryption confirmed the S3 recovery credentials and exact release in `.env`; temporary plaintext was removed. A real PostgreSQL restore passed for the preceding post-migration backup `122832Z`; the latest backup was not separately restored. **The current operations monitor reports a disk warning:** 9.32 GiB free at 12:43 UTC is below the unchanged 10% threshold. API, media and backup checks pass, but overall monitoring is false because of disk headroom. Recording objects are not included in the offsite database/configuration backup. AI models remain undeployed and their combined resource budget is unverified.
+Внешняя зашифрованная копия MP4 теперь работает: настоящая запись Egress автоматически получена на Mac, восстановлена с совпадением SHA256 и размера, затем удалена вместе с копиями. Синхронизация выполняется каждые пять минут при доступном Mac; срок хранения записей три дня сохранен. Свежая копия базы от 17:18:46 UTC+3 также прошла настоящий `pg_restore` и автоматическую проверку на Mac. Инструкции: [копии записей](docs/recording-backup.md), [проверка готовности](docs/launch-readiness.md).
 
-Final storage inspection found small Egress JSON manifests left after MP4 deletion. Release `5880571` disables new manifests and adds exact legacy-manifest cleanup with retry semantics. The repeat production recording test passed with one observed MP4, no observed manifests, zero remaining objects and confirmed database cleanup. See the release audit for the test scope and evidence.
+**Диск остается критическим ограничением: после адресной очистки свободно около 1,7 GiB, использование 99%.** Пороги более 5 GiB и более 10% не менялись. Рабочие звонки и успешные тесты не означают готовность общего сервера к коммерческой нагрузке. Открытая регистрация закрыта, почта работает в capture; платежи, транскрипции и AI выключены. Независимые круглосуточные оповещения и целевая емкость еще не приняты. Начать работу с интерфейсом поможет [руководство пользователя](docs/product-guide.ru.md).
 
 ## Product
 
@@ -20,12 +20,13 @@ Final storage inspection found small Egress JSON manifests left after MP4 deleti
 - Independent camera/microphone preview, microphone level indication, video/audio, screen sharing, participant roster and moderator microphone muting through LiveKit's real React components.
 - PostgreSQL-backed meeting chat with retry-safe sending, pagination, post-call history and retention. Messages survive a new media session after a page reload.
 - Recording API, signed webhooks, persistent states, private S3 downloads, deletion and retention. Enabled on the published preview with a three-day retention limit; the real Egress/S3 lifecycle passed both isolated acceptance and repeat acceptance through the public production alias. New installations keep recording disabled by default until their own worker/storage checks pass.
+- Incremental encrypted offsite recording copies, automatic verification on the Mac, private file recovery and deletion/expiry propagation. The recording mirror preserves the original retention period and depends on the Mac being available; see [recording recovery and its limits](docs/recording-backup.md).
 - Optional private CPU transcription and local AI summaries, with explicit opt-in, bounded jobs, cancellation, retention and text export. The implementation is present; AI is currently off.
 - Current plan and usage, server-enforced limits and durable payment entitlements. Optional YooKassa checkout supports manual 30-day renewal and server-verified payment status; collection stays disabled until a merchant account is configured.
 - A complete [guest meeting widget and SDK](packages/sdk/README.md): hosted ES modules, an isolated guest iframe, device check, waiting-room admission, real media and persistent chat. Embedding is restricted to exact configured host origins. The parent receives bounded state events and cannot obtain room/account credentials or switch on devices. The lower-level client remains available for custom interfaces; npm publication is not required for the hosted widget.
 - Russian responsive interface, account and device settings, honest empty states.
 
-Calendar OAuth and enterprise SSO remain on the roadmap. Automatic recurring charges are not implemented; renewal is manual. Registration reopening, live payments and AI execution require their provider or worker acceptance before being advertised as available. Recording is enabled on the current preview; its published-deployment acceptance is tracked in the release audit. See the [feature and API reference](apps/api/FEATURES.md) for implemented behavior and configuration gates.
+Calendar OAuth and enterprise SSO remain on the roadmap. Automatic recurring charges are not implemented; renewal is manual. Registration reopening, live payments and AI execution require their provider or worker acceptance before being advertised as available. Recording is enabled on the current preview; current published-deployment and recovery acceptance is tracked in the [continuation report](docs/continuation-2026-11-01.md). See the [feature and API reference](apps/api/FEATURES.md) for implemented behavior and configuration gates.
 
 ## Architecture
 
@@ -103,6 +104,9 @@ Recording states are reconciled using the Egress ID and exact output key. Unknow
 
 ## Documentation
 
+- [Актуальные изменения, приемка и ограничения](docs/continuation-2026-11-01.md)
+- [Launch readiness checks and evidence contract](docs/launch-readiness.md)
+- [Encrypted offsite recording backup and recovery](docs/recording-backup.md)
 - [Russian product guide](docs/product-guide.ru.md)
 - [API setup and configuration](apps/api/README.md)
 - [Admission, MFA, data controls, billing and analysis API](apps/api/FEATURES.md)
@@ -113,7 +117,7 @@ Recording states are reconciled using the Egress ID and exact output key. Unknow
 - [Vercel review deployment](docs/vercel-review.md)
 - [Commercial launch roadmap](docs/roadmap.md)
 - [Verification record](docs/verification.md)
-- [Published release audit and remaining dependencies](docs/release-audit-2026-11-01.md)
+- [Earlier release audit, before the widget and recording backup](docs/release-audit-2026-11-01.md)
 - [Earlier hardening audit](docs/audit-remediation-2026-11-01.md)
 - [TURN, automated backup and operations](docs/operations.md)
 - [External email activation](docs/email-activation.md)
