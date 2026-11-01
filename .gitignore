@@ -11,3 +11,7 @@ test-results/
 *.tsbuildinfo
 backups/
 .DS_Store
+.vercel/
+deploy/livekit.public.yaml
+deploy/nginx.public.conf
+deploy/nginx.acme.generated.conf

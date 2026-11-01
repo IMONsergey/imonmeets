@@ -35,12 +35,24 @@ export function Auth({
     isForgot = path === "/forgot-password",
     isReset = path === "/reset-password",
     isVerify = path === "/verify-email";
+  const reviewMode =
+    config.emailDelivery === "capture" && !config.registrationEnabled;
+  const registrationClosed = isRegister && !config.registrationEnabled;
+  const emailRequestUnavailable =
+    (isForgot || isVerify) && (reviewMode || !config.emailConfigured);
   useEffect(() => {
     setError("");
     setSuccess("");
   }, [path]);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (busy) return;
+    if (emailRequestUnavailable) {
+      setError(
+        "Для восстановления доступа или подтверждения почты обратитесь к администратору.",
+      );
+      return;
+    }
     setBusy(true);
     setError("");
     const values = new FormData(e.currentTarget);
@@ -57,7 +69,9 @@ export function Auth({
         const token = new URLSearchParams(location.search).get("token");
         if (!token)
           throw new Error(
-            "В ссылке нет токена восстановления. Запросите новое письмо.",
+            reviewMode
+              ? "Ссылка восстановления неполная. Обратитесь к администратору."
+              : "В ссылке нет токена восстановления. Запросите новое письмо.",
           );
         await api("/auth/reset-password", {
           newPassword: values.get("password"),
@@ -107,15 +121,17 @@ export function Auth({
       setBusy(false);
     }
   }
-  const title = isRegister
-    ? "Давайте познакомимся"
-    : isForgot
-      ? "Восстановить доступ"
-      : isReset
-        ? "Новый пароль"
-        : isVerify
-          ? "Подтвердите вашу почту"
-          : "Рады видеть вас снова";
+  const title = registrationClosed
+    ? "Регистрация закрыта"
+    : isRegister
+      ? "Давайте познакомимся"
+      : isForgot
+        ? "Восстановить доступ"
+        : isReset
+          ? "Новый пароль"
+          : isVerify
+            ? "Подтвердите вашу почту"
+            : "Рады видеть вас снова";
   return (
     <div className="auth-layout">
       <div className="auth-story">
@@ -160,17 +176,31 @@ export function Auth({
         </div>
         <div className="auth-card">
           <span className="eyebrow">ВАШЕ РАБОЧЕЕ ПРОСТРАНСТВО</span>
+          {reviewMode && (
+            <div className="review-access-note">
+              <span className="review-badge">Версия для знакомства</span>
+              <p>
+                Вход через тестовый аккаунт. Доступ предоставит администратор.
+              </p>
+            </div>
+          )}
           <h1>{title}</h1>
           <p>
-            {isRegister
-              ? "Создайте аккаунт и пригласите вашу команду."
-              : isForgot
-                ? "Отправим ссылку для смены пароля на вашу почту."
-                : isReset
-                  ? "Придумайте надежный пароль от 10 символов."
-                  : isVerify
-                    ? "Подтвержденный адрес нужен для приглашений и безопасной работы."
-                    : "Войдите, чтобы продолжить разговор."}
+            {registrationClosed
+              ? "Новые аккаунты пока не создаются. Если у вас уже есть аккаунт, войдите."
+              : isRegister
+                ? "Создайте аккаунт и пригласите вашу команду."
+                : isForgot
+                  ? reviewMode
+                    ? "В этой версии восстановить доступ можно через администратора."
+                    : "Отправим ссылку для смены пароля на вашу почту."
+                  : isReset
+                    ? "Придумайте надежный пароль от 10 символов."
+                    : isVerify
+                      ? reviewMode
+                        ? "Для подтверждения адреса обратитесь к администратору."
+                        : "Подтвержденный адрес нужен для приглашений и безопасной работы."
+                      : "Войдите, чтобы продолжить разговор."}
           </p>
           {new URLSearchParams(location.search).get("success") && isVerify && (
             <div className="success-box">
@@ -178,7 +208,14 @@ export function Auth({
             </div>
           )}
           <ErrorBox error={error} />
-          {success ? (
+          {registrationClosed ? (
+            <div className="registration-closed">
+              <p>Нужен доступ? Обратитесь к администратору пространства.</p>
+              <Link to="/login" className="button primary full">
+                Перейти ко входу <ArrowRight size={18} />
+              </Link>
+            </div>
+          ) : success ? (
             <div className="success-box">
               <CheckCircle2 size={21} />
               <span>{success}</span>
@@ -228,18 +265,25 @@ export function Auth({
                   />
                 </Field>
               )}
-              {!isRegister && !isForgot && !isReset && !isVerify && (
-                <div className="forgot-link">
-                  <Link to="/forgot-password">Забыли пароль?</Link>
-                </div>
-              )}
+              {!isRegister &&
+                !isForgot &&
+                !isReset &&
+                !isVerify &&
+                !reviewMode && (
+                  <div className="forgot-link">
+                    <Link to="/forgot-password">Забыли пароль?</Link>
+                  </div>
+                )}
               <Button
                 type="submit"
                 busy={busy}
                 className="primary full"
                 disabled={
                   (isRegister && !config.registrationEnabled) ||
-                  ((isForgot || isVerify) && !config.emailConfigured)
+                  emailRequestUnavailable
+                }
+                aria-describedby={
+                  emailRequestUnavailable ? "auth-delivery-note" : undefined
                 }
               >
                 {isRegister
@@ -253,9 +297,11 @@ export function Auth({
                         : "Войти в пространство"}
                 <ArrowRight size={18} />
               </Button>
-              {(isForgot || isVerify) && !config.emailConfigured && (
-                <p className="form-note">
-                  Почтовый сервис пока не настроен. Обратитесь к администратору.
+              {emailRequestUnavailable && (
+                <p className="form-note" id="auth-delivery-note">
+                  {reviewMode
+                    ? "Письма на внешнюю почту в этой версии не отправляются. Для восстановления доступа или подтверждения адреса обратитесь к администратору."
+                    : "Почтовый сервис пока не настроен. Обратитесь к администратору."}
                 </p>
               )}
             </form>
@@ -280,22 +326,24 @@ export function Auth({
               Я подтвердил адрес
             </Button>
           )}
-          <div className="auth-switch">
-            {isRegister ? (
-              <>
-                Уже есть аккаунт? <Link to="/login">Войти</Link>
-              </>
-            ) : isForgot || isReset || isVerify ? (
-              <Link to="/login">
-                <ArrowLeft size={15} />
-                Вернуться ко входу
-              </Link>
-            ) : (
-              <>
-                Впервые здесь? <Link to="/register">Создать аккаунт</Link>
-              </>
-            )}
-          </div>
+          {!registrationClosed && (
+            <div className="auth-switch">
+              {isRegister ? (
+                <>
+                  Уже есть аккаунт? <Link to="/login">Войти</Link>
+                </>
+              ) : isForgot || isReset || isVerify ? (
+                <Link to="/login">
+                  <ArrowLeft size={15} />
+                  Вернуться ко входу
+                </Link>
+              ) : config.registrationEnabled ? (
+                <>
+                  Впервые здесь? <Link to="/register">Создать аккаунт</Link>
+                </>
+              ) : null}
+            </div>
+          )}
         </div>
         <div className="auth-bottom">
           <ShieldCheck size={15} />

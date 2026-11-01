@@ -2,6 +2,8 @@
 
 Own your meeting experience: accounts, workspaces, scheduled rooms and real video meetings in a single self-hosted product.
 
+**Public review:** [imonmeets.vercel.app](https://imonmeets.vercel.app), with a dedicated review account. Public signup is closed while external email is being configured. See the [Vercel deployment guide](docs/vercel-review.md) for topology and access limitations.
+
 **Status: version 0.1.0 passed local acceptance on 2026-11-01.** Registration, verified accounts, two-browser video/chat, permanent room closure and password recovery were exercised against the deployed services. The default deployment remains local to the server. Public DNS, HTTPS/WSS, TURN, external email and recording infrastructure need their own configuration and acceptance checks before customer launch. See [verification](docs/verification.md), [deployment](docs/deployment.md) and [launch roadmap](docs/roadmap.md).
 
 ![IMON Meets dashboard](docs/screenshots/dashboard-desktop.png)
@@ -13,6 +15,7 @@ Own your meeting experience: accounts, workspaces, scheduled rooms and real vide
 - Email/password accounts, email verification, password recovery and session management through Better Auth.
 - Workspaces, owner/admin/member roles, invitations bound to verified email, member removal.
 - Instant and scheduled rooms, descriptions, participant limits, guest links, link rotation and permanent room closure.
+- Calendar export (.ics) with UTC event times, local timezone display and safe text handling.
 - Device preview, video/audio, screen sharing and meeting chat through LiveKit's real React components.
 - Recording API, signed webhooks, persistent states and private S3 downloads when an Egress worker and storage are configured. Disabled by default; live capture/storage is a separate acceptance gate.
 - Russian responsive interface, account and device settings, honest empty states.
@@ -98,6 +101,7 @@ Recording states are reconciled using the Egress ID and exact output key. Unknow
 - [Product and API contract](docs/spec.md)
 - [Implementation plan](docs/implementation-plan.md)
 - [Deployment, backup and recovery](docs/deployment.md)
+- [Vercel review deployment](docs/vercel-review.md)
 - [Commercial launch roadmap](docs/roadmap.md)
 - [Verification record](docs/verification.md)
 - [Third-party components](THIRD_PARTY_NOTICES.md)

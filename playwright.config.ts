@@ -17,6 +17,7 @@ export default defineConfig({
     viewport: { width: 1440, height: 1000 },
     permissions: ["camera", "microphone"],
     launchOptions: {
+      executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH,
       args: [
         "--use-fake-ui-for-media-stream",
         "--use-fake-device-for-media-stream",

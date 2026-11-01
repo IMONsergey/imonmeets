@@ -50,3 +50,37 @@ test("production rejects insecure configuration and development is explicit", ()
   assert.equal(c.mediaConfigured, false);
   assert.equal(c.recordingConfigured, false);
 });
+test("production capture closes registration and external SMTP requires TLS", () => {
+  const base = {
+    DATABASE_URL: "postgres://localhost/test",
+    APP_URL: "https://review.example.com",
+    BETTER_AUTH_SECRET: "ABCdef0123456789-random-strong-secret-sample",
+    NODE_ENV: "production",
+    SMTP_HOST: "smtp.example.com",
+    SMTP_FROM: "review@example.com",
+  };
+  assert.throws(() => loadConfig(base), /capture email.*REGISTRATION_ENABLED/);
+  const capture = loadConfig({ ...base, REGISTRATION_ENABLED: "false" });
+  assert.equal(capture.emailDelivery, "capture");
+  assert.equal(capture.dev, false);
+  assert.equal(capture.emailConfigured, true);
+  const external = loadConfig({ ...base, EMAIL_DELIVERY_MODE: "external" });
+  assert.equal(external.smtp.requireTLS, true);
+  assert.equal(external.registrationEnabled, true);
+  assert.equal(
+    loadConfig({
+      ...base,
+      EMAIL_DELIVERY_MODE: "external",
+      SMTP_SECURE: "true",
+    }).smtp.requireTLS,
+    false,
+  );
+  assert.throws(
+    () => loadConfig({ ...base, EMAIL_DELIVERY_MODE: "pretend" }),
+    /EMAIL_DELIVERY_MODE/,
+  );
+  assert.throws(
+    () => loadConfig({ ...base, ORIGIN_PROXY_SECRET: "short" }),
+    /ORIGIN_PROXY_SECRET/,
+  );
+});

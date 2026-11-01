@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import {
   ArrowRight,
   CalendarDays,
+  CalendarPlus,
   Clock3,
   Copy,
   Film,
@@ -19,7 +20,14 @@ import {
   Video,
   DoorOpen,
 } from "lucide-react";
-import { api, date, meetingUrl } from "../api";
+import { api, meetingUrl } from "../api";
+import {
+  downloadMeetingCalendar,
+  localDateTimeInput,
+  localMeetingDateTime,
+  localTimeZone,
+  parseLocalMeetingStart,
+} from "../calendar";
 import type { Room, User, Workspace } from "../api";
 import {
   Button,
@@ -32,6 +40,37 @@ import {
   go,
 } from "../ui";
 import type { PageProps } from "../ui";
+
+function CalendarExport({
+  room,
+  notify,
+  compact = false,
+}: {
+  room: Room;
+  notify: PageProps["notify"];
+  compact?: boolean;
+}) {
+  if (!room.startsAt || room.status !== "open") return null;
+  return (
+    <Button
+      className={compact ? "icon-button calendar-export" : "calendar-export"}
+      title="Добавить в календарь (.ics)"
+      aria-label={`Добавить в календарь: ${room.title}`}
+      onClick={() => {
+        try {
+          downloadMeetingCalendar(room);
+          notify("Файл .ics подготовлен. Откройте его в вашем календаре.");
+        } catch (error) {
+          notify((error as Error).message, true);
+        }
+      }}
+    >
+      <CalendarPlus size={17} aria-hidden="true" />
+      {!compact && "Добавить в календарь (.ics)"}
+    </Button>
+  );
+}
+
 export function PageHeading({
   eyebrow,
   title,
@@ -262,7 +301,7 @@ export function Dashboard({
           ) : upcoming.length ? (
             upcoming.map((room) => (
               <div className="upcoming-row" key={room.id}>
-                <div className="calendar-date">
+                <div className="calendar-date" aria-hidden="true">
                   <strong>{new Date(room.startsAt!).getDate()}</strong>
                   <span>
                     {new Intl.DateTimeFormat("ru", { month: "short" }).format(
@@ -270,19 +309,28 @@ export function Dashboard({
                     )}
                   </span>
                 </div>
-                <div>
+                <div className="upcoming-details">
                   <h3>{room.title}</h3>
                   <p>
                     <Clock3 size={13} />
-                    {date(room.startsAt)}
+                    <time dateTime={room.startsAt!}>
+                      {localMeetingDateTime(room.startsAt!)}
+                    </time>
                     <span>·</span>
                     {room.durationMinutes} мин
                   </p>
                 </div>
-                <Link to={`/join/${room.slug}`} className="button small">
-                  Войти
-                  <ArrowRight size={14} />
-                </Link>
+                <div className="upcoming-actions">
+                  <CalendarExport room={room} notify={notify} compact />
+                  <Link
+                    to={`/join/${room.slug}`}
+                    className="button small"
+                    title={`Войти: ${room.title}`}
+                  >
+                    Войти
+                    <ArrowRight size={14} />
+                  </Link>
+                </div>
               </div>
             ))
           ) : (
@@ -328,6 +376,7 @@ export function Dashboard({
       {editing && (
         <RoomEditor
           workspace={workspace}
+          scheduledByDefault
           onClose={() => setEditing(false)}
           onSaved={() => {
             setEditing(false);
@@ -345,24 +394,21 @@ function RoomEditor({
   room,
   onClose,
   onSaved,
+  scheduledByDefault = false,
 }: {
   workspace: Workspace;
   room?: Room;
   onClose: () => void;
   onSaved: (r: Room) => void;
+  scheduledByDefault?: boolean;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [scheduled, setScheduled] = useState(!!room?.startsAt);
+  const [scheduled, setScheduled] = useState(
+    !!room?.startsAt || scheduledByDefault,
+  );
   const [guests, setGuests] = useState(room?.allowGuests ?? true);
-  const localDate = room?.startsAt
-    ? new Date(
-        new Date(room.startsAt).getTime() -
-          new Date(room.startsAt).getTimezoneOffset() * 60000,
-      )
-        .toISOString()
-        .slice(0, 16)
-    : "";
+  const localDate = room?.startsAt ? localDateTimeInput(room.startsAt) : "";
   return (
     <Modal
       title={room ? "Изменить встречу" : "Новая встреча"}
@@ -376,7 +422,9 @@ function RoomEditor({
       <form
         onSubmit={async (e) => {
           e.preventDefault();
+          if (busy) return;
           const data = new FormData(e.currentTarget);
+          setError("");
           setBusy(true);
           try {
             const { room: saved } = await api<{ room: Room }>(
@@ -385,7 +433,7 @@ function RoomEditor({
                 title: data.get("title"),
                 description: data.get("description"),
                 startsAt: scheduled
-                  ? new Date(data.get("startsAt") as string).toISOString()
+                  ? parseLocalMeetingStart(data.get("startsAt") as string)
                   : null,
                 durationMinutes: Number(data.get("durationMinutes")),
                 maxParticipants: Number(data.get("maxParticipants")),
@@ -429,14 +477,21 @@ function RoomEditor({
           <span>Запланировать дату и время</span>
         </label>
         {scheduled && (
-          <Field label="Начало встречи">
-            <input
-              type="datetime-local"
-              name="startsAt"
-              defaultValue={localDate}
-              required
-            />
-          </Field>
+          <>
+            <Field label="Начало встречи">
+              <input
+                type="datetime-local"
+                name="startsAt"
+                defaultValue={localDate}
+                required
+                aria-describedby="meeting-local-timezone"
+              />
+            </Field>
+            <p className="schedule-timezone-note" id="meeting-local-timezone">
+              Дата и время на вашем устройстве: {localTimeZone()}. В календаре
+              встреча появится в часовом поясе получателя.
+            </p>
+          </>
         )}
         <div className="form-columns">
           <Field label="Длительность">
@@ -444,11 +499,25 @@ function RoomEditor({
               name="durationMinutes"
               defaultValue={room?.durationMinutes ?? 60}
             >
-              {[15, 30, 45, 60, 90, 120, 180, 240].map((n) => (
-                <option key={n} value={n}>
-                  {n} минут
-                </option>
-              ))}
+              {Array.from(
+                new Set([
+                  room?.durationMinutes ?? 60,
+                  15,
+                  30,
+                  45,
+                  60,
+                  90,
+                  120,
+                  180,
+                  240,
+                ]),
+              )
+                .sort((a, b) => a - b)
+                .map((n) => (
+                  <option key={n} value={n}>
+                    {n} минут
+                  </option>
+                ))}
             </select>
           </Field>
           <Field label="Максимум участников">
@@ -536,6 +605,22 @@ function ShareRoom({
           </Button>
         </div>
       </Field>
+      {room.startsAt && (
+        <div className="share-schedule">
+          <p>
+            <Clock3 size={14} aria-hidden="true" />
+            <time dateTime={room.startsAt}>
+              {localMeetingDateTime(room.startsAt)}
+            </time>
+            <span>· {room.durationMinutes} мин</span>
+          </p>
+          <CalendarExport room={room} notify={notify} />
+          <small>
+            Скачайте файл и откройте его в приложении календаря. Изменения
+            встречи не обновляют сохраненное событие автоматически.
+          </small>
+        </div>
+      )}
       <p className="form-note">
         {room.allowGuests
           ? "Любой человек с этой ссылкой сможет войти, указав свое имя."
@@ -639,6 +724,7 @@ export function Rooms({
                 key={value}
                 onClick={() => setFilter(value)}
                 className={filter === value ? "selected" : ""}
+                aria-pressed={filter === value}
               >
                 {label}
               </button>
@@ -682,7 +768,13 @@ export function Rooms({
                   <div className="room-meta">
                     <span>
                       <CalendarDays size={14} />
-                      {date(room.startsAt)}
+                      {room.startsAt ? (
+                        <time dateTime={room.startsAt}>
+                          {localMeetingDateTime(room.startsAt)}
+                        </time>
+                      ) : (
+                        "Без расписания"
+                      )}
                     </span>
                     <span>
                       <Clock3 size={14} />
@@ -705,6 +797,7 @@ export function Rooms({
                 <div className="row-actions">
                   {room.status === "open" && (
                     <>
+                      <CalendarExport room={room} notify={notify} compact />
                       <Button
                         className="icon-button"
                         title="Поделиться ссылкой"
@@ -722,7 +815,11 @@ export function Rooms({
                           <Pencil size={17} />
                         </Button>
                       )}
-                      <Link to={`/join/${room.slug}`} className="button small">
+                      <Link
+                        to={`/join/${room.slug}`}
+                        className="button small"
+                        title={`Войти: ${room.title}`}
+                      >
                         Войти
                         <ArrowRight size={15} />
                       </Link>

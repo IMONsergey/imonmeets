@@ -8,6 +8,7 @@ export function createMailer(c: Config) {
         host: c.smtp.host,
         port: c.smtp.port,
         secure: c.smtp.secure,
+        requireTLS: c.smtp.requireTLS,
         auth: c.smtp.user
           ? { user: c.smtp.user, pass: c.smtp.pass }
           : undefined,

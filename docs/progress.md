@@ -36,3 +36,7 @@ Ruling: self-hosted LiveKit refreshes existing client JWTs; a five-minute initia
 - Recording remains disabled pending a real Egress worker, private storage, capacity limits and complete lifecycle acceptance.
 
 See verification.md for exact scope and remaining checks. Screenshots show synthetic test accounts, not seeded production activity.
+
+## Public review iteration
+
+2026-11-01: User explicitly requested product improvements and publication on Vercel. Added scheduled-event calendar export and timezone handling, authenticated Vercel-to-origin requests, validated proxy-aware rate limits, explicit captured/external mail capability and closed-registration review UI. Certificates were issued and a renewal dry run succeeded. Nine API/PostgreSQL tests and seven calendar tests passed. Live Vercel acceptance is performed after deployment; see verification.md for the final result.

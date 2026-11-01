@@ -8,6 +8,13 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
   if (authSecret.length < 32)
     throw new Error("BETTER_AUTH_SECRET must have at least 32 characters");
   if (!env.DATABASE_URL) throw new Error("DATABASE_URL is required");
+  const originProxySecret = env.ORIGIN_PROXY_SECRET || undefined;
+  if (originProxySecret && originProxySecret.length < 32)
+    throw new Error("ORIGIN_PROXY_SECRET must have at least 32 characters");
+  const emailDelivery = env.EMAIL_DELIVERY_MODE || "capture";
+  if (emailDelivery !== "capture" && emailDelivery !== "external")
+    throw new Error("EMAIL_DELIVERY_MODE must be capture or external");
+  const registrationEnabled = env.REGISTRATION_ENABLED !== "false";
   const emailConfigured = Boolean(env.SMTP_HOST && env.SMTP_FROM);
   if (!dev && !emailConfigured)
     throw new Error(
@@ -27,6 +34,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
       );
     if (env.LIVEKIT_URL && !env.LIVEKIT_URL.startsWith("wss://"))
       throw new Error("Production LIVEKIT_URL must use WSS");
+    if (emailDelivery === "capture" && registrationEnabled)
+      throw new Error(
+        "Production capture email requires REGISTRATION_ENABLED=false",
+      );
   }
   const mediaConfigured = Boolean(
     env.LIVEKIT_URL && env.LIVEKIT_API_KEY && env.LIVEKIT_API_SECRET,
@@ -44,17 +55,23 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     dev,
     appUrl,
     authSecret,
+    originProxySecret,
     databaseUrl: env.DATABASE_URL,
     emailConfigured,
+    emailDelivery,
     mediaConfigured,
     recordingConfigured,
     port: Number(env.PORT || 3540),
     host: env.HOST || "127.0.0.1",
-    registrationEnabled: env.REGISTRATION_ENABLED !== "false",
+    registrationEnabled,
     smtp: {
       host: env.SMTP_HOST,
       port: Number(env.SMTP_PORT || 587),
       secure: env.SMTP_SECURE === "true",
+      requireTLS:
+        env.NODE_ENV === "production" &&
+        emailDelivery === "external" &&
+        env.SMTP_SECURE !== "true",
       user: env.SMTP_USER,
       pass: env.SMTP_PASSWORD,
       from: env.SMTP_FROM,

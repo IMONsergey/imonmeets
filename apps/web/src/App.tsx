@@ -46,6 +46,8 @@ export default function App() {
     localStorage.getItem("imon.workspace") ?? "",
   );
   const [mobileNav, setMobileNav] = useState(false);
+  const reviewMode =
+    config?.emailDelivery === "capture" && config.registrationEnabled === false;
   const notify = useCallback(
     (text: string, error = false) => setToast({ text, error }),
     [],
@@ -280,10 +282,19 @@ export default function App() {
               </strong>
             </div>
             <div className="topbar-right">
-              <span className="secure-label">
-                <ShieldCheck size={15} />
-                Ваше пространство для встреч
-              </span>
+              {reviewMode ? (
+                <span
+                  className="review-badge"
+                  title="Версия для знакомства с сервисом"
+                >
+                  Тестовый доступ
+                </span>
+              ) : (
+                <span className="secure-label">
+                  <ShieldCheck size={15} />
+                  Ваше пространство для встреч
+                </span>
+              )}
               <Link
                 to="/settings"
                 className="top-avatar"
@@ -298,11 +309,15 @@ export default function App() {
               <div className="notice verification-notice">
                 <Mail size={18} />
                 <span>
-                  Подтвердите почту, чтобы принимать приглашения команды.
+                  {reviewMode
+                    ? "Для подтверждения почты обратитесь к администратору."
+                    : "Подтвердите почту, чтобы принимать приглашения команды."}
                 </span>
-                <Link to="/verify-email">
-                  Подтвердить <ArrowRight size={14} />
-                </Link>
+                {!reviewMode && (
+                  <Link to="/verify-email">
+                    Подтвердить <ArrowRight size={14} />
+                  </Link>
+                )}
               </div>
             )}
             {path === "/rooms" ? (

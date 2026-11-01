@@ -15,7 +15,7 @@
     "dev:web": "npm run dev -w @imonmeets/web",
     "build": "npm run build -w @imonmeets/web && npm run build -w @imonmeets/api",
     "typecheck": "npm run typecheck --workspaces && tsc -p tsconfig.e2e.json",
-    "test": "npm run test -w @imonmeets/api",
+    "test": "npm run test -w @imonmeets/api && node --import tsx apps/web/src/calendar.test.ts",
     "migrate": "npm run migrate -w @imonmeets/api",
     "start": "npm run start -w @imonmeets/api",
     "test:e2e": "playwright test",

@@ -1,0 +1,8 @@
+# Opt-in public media transport. Signaling still reaches LiveKit through local Nginx.
+# Requires Docker Compose >= 2.24.4 for !override.
+services:
+  livekit:
+    ports: !override
+      - 127.0.0.1:7880:7880
+      - "${LIVEKIT_PUBLIC_IP:?Set public server IPv4}:7881:7881"
+      - "${LIVEKIT_PUBLIC_IP:?Set public server IPv4}:7882:7882/udp"

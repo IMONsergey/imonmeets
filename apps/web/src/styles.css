@@ -1813,6 +1813,37 @@ strong {
   align-items: center;
   gap: 6px;
 }
+.review-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 9px;
+  color: #7d735b;
+  background: #f6f0e5;
+  border: 1px solid #e9dfcb;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.review-access-note {
+  margin: 18px 0 21px;
+}
+.review-access-note p {
+  margin-top: 9px;
+  color: #738068;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.registration-closed > p {
+  margin-bottom: 22px;
+  color: #738068;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.topbar-right > .review-badge {
+  font-size: 8px;
+}
 .auth-bottom {
   position: absolute;
   bottom: 25px;
@@ -4168,4 +4199,82 @@ strong {
 .prejoin-note,
 .join-account-link {
   color: #738068;
+}
+
+.upcoming-row .calendar-date {
+  flex-shrink: 0;
+}
+.upcoming-details {
+  flex: 1;
+  min-width: 0;
+}
+.upcoming-details h3 {
+  overflow-wrap: anywhere;
+}
+.upcoming-details p {
+  flex-wrap: wrap;
+  color: #738068;
+  line-height: 1.7;
+}
+.upcoming-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 5px;
+  margin-left: auto;
+}
+.button.icon-button.calendar-export {
+  width: 40px;
+  min-height: 40px;
+  color: #738068;
+}
+.button.icon-button.calendar-export:hover {
+  color: #b56d45;
+  background: #fbf1e8;
+}
+.schedule-timezone-note {
+  margin: -8px 0 21px;
+  color: #738068;
+  font-size: 10px;
+  line-height: 1.8;
+}
+.share-schedule {
+  border: 1px solid #e8ece1;
+  background: #f8faf4;
+  border-radius: 8px;
+  padding: 14px;
+  margin: 17px 0;
+}
+.share-schedule p {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: #66775a;
+  font-size: 10px;
+  line-height: 1.8;
+  margin-bottom: 11px;
+}
+.share-schedule .calendar-export {
+  font-size: 10px;
+  min-height: 38px;
+  width: 100%;
+}
+.share-schedule small {
+  display: block;
+  margin-top: 11px;
+  color: #738068;
+  font-size: 9px;
+  line-height: 1.8;
+}
+@media (max-width: 1200px) {
+  .upcoming-row {
+    flex-wrap: wrap;
+  }
+  .upcoming-details {
+    flex-basis: calc(100% - 58px);
+  }
+  .upcoming-actions {
+    margin-left: 56px;
+  }
 }

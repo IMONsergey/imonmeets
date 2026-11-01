@@ -11,6 +11,8 @@ x-app: &app
     APP_URL: ${APP_URL:?Set APP_URL}
     BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?Generate .env first}
     REGISTRATION_ENABLED: ${REGISTRATION_ENABLED:-true}
+    EMAIL_DELIVERY_MODE: ${EMAIL_DELIVERY_MODE:-capture}
+    ORIGIN_PROXY_SECRET: ${ORIGIN_PROXY_SECRET:-}
     DEV_ALLOW_UNVERIFIED_EMAIL: ${DEV_ALLOW_UNVERIFIED_EMAIL:-false}
     SMTP_HOST: ${SMTP_HOST:-}
     SMTP_PORT: ${SMTP_PORT:-587}
@@ -83,7 +85,10 @@ services:
     environment:
       LIVEKIT_KEYS: "${LIVEKIT_API_KEY:?Generate .env first}: ${LIVEKIT_API_SECRET:?Generate .env first}"
     command: [--config, /etc/livekit.yaml]
-    volumes: [./deploy/livekit.local.yaml:/etc/livekit.yaml:ro]
+    volumes:
+      [
+        "${LIVEKIT_CONFIG_PATH:-./deploy/livekit.local.yaml}:/etc/livekit.yaml:ro",
+      ]
     ports:
       - 127.0.0.1:7880:7880
       - 127.0.0.1:7881:7881

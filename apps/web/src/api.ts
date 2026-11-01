@@ -40,6 +40,7 @@ export type Config = {
   registrationEnabled: boolean;
   emailVerificationRequired: boolean;
   emailConfigured: boolean;
+  emailDelivery: "capture" | "external";
   mediaConfigured: boolean;
   recordingConfigured: boolean;
 };

@@ -21,6 +21,7 @@ import {
 } from "./policy.js";
 import { createMedia, type Media } from "./media.js";
 import { applyRecordingInfo, matchesRecording } from "./recordings.js";
+import { clientIp, proxySecretMatches } from "./proxy.js";
 
 type Row = QueryResultRow;
 type User = { id: string; name: string; email: string; emailVerified: boolean };
@@ -91,12 +92,13 @@ export async function createApp(
   });
   await app.register(rateLimit, {
     global: false,
-    errorResponseBuilder: () => ({
-      error: {
-        code: "RATE_LIMIT",
-        message: "Слишком много запросов. Повторите позже.",
-      },
-    }),
+    keyGenerator: (req) => clientIp(req, c.originProxySecret),
+    errorResponseBuilder: () =>
+      new ApiError(
+        429,
+        "RATE_LIMIT",
+        "Слишком много запросов. Повторите позже.",
+      ),
   });
   app.setErrorHandler((e, req, reply) => {
     if (e instanceof ApiError)
@@ -136,6 +138,17 @@ export async function createApp(
     reply.header("Referrer-Policy", "no-referrer");
     if (req.url.startsWith("/api/")) reply.header("Cache-Control", "no-store");
     if (
+      c.originProxySecret &&
+      req.url.startsWith("/api/") &&
+      req.url.split("?")[0] !== "/api/health"
+    )
+      assert(
+        proxySecretMatches(req, c.originProxySecret),
+        403,
+        "PROXY_REJECTED",
+        "Доступ через этот адрес не разрешен.",
+      );
+    if (
       ["POST", "PUT", "PATCH", "DELETE"].includes(req.method) &&
       req.url.split("?")[0] !== "/api/livekit/webhook"
     ) {
@@ -152,7 +165,7 @@ export async function createApp(
     required = true,
   ): Promise<User | null> {
     const headers = fromNodeHeaders(req.headers);
-    headers.set("x-imon-client-ip", req.ip);
+    headers.set("x-imon-client-ip", clientIp(req, c.originProxySecret));
     const session = await auth.api.getSession({ headers });
     assert(!required || session, 401, "UNAUTHENTICATED", "Войдите в аккаунт.");
     if (!session) return null;
@@ -222,7 +235,7 @@ export async function createApp(
           "Отправка почты не настроена.",
         );
       const headers = fromNodeHeaders(req.headers);
-      headers.set("x-imon-client-ip", req.ip);
+      headers.set("x-imon-client-ip", clientIp(req, c.originProxySecret));
       const response = await auth.handler(
         new Request(new URL(req.url, c.appUrl), {
           method: req.method,
@@ -244,6 +257,7 @@ export async function createApp(
     registrationEnabled: c.registrationEnabled,
     emailVerificationRequired: !c.dev,
     emailConfigured: c.emailConfigured,
+    emailDelivery: c.emailDelivery,
     mediaConfigured: c.mediaConfigured,
     recordingConfigured: c.recordingConfigured,
   }));

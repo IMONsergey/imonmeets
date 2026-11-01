@@ -9,3 +9,7 @@ test-results
 playwright-report
 backups
 *.log
+.vercel
+deploy/livekit.public.yaml
+deploy/nginx.public.conf
+deploy/nginx.acme.generated.conf
