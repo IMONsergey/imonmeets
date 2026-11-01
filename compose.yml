@@ -1,0 +1,140 @@
+name: imonmeets
+
+x-app: &app
+  image: imonmeets-app:0.1.0
+  build: .
+  environment:
+    NODE_ENV: ${APP_ENV:-development}
+    DATABASE_URL: postgres://imonmeets_app:${APP_DATABASE_PASSWORD:?Generate .env first}@db:5432/imonmeets
+    HOST: 0.0.0.0
+    PORT: 3540
+    APP_URL: ${APP_URL:?Set APP_URL}
+    BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?Generate .env first}
+    REGISTRATION_ENABLED: ${REGISTRATION_ENABLED:-true}
+    DEV_ALLOW_UNVERIFIED_EMAIL: ${DEV_ALLOW_UNVERIFIED_EMAIL:-false}
+    SMTP_HOST: ${SMTP_HOST:-}
+    SMTP_PORT: ${SMTP_PORT:-587}
+    SMTP_SECURE: ${SMTP_SECURE:-false}
+    SMTP_FROM: ${SMTP_FROM:-}
+    SMTP_USER: ${SMTP_USER:-}
+    SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+    LIVEKIT_URL: ${LIVEKIT_URL:-}
+    LIVEKIT_INTERNAL_URL: ${LIVEKIT_INTERNAL_URL:-http://livekit:7880}
+    LIVEKIT_API_KEY: ${LIVEKIT_API_KEY:?Generate .env first}
+    LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET:?Generate .env first}
+    RECORDING_ENABLED: ${RECORDING_ENABLED:-false}
+    S3_BUCKET: ${S3_BUCKET:-}
+    S3_REGION: ${S3_REGION:-us-east-1}
+    S3_ENDPOINT: ${S3_ENDPOINT:-}
+    S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
+    S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
+    S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-false}
+  init: true
+  security_opt: [no-new-privileges:true]
+  cap_drop: [ALL]
+  read_only: true
+  tmpfs: ["/tmp:size=32m,mode=1777"]
+
+services:
+  db:
+    image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
+    environment:
+      POSTGRES_USER: imonmeets
+      POSTGRES_DB: imonmeets
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Generate .env first}
+      APP_DATABASE_PASSWORD: ${APP_DATABASE_PASSWORD:?Generate .env first}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./deploy/init-db.sh:/docker-entrypoint-initdb.d/10-app-role.sh:ro
+    restart: unless-stopped
+    mem_limit: 768m
+    cpus: 1.0
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U imonmeets -d imonmeets"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: valkey/valkey:8.1-alpine@sha256:2602ace2be6569bc2bbb06f873776516ab9089821525be34f4305c67eb9db02a
+    command:
+      [
+        valkey-server,
+        --save,
+        "",
+        --appendonly,
+        "no",
+        --maxmemory,
+        96mb,
+        --maxmemory-policy,
+        noeviction,
+      ]
+    restart: unless-stopped
+    mem_limit: 128m
+    cpus: 0.5
+    healthcheck:
+      test: [CMD, valkey-cli, ping]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  livekit:
+    image: livekit/livekit-server:v1.13.11@sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20
+    environment:
+      LIVEKIT_KEYS: "${LIVEKIT_API_KEY:?Generate .env first}: ${LIVEKIT_API_SECRET:?Generate .env first}"
+    command: [--config, /etc/livekit.yaml]
+    volumes: [./deploy/livekit.local.yaml:/etc/livekit.yaml:ro]
+    ports:
+      - 127.0.0.1:7880:7880
+      - 127.0.0.1:7881:7881
+      - 127.0.0.1:7882:7882/udp
+    depends_on:
+      redis: { condition: service_healthy }
+    restart: unless-stopped
+    mem_limit: 1024m
+    cpus: 2.0
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+
+  mailpit:
+    image: axllent/mailpit:v1.32.0@sha256:0790692be935ea4420d085694f7985b1f692ca6a8771ab0e0bd8ba75ac180498
+    ports: ["127.0.0.1:3541:8025"]
+    restart: unless-stopped
+    mem_limit: 128m
+    cpus: 0.5
+    environment:
+      MP_MAX_MESSAGES: 200
+
+  migrate:
+    <<: *app
+    command: [node, apps/api/dist/migrate.js]
+    depends_on:
+      db: { condition: service_healthy }
+    restart: "no"
+    mem_limit: 512m
+
+  app:
+    <<: *app
+    ports: ["127.0.0.1:3540:3540"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      livekit: { condition: service_started }
+      mailpit: { condition: service_started }
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: 1.0
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          "fetch('http://127.0.0.1:3540/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  db-data:

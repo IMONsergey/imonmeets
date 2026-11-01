@@ -1,0 +1,40 @@
+import { Pool, type PoolClient } from "pg";
+export const schema = `
+CREATE TABLE IF NOT EXISTS im_workspaces (id text PRIMARY KEY,name text NOT NULL,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS im_members (id text PRIMARY KEY,workspace_id text NOT NULL REFERENCES im_workspaces(id) ON DELETE CASCADE,user_id text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,role text NOT NULL CHECK(role IN ('owner','admin','member')),UNIQUE(workspace_id,user_id));
+CREATE UNIQUE INDEX IF NOT EXISTS im_one_owner ON im_members(workspace_id) WHERE role='owner';
+CREATE TABLE IF NOT EXISTS im_rooms (id text PRIMARY KEY,workspace_id text NOT NULL REFERENCES im_workspaces(id) ON DELETE CASCADE,slug text UNIQUE NOT NULL,title text NOT NULL,description text NOT NULL DEFAULT '',starts_at timestamptz,duration_minutes integer NOT NULL DEFAULT 60 CHECK(duration_minutes BETWEEN 5 AND 1440),allow_guests boolean NOT NULL DEFAULT true,max_participants integer NOT NULL DEFAULT 25 CHECK(max_participants BETWEEN 2 AND 100),status text NOT NULL DEFAULT 'open' CHECK(status IN ('open','closed')),media_closed boolean NOT NULL DEFAULT false,created_by text NOT NULL REFERENCES "user"(id),created_at timestamptz NOT NULL DEFAULT now());
+ALTER TABLE im_rooms ADD COLUMN IF NOT EXISTS media_closed boolean NOT NULL DEFAULT false;
+CREATE TABLE IF NOT EXISTS im_invitations (id text PRIMARY KEY,workspace_id text NOT NULL REFERENCES im_workspaces(id) ON DELETE CASCADE,email text NOT NULL,role text NOT NULL CHECK(role IN ('admin','member')),token_hash text UNIQUE NOT NULL,expires_at timestamptz NOT NULL,created_by text NOT NULL REFERENCES "user"(id),consumed_at timestamptz);
+CREATE INDEX IF NOT EXISTS im_invitation_workspace ON im_invitations(workspace_id);
+CREATE TABLE IF NOT EXISTS im_recordings (id text PRIMARY KEY,workspace_id text NOT NULL REFERENCES im_workspaces(id) ON DELETE CASCADE,room_id text NOT NULL REFERENCES im_rooms(id),egress_id text UNIQUE,status text NOT NULL CHECK(status IN ('starting','active','ending','complete','failed')),started_at timestamptz NOT NULL DEFAULT now(),ended_at timestamptz,size_bytes bigint,error text,object_key text NOT NULL);
+CREATE UNIQUE INDEX IF NOT EXISTS im_active_recording ON im_recordings(room_id) WHERE status IN ('starting','active','ending');
+CREATE TABLE IF NOT EXISTS im_audit (id bigserial PRIMARY KEY,workspace_id text REFERENCES im_workspaces(id),actor_id text,event text NOT NULL,resource_id text,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS im_webhook_events (id text PRIMARY KEY,created_at timestamptz NOT NULL DEFAULT now());
+`;
+export async function transaction<T>(
+  pool: Pool,
+  fn: (client: PoolClient) => Promise<T>,
+): Promise<T> {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const result = await fn(client);
+    await client.query("COMMIT");
+    return result;
+  } catch (e) {
+    await client.query("ROLLBACK");
+    throw e;
+  } finally {
+    client.release();
+  }
+}
+export function createPool(connectionString: string) {
+  return new Pool({
+    connectionString,
+    max: 10,
+    connectionTimeoutMillis: 5000,
+    statement_timeout: 15000,
+    lock_timeout: 10000,
+  });
+}

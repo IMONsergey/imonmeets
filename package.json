@@ -1,0 +1,32 @@
+{
+  "name": "imonmeets",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev:api": "npm run dev -w @imonmeets/api",
+    "dev:web": "npm run dev -w @imonmeets/web",
+    "build": "npm run build -w @imonmeets/web && npm run build -w @imonmeets/api",
+    "typecheck": "npm run typecheck --workspaces && tsc -p tsconfig.e2e.json",
+    "test": "npm run test -w @imonmeets/api",
+    "migrate": "npm run migrate -w @imonmeets/api",
+    "start": "npm run start -w @imonmeets/api",
+    "test:e2e": "playwright test",
+    "format": "prettier --write apps tests playwright.config.ts package.json compose.yml docs README.md",
+    "format:check": "prettier --check apps tests playwright.config.ts package.json compose.yml docs README.md"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "prettier": "3.9.10"
+  },
+  "overrides": {
+    "glob": "14.0.3"
+  }
+}

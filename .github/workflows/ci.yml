@@ -1,0 +1,33 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
+        env:
+          POSTGRES_USER: imonmeets
+          POSTGRES_PASSWORD: ci-only-test-password
+          POSTGRES_DB: imonmeets_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U imonmeets -d imonmeets_test"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.21.0
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm test
+        env:
+          TEST_DATABASE_URL: postgres://imonmeets:ci-only-test-password@localhost:5432/imonmeets_test
+      - run: npm audit --omit=dev --audit-level=high
