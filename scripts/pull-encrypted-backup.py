@@ -4,6 +4,7 @@
 import datetime
 import fcntl
 import hashlib
+import importlib.util
 import json
 import os
 import pathlib
@@ -47,12 +48,17 @@ def https_fetch(root, cfg, path, output=None, max_bytes=512 * 1024 * 1024):
     token = cfg.get("bearerToken", "")
     if not re.fullmatch(r"[A-Za-z0-9_-]{43,128}", token):
         raise ValueError("Invalid export token")
+    transfer_timeout = 240
+    if re.fullmatch(r"/_ops/recordings/[0-9a-f]{64}\.enc", path):
+        transfer_timeout = cfg.get("recordingTransferTimeoutSeconds", 1800)
+        if type(transfer_timeout) is not int or not 60 <= transfer_timeout <= 3600:
+            raise ValueError("Recording transfer timeout must be an integer between 60 and 3600 seconds")
     options = {
         "url": base.rstrip("/") + path,
         "header": "Authorization: Bearer " + token,
         "proto": "=https",
         "connect-timeout": "15",
-        "max-time": "240",
+        "max-time": str(transfer_timeout),
         "max-filesize": str(max_bytes),
     }
     if cfg.get("caFile"):
@@ -67,7 +73,7 @@ def https_fetch(root, cfg, path, output=None, max_bytes=512 * 1024 * 1024):
     result = subprocess.run(
         ["/usr/bin/curl", "--config", "-"], input=config.encode(),
         stdout=output if output is not None else subprocess.PIPE,
-        stderr=subprocess.PIPE, check=True, timeout=250,
+        stderr=subprocess.PIPE, check=True, timeout=transfer_timeout + 10,
     )
     return result.stdout
 
@@ -171,6 +177,14 @@ def main():
     cfg = {"notifications": sys.platform == "darwin"}
     try:
         cfg = json.loads((root / "connection.json").read_text())
+        recordings = None
+        if cfg.get("recordingBackups") or (root / "recordings").exists():
+            spec = importlib.util.spec_from_file_location("pull_recordings", root / "pull-recording-backup.py")
+            recordings = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(recordings)
+            # Expiry does not depend on successful database/TLS/SMTP/network
+            # checks, and still runs if future recording transfers are disabled.
+            recordings.housekeeping(root)
         with tempfile.NamedTemporaryFile(prefix=".incoming-", dir=store, delete=False) as incoming:
             temporary = pathlib.Path(incoming.name)
             if cfg.get("baseUrl"):
@@ -210,13 +224,19 @@ def main():
             "verifiedSha256": manifest["sha256"],
             "transport": "https" if cfg.get("baseUrl") else "ssh",
         }
+        if cfg.get("recordingBackups"):
+            try:
+                result["recordingBackup"] = recordings.sync(root, cfg, https_fetch)
+            except Exception as error:
+                result["recordingBackup"] = {"ok": False, "error": type(error).__name__}
+                result["ok"] = False
         if cfg.get("baseUrl"):
             try:
                 health = json.loads(https_fetch(root, cfg, "/_ops/health", max_bytes=65536))
                 checked = datetime.datetime.fromisoformat(health["checkedAt"].replace("Z", "+00:00"))
                 age = (datetime.datetime.now(datetime.timezone.utc) - checked).total_seconds()
                 result["serverHealth"] = health
-                result["ok"] = health.get("ok") is True and 0 <= age <= 600
+                result["ok"] = result["ok"] and health.get("ok") is True and 0 <= age <= 600
             except Exception as error:
                 result["serverHealth"] = {"ok": False, "error": type(error).__name__}
                 result["ok"] = False

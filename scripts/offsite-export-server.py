@@ -4,6 +4,7 @@ import argparse
 import datetime
 import hmac
 import http.server
+import importlib.util
 import json
 import os
 import pathlib
@@ -11,6 +12,17 @@ import re
 import stat
 
 MAX_ARCHIVE_BYTES = 512 * 1024 * 1024
+_recording_spec = importlib.util.spec_from_file_location(
+    "recording_backup_common", pathlib.Path(__file__).with_name("recording-backup.py"))
+recording_backup = importlib.util.module_from_spec(_recording_spec)
+_recording_spec.loader.exec_module(recording_backup)
+
+
+def recording_manifest(project):
+    result = recording_backup.validate_manifest(recording_backup.read_json(project / "backups/recordings/manifest.json"))
+    result["objects"] = [obj for obj in result["objects"]
+                         if recording_backup.timestamp(obj["expiresAt"]) > recording_backup.utcnow()]
+    return result
 
 
 def regular_file(path):
@@ -94,6 +106,30 @@ def make_handler(project, token):
                     return
                 with source:
                     self.send_headers(200, "application/octet-stream", size)
+                    for block in iter(lambda: source.read(128 * 1024), b""):
+                        self.wfile.write(block)
+            elif self.path == "/_ops/recordings":
+                try:
+                    self.json_response(200, recording_manifest(project))
+                except Exception:
+                    self.json_response(503, {"error": "recording_backup_unavailable"})
+            elif re.fullmatch(r"/_ops/recordings/[0-9a-f]{64}\.enc", self.path):
+                try:
+                    manifest = recording_manifest(project)
+                    name = self.path.rsplit("/", 1)[1]
+                    item = next((obj for obj in manifest["objects"] if obj["cipherFile"] == name), None)
+                    if item is None:
+                        self.json_response(404, {"error": "not_found"})
+                        return
+                    source = regular_file(project / "backups/recordings" / name)
+                    if os.fstat(source.fileno()).st_size != item["cipherBytes"]:
+                        source.close()
+                        raise ValueError("Encrypted recording size mismatch")
+                except Exception:
+                    self.json_response(503, {"error": "recording_backup_unavailable"})
+                    return
+                with source:
+                    self.send_headers(200, "application/octet-stream", item["cipherBytes"])
                     for block in iter(lambda: source.read(128 * 1024), b""):
                         self.wfile.write(block)
             else:

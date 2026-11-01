@@ -42,6 +42,12 @@ if installed_server.is_symlink():
 shutil.copyfile(pathlib.Path(__file__).with_name("offsite-export-server.py"), installed_server)
 os.chown(installed_server, 0, 0)
 installed_server.chmod(0o755)
+installed_recording = installed_dir / "recording-backup.py"
+if installed_recording.is_symlink():
+    raise SystemExit("Installed recording helper must not be a symlink")
+shutil.copyfile(pathlib.Path(__file__).with_name("recording-backup.py"), installed_recording)
+os.chown(installed_recording, 0, 0)
+installed_recording.chmod(0o755)
 pathlib.Path("/etc/systemd/system/imonmeets-offsite-export.service").write_text(f"""[Unit]
 Description=IMON Meets encrypted offsite export
 After=network.target
@@ -92,6 +98,24 @@ location = /_ops/health {
     proxy_pass http://127.0.0.1:3542;
     proxy_set_header Authorization $http_authorization;
     proxy_read_timeout 10s;
+    client_max_body_size 1k;
+}
+location = /_ops/recordings {
+    limit_req zone=imonmeets_ops burst=10 nodelay;
+    access_log off;
+    proxy_pass http://127.0.0.1:3542;
+    proxy_set_header Authorization $http_authorization;
+    proxy_read_timeout 15s;
+    client_max_body_size 1k;
+}
+location ^~ /_ops/recordings/ {
+    limit_req zone=imonmeets_ops burst=10 nodelay;
+    access_log off;
+    proxy_pass http://127.0.0.1:3542;
+    proxy_set_header Authorization $http_authorization;
+    proxy_read_timeout 90s;
+    proxy_send_timeout 30s;
+    proxy_buffering off;
     client_max_body_size 1k;
 }
 """)

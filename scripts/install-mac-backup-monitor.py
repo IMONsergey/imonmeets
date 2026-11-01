@@ -31,12 +31,19 @@ target = root / "pull.py"
 if source.resolve() != target.resolve():
     shutil.copyfile(source, target)
 target.chmod(0o700)
+for helper in ("pull-recording-backup.py", "recording-backup.py"):
+    helper_source = pathlib.Path(__file__).with_name(helper)
+    helper_target = root / helper
+    if helper_source.resolve() != helper_target.resolve():
+        shutil.copyfile(helper_source, helper_target)
+    helper_target.chmod(0o700)
 # Do not install an automatic job before transport, decryption and freshness pass.
 started = time.time()
-checked = subprocess.run([sys.executable, str(target)], timeout=650)
+checked = subprocess.run([sys.executable, str(target)], timeout=7200 if cfg.get("recordingBackups") else 650)
 status = json.loads((root / "status.json").read_text())
 checked_at = datetime.datetime.fromisoformat(status.get("checkedAt", "").replace("Z", "+00:00")).timestamp()
-if checked.returncode not in {0, 1} or checked_at < started - 1 or not status.get("backupOk"):
+if (checked.returncode not in {0, 1} or checked_at < started - 1 or not status.get("backupOk")
+        or (cfg.get("recordingBackups") and status.get("recordingBackup", {}).get("ok") is not True)):
     raise SystemExit("First verified backup failed; automatic job was not installed")
 cfg["notifications"] = True
 (root / "connection.json").write_text(json.dumps(cfg, indent=2) + "\n")

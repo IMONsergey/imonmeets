@@ -15,8 +15,14 @@ When present, `deploy/recording-private/credentials.json` is also included in
 this encrypted recovery bundle so the app and administrative S3 identities can
 be restored. It must be a regular file, not a symlink. These credentials are
 never added to the unencrypted database dump or manifest.
-The bundle does not include recording objects, other applications, or a server image.
+The database bundle does not include recording objects, other applications, or a server image.
 The current HTTP transfer limit is 512 MiB per encrypted bundle.
+
+Recording objects use a separate, incremental encrypted mirror described in
+[recording-backup.md](recording-backup.md). It preserves original deletion/expiry,
+stores at most 1 GiB of ciphertext per side, and verifies both encrypted and
+decrypted checksums without writing plaintext during ordinary checks. Enable it
+with `"recordingBackups": true` only after deploying the worker and exporter.
 
 On the Mac, the puller verifies TLS, decrypts into a mode 0600 temporary file,
 validates the dump checksum and size, rejects a copy older than two hours or more
@@ -53,12 +59,14 @@ nginx. Set `OFFSITE_EXPORT_ENABLED=true` in the server environment so
 `scripts/prepare-public.mjs` preserves the include when regenerating configuration.
 Do not add it to the RTC host or open a new public port.
 
-Both exact paths require the bearer:
+All operations require the bearer:
 
 | Path           | Response                                                              |
 | -------------- | --------------------------------------------------------------------- |
 | `/_ops/backup` | Latest completed encrypted archive, no arbitrary path selection       |
 | `/_ops/health` | Timestamp and allowlisted boolean checks from local health monitoring |
+| `/_ops/recordings` | Fresh encrypted-recording catalog, when recording backup is deployed |
+| `/_ops/recordings/<sha256>.enc` | Only an unexpired ciphertext explicitly named in that catalog |
 
 No query-string credentials, plaintext dump, token, `.env`, private key, other
 file, write endpoint or remote shell is exposed. Requests without the correct
@@ -87,7 +95,8 @@ certificate store lacks the issuer, `caFile` can point to an independently
 verified public CA PEM. This is an additional trust bundle, never an option to
 skip certificate or hostname verification.
 
-Copy `pull-encrypted-backup.py` and `install-mac-backup-monitor.py` into one private
+Copy `pull-encrypted-backup.py`, `pull-recording-backup.py`, `recording-backup.py`,
+and `install-mac-backup-monitor.py` into one private
 staging directory on the Mac. Run the installer with the intended Python 3
 interpreter:
 
@@ -105,6 +114,8 @@ Verify `launchctl print gui/UID/world.imon.meets.backup-monitor` and the private
 `status.json`. A successful scheduled run has `automatic: true`, `backupOk: true`,
 `transport: "https"`, a fresh `backupCreatedAt`, and a verified checksum.
 The overall `ok` also requires a fresh, successful server health response.
+When recording backup is enabled, it additionally requires
+`recordingBackup.ok: true`. A database backup alone cannot satisfy that check.
 
 ## Alert behavior and limits
 
@@ -133,6 +144,7 @@ check remains necessary.
 ```sh
 python3 scripts/test-pull-encrypted-backup.py
 python3 scripts/test-offsite-monitor.py
+python3 scripts/test-recording-backup.py
 ```
 
 The tests use synthetic fixtures. They check archive age/checksum/cleanup,

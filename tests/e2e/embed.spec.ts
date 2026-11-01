@@ -83,7 +83,7 @@ async function installMediaProbe(context: BrowserContext) {
   );
 }
 
-async function mediaIsFlowing(surface: Page | Frame) {
+async function mediaCounters(surface: Page | Frame) {
   return surface.evaluate(async () => {
     const probe = (window as any).__imonEmbedProbe as
       { peers: RTCPeerConnection[] } | undefined;
@@ -99,8 +99,8 @@ async function mediaIsFlowing(surface: Page | Frame) {
           videoFrames += entry.framesDecoded || 0;
       });
     }
-    // Only a boolean returns to the report; no SDP, ICE addresses or grant data.
-    return audioBytes > 0 && videoFrames > 0;
+    // Only aggregate counters leave the browser; no SDP, ICE addresses or grants.
+    return { audioBytes, videoFrames };
   });
 }
 
@@ -129,11 +129,21 @@ async function expectTwoVideos(surface: Page | Frame) {
       },
     )
     .toBe(2);
+  const baseline = await mediaCounters(surface);
   await expect
-    .poll(() => mediaIsFlowing(surface), {
-      timeout: 30000,
-      message: "Real inbound audio and video are flowing",
-    })
+    .poll(
+      async () => {
+        const current = await mediaCounters(surface);
+        return (
+          current.audioBytes > baseline.audioBytes &&
+          current.videoFrames > baseline.videoFrames
+        );
+      },
+      {
+        timeout: 30000,
+        message: "Real inbound audio and video are flowing",
+      },
+    )
     .toBe(true);
 }
 
@@ -157,6 +167,31 @@ test("published guest widget: CSP, hosted modules, admission, real media, chat a
   let guestContext: BrowserContext | undefined,
     blockedContext: BrowserContext | undefined;
   let assetFailures = 0;
+  let cleanupCookie = "";
+  const cleanupRequest = async (
+    path: string,
+    method: string,
+    data: unknown,
+  ) => {
+    if (!cleanupCookie) return 0;
+    try {
+      const response = await fetch(new URL(path, base), {
+        method,
+        redirect: "error",
+        signal: AbortSignal.timeout(20000),
+        headers: {
+          origin: base,
+          cookie: cleanupCookie,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      await response.body?.cancel();
+      return response.status;
+    } catch {
+      return 0;
+    }
+  };
   const get = async (url: string) => {
     try {
       return await request.get(url);
@@ -211,6 +246,15 @@ test("published guest widget: CSP, hosted modules, admission, real media, chat a
     await expect(
       page.getByRole("heading", { name: /^Добрый день,/ }),
     ).toBeVisible();
+    // In-memory only. Native fetch lets finally clean up even after a page crash,
+    // without putting credentials into Playwright API-step records.
+    cleanupCookie = (await page.context().cookies(base))
+      .map((cookie) => `${cookie.name}=${cookie.value}`)
+      .join("; ");
+    expect(
+      cleanupCookie.length > 0,
+      "Authenticated cleanup capability is present",
+    ).toBe(true);
     const createdWorkspace = await page.request
       .post(`${base}/api/workspaces`, {
         headers: { origin: base },
@@ -493,48 +537,25 @@ test("published guest widget: CSP, hosted modules, admission, real media, chat a
       "A CSP-blocked frame never starts guest API requests",
     ).toBe(0);
   } finally {
-    await blockedContext?.close();
-    await guestContext?.close();
+    await blockedContext?.close().catch(() => undefined);
+    await guestContext?.close().catch(() => undefined);
     if (room)
-      await page.request
-        .post(
-          `${base}/api/workspaces/${room.workspaceId}/rooms/${room.id}/close`,
-          {
-            headers: { origin: base },
-            data: {},
-          },
-        )
-        .catch(() => undefined);
+      await cleanupRequest(
+        `/api/workspaces/${room.workspaceId}/rooms/${room.id}/close`,
+        "POST",
+        {},
+      );
     if (workspaceId) {
-      // Password remains inside a generic browser evaluation with tracing off.
-      // The scope is the workspace created by this test, never a preexisting one.
-      const deleted = await page
-        .evaluate(
-          async ({ base, workspaceId, password }) => {
-            if (location.origin !== base) return 0;
-            try {
-              const response = await fetch(
-                `${base}/api/workspaces/${encodeURIComponent(workspaceId)}`,
-                {
-                  method: "DELETE",
-                  credentials: "include",
-                  redirect: "error",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ password, confirmation: "DELETE" }),
-                },
-              );
-              return response.status;
-            } catch {
-              return 0;
-            }
-          },
-          { base, workspaceId, password },
-        )
-        .catch(() => 0);
+      const deleted = await cleanupRequest(
+        `/api/workspaces/${encodeURIComponent(workspaceId)}`,
+        "DELETE",
+        { password, confirmation: "DELETE" },
+      );
       expect(
         deleted,
         "The disposable acceptance workspace and its data are removed",
       ).toBe(200);
     }
+    cleanupCookie = "";
   }
 });

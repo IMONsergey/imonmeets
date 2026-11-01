@@ -89,6 +89,40 @@ class ExportTests(unittest.TestCase):
 
 
 class MonitorTests(unittest.TestCase):
+    def test_recording_object_has_separate_bounded_transfer_timeout(self):
+        cfg = {"baseUrl": "https://example.invalid:8443", "bearerToken": TOKEN}
+        object_path = "/_ops/recordings/" + "a" * 64 + ".enc"
+        for value in (None, 60, 3600):
+            options = cfg if value is None else {**cfg, "recordingTransferTimeoutSeconds": value}
+            expected = 1800 if value is None else value
+            with self.subTest(value=value), patch.object(pull.subprocess, "run") as run:
+                pull.https_fetch(pathlib.Path("/tmp"), options, object_path)
+                args, kwargs = run.call_args
+                self.assertIn('max-time = "' + str(expected) + '"', kwargs["input"].decode())
+                self.assertEqual(kwargs["timeout"], expected + 10)
+                self.assertEqual(args[0], ["/usr/bin/curl", "--config", "-"])
+                self.assertNotIn(TOKEN, repr(args))
+                self.assertNotIn("location", kwargs["input"].decode())
+
+    def test_non_recording_transfers_keep_original_timeout(self):
+        cfg = {"baseUrl": "https://example.invalid:8443", "bearerToken": TOKEN,
+               "recordingTransferTimeoutSeconds": 3600}
+        for path in ("/_ops/backup", "/_ops/health", "/_ops/recordings"):
+            with self.subTest(path=path), patch.object(pull.subprocess, "run") as run:
+                pull.https_fetch(pathlib.Path("/tmp"), cfg, path)
+                args, kwargs = run.call_args
+                self.assertIn('max-time = "240"', kwargs["input"].decode())
+                self.assertEqual(kwargs["timeout"], 250)
+
+    def test_invalid_recording_timeout_rejected_before_transport(self):
+        cfg = {"baseUrl": "https://example.invalid:8443", "bearerToken": TOKEN}
+        for value in (None, True, False, "1800", 1800.0, 59, 3601, -1, [], {}):
+            with self.subTest(value=value), patch.object(pull.subprocess, "run") as run:
+                with self.assertRaises(ValueError):
+                    pull.https_fetch(pathlib.Path("/tmp"), {**cfg, "recordingTransferTimeoutSeconds": value},
+                                     "/_ops/recordings/" + "a" * 64 + ".enc")
+                run.assert_not_called()
+
     def test_tls_url_and_token_not_in_process_arguments(self):
         cfg = {"baseUrl": "https://example.invalid:8443", "bearerToken": TOKEN}
         with patch.object(pull.subprocess, "run") as run:
