@@ -143,7 +143,7 @@ test("guest framing is served by the authenticated origin without exposing accou
     assert.equal(denied.statusCode, 403);
     const embedded = await app.inject({
       url: embedPath,
-      headers: { accept: "text/html", "x-imon-proxy-secret": secret },
+      headers: { "x-imon-proxy-secret": secret },
     });
     assert.equal(
       embedded.statusCode,

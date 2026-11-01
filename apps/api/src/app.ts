@@ -1987,6 +1987,19 @@ export async function createApp(
   const webPath = fileURLToPath(new URL("../../web/dist", import.meta.url));
   if (existsSync(webPath)) {
     await app.register(staticPlugin, { root: webPath, prefix: "/" });
+    // This is a dedicated document, including for ordinary GET/HEAD probes
+    // that do not send a browser's Accept: text/html header.
+    for (const url of ["/embed/:slug", "/embed/:slug/"]) {
+      app.get(url, async (req, reply) => {
+        assert(
+          isEmbedPath(req.url.split("?")[0]!),
+          404,
+          "NOT_FOUND",
+          "Страница не найдена.",
+        );
+        return reply.sendFile("index.html", { cacheControl: false });
+      });
+    }
     app.setNotFoundHandler(async (req, reply) => {
       if (
         req.url.startsWith("/api/") ||
