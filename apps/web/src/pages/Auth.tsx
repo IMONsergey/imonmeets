@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  LogOut,
-  Mic,
-  ShieldCheck,
-  Users,
-  Video,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, LogOut } from "lucide-react";
 import { api } from "../api";
 import type { Config, User, Workspace } from "../api";
 import { Brand, Button, ErrorBox, Field, Link, go } from "../ui";
@@ -124,58 +115,23 @@ export function Auth({
   const title = registrationClosed
     ? "Регистрация закрыта"
     : isRegister
-      ? "Давайте познакомимся"
+      ? "Создать аккаунт"
       : isForgot
         ? "Восстановить доступ"
         : isReset
           ? "Новый пароль"
           : isVerify
             ? "Подтвердите вашу почту"
-            : "Рады видеть вас снова";
+            : "Войти";
   return (
     <div className="auth-layout">
-      <div className="auth-story">
-        <Brand light />
-        <div className="story-main">
-          <div className="eyebrow">
-            <span className="status-dot" /> IMON MEETS
-          </div>
-          <h1>
-            Ближе к команде.
-            <br />
-            <span>Ближе к делу.</span>
-          </h1>
-          <p>
-            Пространство для разговоров,
-            <br />
-            из которых рождаются хорошие идеи.
-          </p>
-          <div className="story-art" aria-hidden="true">
-            <div className="art-orbit orbit-one" />
-            <div className="art-orbit orbit-two" />
-            <div className="art-core">
-              <Video size={51} />
-            </div>
-            <div className="art-chip chip-one">
-              <Mic size={19} />
-              <span>На одной волне</span>
-            </div>
-            <div className="art-chip chip-two">
-              <span className="status-dot" />
-              Связь начинается здесь
-            </div>
-          </div>
-        </div>
-        <div className="auth-story-footer">
-          Видео. Голос. Совместная работа.
-        </div>
-      </div>
-      <div className="auth-form-side">
-        <div className="auth-mobile-brand">
+      <header className="auth-header">
+        <Link to="/login" title="IMON Meets">
           <Brand />
-        </div>
+        </Link>
+      </header>
+      <main className="auth-form-side">
         <div className="auth-card">
-          <span className="eyebrow">ВАШЕ РАБОЧЕЕ ПРОСТРАНСТВО</span>
           {reviewMode && (
             <div className="review-access-note">
               <span className="review-badge">Версия для знакомства</span>
@@ -200,7 +156,7 @@ export function Auth({
                       ? reviewMode
                         ? "Для подтверждения адреса обратитесь к администратору."
                         : "Подтвержденный адрес нужен для приглашений и безопасной работы."
-                      : "Войдите, чтобы продолжить разговор."}
+                      : "Введите адрес почты и пароль вашего аккаунта."}
           </p>
           {new URLSearchParams(location.search).get("success") && isVerify && (
             <div className="success-box">
@@ -345,11 +301,8 @@ export function Auth({
             </div>
           )}
         </div>
-        <div className="auth-bottom">
-          <ShieldCheck size={15} />
-          Ваши встречи. Ваша команда. Ваше пространство.
-        </div>
-      </div>
+      </main>
+      <footer className="auth-bottom">IMON Meets</footer>
     </div>
   );
 }
@@ -371,17 +324,16 @@ export function Onboarding({
     <div className="onboarding">
       <header>
         <Brand />
-        <Button className="text-button" onClick={logout}>
-          <LogOut size={17} />
-          Выйти
-        </Button>
+        <div className="onboarding-account">
+          <span>{user.name}</span>
+          <Button className="text-button" onClick={logout}>
+            <LogOut size={17} />
+            Выйти
+          </Button>
+        </div>
       </header>
       <div className="onboarding-card">
-        <div className="empty-icon">
-          <Users size={28} />
-        </div>
-        <span className="eyebrow">НАЧАЛО БОЛЬШОЙ РАБОТЫ</span>
-        <h1>{user.name.split(" ")[0]}, добро пожаловать.</h1>
+        <h1>Создать рабочее пространство</h1>
         <p>
           Создайте пространство для вашей команды. Здесь будут ваши встречи,
           комнаты и записи.
@@ -422,10 +374,9 @@ export function Onboarding({
             <ArrowRight size={18} />
           </Button>
         </form>
-        <div className="onboarding-foot">
-          <ShieldCheck size={16} />
-          Только вы решаете, кого пригласить.
-        </div>
+        <p className="onboarding-foot">
+          Вы станете владельцем пространства и сможете пригласить участников.
+        </p>
       </div>
     </div>
   );

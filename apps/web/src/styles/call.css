@@ -1,0 +1,888 @@
+.join-page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface, #fff);
+  color: var(--text, #232333);
+}
+.join-page > header {
+  min-height: 76px;
+  height: auto;
+  padding: 18px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: #fff;
+  border-bottom: 1px solid var(--border, #e0e0e6);
+}
+.join-header-label {
+  color: var(--muted, #6e6e73);
+  font-size: 13px;
+}
+.join-page .join-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 44px 32px 56px;
+}
+.join-intro {
+  margin: 0 0 32px;
+  text-align: center;
+}
+.join-intro h1 {
+  margin: 0;
+  color: var(--text, #232333);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.join-intro > p {
+  max-width: 700px;
+  margin: 12px auto 0;
+  color: var(--muted, #6e6e73);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.join-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px 22px;
+  margin-top: 16px;
+  color: var(--muted, #6e6e73);
+  font-size: 12px;
+}
+.join-meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.join-page .prejoin-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  color: var(--text, #232333);
+  --lk-bg: #fff;
+  --lk-fg: #232333;
+  --lk-accent-bg: #0b5cff;
+  --lk-accent-fg: #fff;
+}
+.prejoin-wrap .lk-prejoin {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(250px, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 18px 36px;
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  background: transparent;
+  color: var(--text, #232333);
+}
+.prejoin-wrap .lk-video-container {
+  grid-column: 1;
+  grid-row: 1;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #202024;
+  border: 1px solid #2d2d32;
+  border-radius: 10px;
+}
+.prejoin-wrap .lk-video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.prejoin-wrap .lk-camera-off-note {
+  color: #96969f;
+}
+.prejoin-wrap .lk-camera-off-note svg {
+  max-width: 90px;
+}
+.prejoin-wrap .lk-button-group-container {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  margin: 0;
+}
+.prejoin-wrap .lk-button-group {
+  overflow: visible;
+}
+.prejoin-wrap .lk-button {
+  min-height: 40px;
+  padding: 10px 12px;
+  background: #f5f5f7;
+  border: 1px solid #e0e0e6;
+  color: #34343f;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.prejoin-wrap .lk-button:hover {
+  background: #ececf0;
+}
+.prejoin-wrap .lk-button[data-lk-enabled="false"] {
+  background: #fff;
+  color: var(--danger, #d92d20);
+}
+.prejoin-wrap .lk-username-container {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  width: 100%;
+  margin: 0;
+  gap: 18px;
+}
+.prejoin-wrap .lk-username-container input {
+  width: 100%;
+  max-width: none;
+  min-height: 46px;
+  padding: 12px 14px;
+  border: 1px solid var(--border, #e0e0e6);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text, #232333);
+  font-size: 15px;
+}
+.prejoin-wrap .lk-username-container input:focus {
+  outline: 2px solid #0b5cff40;
+  border-color: var(--accent, #0b5cff);
+}
+.prejoin-wrap .lk-username-container .lk-join-button {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 14px;
+  border: 1px solid var(--accent, #0b5cff);
+  background: var(--accent, #0b5cff);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+.prejoin-wrap .lk-username-container .lk-join-button:hover:not(:disabled) {
+  background: var(--accent-hover, #004ce5);
+}
+.prejoin-wrap .lk-device-menu {
+  background: #fff;
+  border: 1px solid var(--border, #e0e0e6);
+  border-radius: 8px;
+  color: var(--text, #232333);
+  box-shadow: 0 6px 24px #00000012;
+}
+.prejoin-wrap .lk-device-menu button {
+  color: var(--text, #232333);
+}
+.prejoin-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 28px;
+  color: var(--muted, #6e6e73);
+  font-size: 12px;
+}
+.joining-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
+  border-radius: 10px;
+  background: #ffffffed;
+  color: var(--text, #232333);
+  font-size: 14px;
+}
+.join-account-link {
+  margin-top: 28px;
+  text-align: center;
+  color: var(--muted, #6e6e73);
+  font-size: 13px;
+}
+.join-account-link button {
+  border: 0;
+  padding: 0 0 0 5px;
+  color: var(--accent, #0b5cff);
+  background: transparent;
+  font-size: inherit;
+}
+.join-account-link button:hover {
+  text-decoration: underline;
+}
+.join-page > footer {
+  padding: 20px;
+  text-align: center;
+  color: #85858d;
+  font-size: 12px;
+}
+.join-page .standalone-card {
+  max-width: 450px;
+  margin: 40px auto;
+  padding: 32px;
+  background: #fff;
+  border: 1px solid var(--border, #e0e0e6);
+  border-radius: 12px;
+  text-align: center;
+}
+.join-page .standalone-card h1 {
+  color: var(--text, #232333);
+  font-size: 26px;
+  letter-spacing: -0.4px;
+}
+.join-page .standalone-card > p {
+  margin: 16px 0 26px;
+  color: var(--muted, #6e6e73);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.join-page .standalone-card .button {
+  font-size: 14px;
+}
+.join-page .standalone-card > .empty-icon {
+  margin: 0 auto 24px;
+  background: #f5f7fb;
+  color: var(--accent, #0b5cff);
+  border-color: #e4eaf4;
+}
+.join-page .back-link {
+  margin-top: 22px;
+  color: var(--accent, #0b5cff);
+  font-size: 13px;
+}
+.call-page {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  background: #111113;
+  color: #fff;
+}
+.call-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 58px;
+  padding: 10px 22px;
+  border-bottom: 1px solid #323236;
+  background: #1b1b1e;
+  color: #fff;
+}
+.call-meeting-identity {
+  min-width: 0;
+}
+.call-room-title {
+  display: block;
+  max-width: 560px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #f5f5f7;
+  font-size: 14px;
+  font-weight: 500;
+}
+.call-security {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3px;
+  color: #a7a7ae;
+  font-size: 11px;
+}
+.call-security svg {
+  color: #8dcb9e;
+}
+.call-owner-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+.call-owner-actions .button {
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 1px solid #56565e;
+  border-radius: 6px;
+  background: #29292d;
+  color: #f5f5f7;
+  font-size: 12px;
+  font-weight: 400;
+  box-shadow: none;
+}
+.call-owner-actions .button:hover:not(:disabled) {
+  background: #3d3d43;
+  box-shadow: none;
+}
+.call-owner-actions .recording-active {
+  color: #ffb3ac;
+  border-color: #91514e;
+}
+.call-owner-actions .close-room-button {
+  background: #d92d20;
+  border-color: #d92d20;
+  color: #fff;
+}
+.call-owner-actions .close-room-button:hover:not(:disabled) {
+  background: #b42318;
+}
+.live-room {
+  flex: 1;
+  min-height: 0;
+  background: #111113;
+  --lk-bg: #111113;
+  --lk-bg2: #202024;
+  --lk-bg3: #303036;
+  --lk-fg: #fff;
+  --lk-fg2: #d5d5dc;
+  --lk-accent-bg: #0b5cff;
+}
+.conference-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #111113;
+}
+.conference-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+.conference-video {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+.conference-video .lk-control-bar,
+.conference-video .lk-chat,
+.conference-video .lk-toast {
+  display: none !important;
+}
+.conference-video .lk-video-conference,
+.conference-video .lk-video-conference-inner {
+  height: 100%;
+  background: #111113;
+}
+.conference-video .lk-grid-layout-wrapper {
+  padding: 14px;
+}
+.conference-video .lk-participant-tile {
+  border-radius: 5px;
+  background: #252529;
+}
+.conference-video .lk-participant-name {
+  color: #fff;
+  font-size: 13px;
+}
+.conference-video .lk-participant-metadata {
+  background: #18181cc9;
+}
+.connection-banner,
+.allow-audio {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  z-index: 5;
+  transform: translateX(-50%);
+  padding: 12px 18px;
+  border: 1px solid #55555e;
+  border-radius: 8px;
+  background: #2d2d35;
+  color: #fff;
+  font-size: 13px;
+  text-align: center;
+}
+.allow-audio {
+  background: var(--accent, #0b5cff);
+  border-color: var(--accent, #0b5cff);
+}
+.meeting-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  min-height: 84px;
+  gap: 20px;
+  padding: 10px 24px;
+  background: #1b1b1e;
+  border-top: 1px solid #323236;
+}
+.participant-count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  min-width: 100px;
+  color: #dddde3;
+  font-size: 11px;
+}
+.participant-count > svg {
+  width: 24px;
+  height: 24px;
+}
+.meeting-main-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.meeting-main-controls > .lk-button,
+.meeting-main-controls > .button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  gap: 7px;
+  min-width: 82px;
+  min-height: 60px;
+  margin: 0;
+  padding: 8px 13px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  box-shadow: none;
+  color: #f4f4f7;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+.meeting-main-controls > .lk-button > svg,
+.meeting-main-controls > .button > svg {
+  width: 24px;
+  height: 24px;
+}
+.meeting-main-controls > .lk-button > span,
+.meeting-main-controls > .button > span {
+  display: inline;
+}
+.meeting-main-controls > .lk-button:hover:not(:disabled),
+.meeting-main-controls > .button:hover:not(:disabled),
+.meeting-main-controls > .control-selected {
+  background: #39393f;
+  border-color: transparent;
+  box-shadow: none;
+}
+.meeting-main-controls > .lk-button[data-lk-enabled="false"] {
+  background: transparent;
+  color: #f4f4f7;
+  border-color: transparent;
+}
+.meeting-main-controls > .lk-button[data-lk-enabled="false"] > svg {
+  color: #ff776c;
+}
+.meeting-main-controls > .lk-button.screen-share-control,
+.meeting-main-controls
+  > .lk-button.screen-share-control[data-lk-enabled="false"] {
+  color: #fff;
+  background: #16803c;
+  border-color: #16803c;
+}
+.meeting-main-controls > .lk-button.screen-share-control:hover:not(:disabled) {
+  background: #126b32;
+}
+.meeting-main-controls > .lk-button.screen-share-control > svg,
+.meeting-main-controls
+  > .lk-button.screen-share-control[data-lk-enabled="false"]
+  > svg {
+  color: #fff;
+}
+.meeting-main-controls
+  > .lk-button.screen-share-control[data-lk-enabled="true"] {
+  background: #11692f;
+  border-color: #74d58e;
+}
+.meeting-main-controls > .button small {
+  position: absolute;
+  top: 3px;
+  right: 18px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: #0b5cff;
+  color: #fff;
+  font-size: 9px;
+}
+.leave-meeting {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  min-width: 100px;
+  padding: 9px 18px;
+  border: 1px solid #d92d20;
+  border-radius: 7px;
+  background: #d92d20;
+  color: #fff;
+  font-size: 13px;
+}
+.leave-meeting:hover {
+  background: #b42318;
+  border-color: #b42318;
+}
+.meeting-chat {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 330px;
+  border-left: 1px solid #dedee5;
+  background: #fff;
+  color: #232333;
+}
+.chat-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e6;
+}
+.chat-heading h2 {
+  color: #232333;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+.chat-heading .icon-button {
+  color: #6e6e73;
+}
+.chat-heading .icon-button:hover {
+  background: #f0f0f4;
+  color: #232333;
+}
+.chat-privacy {
+  padding: 16px 20px 0;
+  color: #76767e;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.chat-messages {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 20px;
+}
+.chat-message {
+  margin-bottom: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  overflow-wrap: anywhere;
+}
+.chat-message > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.chat-message strong {
+  color: #343442;
+  font-size: 12px;
+  font-weight: 600;
+}
+.chat-message time {
+  color: #85858d;
+  font-size: 11px;
+}
+.chat-message p {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f3f3f7;
+  color: #232333;
+  font-size: 13px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+.chat-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  height: 100%;
+  min-height: 130px;
+  color: #8c8c96;
+}
+.chat-empty span {
+  color: #6e6e73;
+  font-size: 13px;
+}
+.chat-compose {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  background: #fff;
+  border-top: 1px solid #e0e0e6;
+}
+.chat-compose input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 12px;
+  min-height: 42px;
+  background: #fff;
+  color: #232333;
+  border: 1px solid #d5d5dd;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.chat-compose input::placeholder {
+  color: #85858d;
+}
+.chat-compose button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 42px;
+  border: 1px solid #0b5cff;
+  border-radius: 8px;
+  background: #0b5cff;
+  color: #fff;
+}
+.call-device-panel {
+  position: absolute;
+  z-index: 8;
+  right: 24px;
+  bottom: 100px;
+  width: 350px;
+  max-width: calc(100% - 32px);
+  padding: 0 20px 6px;
+  border: 1px solid #dcdce4;
+  border-radius: 10px;
+  background: #fff;
+  color: #232333;
+  box-shadow: 0 8px 32px #0003;
+}
+.call-device-panel > .chat-heading {
+  margin: 0 -20px 20px;
+  padding: 18px 20px;
+}
+.call-device-panel .field > span {
+  color: #343442;
+  font-size: 12px;
+}
+.call-device-panel .field select {
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid #d5d5dd;
+  border-radius: 8px;
+  background: #fff;
+  color: #232333;
+  font-size: 13px;
+}
+.call-device-panel .field option {
+  background: #fff;
+  color: #232333;
+}
+@media (max-width: 1050px) {
+  .participant-count {
+    min-width: 72px;
+    font-size: 10px;
+  }
+  .meeting-controls {
+    padding: 10px 14px;
+    gap: 10px;
+  }
+  .meeting-main-controls {
+    gap: 3px;
+  }
+  .meeting-main-controls > .lk-button,
+  .meeting-main-controls > .button {
+    min-width: 72px;
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+  .meeting-main-controls > .screen-share-control > span {
+    max-width: 110px;
+    white-space: normal;
+    text-align: center;
+  }
+  .leave-meeting {
+    min-width: 85px;
+    padding: 9px 12px;
+  }
+}
+@media (max-width: 800px) {
+  .join-page > header {
+    min-height: 68px;
+    padding: 16px 24px;
+  }
+  .join-page .join-main {
+    padding: 32px 24px 44px;
+  }
+  .prejoin-wrap .lk-prejoin {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 550px;
+    margin: 0 auto;
+  }
+  .prejoin-wrap .lk-username-container {
+    max-width: 400px;
+    margin: 8px auto 0;
+  }
+  .prejoin-wrap .lk-button-group-container {
+    gap: 12px;
+  }
+  .participant-count {
+    display: none;
+  }
+  .meeting-main-controls {
+    flex: 1;
+    justify-content: center;
+  }
+  .meeting-chat {
+    width: 300px;
+  }
+  .call-owner-actions .button {
+    font-size: 11px;
+  }
+}
+@media (max-width: 600px) {
+  .join-header-label {
+    display: none;
+  }
+  .join-page .join-main {
+    padding: 28px 20px 40px;
+  }
+  .join-intro {
+    margin-bottom: 26px;
+  }
+  .join-intro h1 {
+    font-size: 24px;
+  }
+  .join-intro > p {
+    font-size: 13px;
+  }
+  .join-meta {
+    font-size: 11px;
+  }
+  .prejoin-wrap .lk-video-container {
+    aspect-ratio: 4 / 3;
+    height: auto;
+    min-height: 0;
+  }
+  .prejoin-wrap .lk-button {
+    font-size: 12px;
+  }
+  .prejoin-note {
+    font-size: 11px;
+    margin-top: 24px;
+  }
+  .join-page .standalone-card {
+    padding: 28px 24px;
+    margin-top: 20px;
+  }
+  .call-header {
+    gap: 12px;
+    min-height: 58px;
+    padding: 10px 14px;
+    flex-wrap: wrap;
+  }
+  .call-room-title,
+  .call-header:has(.call-owner-actions > .button) .call-room-title {
+    max-width: 100%;
+    font-size: 12px;
+  }
+  .call-meeting-identity {
+    flex: 1;
+    min-width: 100px;
+  }
+  .call-security {
+    font-size: 9px;
+  }
+  .call-owner-actions {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .call-owner-actions .button {
+    min-height: 32px;
+    font-size: 10px;
+    padding: 7px 9px;
+  }
+  .meeting-controls {
+    min-height: 76px;
+    padding: 8px 9px;
+    gap: 6px;
+  }
+  .meeting-main-controls {
+    gap: 1px;
+    justify-content: space-around;
+  }
+  .meeting-main-controls > .lk-button,
+  .meeting-main-controls > .button {
+    min-width: 44px;
+    max-width: 66px;
+    min-height: 56px;
+    padding: 7px 5px;
+    gap: 6px;
+    font-size: 9px;
+  }
+  .meeting-main-controls > .lk-button > svg,
+  .meeting-main-controls > .button > svg {
+    width: 21px;
+    height: 21px;
+  }
+  .meeting-main-controls > .screen-share-control > span {
+    max-width: 66px;
+    font-size: 8px;
+  }
+  .meeting-main-controls > .button small {
+    top: 2px;
+    right: 6px;
+    font-size: 8px;
+  }
+  .leave-meeting {
+    min-width: 60px;
+    min-height: 36px;
+    gap: 5px;
+    padding: 8px;
+    font-size: 11px;
+  }
+  .leave-meeting svg {
+    display: none;
+  }
+  .meeting-chat {
+    position: absolute;
+    z-index: 6;
+    inset: 0 0 76px auto;
+    width: min(330px, calc(100% - 32px));
+    box-shadow: -10px 0 30px #0004;
+  }
+  .call-device-panel {
+    right: 16px;
+    bottom: 92px;
+    width: calc(100% - 32px);
+  }
+  .conference-video .lk-grid-layout-wrapper {
+    padding: 8px;
+  }
+  .connection-banner,
+  .allow-audio {
+    width: max-content;
+    max-width: calc(100% - 32px);
+    font-size: 12px;
+  }
+}

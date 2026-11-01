@@ -1,25 +1,31 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import type { ReactNode } from "react";
 import {
   ArrowRight,
   ChevronDown,
-  ChevronRight,
   CircleHelp,
   CheckCircle2,
   Film,
-  LayoutDashboard,
+  Home,
   LogOut,
   Mail,
-  Menu,
+  Plus,
+  Search,
   Settings,
-  ShieldCheck,
   Users,
   Video,
   X,
 } from "lucide-react";
 import { api, ApiError, initials } from "./api";
 import type { Config } from "./api";
-import { Brand, Button, ErrorBox, Link, Spinner, go, roleLabel } from "./ui";
+import { Brand, Button, ErrorBox, Link, Spinner, go } from "./ui";
 import type { Session } from "./ui";
 import { Auth, Onboarding } from "./pages/Auth";
 import { Dashboard, Rooms } from "./pages/Meetings";
@@ -29,8 +35,8 @@ const Join = lazy(() =>
 );
 type Toast = { text: string; error?: boolean };
 const nav = [
-  { path: "/", label: "Обзор", icon: LayoutDashboard },
-  { path: "/rooms", label: "Комнаты", icon: Video },
+  { path: "/", label: "Главная", icon: Home },
+  { path: "/rooms", label: "Встречи", icon: Video },
   { path: "/recordings", label: "Записи", icon: Film },
   { path: "/team", label: "Команда", icon: Users },
   { path: "/settings", label: "Настройки", icon: Settings },
@@ -42,10 +48,10 @@ export default function App() {
   const [booting, setBooting] = useState(true);
   const [fatal, setFatal] = useState("");
   const [toast, setToast] = useState<Toast>();
+  const accountMenu = useRef<HTMLDetailsElement>(null);
   const [workspaceId, setWorkspaceId] = useState(
     localStorage.getItem("imon.workspace") ?? "",
   );
-  const [mobileNav, setMobileNav] = useState(false);
   const reviewMode =
     config?.emailDelivery === "capture" && config.registrationEnabled === false;
   const notify = useCallback(
@@ -60,10 +66,32 @@ export default function App() {
   useEffect(() => {
     const onPop = () => {
       setPath(location.pathname);
-      setMobileNav(false);
+      if (accountMenu.current) accountMenu.current.open = false;
     };
     addEventListener("popstate", onPop);
     return () => removeEventListener("popstate", onPop);
+  }, []);
+  useEffect(() => {
+    const closeOutside = (event: PointerEvent) => {
+      if (
+        accountMenu.current &&
+        event.target instanceof Node &&
+        !accountMenu.current.contains(event.target)
+      )
+        accountMenu.current.open = false;
+    };
+    const closeEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && accountMenu.current?.open) {
+        accountMenu.current.open = false;
+        accountMenu.current.querySelector("summary")?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    document.addEventListener("keydown", closeEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      document.removeEventListener("keydown", closeEscape);
+    };
   }, []);
   useEffect(() => {
     let active = true;
@@ -139,7 +167,7 @@ export default function App() {
       <div className="full-loader">
         <Brand />
         <Spinner />
-        <p>Подготавливаем ваше пространство</p>
+        <p>Загрузка IMON Meets</p>
       </div>
     );
   else if (fatal || !config)
@@ -204,106 +232,111 @@ export default function App() {
   else
     content = (
       <div className="app-layout">
-        <aside className={`sidebar ${mobileNav ? "is-open" : ""}`}>
-          <Link to="/" className="brand-link">
-            <Brand light />
+        <header className="topbar">
+          <Link to="/" className="brand-link" aria-label="IMON Meets, главная">
+            <Brand />
           </Link>
-          <div className="workspace-switch">
-            <span className="workspace-avatar">{initials(workspace.name)}</span>
-            <div>
-              <small>Рабочее пространство</small>
+          <form
+            className="global-search"
+            role="search"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const query = String(
+                new FormData(event.currentTarget).get("q") ?? "",
+              ).trim();
+              go(`/rooms${query ? `?q=${encodeURIComponent(query)}` : ""}`);
+            }}
+          >
+            <Search size={17} aria-hidden="true" />
+            <input
+              name="q"
+              aria-label="Поиск встреч"
+              placeholder="Поиск встреч"
+              autoComplete="off"
+            />
+            <button type="submit" aria-label="Найти встречи">
+              <ArrowRight size={16} />
+            </button>
+          </form>
+          <div className="topbar-right">
+            <Link
+              to="/rooms?new=1"
+              className="icon-button topbar-create"
+              title="Новая встреча"
+              aria-label="Новая встреча"
+            >
+              <Plus size={21} />
+            </Link>
+            <div className="workspace-switch">
               <select
                 aria-label="Рабочее пространство"
                 value={workspace.id}
-                onChange={(e) => setWorkspaceId(e.target.value)}
+                onChange={(event) => setWorkspaceId(event.target.value)}
               >
-                {session.workspaces.map((w) => (
-                  <option key={w.id} value={w.id}>
-                    {w.name}
+                {session.workspaces.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
                   </option>
                 ))}
               </select>
+              <ChevronDown size={13} aria-hidden="true" />
             </div>
-            <ChevronDown size={14} />
-          </div>
-          <div className="nav-caption">РАБОЧЕЕ ПРОСТРАНСТВО</div>
-          <nav aria-label="Главная навигация">
-            {nav.map(({ path: p, label, icon: Icon }) => (
-              <Link
-                key={p}
-                to={p}
-                className={`nav-item ${path === p ? "active" : ""}`}
+            {reviewMode && (
+              <span
+                className="review-badge"
+                title="Версия для знакомства с сервисом"
               >
-                <Icon size={19} />
+                Тестовый доступ
+              </span>
+            )}
+            <details className="account-menu" ref={accountMenu}>
+              <summary
+                className="top-avatar"
+                title={session.user.name}
+                aria-label="Меню аккаунта"
+              >
+                {initials(session.user.name)}
+                <span className="presence-dot" />
+              </summary>
+              <div className="account-popover">
+                <div className="account-identity">
+                  <strong>{session.user.name}</strong>
+                  <span>{session.user.email}</span>
+                </div>
+                <Link
+                  to="/settings"
+                  onClick={() => {
+                    if (accountMenu.current) accountMenu.current.open = false;
+                  }}
+                >
+                  <Settings size={16} />
+                  Настройки аккаунта
+                </Link>
+                <button onClick={logout}>
+                  <LogOut size={16} />
+                  Выйти из аккаунта
+                </button>
+              </div>
+            </details>
+          </div>
+        </header>
+        <aside className="sidebar">
+          <nav aria-label="Главная навигация">
+            {nav.map(({ path: itemPath, label, icon: Icon }) => (
+              <Link
+                key={itemPath}
+                to={itemPath}
+                className={`nav-item ${path === itemPath ? "active" : ""}`}
+                aria-current={path === itemPath ? "page" : undefined}
+                title={label}
+              >
+                <Icon size={21} strokeWidth={1.75} aria-hidden="true" />
                 <span>{label}</span>
-                {path === p && <span className="nav-dot" />}
               </Link>
             ))}
           </nav>
-          <div className="sidebar-bottom">
-            <div className="sidebar-note">
-              <span className="status-dot" />
-              <span>Место, где мы ближе</span>
-            </div>
-            <div className="account">
-              <div className="avatar">{initials(session.user.name)}</div>
-              <div className="account-copy">
-                <strong>{session.user.name}</strong>
-                <span>{roleLabel[workspace.role]}</span>
-              </div>
-              <button
-                className="icon-button"
-                title="Выйти из аккаунта"
-                aria-label="Выйти из аккаунта"
-                onClick={logout}
-              >
-                <LogOut size={18} />
-              </button>
-            </div>
-          </div>
         </aside>
-        {mobileNav && (
-          <div className="nav-shade" onClick={() => setMobileNav(false)} />
-        )}
         <div className="app-main">
-          <header className="topbar">
-            <div className="breadcrumb">
-              <button
-                className="icon-button mobile-menu"
-                onClick={() => setMobileNav(!mobileNav)}
-                aria-label="Открыть меню"
-              >
-                <Menu size={22} />
-              </button>
-              <span>{workspace.name}</span>
-              <ChevronRight size={14} />
-              <strong>
-                {nav.find((n) => n.path === path)?.label ?? "Обзор"}
-              </strong>
-            </div>
-            <div className="topbar-right">
-              {reviewMode ? (
-                <span
-                  className="review-badge"
-                  title="Версия для знакомства с сервисом"
-                >
-                  Тестовый доступ
-                </span>
-              ) : (
-                <span className="secure-label">
-                  <ShieldCheck size={15} />
-                  Ваше пространство для встреч
-                </span>
-              )}
-              <Link
-                to="/settings"
-                className="top-avatar"
-                title="Настройки аккаунта"
-              >
-                {initials(session.user.name)}
-              </Link>
-            </div>
-          </header>
           <main className="main-content" key={workspace.id}>
             {!session.user.emailVerified && (
               <div className="notice verification-notice">
@@ -352,10 +385,6 @@ export default function App() {
               />
             )}
           </main>
-          <footer className="app-footer">
-            <span>IMON Meets</span>
-            <span>Хорошая работа начинается с разговора.</span>
-          </footer>
         </div>
       </div>
     );

@@ -152,12 +152,11 @@ export function Join({
     return (
       <div className="call-page">
         <header className="call-header">
-          <Brand light />
-          <div>
+          <div className="call-meeting-identity">
             <span className="call-room-title">{info?.room.title}</span>
             <span className="call-security">
               <ShieldCheck size={13} />
-              Приватная встреча
+              Встреча IMON Meets
             </span>
           </div>
           <div className="call-owner-actions">
@@ -282,10 +281,7 @@ export function Join({
         <Link to="/">
           <Brand />
         </Link>
-        <span className="subtle">
-          <ShieldCheck size={15} />
-          Ваше пространство для встреч
-        </span>
+        <span className="join-header-label">Вход во встречу</span>
       </header>
       <main className="join-main">
         {!info && !error ? (
@@ -316,7 +312,6 @@ export function Join({
         ) : (
           <>
             <div className="join-intro">
-              <span className="eyebrow">ГОТОВЫ К РАЗГОВОРУ?</span>
               <h1>{info?.room.title ?? "Войти во встречу"}</h1>
               {info?.room.description && <p>{info.room.description}</p>}
               <div className="join-meta">
@@ -419,7 +414,7 @@ export function Join({
           </>
         )}
       </main>
-      <footer>IMON Meets · Хорошая работа начинается с разговора.</footer>
+      <footer>IMON Meets</footer>
     </div>
   );
 }

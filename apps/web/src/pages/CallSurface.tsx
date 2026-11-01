@@ -11,7 +11,6 @@ import {
 } from "@livekit/components-react";
 import { ConnectionState, Track } from "livekit-client";
 import {
-  ChevronDown,
   DoorOpen,
   MessageSquare,
   Mic,
@@ -150,11 +149,7 @@ export function CallSurface({
               ) : (
                 <div className="chat-empty">
                   <MessageSquare size={26} />
-                  <span>
-                    Начните разговор.
-                    <br />
-                    Напишите команде первое сообщение.
-                  </span>
+                  <span>Сообщений пока нет</span>
                 </div>
               )}
               <div ref={bottomRef} />
@@ -212,7 +207,7 @@ export function CallSurface({
       <div className="meeting-controls">
         <span className="participant-count">
           <Users size={16} />
-          {participants.length}
+          <span>Участники ({participants.length})</span>
         </span>
         <div className="meeting-main-controls">
           <TrackToggle
@@ -237,6 +232,7 @@ export function CallSurface({
           </TrackToggle>
           {canScreenShare && (
             <TrackToggle
+              className="screen-share-control"
               showIcon={false}
               source={Track.Source.ScreenShare}
               onDeviceError={error}
@@ -244,7 +240,7 @@ export function CallSurface({
               title="Демонстрация экрана"
             >
               <MonitorUp size={18} />
-              <span>Экран</span>
+              <span>Демонстрация экрана</span>
             </TrackToggle>
           )}
           <Button
@@ -264,7 +260,7 @@ export function CallSurface({
             aria-pressed={settingsOpen}
           >
             <Settings size={18} />
-            <ChevronDown size={12} />
+            <span>Настройки</span>
           </Button>
         </div>
         <DisconnectButton className="leave-meeting">

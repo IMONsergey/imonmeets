@@ -5,20 +5,20 @@ import {
   CalendarDays,
   CalendarPlus,
   Clock3,
+  ChevronLeft,
+  ChevronRight,
+  LogIn,
   Copy,
   Film,
   Globe2,
   Link2,
-  Mic,
   Pencil,
   Plus,
   Search,
   ShieldCheck,
-  Sparkles,
   Square,
   Users,
   Video,
-  DoorOpen,
 } from "lucide-react";
 import { api, meetingUrl } from "../api";
 import {
@@ -72,7 +72,6 @@ function CalendarExport({
 }
 
 export function PageHeading({
-  eyebrow,
   title,
   text,
   children,
@@ -85,7 +84,6 @@ export function PageHeading({
   return (
     <div className="page-heading">
       <div>
-        <span className="eyebrow">{eyebrow}</span>
         <h1>{title}</h1>
         <p>{text}</p>
       </div>
@@ -93,6 +91,87 @@ export function PageHeading({
     </div>
   );
 }
+function MeetingClock() {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 30_000);
+    return () => clearInterval(timer);
+  }, []);
+  return (
+    <div className="home-clock">
+      <time className="home-time" dateTime={now.toISOString()}>
+        {new Intl.DateTimeFormat("ru", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(now)}
+      </time>
+      <p>
+        {new Intl.DateTimeFormat("ru", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+        }).format(now)}
+      </p>
+    </div>
+  );
+}
+
+function JoinMeeting({ onClose }: { onClose: () => void }) {
+  const [error, setError] = useState("");
+  return (
+    <Modal title="Присоединиться к встрече" onClose={onClose}>
+      <p className="modal-intro">
+        Вставьте ссылку, которую прислал организатор.
+      </p>
+      <ErrorBox error={error} />
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          const value = String(
+            new FormData(event.currentTarget).get("meeting") ?? "",
+          ).trim();
+          let slug = value;
+          try {
+            if (value.includes("/")) {
+              const url = new URL(value, location.origin);
+              if (
+                url.origin !== location.origin ||
+                !url.pathname.startsWith("/join/")
+              )
+                throw new Error();
+              slug = decodeURIComponent(url.pathname.slice(6));
+            }
+            if (!/^[a-zA-Z0-9_-]{16,128}$/.test(slug)) throw new Error();
+            go(`/join/${encodeURIComponent(slug)}`);
+          } catch {
+            setError(
+              "Нужна ссылка на встречу IMON Meets или код из этой ссылки.",
+            );
+          }
+        }}
+      >
+        <Field label="Ссылка или код встречи">
+          <input
+            name="meeting"
+            required
+            autoFocus
+            autoComplete="off"
+            placeholder={`${location.origin}/join/…`}
+          />
+        </Field>
+        <div className="modal-actions">
+          <Button type="button" onClick={onClose}>
+            Отмена
+          </Button>
+          <Button type="submit" className="primary">
+            Присоединиться
+          </Button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
+
 export function Dashboard({
   workspace,
   user,
@@ -101,17 +180,15 @@ export function Dashboard({
 }: PageProps & { user: User }) {
   const [overview, setOverview] = useState<{
     rooms: Room[];
-    membersCount: number;
-    recordingsCount: number;
   }>();
   const [error, setError] = useState("");
   const [editing, setEditing] = useState(false);
+  const [joining, setJoining] = useState(false);
   const [instant, setInstant] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(() => new Date());
   const load = useCallback(
     () =>
-      api<{ rooms: Room[]; membersCount: number; recordingsCount: number }>(
-        `/workspaces/${workspace.id}/overview`,
-      )
+      api<{ rooms: Room[] }>(`/workspaces/${workspace.id}/rooms`)
         .then(setOverview)
         .catch((e) => setError(e.message)),
     [workspace.id],
@@ -119,16 +196,27 @@ export function Dashboard({
   useEffect(() => {
     void load();
   }, [load]);
-  const upcoming =
+  const sameDay = (a: Date, b: Date) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+  const isToday = sameDay(selectedDate, new Date());
+  const agenda =
     overview?.rooms
       .filter(
-        (r) =>
-          r.status === "open" &&
-          r.startsAt &&
-          new Date(r.startsAt).getTime() >= Date.now(),
+        (room) =>
+          room.status === "open" &&
+          room.startsAt &&
+          sameDay(new Date(room.startsAt), selectedDate),
       )
-      .sort((a, b) => a.startsAt!.localeCompare(b.startsAt!))
-      .slice(0, 3) ?? [];
+      .sort((a, b) => a.startsAt!.localeCompare(b.startsAt!)) ?? [];
+  function moveDay(amount: number) {
+    setSelectedDate((previous) => {
+      const next = new Date(previous);
+      next.setDate(next.getDate() + amount);
+      return next;
+    });
+  }
   async function start() {
     setInstant(true);
     try {
@@ -137,207 +225,149 @@ export function Dashboard({
         { title: "Быстрая встреча", allowGuests: true },
       );
       go(`/join/${room.slug}`);
-    } catch (e) {
-      notify((e as Error).message, true);
+    } catch (error) {
+      notify((error as Error).message, true);
     } finally {
       setInstant(false);
     }
   }
   return (
-    <>
-      <PageHeading
-        eyebrow="ВАШ ДЕНЬ В IMON MEETS"
-        title={`Добрый день, ${user.name.split(" ")[0]}`}
-        text="Все для продуктивного разговора в одном месте."
-      >
-        <Button className="primary" onClick={() => setEditing(true)}>
-          <Plus size={18} />
-          Запланировать встречу
-        </Button>
-      </PageHeading>
+    <div className="home-page">
+      <h1 className="home-greeting">Добрый день, {user.name.split(" ")[0]}</h1>
+      <MeetingClock />
       <ErrorBox error={error} />
-      <section className="welcome-panel">
-        <div className="welcome-copy">
-          <span className="pill">
-            <span className="status-dot" />
-            ВАШЕ ПРОСТРАНСТВО
+      <div className="quick-actions" aria-label="Действия со встречами">
+        <button className="quick-action" disabled={instant} onClick={start}>
+          <span className="quick-action-icon new-meeting">
+            {instant ? (
+              <Spinner />
+            ) : (
+              <Video size={29} fill="currentColor" strokeWidth={1.5} />
+            )}
           </span>
-          <h2>
-            Хорошие идеи
-            <br />
-            начинаются со встречи.
-          </h2>
-          <p>
-            Соберите команду, обсудите важное
-            <br className="desktop-break" /> и двигайтесь дальше вместе.
-          </p>
-          <Button className="dark-button" busy={instant} onClick={start}>
-            <Video size={19} />
-            Начать встречу
-            <ArrowRight size={17} />
-          </Button>
-          <small>
-            {config.mediaConfigured
-              ? "Видео, звук и демонстрация экрана"
-              : "Комнату можно создать. Видеосвязь еще настраивается."}
-          </small>
-        </div>
-        <div className="meeting-art" aria-hidden="true">
-          <div className="art-grid" />
-          <div className="call-window">
-            <div className="window-heading">
-              <span />
-              <span />
-              <span />
-              <div>IMON Meets</div>
-            </div>
-            <div className="call-tiles">
-              <div className="person-tile person-one">
-                <div className="person-head" />
-                <div className="person-body" />
-                <span>
-                  <Mic size={11} />
-                  Вы
-                </span>
-              </div>
-              <div className="person-tile person-two">
-                <div className="person-head" />
-                <div className="person-body" />
-                <span>
-                  <Mic size={11} />
-                  Команда
-                </span>
-              </div>
-            </div>
-            <div className="call-controls">
-              <span>
-                <Mic size={15} />
-              </span>
-              <span>
-                <Video size={15} />
-              </span>
-              <span className="hangup">
-                <DoorOpen size={15} />
-              </span>
-            </div>
-          </div>
-          <span className="floating-note">
-            <Sparkles size={16} />
-            Есть что обсудить
+          <span>Начать встречу</span>
+        </button>
+        <button
+          className="quick-action"
+          aria-label="Присоединиться"
+          onClick={() => setJoining(true)}
+        >
+          <span className="quick-action-icon">
+            <LogIn size={29} strokeWidth={1.8} />
           </span>
-        </div>
-      </section>
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon peach">
-            <Video size={21} />
-          </div>
-          <div>
-            <span>Открытые комнаты</span>
-            <strong>
-              {overview ? (
-                overview.rooms.filter((r) => r.status === "open").length
-              ) : (
-                <span className="skeleton-number" />
-              )}
-            </strong>
-          </div>
-          <Link to="/rooms" title="Перейти к комнатам">
-            <ArrowRight size={18} />
-          </Link>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon lavender">
-            <Users size={21} />
-          </div>
-          <div>
-            <span>Участники команды</span>
-            <strong>
-              {overview ? (
-                overview.membersCount
-              ) : (
-                <span className="skeleton-number" />
-              )}
-            </strong>
-          </div>
-          <Link to="/team" title="Перейти к команде">
-            <ArrowRight size={18} />
-          </Link>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon sage">
-            <Film size={21} />
-          </div>
-          <div>
-            <span>Записи встреч</span>
-            <strong>
-              {overview ? (
-                overview.recordingsCount
-              ) : (
-                <span className="skeleton-number" />
-              )}
-            </strong>
-          </div>
-          <Link to="/recordings" title="Перейти к записям">
-            <ArrowRight size={18} />
-          </Link>
-        </div>
+          <span>Войти</span>
+        </button>
+        <button
+          className="quick-action"
+          aria-label="Запланировать встречу"
+          onClick={() => setEditing(true)}
+        >
+          <span className="quick-action-icon">
+            <CalendarDays size={29} strokeWidth={1.8} />
+          </span>
+          <span>Запланировать</span>
+        </button>
+        <Link to="/team" className="quick-action">
+          <span className="quick-action-icon">
+            <Users size={29} strokeWidth={1.8} />
+          </span>
+          <span>Команда</span>
+        </Link>
       </div>
-      <div className="dashboard-bottom">
-        <section className="panel upcoming-panel">
-          <div className="section-heading">
-            <h2>
-              Ближайшие встречи <span className="count">{upcoming.length}</span>
-            </h2>
-            <Link to="/rooms">
-              Все комнаты
-              <ArrowRight size={15} />
-            </Link>
-          </div>
+      {!config.mediaConfigured && (
+        <div className="notice">
+          <Video size={18} />
+          <span>
+            Видеосвязь еще настраивается. Планирование встреч уже доступно.
+          </span>
+        </div>
+      )}
+      <section className="agenda-panel panel" aria-label="Расписание встреч">
+        <div className="agenda-heading">
+          <button
+            className="icon-button"
+            aria-label="Добавить встречу"
+            onClick={() => setEditing(true)}
+          >
+            <Plus size={19} />
+          </button>
+          <h2>
+            {isToday ? "Сегодня, " : ""}
+            {new Intl.DateTimeFormat("ru", {
+              day: "numeric",
+              month: "long",
+            }).format(selectedDate)}
+          </h2>
+          <Link
+            to="/rooms"
+            className="icon-button"
+            title="Все встречи"
+            aria-label="Все встречи"
+          >
+            <CalendarDays size={18} />
+          </Link>
+        </div>
+        <div className="agenda-navigation">
+          <Button className="small" onClick={() => setSelectedDate(new Date())}>
+            <CalendarDays size={14} />
+            Сегодня
+          </Button>
+          <button
+            className="icon-button"
+            aria-label="Предыдущий день"
+            onClick={() => moveDay(-1)}
+          >
+            <ChevronLeft size={17} />
+          </button>
+          <button
+            className="icon-button"
+            aria-label="Следующий день"
+            onClick={() => moveDay(1)}
+          >
+            <ChevronRight size={17} />
+          </button>
+          <span>{localTimeZone()}</span>
+        </div>
+        <div className="agenda-content">
           {!overview && !error ? (
             <div className="loading-section">
               <Spinner />
             </div>
-          ) : upcoming.length ? (
-            upcoming.map((room) => (
-              <div className="upcoming-row" key={room.id}>
-                <div className="calendar-date" aria-hidden="true">
-                  <strong>{new Date(room.startsAt!).getDate()}</strong>
-                  <span>
-                    {new Intl.DateTimeFormat("ru", { month: "short" }).format(
-                      new Date(room.startsAt!),
-                    )}
-                  </span>
+          ) : agenda.length ? (
+            agenda.map((room) => (
+              <article className="agenda-event" key={room.id}>
+                <div className="agenda-event-time">
+                  <time dateTime={room.startsAt!}>
+                    {new Intl.DateTimeFormat("ru", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }).format(new Date(room.startsAt!))}
+                  </time>
+                  <span>{room.durationMinutes} мин</span>
                 </div>
-                <div className="upcoming-details">
+                <div className="agenda-event-details">
                   <h3>{room.title}</h3>
                   <p>
-                    <Clock3 size={13} />
-                    <time dateTime={room.startsAt!}>
-                      {localMeetingDateTime(room.startsAt!)}
-                    </time>
-                    <span>·</span>
-                    {room.durationMinutes} мин
+                    {room.allowGuests ? "Вход по ссылке" : "Встреча команды"}
                   </p>
                 </div>
                 <div className="upcoming-actions">
                   <CalendarExport room={room} notify={notify} compact />
                   <Link
                     to={`/join/${room.slug}`}
-                    className="button small"
+                    className="button primary small"
                     title={`Войти: ${room.title}`}
                   >
                     Войти
-                    <ArrowRight size={14} />
                   </Link>
                 </div>
-              </div>
+              </article>
             ))
           ) : (
             <Empty
               icon={CalendarDays}
-              title="Впереди свободное время"
-              text="Запланируйте встречу, и она появится здесь."
+              title="На этот день встреч нет"
+              text="Запланированные встречи появятся здесь."
               action={
                 <Button
                   className="text-button"
@@ -349,30 +379,19 @@ export function Dashboard({
               }
             />
           )}
-        </section>
-        <section className="team-card">
-          <div className="team-card-top" aria-hidden="true">
-            <div className="overlap-avatar">И</div>
-            <div className="overlap-avatar">М</div>
-            <div className="overlap-avatar">
-              <Plus size={17} />
-            </div>
-          </div>
-          <h2>Вместе получается больше</h2>
-          <p>
-            Пригласите коллег в пространство, чтобы встречи были всегда под
-            рукой.
-          </p>
-          <Link to="/team" className="button">
-            Пригласить команду
-            <ArrowRight size={16} />
+        </div>
+        <div className="agenda-footer">
+          <Link to="/recordings">
+            <Film size={15} />
+            Записи встреч
+            <ChevronRight size={14} />
           </Link>
-          <span className="team-card-label">
-            <ShieldCheck size={14} />
-            Общее пространство, понятный доступ
-          </span>
-        </section>
-      </div>
+          <Link to="/rooms">
+            Все встречи
+            <ChevronRight size={14} />
+          </Link>
+        </div>
+      </section>
       {editing && (
         <RoomEditor
           workspace={workspace}
@@ -385,7 +404,8 @@ export function Dashboard({
           }}
         />
       )}
-    </>
+      {joining && <JoinMeeting onClose={() => setJoining(false)} />}
+    </div>
   );
 }
 
@@ -415,7 +435,7 @@ function RoomEditor({
       onClose={onClose}
     >
       <p className="modal-intro">
-        Дайте разговору название. Ссылкой можно будет поделиться сразу после
+        Укажите название и параметры встречи. Ссылка будет доступна после
         создания.
       </p>
       <ErrorBox error={error} />
@@ -573,7 +593,7 @@ function ShareRoom({
   return (
     <Modal title="Пригласить на встречу" onClose={onClose}>
       <div className="share-room-title">
-        <div className="stat-icon peach">
+        <div className="stat-icon">
           <Video size={23} />
         </div>
         <div>
@@ -668,8 +688,12 @@ export function Rooms({
 }: PageProps & { user: User }) {
   const [rooms, setRooms] = useState<Room[]>();
   const [error, setError] = useState("");
-  const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState("open");
+  const [query, setQuery] = useState(
+    () => new URLSearchParams(location.search).get("q") ?? "",
+  );
+  const [filter, setFilter] = useState(() =>
+    new URLSearchParams(location.search).has("q") ? "all" : "open",
+  );
   const [editor, setEditor] = useState<Room | true>();
   const [sharing, setSharing] = useState<Room>();
   const [busy, setBusy] = useState("");
@@ -683,6 +707,25 @@ export function Rooms({
   useEffect(() => {
     void load();
   }, [load]);
+  useEffect(() => {
+    const updateFromLocation = () => {
+      const params = new URLSearchParams(location.search);
+      setQuery(params.get("q") ?? "");
+      if (params.has("q")) setFilter("all");
+      if (params.get("new") === "1") {
+        setEditor(true);
+        params.delete("new");
+        history.replaceState(
+          {},
+          "",
+          `/rooms${params.size ? `?${params}` : ""}`,
+        );
+      }
+    };
+    updateFromLocation();
+    addEventListener("popstate", updateFromLocation);
+    return () => removeEventListener("popstate", updateFromLocation);
+  }, []);
   const visible = rooms?.filter(
     (r) =>
       (filter === "all" || r.status === filter) &&
@@ -694,12 +737,12 @@ export function Rooms({
     <>
       <PageHeading
         eyebrow="МЕСТО ДЛЯ РАЗГОВОРА"
-        title="Комнаты"
-        text="Планируйте встречи и собирайте команду по одной ссылке."
+        title="Встречи"
+        text="Запланированные встречи и постоянные комнаты вашего пространства."
       >
         <Button className="primary" onClick={() => setEditor(true)}>
           <Plus size={18} />
-          Создать комнату
+          Новая встреча
         </Button>
       </PageHeading>
       {!config.mediaConfigured && (
@@ -718,7 +761,7 @@ export function Rooms({
             {[
               ["open", "Открытые"],
               ["closed", "Завершенные"],
-              ["all", "Все комнаты"],
+              ["all", "Все встречи"],
             ].map(([value, label]) => (
               <button
                 key={value}
@@ -733,8 +776,8 @@ export function Rooms({
           <label className="search-field">
             <Search size={17} />
             <input
-              placeholder="Найти комнату"
-              aria-label="Найти комнату"
+              placeholder="Найти встречу"
+              aria-label="Найти встречу"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -817,7 +860,7 @@ export function Rooms({
                       )}
                       <Link
                         to={`/join/${room.slug}`}
-                        className="button small"
+                        className="button primary small"
                         title={`Войти: ${room.title}`}
                       >
                         Войти
@@ -868,18 +911,18 @@ export function Rooms({
                 ? "Ничего не найдено"
                 : filter === "closed"
                   ? "Завершенных встреч пока нет"
-                  : "Ваша следующая встреча начинается здесь"
+                  : "Встреч пока нет"
             }
             text={
               query
                 ? "Попробуйте другое название комнаты."
-                : "Создайте комнату и пригласите коллег к разговору."
+                : "Создайте встречу и отправьте участникам ссылку."
             }
             action={
               !query && filter !== "closed" ? (
                 <Button className="primary" onClick={() => setEditor(true)}>
                   <Plus size={17} />
-                  Создать комнату
+                  Новая встреча
                 </Button>
               ) : undefined
             }

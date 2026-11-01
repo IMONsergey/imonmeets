@@ -13,7 +13,6 @@ import {
   Plus,
   Settings,
   ShieldCheck,
-  Sparkles,
   Square,
   Trash2,
   Users,
@@ -67,15 +66,15 @@ export function Recordings({ workspace, config, notify }: PageProps) {
     }
   }, [recordings, load]);
   return (
-    <>
+    <div className="workspace-page">
       <PageHeading
-        eyebrow="СОХРАНИТЕ ВАЖНОЕ"
+        eyebrow=""
         title="Записи встреч"
-        text="Возвращайтесь к обсуждениям, когда это нужно."
+        text="Облачные записи встреч вашего пространства."
       />
       <ErrorBox error={error} />
       {!config.recordingConfigured && (
-        <div className="notice">
+        <div className="workspace-notice">
           <Film size={19} />
           <span>
             <strong>Запись встреч пока не подключена.</strong> Администратору
@@ -83,29 +82,39 @@ export function Recordings({ workspace, config, notify }: PageProps) {
           </span>
         </div>
       )}
-      <div className="panel">
-        <div className="section-heading">
+      <div className="panel workspace-panel">
+        <div className="workspace-section-heading">
           <h2>
             Все записи
-            {recordings && <span className="count">{recordings.length}</span>}
+            {recordings && (
+              <span className="workspace-count">{recordings.length}</span>
+            )}
           </h2>
-          <span className="subtle">
+          <span className="workspace-muted">
             <ShieldCheck size={14} />
             Доступны вашей команде
           </span>
         </div>
         {!recordings && !error ? (
-          <div className="loading-section">
+          <div className="workspace-loading">
             <Spinner />
           </div>
         ) : recordings?.length ? (
-          <div>
+          <div className="workspace-recording-list">
+            <div
+              className="workspace-table-head workspace-recording-head"
+              aria-hidden="true"
+            >
+              <span>Название встречи</span>
+              <span>Статус</span>
+              <span>Действия</span>
+            </div>
             {recordings.map((r) => (
-              <div className="recording-row" key={r.id}>
-                <div className="stat-icon lavender">
+              <div className="workspace-recording-row" key={r.id}>
+                <div className="workspace-recording-icon">
                   <Film size={22} />
                 </div>
-                <div className="recording-details">
+                <div className="workspace-recording-details">
                   <h3>{r.roomTitle}</h3>
                   <p>
                     {date(r.startedAt)}
@@ -116,69 +125,47 @@ export function Recordings({ workspace, config, notify }: PageProps) {
                   {r.error && <small className="danger-text">{r.error}</small>}
                 </div>
                 <span
-                  className={`badge ${r.status === "complete" ? "green" : r.status === "failed" ? "red" : "orange"}`}
+                  className={`workspace-status ${r.status === "complete" ? "success" : r.status === "failed" ? "error" : r.status === "active" ? "info" : "neutral"}`}
                 >
                   {r.status === "active" && <span className="status-dot" />}
                   {recordingLabels[r.status]}
                 </span>
-                {r.status === "complete" && config.recordingConfigured && (
-                  <Button
-                    busy={busy === r.id}
-                    onClick={async () => {
-                      setBusy(r.id);
-                      try {
-                        const response = await fetch(
-                          `/api/workspaces/${workspace.id}/recordings/${r.id}/download`,
-                          { credentials: "include" },
-                        );
-                        if (!response.ok)
-                          throw new Error(
-                            "Не удалось получить ссылку на запись.",
-                          );
-                        if (
-                          response.headers.get("Content-Type")?.includes("json")
-                        ) {
-                          const data = await response.json();
-                          if (!data.url)
-                            throw new Error(
-                              "Ссылка на запись пока недоступна.",
-                            );
-                          window.open(
-                            data.url,
-                            "_blank",
-                            "noopener,noreferrer",
-                          );
-                        } else
-                          window.open(
-                            response.url,
-                            "_blank",
-                            "noopener,noreferrer",
-                          );
-                      } catch (e) {
-                        notify((e as Error).message, true);
-                      } finally {
-                        setBusy("");
-                      }
-                    }}
-                  >
-                    <ArrowDownToLine size={17} />
-                    Скачать
-                  </Button>
-                )}
-                {config.recordingConfigured &&
-                  r.canManage &&
-                  r.status === "active" && (
+                <div className="workspace-row-actions">
+                  {r.status === "complete" && config.recordingConfigured && (
                     <Button
                       busy={busy === r.id}
                       onClick={async () => {
                         setBusy(r.id);
                         try {
-                          await api(
-                            `/workspaces/${workspace.id}/recordings/${r.id}/stop`,
-                            {},
+                          const response = await fetch(
+                            `/api/workspaces/${workspace.id}/recordings/${r.id}/download`,
+                            { credentials: "include" },
                           );
-                          await load();
-                          notify("Запись остановлена");
+                          if (!response.ok)
+                            throw new Error(
+                              "Не удалось получить ссылку на запись.",
+                            );
+                          if (
+                            response.headers
+                              .get("Content-Type")
+                              ?.includes("json")
+                          ) {
+                            const data = await response.json();
+                            if (!data.url)
+                              throw new Error(
+                                "Ссылка на запись пока недоступна.",
+                              );
+                            window.open(
+                              data.url,
+                              "_blank",
+                              "noopener,noreferrer",
+                            );
+                          } else
+                            window.open(
+                              response.url,
+                              "_blank",
+                              "noopener,noreferrer",
+                            );
                         } catch (e) {
                           notify((e as Error).message, true);
                         } finally {
@@ -186,26 +173,52 @@ export function Recordings({ workspace, config, notify }: PageProps) {
                         }
                       }}
                     >
-                      <Square size={15} />
-                      Остановить
+                      <ArrowDownToLine size={17} />
+                      Скачать
                     </Button>
                   )}
+                  {config.recordingConfigured &&
+                    r.canManage &&
+                    r.status === "active" && (
+                      <Button
+                        busy={busy === r.id}
+                        onClick={async () => {
+                          setBusy(r.id);
+                          try {
+                            await api(
+                              `/workspaces/${workspace.id}/recordings/${r.id}/stop`,
+                              {},
+                            );
+                            await load();
+                            notify("Запись остановлена");
+                          } catch (e) {
+                            notify((e as Error).message, true);
+                          } finally {
+                            setBusy("");
+                          }
+                        }}
+                      >
+                        <Square size={15} />
+                        Остановить
+                      </Button>
+                    )}
+                </div>
               </div>
             ))}
           </div>
         ) : (
           <Empty
             icon={Film}
-            title="Важные разговоры останутся с вами"
+            title="Записей пока нет"
             text={
               config.recordingConfigured
                 ? "Начните запись из комнаты встречи. Готовое видео появится здесь."
-                : "После подключения записи здесь будут сохраняться встречи вашей команды."
+                : "Записи появятся здесь после подключения сервиса записи."
             }
           />
         )}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -240,11 +253,11 @@ export function Team({
   }, [load]);
   const manage = workspace.role !== "member";
   return (
-    <>
+    <div className="workspace-page">
       <PageHeading
-        eyebrow="ЛЮДИ, С КОТОРЫМИ ВЫ НА СВЯЗИ"
-        title="Ваша команда"
-        text="Одно пространство для всей команды. У каждого своя роль."
+        eyebrow=""
+        title="Управление участниками"
+        text={workspace.name}
       >
         {manage && (
           <Button
@@ -260,95 +273,107 @@ export function Team({
         )}
       </PageHeading>
       <ErrorBox error={error} />
-      <div className="panel">
-        <div className="section-heading">
+      <div className="panel workspace-panel">
+        <div className="workspace-section-heading">
           <h2>
             Участники{" "}
-            {data && <span className="count">{data.members.length}</span>}
+            {data && (
+              <span className="workspace-count">{data.members.length}</span>
+            )}
           </h2>
-          <span className="subtle">{workspace.name}</span>
+          <span className="workspace-muted">{workspace.name}</span>
         </div>
         {!data && !error ? (
-          <div className="loading-section">
+          <div className="workspace-loading">
             <Spinner />
           </div>
         ) : (
-          <div>
+          <div className="workspace-member-list">
+            <div
+              className="workspace-table-head workspace-member-head"
+              aria-hidden="true"
+            >
+              <span>Имя и адрес почты</span>
+              <span>Роль</span>
+              <span>Действия</span>
+            </div>
             {data?.members.map((member) => (
-              <div className="member-row" key={member.id}>
-                <div
-                  className={`avatar ${member.role === "owner" ? "peach" : ""}`}
-                >
-                  {initials(member.name)}
+              <div className="workspace-member-row" key={member.id}>
+                <div className="workspace-person">
+                  <div className="workspace-avatar">
+                    {initials(member.name)}
+                  </div>
+                  <div className="workspace-member-details">
+                    <h3>
+                      {member.name}
+                      {member.userId === user.id && (
+                        <span className="workspace-you-label">Это вы</span>
+                      )}
+                    </h3>
+                    <p>{member.email}</p>
+                  </div>
                 </div>
-                <div className="member-details">
-                  <h3>
-                    {member.name}
-                    {member.userId === user.id && (
-                      <span className="you-label">Это вы</span>
+                <span className="workspace-role">{roleLabel[member.role]}</span>
+                <div className="workspace-row-actions">
+                  {manage &&
+                    member.role !== "owner" &&
+                    member.userId !== user.id &&
+                    (workspace.role === "owner" ||
+                      member.role === "member") && (
+                      <Button
+                        className="icon-button danger-quiet"
+                        busy={busy === member.id}
+                        aria-label={`Удалить участника ${member.name}`}
+                        onClick={async () => {
+                          if (
+                            !confirm(`Удалить ${member.name} из пространства?`)
+                          )
+                            return;
+                          setBusy(member.id);
+                          try {
+                            await api(
+                              `/workspaces/${workspace.id}/members/${member.id}`,
+                              undefined,
+                              "DELETE",
+                            );
+                            await load();
+                            notify("Участник удален");
+                          } catch (e) {
+                            notify((e as Error).message, true);
+                          } finally {
+                            setBusy("");
+                          }
+                        }}
+                      >
+                        <Trash2 size={17} />
+                      </Button>
                     )}
-                  </h3>
-                  <p>{member.email}</p>
                 </div>
-                <span
-                  className={`badge ${member.role === "owner" ? "orange" : "gray"}`}
-                >
-                  {member.role === "owner" && <ShieldCheck size={12} />}{" "}
-                  {roleLabel[member.role]}
-                </span>
-                {manage &&
-                  member.role !== "owner" &&
-                  member.userId !== user.id &&
-                  (workspace.role === "owner" || member.role === "member") && (
-                    <Button
-                      className="icon-button danger-quiet"
-                      busy={busy === member.id}
-                      aria-label={`Удалить участника ${member.name}`}
-                      onClick={async () => {
-                        if (!confirm(`Удалить ${member.name} из пространства?`))
-                          return;
-                        setBusy(member.id);
-                        try {
-                          await api(
-                            `/workspaces/${workspace.id}/members/${member.id}`,
-                            undefined,
-                            "DELETE",
-                          );
-                          await load();
-                          notify("Участник удален");
-                        } catch (e) {
-                          notify((e as Error).message, true);
-                        } finally {
-                          setBusy("");
-                        }
-                      }}
-                    >
-                      <Trash2 size={17} />
-                    </Button>
-                  )}
               </div>
             ))}
           </div>
         )}
       </div>
       {manage && data && data.invitations.length > 0 && (
-        <div className="panel invitations-panel">
-          <div className="section-heading">
+        <div className="panel workspace-panel workspace-invitations-panel">
+          <div className="workspace-section-heading">
             <h2>
               Ожидают приглашения{" "}
-              <span className="count">{data.invitations.length}</span>
+              <span className="workspace-count">{data.invitations.length}</span>
             </h2>
           </div>
           {data.invitations.map((i) => (
-            <div className="member-row" key={i.id}>
-              <div className="avatar">
-                <Mail size={19} />
+            <div className="workspace-member-row" key={i.id}>
+              <div className="workspace-person">
+                <div className="workspace-avatar">
+                  <Mail size={19} />
+                </div>
+                <div className="workspace-member-details">
+                  <h3>{i.email}</h3>
+                  <p>Действует до {date(i.expiresAt, false)}</p>
+                </div>
               </div>
-              <div className="member-details">
-                <h3>{i.email}</h3>
-                <p>Действует до {date(i.expiresAt, false)}</p>
-              </div>
-              <span className="badge gray">{roleLabel[i.role]}</span>
+              <span className="workspace-role">{roleLabel[i.role]}</span>
               <Button
                 className="text-button"
                 busy={busy === i.id}
@@ -375,7 +400,7 @@ export function Team({
           ))}
         </div>
       )}
-      <div className="info-caption">
+      <div className="workspace-permission-note">
         <ShieldCheck size={18} />
         <p>
           Владельцы и администраторы управляют пространством. Участники могут
@@ -386,12 +411,12 @@ export function Team({
         <Modal title="Пригласить в команду" onClose={() => setInvite(false)}>
           {inviteUrl ? (
             <>
-              <div className="success-box">
+              <div className="workspace-confirmation">
                 <CheckCircle2 size={21} />
                 <span>Приглашение создано. Передайте ссылку коллеге.</span>
               </div>
               <Field label="Личная ссылка приглашения">
-                <div className="copy-field">
+                <div className="workspace-copy-field">
                   <input value={inviteUrl} readOnly />
                   <Button
                     onClick={async () => {
@@ -432,7 +457,7 @@ export function Team({
                   if (r.inviteUrl) setInviteUrl(r.inviteUrl);
                   else {
                     setInvite(false);
-                    notify("Приглашение отправлено");
+                    notify("Приглашение создано");
                   }
                 } catch (e) {
                   notify((e as Error).message, true);
@@ -481,7 +506,7 @@ export function Team({
           )}
         </Modal>
       )}
-    </>
+    </div>
   );
 }
 
@@ -493,249 +518,327 @@ export function AccountSettings({
   notify,
 }: PageProps & { user: User; refresh: () => Promise<Session> }) {
   const [busy, setBusy] = useState("");
+  const [section, setSection] = useState("profile");
+  const settingsSections = [
+    { id: "profile", label: "Профиль", icon: Users },
+    { id: "security", label: "Безопасность", icon: ShieldCheck },
+    { id: "devices", label: "Видео и звук", icon: Video },
+    { id: "services", label: "Сервисы", icon: Settings },
+  ];
   const [devices, setDevices] = useState<MediaDeviceInfo[]>();
   const [deviceError, setDeviceError] = useState("");
   const [preview, setPreview] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | undefined>(undefined);
+  const previewRequestRef = useRef(0);
   useEffect(
-    () => () => streamRef.current?.getTracks().forEach((t) => t.stop()),
+    () => () => {
+      previewRequestRef.current++;
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+    },
     [],
   );
-  const capability = (label: string, enabled: boolean, description: string) => (
-    <div className="capability-row">
+  useEffect(() => {
+    if (section !== "devices") {
+      previewRequestRef.current++;
+      streamRef.current?.getTracks().forEach((track) => track.stop());
+      setPreview(false);
+    }
+  }, [section]);
+  const capability = (
+    label: string,
+    enabled: boolean,
+    description: string,
+    status?: string,
+  ) => (
+    <div className="workspace-capability-row">
       <div>
         <strong>{label}</strong>
         <p>{description}</p>
       </div>
-      <span className={`badge ${enabled ? "green" : "gray"}`}>
+      <span className={`workspace-status ${enabled ? "success" : "neutral"}`}>
         {enabled ? <Check size={13} /> : <Clock3 size={13} />}{" "}
-        {enabled ? "Настроено" : "Не настроено"}
+        {status ?? (enabled ? "Настроено" : "Не настроено")}
       </span>
     </div>
   );
   return (
-    <>
+    <div className="workspace-page">
       <PageHeading
-        eyebrow="ВСЕ, ЧТО ВАМ НУЖНО"
+        eyebrow=""
         title="Настройки"
-        text="Ваш профиль, устройства и возможности пространства."
+        text="Профиль, безопасность и параметры устройств."
       />
-      <div className="settings-grid">
-        <section className="panel settings-panel">
-          <div className="section-heading">
-            <h2>Личный профиль</h2>
-            <Settings size={18} />
-          </div>
-          <div className="profile-summary">
-            <div className="avatar large peach">{initials(user.name)}</div>
-            <div>
-              <h3>{user.name}</h3>
-              <p>{roleLabel[workspace.role]}</p>
-            </div>
-          </div>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              setBusy("profile");
-              try {
-                await api("/auth/update-user", {
-                  name: new FormData(e.currentTarget).get("name"),
-                });
-                await refresh();
-                notify("Профиль обновлен");
-              } catch (e) {
-                notify((e as Error).message, true);
-              } finally {
-                setBusy("");
-              }
-            }}
+      <div className="workspace-settings">
+        <nav className="workspace-settings-nav" aria-label="Разделы настроек">
+          {settingsSections.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              className={section === id ? "selected" : ""}
+              aria-current={section === id ? "page" : undefined}
+              aria-controls={`settings-${id}`}
+              onClick={() => setSection(id)}
+            >
+              <Icon size={17} />
+              <span>{label}</span>
+            </button>
+          ))}
+        </nav>
+        <div className="workspace-settings-content">
+          <section
+            className="panel workspace-settings-panel"
+            id="settings-profile"
+            hidden={section !== "profile"}
           >
-            <Field label="Ваше имя">
-              <input
-                name="name"
-                required
-                maxLength={100}
-                defaultValue={user.name}
-              />
-            </Field>
-            <Field label="Почта">
-              <input value={user.email} readOnly />
-            </Field>
-            <div className="email-status">
-              <span
-                className={`badge ${user.emailVerified ? "green" : "orange"}`}
+            <div className="workspace-section-heading">
+              <h2>Личный профиль</h2>
+              <Settings size={18} />
+            </div>
+            <div className="workspace-profile-summary">
+              <div className="workspace-avatar workspace-avatar-large">
+                {initials(user.name)}
+              </div>
+              <div>
+                <h3>{user.name}</h3>
+                <p>{roleLabel[workspace.role]}</p>
+              </div>
+            </div>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setBusy("profile");
+                try {
+                  await api("/auth/update-user", {
+                    name: new FormData(e.currentTarget).get("name"),
+                  });
+                  await refresh();
+                  notify("Профиль обновлен");
+                } catch (e) {
+                  notify((e as Error).message, true);
+                } finally {
+                  setBusy("");
+                }
+              }}
+            >
+              <Field label="Ваше имя">
+                <input
+                  name="name"
+                  required
+                  maxLength={100}
+                  defaultValue={user.name}
+                />
+              </Field>
+              <Field label="Почта">
+                <input value={user.email} readOnly />
+              </Field>
+              <div className="workspace-email-status">
+                <span
+                  className={`workspace-status ${user.emailVerified ? "success" : "neutral"}`}
+                >
+                  {user.emailVerified ? (
+                    <CheckCircle2 size={13} />
+                  ) : (
+                    <Mail size={13} />
+                  )}{" "}
+                  {user.emailVerified
+                    ? "Почта подтверждена"
+                    : "Нужно подтверждение"}
+                </span>
+                {!user.emailVerified && (
+                  <Link to="/verify-email">Подтвердить</Link>
+                )}
+              </div>
+              <Button
+                type="submit"
+                className="primary"
+                busy={busy === "profile"}
               >
-                {user.emailVerified ? (
-                  <CheckCircle2 size={13} />
-                ) : (
-                  <Mail size={13} />
-                )}{" "}
-                {user.emailVerified
-                  ? "Почта подтверждена"
-                  : "Нужно подтверждение"}
-              </span>
-              {!user.emailVerified && (
-                <Link to="/verify-email">Подтвердить</Link>
+                Сохранить изменения
+              </Button>
+            </form>
+          </section>
+          <section
+            className="panel workspace-settings-panel"
+            id="settings-security"
+            hidden={section !== "security"}
+          >
+            <div className="workspace-section-heading">
+              <h2>Безопасность</h2>
+              <ShieldCheck size={18} />
+            </div>
+            <p className="workspace-settings-description">
+              Для смены пароля укажите текущий пароль. Другие сеансы будут
+              завершены.
+            </p>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                const f = new FormData(form);
+                setBusy("password");
+                try {
+                  await api("/auth/change-password", {
+                    currentPassword: f.get("currentPassword"),
+                    newPassword: f.get("newPassword"),
+                    revokeOtherSessions: true,
+                  });
+                  form.reset();
+                  notify("Пароль изменен");
+                } catch (e) {
+                  notify((e as Error).message, true);
+                } finally {
+                  setBusy("");
+                }
+              }}
+            >
+              <Field label="Текущий пароль">
+                <input
+                  type="password"
+                  name="currentPassword"
+                  autoComplete="current-password"
+                  required
+                />
+              </Field>
+              <Field label="Новый пароль" hint="Не менее 10 символов">
+                <input
+                  type="password"
+                  name="newPassword"
+                  autoComplete="new-password"
+                  required
+                  minLength={10}
+                  maxLength={128}
+                />
+              </Field>
+              <Button
+                type="submit"
+                className="primary"
+                busy={busy === "password"}
+              >
+                Обновить пароль
+              </Button>
+            </form>
+          </section>
+          <section
+            className="panel workspace-settings-panel"
+            id="settings-devices"
+            hidden={section !== "devices"}
+          >
+            <div className="workspace-section-heading">
+              <h2>Камера и микрофон</h2>
+              <Video size={18} />
+            </div>
+            <p className="workspace-settings-description">
+              Проверьте доступ к устройствам. Перед каждой встречей вы сможете
+              выбрать камеру и микрофон.
+            </p>
+            <ErrorBox error={deviceError} />
+            <div
+              className={`workspace-device-preview ${preview ? "workspace-preview-active" : ""}`}
+            >
+              <video ref={videoRef} autoPlay playsInline muted />
+              {!preview && (
+                <>
+                  <Video size={30} />
+                  <span>Предпросмотр устройства</span>
+                </>
               )}
             </div>
-            <Button type="submit" busy={busy === "profile"}>
-              Сохранить изменения
+            <Button
+              busy={busy === "devices"}
+              onClick={async () => {
+                if (preview) {
+                  streamRef.current?.getTracks().forEach((t) => t.stop());
+                  setPreview(false);
+                  return;
+                }
+                setBusy("devices");
+                setDeviceError("");
+                const requestId = ++previewRequestRef.current;
+                try {
+                  const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true,
+                  });
+                  if (requestId !== previewRequestRef.current) {
+                    stream.getTracks().forEach((track) => track.stop());
+                    return;
+                  }
+                  streamRef.current = stream;
+                  if (videoRef.current) videoRef.current.srcObject = stream;
+                  setPreview(true);
+                  setDevices(await navigator.mediaDevices.enumerateDevices());
+                } catch {
+                  setDeviceError(
+                    "Нет доступа к камере или микрофону. Проверьте разрешения браузера и подключение устройств.",
+                  );
+                } finally {
+                  setBusy("");
+                }
+              }}
+            >
+              {preview ? <Square size={16} /> : <Video size={17} />}{" "}
+              {preview ? "Выключить предпросмотр" : "Проверить устройства"}
             </Button>
-          </form>
-        </section>
-        <section className="panel settings-panel">
-          <div className="section-heading">
-            <h2>Безопасность</h2>
-            <ShieldCheck size={18} />
-          </div>
-          <p className="settings-description">
-            Для смены пароля укажите текущий пароль. Другие сеансы будут
-            завершены.
-          </p>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const form = e.currentTarget;
-              const f = new FormData(form);
-              setBusy("password");
-              try {
-                await api("/auth/change-password", {
-                  currentPassword: f.get("currentPassword"),
-                  newPassword: f.get("newPassword"),
-                  revokeOtherSessions: true,
-                });
-                form.reset();
-                notify("Пароль изменен");
-              } catch (e) {
-                notify((e as Error).message, true);
-              } finally {
-                setBusy("");
-              }
-            }}
-          >
-            <Field label="Текущий пароль">
-              <input
-                type="password"
-                name="currentPassword"
-                autoComplete="current-password"
-                required
-              />
-            </Field>
-            <Field label="Новый пароль" hint="Не менее 10 символов">
-              <input
-                type="password"
-                name="newPassword"
-                autoComplete="new-password"
-                required
-                minLength={10}
-                maxLength={128}
-              />
-            </Field>
-            <Button type="submit" busy={busy === "password"}>
-              Обновить пароль
-            </Button>
-          </form>
-        </section>
-        <section className="panel settings-panel">
-          <div className="section-heading">
-            <h2>Камера и микрофон</h2>
-            <Video size={18} />
-          </div>
-          <p className="settings-description">
-            Проверьте доступ к устройствам. Перед каждой встречей вы сможете
-            выбрать камеру и микрофон.
-          </p>
-          <ErrorBox error={deviceError} />
-          <div className={`device-preview ${preview ? "show-preview" : ""}`}>
-            <video ref={videoRef} autoPlay playsInline muted />
-            {!preview && (
-              <>
-                <Video size={30} />
-                <span>Предпросмотр устройства</span>
-              </>
+            {devices && (
+              <div className="workspace-device-list">
+                {devices
+                  .filter(
+                    (d) => d.kind === "videoinput" || d.kind === "audioinput",
+                  )
+                  .map((d) => (
+                    <div key={d.deviceId}>
+                      {d.kind === "videoinput" ? (
+                        <Video size={14} />
+                      ) : (
+                        <Mic size={14} />
+                      )}
+                      <span>{d.label || "Устройство без названия"}</span>
+                      <CheckCircle2 size={14} />
+                    </div>
+                  ))}
+              </div>
             )}
-          </div>
-          <Button
-            busy={busy === "devices"}
-            onClick={async () => {
-              if (preview) {
-                streamRef.current?.getTracks().forEach((t) => t.stop());
-                setPreview(false);
-                return;
-              }
-              setBusy("devices");
-              setDeviceError("");
-              try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                  video: true,
-                  audio: true,
-                });
-                streamRef.current = stream;
-                if (videoRef.current) videoRef.current.srcObject = stream;
-                setPreview(true);
-                setDevices(await navigator.mediaDevices.enumerateDevices());
-              } catch {
-                setDeviceError(
-                  "Нет доступа к камере или микрофону. Проверьте разрешения браузера и подключение устройств.",
-                );
-              } finally {
-                setBusy("");
-              }
-            }}
+          </section>
+          <section
+            className="panel workspace-settings-panel"
+            id="settings-services"
+            hidden={section !== "services"}
           >
-            {preview ? <Square size={16} /> : <Video size={17} />}{" "}
-            {preview ? "Выключить предпросмотр" : "Проверить устройства"}
-          </Button>
-          {devices && (
-            <div className="device-list">
-              {devices
-                .filter(
-                  (d) => d.kind === "videoinput" || d.kind === "audioinput",
-                )
-                .map((d) => (
-                  <div key={d.deviceId}>
-                    {d.kind === "videoinput" ? (
-                      <Video size={14} />
-                    ) : (
-                      <Mic size={14} />
-                    )}
-                    <span>{d.label || "Устройство без названия"}</span>
-                    <CheckCircle2 size={14} />
-                  </div>
-                ))}
+            <div className="workspace-section-heading">
+              <h2>Возможности сервиса</h2>
+              <Settings size={18} />
             </div>
-          )}
-        </section>
-        <section className="panel settings-panel">
-          <div className="section-heading">
-            <h2>Возможности сервиса</h2>
-            <Sparkles size={18} />
-          </div>
-          <p className="settings-description">
-            Текущее состояние сервисов для вашего пространства.
-          </p>
-          {capability(
-            "Видеосвязь",
-            config.mediaConfigured,
-            "Видео, звук, чат и демонстрация экрана",
-          )}
-          {capability(
-            "Записи встреч",
-            config.recordingConfigured,
-            "Сервис записи и защищенное хранилище",
-          )}
-          {capability(
-            "Почтовые уведомления",
-            config.emailConfigured,
-            "Подтверждение почты и приглашения",
-          )}
-          <p className="form-note">
-            Подключение сервисов выполняет администратор сервера.
-          </p>
-        </section>
+            <p className="workspace-settings-description">
+              Текущее состояние сервисов для вашего пространства.
+            </p>
+            {capability(
+              "Видеосвязь",
+              config.mediaConfigured,
+              "Видео, звук, чат и демонстрация экрана",
+            )}
+            {capability(
+              "Записи встреч",
+              config.recordingConfigured,
+              "Сервис записи и защищенное хранилище",
+            )}
+            {capability(
+              "Почтовые уведомления",
+              config.emailConfigured && config.emailDelivery === "external",
+              config.emailDelivery === "capture"
+                ? "Сообщения доступны в тестовом ящике. Внешняя доставка не подключена."
+                : "Подтверждение почты, восстановление доступа и приглашения",
+              config.emailConfigured && config.emailDelivery === "capture"
+                ? "Тестовый режим"
+                : undefined,
+            )}
+            <p className="form-note">
+              Подключение сервисов выполняет администратор сервера.
+            </p>
+          </section>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -756,17 +859,16 @@ export function Invite({
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   return (
-    <div className="standalone">
+    <div className="workspace-invite-page">
       <Brand />
-      <div className="standalone-card">
-        <div className="empty-icon">
+      <div className="panel workspace-invite-card">
+        <div className="workspace-invite-icon">
           <Users size={28} />
         </div>
-        <span className="eyebrow">ВАС ПРИГЛАСИЛИ В КОМАНДУ</span>
-        <h1>Работать вместе проще.</h1>
+        <h1>Приглашение в пространство</h1>
         <p>
-          Примите приглашение, чтобы присоединиться к рабочему пространству
-          коллег.
+          Присоединитесь к пространству с адресом почты, на который отправлено
+          приглашение.
         </p>
         <ErrorBox error={error} />
         {!token ? (
@@ -793,7 +895,7 @@ export function Invite({
           </>
         ) : !session.user.emailVerified ? (
           <>
-            <div className="notice">
+            <div className="workspace-notice">
               Для принятия приглашения подтвердите адрес {session.user.email}.
             </div>
             <Button
@@ -812,8 +914,10 @@ export function Invite({
           </>
         ) : (
           <>
-            <div className="invite-account">
-              <span className="avatar">{initials(session.user.name)}</span>
+            <div className="workspace-invite-account">
+              <span className="workspace-avatar">
+                {initials(session.user.name)}
+              </span>
               <span>{session.user.email}</span>
             </div>
             <Button

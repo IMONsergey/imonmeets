@@ -111,9 +111,9 @@ test("verified account, workspace, scheduled room, guest video and durable close
     path: "test-results/dashboard-desktop.png",
     fullPage: true,
   });
-  await page.getByRole("link", { name: "Комнаты", exact: true }).click();
+  await page.getByRole("link", { name: "Встречи", exact: true }).click();
   await page
-    .getByRole("button", { name: "Создать комнату", exact: true })
+    .getByRole("button", { name: "Новая встреча", exact: true })
     .first()
     .click();
   await page.getByLabel("Название встречи").fill("Проверка реального звонка");

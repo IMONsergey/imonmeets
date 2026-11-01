@@ -21,20 +21,28 @@ export function Link({
   to,
   children,
   className = "",
+  onClick,
   ...rest
 }: {
   to: string;
   children: ReactNode;
   className?: string;
-  title?: string;
-}) {
+} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">) {
   return (
     <a
       href={to}
       className={className}
       {...rest}
       onClick={(event) => {
-        if (!event.metaKey && !event.ctrlKey && !event.shiftKey) {
+        onClick?.(event);
+        if (
+          !event.defaultPrevented &&
+          event.button === 0 &&
+          !event.altKey &&
+          !event.metaKey &&
+          !event.ctrlKey &&
+          !event.shiftKey
+        ) {
           event.preventDefault();
           go(to);
         }

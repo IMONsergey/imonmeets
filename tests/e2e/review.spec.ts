@@ -215,9 +215,9 @@ test("public review: verified login, calendar export, two-way call and durable r
     ).toBe(true);
     await expect(page.getByRole("dialog")).toHaveCount(0);
     // The dashboard shows only the nearest three meetings; this workspace is reused.
-    await page.getByRole("link", { name: "Комнаты", exact: true }).click();
+    await page.getByRole("link", { name: "Встречи", exact: true }).click();
     await page
-      .getByRole("textbox", { name: "Найти комнату", exact: true })
+      .getByRole("textbox", { name: "Найти встречу", exact: true })
       .fill(title);
     const scheduledRoom = page.locator(".room-row").filter({
       has: page.getByRole("heading", { name: title, exact: true }),
