@@ -1,5 +1,5 @@
 import { isIP } from "node:net";
-import { writeFile } from "node:fs/promises";
+import { chmod, writeFile } from "node:fs/promises";
 
 const ip = process.env.LIVEKIT_PUBLIC_IP;
 const api = process.env.PUBLIC_API_HOST;
@@ -99,7 +99,11 @@ const files = [
   ["../deploy/livekit.public.yaml", media],
 ];
 for (const [name, contents] of files) {
-  await writeFile(new URL(name, import.meta.url), contents, { mode: 0o644 });
+  const destination = new URL(name, import.meta.url);
+  await writeFile(destination, contents, { mode: 0o644 });
+  // These generated files contain public routing/configuration, not secrets.
+  // Explicit chmod is required when the operator uses a restrictive umask.
+  await chmod(destination, 0o644);
 }
 console.log(
   "Generated ACME bootstrap, TLS ingress and public media configuration. No host configuration was changed.",
