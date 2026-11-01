@@ -717,7 +717,7 @@ export async function registerSuite(
       );
       const rows = (
         await db.query(
-          "SELECT id,object_key FROM im_recordings WHERE deleted_at IS NULL AND deletion_requested_at IS NOT NULL AND (delete_attempt_at IS NULL OR delete_attempt_at<=now()) AND status IN ('complete','failed') ORDER BY deletion_requested_at LIMIT $1 FOR UPDATE SKIP LOCKED",
+          "SELECT id,object_key,egress_id FROM im_recordings WHERE deleted_at IS NULL AND deletion_requested_at IS NOT NULL AND (delete_attempt_at IS NULL OR delete_attempt_at<=now()) AND status IN ('complete','failed') ORDER BY deletion_requested_at LIMIT $1 FOR UPDATE SKIP LOCKED",
           [maxJobs],
         )
       ).rows;
@@ -730,7 +730,7 @@ export async function registerSuite(
     });
     for (const r of jobs) {
       try {
-        await media.delete(r.object_key);
+        await media.delete(r.object_key, r.egress_id);
         await pool.query(
           "UPDATE im_recordings SET deleted_at=now(),error=NULL WHERE id=$1",
           [r.id],

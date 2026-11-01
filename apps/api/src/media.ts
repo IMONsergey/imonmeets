@@ -90,6 +90,9 @@ export function createMedia(c: Config) {
       const output = new EncodedFileOutput({
         fileType: EncodedFileType.MP4,
         filepath: key,
+        // Keep the recording lifecycle limited to its declared media object.
+        // Egress otherwise writes a second JSON object containing room metadata.
+        disableManifest: true,
         output: {
           case: "s3",
           value: new S3Upload({
@@ -123,8 +126,25 @@ export function createMedia(c: Config) {
         },
       );
     },
-    async delete(key: string) {
+    async delete(key: string, egressId?: string | null) {
       await s3.send(new DeleteObjectCommand({ Bucket: c.s3.bucket, Key: key }));
+      // Older Egress requests also wrote <egressId>.json beside the MP4.
+      // Derive only that exact known key from persisted server-generated IDs;
+      // never list the bucket, delete a prefix, or accept a client-supplied URL.
+      if (
+        egressId &&
+        /^EG_[A-Za-z0-9_-]{1,128}$/.test(egressId) &&
+        /^recordings\/[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}\/[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}\.mp4$/i.test(
+          key,
+        )
+      ) {
+        await s3.send(
+          new DeleteObjectCommand({
+            Bucket: c.s3.bucket,
+            Key: `${key.slice(0, key.lastIndexOf("/") + 1)}${egressId}.json`,
+          }),
+        );
+      }
     },
     async download(key: string) {
       return getSignedUrl(

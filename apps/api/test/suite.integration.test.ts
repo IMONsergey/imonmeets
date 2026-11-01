@@ -537,10 +537,11 @@ test(
         w = await h.workspace(owner.cookie),
         r = await h.room(owner.cookie, w.id);
       const id = randomUUID(),
-        key = `recordings/${w.id}/${id}.mp4`;
+        key = `recordings/${w.id}/${id}.mp4`,
+        egressId = "EG_legacyManifestRetry";
       await h.pool.query(
-        "INSERT INTO im_recordings(id,workspace_id,room_id,status,object_key,started_at,ended_at,expires_at,size_bytes) VALUES($1,$2,$3,'complete',$4,now(),now(),now()+interval '1 day',4096)",
-        [id, w.id, r.id, key],
+        "INSERT INTO im_recordings(id,workspace_id,room_id,status,object_key,egress_id,started_at,ended_at,expires_at,size_bytes) VALUES($1,$2,$3,'complete',$4,$5,now(),now(),now()+interval '1 day',4096)",
+        [id, w.id, r.id, key, egressId],
       );
       assert.equal(
         (
@@ -586,8 +587,11 @@ test(
         ).json().job,
         null,
       );
-      h.media.delete = async () => {
-        throw new Error("Temporary storage outage");
+      h.media.delete = async (k, persistedEgressId) => {
+        assert.equal(k, key);
+        assert.equal(persistedEgressId, egressId);
+        h.deleted.push(k);
+        throw new Error("Legacy manifest cleanup failed after MP4 deletion");
       };
       const pending = await h.request(
         "DELETE",
@@ -597,6 +601,15 @@ test(
       );
       assert.equal(pending.statusCode, 200, pending.body);
       assert.equal(pending.json().deletionPending, true);
+      const retryState = (
+        await h.pool.query(
+          "SELECT deleted_at,delete_attempts,delete_attempt_at FROM im_recordings WHERE id=$1",
+          [id],
+        )
+      ).rows[0];
+      assert.equal(retryState.deleted_at, null);
+      assert.equal(retryState.delete_attempts, 1);
+      assert.ok(retryState.delete_attempt_at);
       assert.equal(
         (
           await h.request(
@@ -619,7 +632,8 @@ test(
         ).statusCode,
         404,
       );
-      h.media.delete = async (k) => {
+      h.media.delete = async (k, persistedEgressId) => {
+        assert.equal(persistedEgressId, egressId);
         h.deleted.push(k);
       };
       await h.pool.query(
