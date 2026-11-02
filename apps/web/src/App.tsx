@@ -372,6 +372,7 @@ export default function App() {
         user={session.user}
         logout={logout}
         notify={notify}
+        googleEnabled={config.googleOAuthConfigured}
       />
     );
   else

@@ -240,3 +240,54 @@
   margin-top: 16px;
   gap: 4px;
 }
+
+.google-auth {
+  margin-top: 18px;
+}
+.google-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 16px;
+  color: var(--muted, #777);
+  font-size: 12px;
+}
+.google-auth-divider::before,
+.google-auth-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: var(--border, #e5e5e5);
+}
+.auth-card .google-auth-button {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 1px solid var(--border, #dedee3);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+  color: var(--text, #232333);
+  font-size: 14px;
+  font-weight: 500;
+}
+.auth-card .google-auth-button:hover:not(:disabled) {
+  border-color: #aeb0b8;
+  background: var(--surface-muted, #fafafa);
+}
+.google-mark {
+  display: inline-grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border-radius: 50%;
+  color: #4285f4;
+  font-size: 19px;
+  font-weight: 700;
+  font-family: Arial, sans-serif;
+}
+.google-auth .form-note {
+  margin: 12px 0 0;
+  text-align: center;
+}

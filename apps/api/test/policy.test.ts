@@ -56,7 +56,7 @@ test("production capture closes registration and external SMTP requires TLS", ()
     APP_URL: "https://review.example.com",
     BETTER_AUTH_SECRET: "ABCdef0123456789-random-strong-secret-sample",
     NODE_ENV: "production",
-    SMTP_HOST: "smtp.example.com",
+    SMTP_HOST: "mailpit",
     SMTP_FROM: "review@example.com",
   };
   assert.throws(() => loadConfig(base), /capture email.*REGISTRATION_ENABLED/);
@@ -64,13 +64,18 @@ test("production capture closes registration and external SMTP requires TLS", ()
   assert.equal(capture.emailDelivery, "capture");
   assert.equal(capture.dev, false);
   assert.equal(capture.emailConfigured, true);
-  const external = loadConfig({ ...base, EMAIL_DELIVERY_MODE: "external" });
+  const external = loadConfig({
+    ...base,
+    EMAIL_DELIVERY_MODE: "external",
+    SMTP_HOST: "smtp.example.com",
+  });
   assert.equal(external.smtp.requireTLS, true);
   assert.equal(external.registrationEnabled, true);
   assert.equal(
     loadConfig({
       ...base,
       EMAIL_DELIVERY_MODE: "external",
+      SMTP_HOST: "smtp.example.com",
       SMTP_SECURE: "true",
     }).smtp.requireTLS,
     false,
@@ -83,4 +88,47 @@ test("production capture closes registration and external SMTP requires TLS", ()
     () => loadConfig({ ...base, ORIGIN_PROXY_SECRET: "short" }),
     /ORIGIN_PROXY_SECRET/,
   );
+});
+
+test("capture mail mode refuses a non-local SMTP relay", () => {
+  const development = {
+    NODE_ENV: "development",
+    DEV_ALLOW_UNVERIFIED_EMAIL: "true",
+    DATABASE_URL: "postgres://localhost/test",
+    EMAIL_DELIVERY_MODE: "capture",
+    SMTP_FROM: "IMON Meets <test@example.invalid>",
+  };
+  assert.throws(
+    () => loadConfig({ ...development, SMTP_HOST: "smtp.example.invalid" }),
+    /capture requires a local capture SMTP host/,
+  );
+  const capture = loadConfig({ ...development, SMTP_HOST: "mailpit" });
+  assert.equal(capture.emailDelivery, "capture");
+});
+
+test("Google OAuth requires a complete credential pair and stays disabled by default", () => {
+  const base = {
+    DATABASE_URL: "postgres://localhost/test",
+    DEV_ALLOW_UNVERIFIED_EMAIL: "true",
+  };
+  const disabled = loadConfig(base);
+  assert.equal(disabled.googleOAuthConfigured, false);
+  assert.equal(disabled.google.clientId, "");
+  assert.equal(disabled.google.clientSecret, "");
+  assert.throws(
+    () => loadConfig({ ...base, GOOGLE_CLIENT_ID: "client-id" }),
+    /GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET/,
+  );
+  assert.throws(
+    () => loadConfig({ ...base, GOOGLE_CLIENT_SECRET: "client-secret" }),
+    /GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET/,
+  );
+  const enabled = loadConfig({
+    ...base,
+    GOOGLE_CLIENT_ID: "google-client-id",
+    GOOGLE_CLIENT_SECRET: "google-client-secret",
+  });
+  assert.equal(enabled.googleOAuthConfigured, true);
+  assert.equal(enabled.google.clientId, "google-client-id");
+  assert.equal(enabled.google.clientSecret, "google-client-secret");
 });

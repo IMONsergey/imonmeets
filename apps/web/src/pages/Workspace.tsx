@@ -1113,6 +1113,7 @@ export function AccountSettings({
                   user={user}
                   refresh={refresh}
                   notify={notify}
+                  googleEnabled={config.googleOAuthConfigured}
                 />
                 <SessionSettings notify={notify} />
               </>

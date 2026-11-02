@@ -1,6 +1,7 @@
 # Activate real email delivery
 
 Public registration must remain closed while `EMAIL_DELIVERY_MODE=capture`. That mode stores mail in a private test inbox and cannot deliver a confirmation to a customer's address.
+Capture mode is now restricted to local capture hosts (`mailpit`, `localhost`, `127.0.0.1`, `::1`). A non-local SMTP host with capture mode is rejected at startup, so a misconfigured preview cannot silently send to external recipients.
 
 The application already sends verification, recovery and invitation messages through Nodemailer with bounded timeouts, TLS verification and database-backed budgets. It requires the actual sender credentials and sender-domain configuration. Connecting Gmail as an assistant tool does not give the deployed server a durable SMTP identity.
 

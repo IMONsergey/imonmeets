@@ -27,6 +27,7 @@ export function Auth({
   notify: (s: string, e?: boolean) => void;
 }) {
   const [busy, setBusy] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [needsVerification, setNeedsVerification] = useState(false);
@@ -46,7 +47,35 @@ export function Auth({
   const emailRequestUnavailable =
     (isForgot || isVerify) && (reviewMode || !config.emailConfigured);
   useEffect(() => {
-    setError("");
+    const params = new URLSearchParams(location.search);
+    const oauthError = params.get("error") || params.get("error_description");
+    if (oauthError) {
+      const messages: Record<string, string> = {
+        access_denied:
+          "Вход через Google отменен. Вы можете попробовать еще раз.",
+        user_cancelled:
+          "Вход через Google отменен. Вы можете попробовать еще раз.",
+        account_not_linked:
+          "Для этого адреса уже существует аккаунт. Войдите обычным способом, затем привяжите Google в настройках безопасности.",
+        email_not_verified:
+          "Google не подтвердил адрес почты. Используйте подтвержденный аккаунт Google или войдите другим способом.",
+        signup_disabled: "Регистрация новых аккаунтов сейчас закрыта.",
+      };
+      setError(
+        messages[oauthError] ||
+          "Не удалось завершить вход через Google. Попробуйте еще раз или войдите по почте.",
+      );
+      params.delete("error");
+      params.delete("error_description");
+      const query = params.toString();
+      history.replaceState(
+        history.state,
+        "",
+        `${location.pathname}${query ? `?${query}` : ""}${location.hash}`,
+      );
+    } else {
+      setError("");
+    }
     setSuccess("");
     setNeedsVerification(false);
     setTwoFactor(false);
@@ -77,6 +106,36 @@ export function Auth({
       active = false;
     };
   }, [isVerify, onSession, session?.user.id]);
+  async function signInWithGoogle() {
+    if (
+      googleBusy ||
+      !config.googleOAuthConfigured ||
+      (isRegister && !config.registrationEnabled)
+    )
+      return;
+    setGoogleBusy(true);
+    setError("");
+    try {
+      const callbackURL = `${window.location.origin}${getReturnTo()}`;
+      const result = await api<{ url?: string; redirect?: boolean }>(
+        "/auth/sign-in/social",
+        {
+          provider: "google",
+          callbackURL,
+          errorCallbackURL: `${window.location.origin}/login`,
+          requestSignUp: config.registrationEnabled,
+        },
+      );
+      if (!result.url)
+        throw new Error(
+          "Google не вернул адрес авторизации. Попробуйте еще раз.",
+        );
+      window.location.assign(result.url);
+    } catch (e) {
+      setError((e as Error).message || "Не удалось начать вход через Google.");
+      setGoogleBusy(false);
+    }
+  }
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (busy) return;
@@ -410,6 +469,40 @@ export function Auth({
               )}
             </form>
           )}
+          {config.googleOAuthConfigured &&
+            !twoFactor &&
+            !isForgot &&
+            !isReset &&
+            !isVerify &&
+            !registrationClosed && (
+              <div className="google-auth">
+                <div className="google-auth-divider">
+                  <span>или</span>
+                </div>
+                <Button
+                  type="button"
+                  className="google-auth-button full"
+                  busy={googleBusy}
+                  disabled={
+                    busy ||
+                    googleBusy ||
+                    (isRegister && !config.registrationEnabled)
+                  }
+                  onClick={signInWithGoogle}
+                >
+                  <span className="google-mark" aria-hidden="true">
+                    G
+                  </span>
+                  Продолжить с Google
+                </Button>
+                {isRegister && (
+                  <p className="form-note">
+                    Google должен подтвердить адрес почты. Существующие аккаунты
+                    автоматически не объединяются.
+                  </p>
+                )}
+              </div>
+            )}
           {isVerify && !confirmed && (
             <Button
               className="full"
@@ -471,12 +564,14 @@ export function Onboarding({
   user,
   logout,
   notify,
+  googleEnabled,
 }: {
   refresh: () => Promise<Session>;
   onWorkspace: (id: string) => void;
   user: User;
   logout: () => void;
   notify: (text: string, error?: boolean) => void;
+  googleEnabled?: boolean;
 }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -507,6 +602,7 @@ export function Onboarding({
               user={user}
               refresh={refresh}
               notify={notify}
+              googleEnabled={googleEnabled}
             />
           </>
         ) : (

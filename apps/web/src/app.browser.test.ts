@@ -44,6 +44,9 @@ test(
     const context = await browser.newContext();
     let loggedIn = false;
     let registrationEnabled = false;
+    let googleOAuthEnabled = true;
+    let googleLinked = false;
+    const capturedSocialRequests: Record<string, unknown>[] = [];
     let corruptedUser = false;
     let capturedCallback = "";
     let loginAllowed = false;
@@ -65,6 +68,11 @@ test(
     ];
     await context.route("**/*", async (route) => {
       const url = new URL(route.request().url());
+      if (url.origin === "https://accounts.google.com")
+        return route.fulfill({
+          contentType: "text/html",
+          body: "<main><h1>Mock Google authorization</h1></main>",
+        });
       if (url.origin !== "https://audit.invalid") return route.abort();
       const path = url.pathname;
       if (path === "/api/config")
@@ -75,6 +83,7 @@ test(
             emailDelivery: registrationEnabled ? "external" : "capture",
             emailConfigured: true,
             emailVerificationRequired: true,
+            googleOAuthConfigured: googleOAuthEnabled,
             mediaConfigured: false,
             recordingConfigured: false,
           },
@@ -103,6 +112,31 @@ test(
                 },
               },
         );
+      if (path === "/api/auth/sign-in/social") {
+        capturedSocialRequests.push(route.request().postDataJSON());
+        return route.fulfill({
+          json: {
+            url: "https://accounts.google.com/o/oauth2/v2/auth?client_id=mock-google-client",
+            redirect: true,
+          },
+        });
+      }
+      if (path === "/api/auth/list-accounts")
+        return route.fulfill({
+          json: googleLinked
+            ? [{ providerId: "google" }]
+            : [{ providerId: "credential" }],
+        });
+      if (path === "/api/auth/link-social") {
+        capturedSocialRequests.push(route.request().postDataJSON());
+        googleLinked = true;
+        return route.fulfill({
+          json: {
+            url: "https://accounts.google.com/o/oauth2/v2/auth?client_id=mock-google-client&flow=link",
+            redirect: true,
+          },
+        });
+      }
       if (path === "/api/auth/sign-up/email") {
         capturedCallback = route.request().postDataJSON().callbackURL;
         return route.fulfill({ json: { user: { id: "fixture-user" } } });
@@ -175,6 +209,36 @@ test(
       await expect(page.locator("form")).toHaveCount(0);
 
       await page.goto("https://audit.invalid/login");
+      await page.setViewportSize({ width: 390, height: 844 });
+      const googleButton = page.getByRole("button", {
+        name: "Продолжить с Google",
+        exact: true,
+      });
+      await expect(googleButton).toBeVisible();
+      assert.equal(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth > window.innerWidth,
+        ),
+        false,
+      );
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await googleButton.click();
+      await expect(
+        page.getByRole("heading", { name: "Mock Google authorization" }),
+      ).toBeVisible();
+      assert.equal(capturedSocialRequests.at(-1)?.provider, "google");
+      assert.equal(capturedSocialRequests.at(-1)?.requestSignUp, false);
+      await page.goto("https://audit.invalid/login?error=access_denied");
+      await expect(page.getByRole("alert")).toContainText(
+        "Вход через Google отменен",
+      );
+      assert.equal(new URL(page.url()).searchParams.has("error"), false);
+      await page.goto("https://audit.invalid/login?error=account_not_linked");
+      await expect(page.getByRole("alert")).toContainText(
+        "привяжите Google в настройках безопасности",
+      );
+
+      await page.goto("https://audit.invalid/login");
       await page
         .getByLabel("Рабочая почта", { exact: true })
         .fill("fixture@example.invalid");
@@ -213,6 +277,23 @@ test(
       await expect(
         page.getByRole("heading", { name: /Добрый день/ }),
       ).toBeVisible();
+      await page.goto("https://audit.invalid/settings?section=security");
+      await expect(
+        page.getByRole("heading", { name: "Аккаунт Google" }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("button", { name: "Привязать Google", exact: true }),
+      ).toBeVisible();
+      await page
+        .getByRole("button", { name: "Привязать Google", exact: true })
+        .click();
+      await expect(
+        page.getByRole("heading", { name: "Mock Google authorization" }),
+      ).toBeVisible();
+      assert.equal(capturedSocialRequests.at(-1)?.provider, "google");
+      assert.equal(typeof capturedSocialRequests.at(-1)?.callbackURL, "string");
+      await page.goto("https://audit.invalid/settings?section=security");
+      await expect(page.getByText("Подключен", { exact: true })).toBeVisible();
       await page.getByLabel("Меню аккаунта").click();
       await page
         .getByRole("button", { name: "Выйти из аккаунта", exact: true })
@@ -231,6 +312,17 @@ test(
       await page
         .getByRole("link", { name: "Создать аккаунт", exact: true })
         .click();
+      const googleSignup = page.getByRole("button", {
+        name: "Продолжить с Google",
+        exact: true,
+      });
+      await expect(googleSignup).toBeVisible();
+      await googleSignup.click();
+      await expect(
+        page.getByRole("heading", { name: "Mock Google authorization" }),
+      ).toBeVisible();
+      assert.equal(capturedSocialRequests.at(-1)?.requestSignUp, true);
+      await page.goto("https://audit.invalid/register");
       await page.getByLabel("Ваше имя", { exact: true }).fill("Проверка");
       await page
         .getByLabel("Рабочая почта", { exact: true })

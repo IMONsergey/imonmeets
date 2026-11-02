@@ -103,10 +103,11 @@ export async function createApp(
     logger?: boolean;
     limiter?: RateLimiter;
     paymentRequest?: typeof fetch;
+    auth?: ReturnType<typeof createAuth>;
   } = {},
 ) {
   const pool = options.pool || createPool(c.databaseUrl),
-    auth = createAuth(c, pool),
+    auth = options.auth || createAuth(c, pool),
     media = options.media || createMedia(c),
     sendMail = createMailer(c, pool),
     limiter = options.limiter ?? postgresLimiter(pool);
@@ -454,6 +455,21 @@ export async function createApp(
       }
       const headers = fromNodeHeaders(req.headers);
       headers.set("x-imon-client-ip", clientIp(req, c.originProxySecret));
+      if (req.method === "POST" && authPath === "/api/auth/link-social") {
+        const linkingSession = await auth.api.getSession({ headers });
+        assert(
+          linkingSession,
+          401,
+          "AUTH_REQUIRED",
+          "Войдите в аккаунт, чтобы привязать внешний вход.",
+        );
+        assert(
+          linkingSession.user.emailVerified,
+          403,
+          "EMAIL_NOT_VERIFIED",
+          "Сначала подтвердите почту существующего аккаунта.",
+        );
+      }
       const sensitiveAction = [
         "/api/auth/two-factor/verify-totp",
         "/api/auth/two-factor/disable",
@@ -583,6 +599,7 @@ export async function createApp(
     emailVerificationRequired: !c.dev,
     emailConfigured: c.emailConfigured,
     emailDelivery: c.emailDelivery,
+    googleOAuthConfigured: c.googleOAuthConfigured,
     mediaConfigured: c.mediaConfigured,
     recordingConfigured: c.recordingConfigured,
     waitingRoomConfigured: true,

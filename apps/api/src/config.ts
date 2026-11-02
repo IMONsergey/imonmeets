@@ -18,6 +18,16 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     throw new Error("EMAIL_DELIVERY_MODE must be capture or external");
   const registrationEnabled = env.REGISTRATION_ENABLED !== "false";
   const emailConfigured = Boolean(env.SMTP_HOST && env.SMTP_FROM);
+  const captureMailHost = ["mailpit", "localhost", "127.0.0.1", "::1"].includes(
+    (env.SMTP_HOST || "").trim().toLowerCase(),
+  );
+  const googleClientId = env.GOOGLE_CLIENT_ID?.trim() || "";
+  const googleClientSecret = env.GOOGLE_CLIENT_SECRET?.trim() || "";
+  if (Boolean(googleClientId) !== Boolean(googleClientSecret))
+    throw new Error(
+      "GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be configured together",
+    );
+  const googleOAuthConfigured = Boolean(googleClientId && googleClientSecret);
   if (!dev && !emailConfigured)
     throw new Error(
       "SMTP_HOST and SMTP_FROM required; explicitly set DEV_ALLOW_UNVERIFIED_EMAIL=true for local development",
@@ -41,6 +51,10 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
         "Production capture email requires REGISTRATION_ENABLED=false",
       );
   }
+  if (emailDelivery === "capture" && emailConfigured && !captureMailHost)
+    throw new Error(
+      "EMAIL_DELIVERY_MODE=capture requires a local capture SMTP host; use external only after verified sender setup",
+    );
   const mediaConfigured = Boolean(
     env.LIVEKIT_URL && env.LIVEKIT_API_KEY && env.LIVEKIT_API_SECRET,
   );
@@ -140,6 +154,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     databaseUrl: env.DATABASE_URL,
     emailConfigured,
     emailDelivery,
+    googleOAuthConfigured,
+    google: { clientId: googleClientId, clientSecret: googleClientSecret },
     mediaConfigured,
     recordingConfigured,
     port: Number(env.PORT || 3540),

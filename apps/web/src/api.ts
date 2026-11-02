@@ -46,6 +46,7 @@ export type Config = {
   emailVerificationRequired: boolean;
   emailConfigured: boolean;
   emailDelivery: "capture" | "external";
+  googleOAuthConfigured?: boolean;
   mediaConfigured: boolean;
   recordingConfigured: boolean;
   transcriptionConfigured?: boolean;

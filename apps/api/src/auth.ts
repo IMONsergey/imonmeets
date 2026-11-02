@@ -45,6 +45,26 @@ export function createAuth(c: Config, pool: Pool) {
       }),
     ],
     trustedOrigins: [c.appUrl],
+    account: {
+      accountLinking: {
+        enabled: true,
+        disableImplicitLinking: true,
+        allowDifferentEmails: false,
+        trustedProviders: [],
+      },
+    },
+    ...(c.googleOAuthConfigured
+      ? {
+          socialProviders: {
+            google: {
+              clientId: c.google.clientId,
+              clientSecret: c.google.clientSecret,
+              requireEmailVerification: true,
+              disableSignUp: !c.registrationEnabled,
+            },
+          },
+        }
+      : {}),
     emailAndPassword: {
       enabled: true,
       disableSignUp: !c.registrationEnabled,
