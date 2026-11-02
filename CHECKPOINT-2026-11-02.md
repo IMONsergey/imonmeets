@@ -235,3 +235,98 @@ Reported topology to verify independently before changing:
 5. Verify DNS current record for meets.imon.world without changing it. Prepare isolated vhost/tunnel config and dedicated least-privilege identity. Apply only after backups and routing validation.
 6. Keep Vercel active for rollback. Do not publish, alter Google credentials, send mail or open registration during cutover.
 7. Browser Google Cloud remains blocked until Browser extension supplies an originating browser context. Do not substitute remote desktop GUI without the requested Browser capability.
+
+## Direct new-server hosting investigation (2026-11-02 12:40 UTC)
+
+### Ownership/scope update
+
+The owner superseded the previously discussed edge-server route. The old edge 201.34.145.204 is excluded entirely; do not configure, modify or rely on it. The owner independently wrote the temporary DNS A record meets.imon.world -> 201.34.145.204 in REG.RU at 12:16:36 UTC and is the DNS writer for correcting it to the new main server. No DNS changes were made by this work. The current DNS lookup from the Mac still resolves 201.34.145.204.
+
+The approved target is only the main server imon-workstation at 94.249.186.240, while Vercel remains intact for rollback. No edge host, VPN, nginx, DNS, live app environment, app container, DB volume, LiveKit, TURN or user data was changed.
+
+### Current live server verified
+
+- Host: imon-workstation; IPv4 94.249.186.240; IPv6 2a14:7c0:1002:1b50::.
+- RAM 62 GiB, available ~54 GiB; disk 290 GB, free ~198 GB at inspection.
+- Existing app: imonmeets-app-1, healthy, image imonmeets-app:91aae88, loopback 127.0.0.1:3540.
+- PostgreSQL: imonmeets-db-1, volume imonmeets_db-data.
+- Redis, LiveKit, TURN, Egress, SeaweedFS recording storage all running.
+- Existing RTC public endpoint remains wss://imonmeets-rtc.94-249-186-240.sslip.io:8443; TURN/LiveKit media endpoints were not changed.
+- Existing rollback images remain: imonmeets-app:495ce92, imonmeets-app:c42f3f1, imonmeets-app:suite-candidate, imonmeets-app:rollback-64b4419, and currently active imonmeets-app:91aae88.
+- Main repo remains clean at 8439524dd27f379a6cfad893a4a00cb916488455. Auth/mail branch remains clean at 9bb2dab7a9356c0d75a5743e8c7f25ef7c77ab46.
+
+### Backups and restore acceptance
+
+- Latest DB dump: backups/imonmeets-20261102T120042Z.dump, 66,534 bytes; mode 0600; SHA256 verified against root-only latest.json.
+- Hourly imonmeets-backup.timer active; latest service run succeeded at 12:00:42 UTC.
+- Existing offsite encrypted backup worker succeeded repeatedly. Mac automatic backup monitor reported ok=true, automatic=true, backupOk=true, transport=https, database snapshot 12:00:43 UTC, fresh server health.
+- An unprivileged restore-check attempt failed because backup directory is root-owned mode 0700. This was not a DB restore failure. Re-ran the existing imonmeets-restore-check.service with its existing privileged unit; it succeeded at 12:20:25 UTC.
+- Actual restore into disposable DB succeeded and returned: 6 workspaces, 18 rooms, 7 users, 7 accounts, 6 memberships, 1 invitation. Disposable DB was dropped by the script. Active DB volume was not restored over or changed.
+- Recording worker timer is active and last run succeeded, but the source/catalog contains zero eligible recordings. Mac status also says recording backup ok with 0 recordings. Therefore no real recording object could be restored; the synthetic OpenSSL encryption/decryption/recovery suite passed 15/15. This is a real data-availability limitation, not proof of a nonempty media restore.
+- Recording files remain in /home/sergey/.local/share/imonmeets-recordings; no copy/move/delete performed.
+
+### HTTPS ingress on the new server: observed constraints
+
+- IPv4 TCP 443 is occupied by Docker proxy to VPN bridge 172.30.77.3:443 (amnezia-xray); xray process is live. Do not touch it.
+- UDP 443 is unrelated and does not provide HTTPS.
+- IPv6 exists, but IPv6-only web access is not an adequate public route for all users.
+- A working IPv4 HTTPS listener already exists on 94.249.186.240:8443 via nginx. It was externally verified from the Mac with normal TLS certificate validation: existing sslip.io /api/health returned HTTP 200.
+- Current cert /etc/letsencrypt/live/imonmeets-preview/fullchain.pem is valid until 2027-01-30, but SANs only cover imonmeets-api.94-249-186-240.sslip.io and imonmeets-rtc.94-249-186-240.sslip.io. It does not cover meets.imon.world.
+- Existing port-80 ACME webroot is /var/lib/imonmeets-acme; current HTTP vhost only names the sslip.io API/RTC names. A new meets SAN and matching HTTP-01 vhost/server_name are required after owner DNS points to 94.249.186.240.
+- Current 8443 API vhost only routes /api/, /embed/ and offsite operations; root / returns 404. A full-site vhost must proxy frontend root and all needed paths to 127.0.0.1:3540.
+- Current app has ORIGIN_PROXY_SECRET set, Fastify trustProxy=false, and requires X-Imon-Proxy-Secret on API/embed paths (except health). Current 8443 API proxy does not set this header; its /api/config returns 403, while /api/health returns 200.
+- Correct trusted ingress design must: store the backend proxy secret only in a root-owned private nginx include; unconditionally overwrite X-Imon-Proxy-Secret with that trusted value; overwrite X-Forwarded-For with $remote_addr (never pass client-supplied XFF); clear client-supplied alternate identity headers; set Host, Origin and X-Forwarded-Proto explicitly. Do not pass through a client-supplied proxy-secret header. Keep direct app port 3540 loopback-only.
+- No nginx changes were made.
+
+### Candidate image built without deployment
+
+- Candidate built from clean commit 9bb2dab7a9356c0d75a5743e8c7f25ef7c77ab46.
+- Tag: imonmeets-app:9bb2dab-preview
+- Image ID: sha256:601b62bbf561c82cc369f7ff8e920320f0745b9acfb4c8872fd94e3df623879e
+- OCI revision label matches commit.
+- Docker multi-stage production build succeeded; no dependency vulnerabilities reported by npm audit.
+- Existing Vite warning remains: Join chunk 693.36 kB (>500 kB).
+- Candidate image is not deployed or running. Current app remains on imonmeets-app:91aae88 and healthy.
+- First build through imon-job 20261102T122921-87e97acad6 failed immediately because imon-job restricted runner has no Docker socket permission. The same build was then run once through the authorized root Docker path and succeeded; no duplicate build was made.
+- The temporary PostgreSQL mail-test container created for prior verification (imonmeets-mailer-test-pg) was removed. No other container was stopped.
+
+### Direct-route decision: requires owner selection before changes
+
+The only already-working dual-stack-independent HTTPS ingress identified on the new server is port 8443. Proposed user-facing origin, if the owner accepts the nonstandard port:
+
+- Site: https://meets.imon.world:8443
+- APP_URL=https://meets.imon.world:8443
+- Embed allowed origin should include https://meets.imon.world:8443, retaining https://imon.agency and https://imonmeets.vercel.app during rollback/compatibility.
+- Google authorized JavaScript origin: https://meets.imon.world:8443
+- Google authorized redirect URI: https://meets.imon.world:8443/api/auth/callback/google
+- Better Auth callback origin is same host and port.
+- Keep REGISTRATION_ENABLED=false.
+- Keep LIVEKIT_URL, LIVEKIT_INTERNAL_URL, TURN endpoints and media URL settings unchanged for initial cutover.
+- Vercel deployment and its current APP_URL/config remain unchanged for rollback.
+- Resend remains staged only; no email sent and no active mail transport change.
+
+Standard https://meets.imon.world on IPv4 port 443 is unavailable without changing the VPN listener or obtaining another IPv4 address. The owner has explicitly prohibited changing VPN and excluded the old edge host. Therefore the 8443 URL needs explicit owner acceptance before any DNS-dependent cert, nginx, APP_URL or origin changes. No such changes have been made.
+
+### Google Browser blocker
+
+Attempt to use Browser list_tabs in this ordinary chat failed with exact error: Browser access requires the originating browser context. Open ChatGPT in the browser with the connected extension and try again. The Mac is visible as an RDC device, but RDC access is not Browser tab control. No Google Console page was accessed and no OAuth client/secret was created. Minimal user action: open this same ChatGPT conversation in the browser with the ChatGPT Browser extension connected/enabled, then ask to continue; do not send passwords or OAuth secrets in chat.
+
+### Latest jobs
+
+- 20261102T120333-848374854d: full mail/auth verification, succeeded, 88 passed, 0 skipped.
+- 20261102T121221-a8b4df966c: unprivileged restore-check attempt, failed due to root-only backups/latest.json; superseded by successful privileged service below.
+- 20261102T121838-13d1d01747: sudo inside imon-job runner failed because NoNewPrivileges prevents sudo; no restore action occurred.
+- imonmeets-restore-check.service: successful privileged actual DB restore at 12:20:25 MSK; exit 0.
+- 20261102T122211-f2a47bce79: synthetic recording-backup suite, succeeded, 15/15.
+- 20261102T122921-87e97acad6: image build via restricted imon-job failed due missing Docker socket; one direct privileged Docker build succeeded.
+- No active heavy job at checkpoint. No unresolved command was repeated.
+
+### Next safe steps
+
+1. Wait for owner to accept https://meets.imon.world:8443 or choose another public routing approach that does not touch VPN 443 or old edge.
+2. Owner completes DNS correction; verify A record points to 94.249.186.240 before requesting ACME certificate.
+3. Back up exact nginx config/cert state privately; prepare a dedicated meets TLS vhost on 8443, SAN certificate and safe proxy header injection. Preserve existing API/RTC/offsite paths and existing sslip names.
+4. Validate nginx config and HTTPS using a temporary hosts override before public cutover. No production config reload until explicit cutover approval.
+5. Stage private env delta and rollback; keep registration false, Resend inactive, Vercel unchanged.
+6. Apply APP_URL/embed origins only after 8443 URL is accepted and the vhost passes TLS/header checks.
+7. Browser OAuth setup remains blocked until the Browser extension supplies the originating browser context; then reuse existing Google Cloud project, do not create a duplicate.
