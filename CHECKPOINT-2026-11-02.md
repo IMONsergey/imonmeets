@@ -330,3 +330,7 @@ Attempt to use Browser list_tabs in this ordinary chat failed with exact error: 
 5. Stage private env delta and rollback; keep registration false, Resend inactive, Vercel unchanged.
 6. Apply APP_URL/embed origins only after 8443 URL is accepted and the vhost passes TLS/header checks.
 7. Browser OAuth setup remains blocked until the Browser extension supplies the originating browser context; then reuse existing Google Cloud project, do not create a duplicate.
+
+## Local Google access continuation
+
+The existing Chrome Cloud tab was selected through RDC, but page scripting is disabled by Chrome and the accessibility tree did not expose the Cloud form. No Google account/project/client was verified or changed. See docs/receipts/2026-11-02-local-google-access.md for exact blockers and pending screenshot call IDs. A public TLS check still fails certificate hostname validation for meets.imon.world; live app remains healthy on 91aae88. No deployment changes were made in this continuation.
