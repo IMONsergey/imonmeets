@@ -334,3 +334,32 @@ Attempt to use Browser list_tabs in this ordinary chat failed with exact error: 
 ## Local Google access continuation
 
 The existing Chrome Cloud tab was selected through RDC, but page scripting is disabled by Chrome and the accessibility tree did not expose the Cloud form. No Google account/project/client was verified or changed. See docs/receipts/2026-11-02-local-google-access.md for exact blockers and pending screenshot call IDs. A public TLS check still fails certificate hostname validation for meets.imon.world; live app remains healthy on 91aae88. No deployment changes were made in this continuation.
+
+## Final live deployment handoff (2026-11-02 13:30 UTC)
+
+The owner accepted the direct new-host URL https://meets.imon.world:8443. Live deployment is complete on imon-workstation 94.249.186.240.
+
+- Running app: imonmeets-app-1
+- Running image: imonmeets-app:9bb2dab-preview
+- Image ID: sha256:601b62bbf561c82cc369f7ff8e920320f0745b9acfb4c8872fd94e3df623879e
+- Source commit: 9bb2dab7a9356c0d75a5743e8c7f25ef7c77ab46
+- App healthy; APP_URL=https://meets.imon.world:8443
+- Embed allowlist includes the new 8443 origin while retaining the Vercel and imon.agency origins.
+- Let's Encrypt SAN certificate DNS:meets.imon.world valid 2026-11-02 12:01:20 UTC to 2027-01-31 12:01:19 UTC. certbot.timer enabled/active; deploy hook reloads nginx only when this certificate renews.
+- New vhost /etc/nginx/conf.d/meets.imon.world.conf, private trusted headers /etc/nginx/snippets/meets-proxy-trust.conf (0600 root:root). Client-supplied proxy secret and XFF are overwritten. Existing API/RTC vhosts unchanged.
+- VPN TCP 443, firewall, LiveKit URL, TURN and old host 201.34.145.204 untouched.
+- Registration false. Resend HTTPS selected from the already approved restricted key, Free-tier local budgets active. No new external mail sent; delivery ledger row count zero.
+- Google OAuth remains unconfigured (public config false). It does not block site hosting.
+- External TLS and owner visual /login review passed. Health/config/root/deep links/assets return 200. Unknown API route remains 404. RTC ingress reaches LiveKit; unauthenticated WebSocket returns 401 as expected. Authenticated room/media E2E is not claimed.
+- Post-deployment DB backup /home/sergey/imonmeets/backups/imonmeets-20261102T132246Z.dump (68,177 bytes, SHA256 0f351a3c9f576a567c270f539606d06b9e653cc38c486ce30e383b216e14da50) succeeded. Disposable DB restore drill at 13:22:48-13:22:51 UTC succeeded: 6 workspaces, 18 rooms, 7 users, 7 accounts, 6 memberships, 1 invitation. Active DB untouched.
+- Recording manifest complete=true but objects=0. Synthetic recording recovery suite 15/15; no non-empty real media restore could be performed.
+- Previous app image tag imonmeets-app:91aae88 and image ID sha256:d9b156546d1c9fd23bc4d268316be66ba59d3841d63a3c25be4e9c3b8c761962 remains present.
+- Private snapshot and app-only rollback helper: /home/sergey/.config/imonmeets-accounts/cutover-20261102T124640Z/. Rollback helper syntax and compose resolution validated; it has not been executed. It switches only app image to 91aae88, retains new origin and DB, keeps registration closed, and changes email delivery to capture for compatibility. Never restore old DB or run down -v.
+- Vercel project remains retained, but its vercel.json rewrites /api/* and /embed/* to the new host's sslip.io API ingress. Thus Vercel is a frontend rollback surface, not an independent old backend runtime. Vercel-only rollback does not restore the old backend.
+
+Durable receipts are committed in main at 1b52d6117c62ccc829bdacdbdb88979bc2c939bd:
+- /home/sergey/imonmeets/docs/reviewed-results/2026-11-02-live-deployment.md
+- /home/sergey/imonmeets/docs/reviewed-results/2026-11-02-backup-restore.md
+- /home/sergey/imonmeets/docs/reviewed-results/2026-11-02-rollback.md
+
+Main is locally ahead by one documentation-only commit; source app code was not changed by the receipt commit. Feature branch still contains the verified mail/auth implementation and Google Browser blocker note. No deployment/tests were repeated for this handoff.
