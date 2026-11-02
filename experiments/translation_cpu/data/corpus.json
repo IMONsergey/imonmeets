@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "description": "Synthetic text-only fixtures. No recordings, personal data or voice imitation. slots are semantic checks, not ASR gold audio.",
+  "cases": [
+    {
+      "id": "en-ru-price-001",
+      "stage": "ASR+MT",
+      "source": "en",
+      "target": "ru",
+      "text": "Hello, Alex. The price is twelve thousand dollars.",
+      "slots": {
+        "name": "Alex",
+        "amount": 12000,
+        "currency": "USD"
+      }
+    },
+    {
+      "id": "ru-en-price-002",
+      "stage": "ASR+MT",
+      "source": "ru",
+      "target": "en",
+      "text": "Цена составляет двенадцать тысяч рублей.",
+      "slots": {
+        "amount": 12000,
+        "currency": "RUB"
+      }
+    },
+    {
+      "id": "en-ru-negation-003",
+      "stage": "MT",
+      "source": "en",
+      "target": "ru",
+      "text": "We do not approve the payment until the contract is signed.",
+      "slots": {
+        "negation": true,
+        "action": "approve payment",
+        "condition": "contract signed"
+      }
+    },
+    {
+      "id": "ru-en-negation-004",
+      "stage": "MT",
+      "source": "ru",
+      "target": "en",
+      "text": "Не отправляйте счет до подтверждения суммы.",
+      "slots": {
+        "negation": true,
+        "action": "send invoice",
+        "condition": "amount confirmed"
+      }
+    },
+    {
+      "id": "zh-ru-money-005",
+      "stage": "MT",
+      "source": "zh",
+      "target": "ru",
+      "text": "总价是十二万五千元，不是十二元。",
+      "slots": {
+        "amount": 125000,
+        "currency": "CNY",
+        "contrast_amount": 12,
+        "negation": true
+      }
+    },
+    {
+      "id": "ar-ru-money-006",
+      "stage": "MT",
+      "source": "ar",
+      "target": "ru",
+      "text": "السعر اثنا عشر ألف دولار وليس ألفاً ومئتي دولار.",
+      "slots": {
+        "amount": 12000,
+        "currency": "USD",
+        "contrast_amount": 1200,
+        "negation": true
+      }
+    },
+    {
+      "id": "en-ru-silence-007",
+      "stage": "VAD",
+      "source": "en",
+      "target": "ru",
+      "text": "",
+      "slots": {
+        "silence": true
+      }
+    },
+    {
+      "id": "en-ru-interruption-008",
+      "stage": "stream",
+      "source": "en",
+      "target": "ru",
+      "text": "The transfer is ... no, cancel that. Send only ten euros.",
+      "slots": {
+        "interruption": true,
+        "negation": true,
+        "amount": 10,
+        "currency": "EUR"
+      }
+    },
+    {
+      "id": "ru-en-name-009",
+      "stage": "ASR",
+      "source": "ru",
+      "target": "en",
+      "text": "Мария Волкова подключится через пять минут.",
+      "slots": {
+        "name": "Мария Волкова",
+        "amount": 5,
+        "unit": "minutes"
+      }
+    },
+    {
+      "id": "en-ru-decimal-010",
+      "stage": "ASR+MT",
+      "source": "en",
+      "target": "ru",
+      "text": "The amount is one thousand and fifty point zero five euros.",
+      "slots": {
+        "amount": 1050.05,
+        "currency": "EUR"
+      }
+    },
+    {
+      "id": "zh-en-time-011",
+      "stage": "ASR+MT",
+      "source": "zh",
+      "target": "en",
+      "text": "会议在下午三点十五分开始。",
+      "slots": {
+        "time": "15:15"
+      }
+    },
+    {
+      "id": "ar-en-negation-012",
+      "stage": "MT",
+      "source": "ar",
+      "target": "en",
+      "text": "لا توافق على السعر قبل مراجعة العقد.",
+      "slots": {
+        "negation": true,
+        "action": "approve price",
+        "condition": "review contract"
+      }
+    }
+  ],
+  "known_regressions": [
+    {
+      "id": "reg-base-name-price",
+      "source": "en",
+      "observed": "Sergey/name and price term confused in baseline ASR",
+      "impact": "proper noun and commercial amount may be corrupted",
+      "status": "open"
+    },
+    {
+      "id": "reg-zh-amount-loss",
+      "source": "zh",
+      "observed": "translated speech omitted price in baseline pipeline",
+      "impact": "financial information lost",
+      "status": "open"
+    },
+    {
+      "id": "reg-ar-semantic-loss",
+      "source": "ar",
+      "observed": "translation lost most of the meaning even from clean recognized text",
+      "impact": "semantic fidelity unacceptable",
+      "status": "open"
+    }
+  ],
+  "tts_cases": [
+    {
+      "id": "tts-en-001",
+      "language": "en",
+      "text": "The total is twelve thousand dollars.",
+      "expected": "USD amount and scale remain intelligible"
+    },
+    {
+      "id": "tts-ru-002",
+      "language": "ru",
+      "text": "Итоговая сумма составляет двенадцать тысяч рублей.",
+      "expected": "RUB amount and inflection remain intelligible"
+    },
+    {
+      "id": "tts-zh-003",
+      "language": "zh",
+      "text": "总价是十二万五千元。",
+      "expected": "CNY amount and magnitude remain intelligible"
+    },
+    {
+      "id": "tts-ar-004",
+      "language": "ar",
+      "text": "السعر اثنا عشر ألف دولار.",
+      "expected": "USD amount and magnitude remain intelligible"
+    },
+    {
+      "id": "tts-ru-decimal-005",
+      "language": "ru",
+      "text": "Сумма составляет тысячу пятьдесят евро и пять центов.",
+      "expected": "Decimal amount and currency remain intelligible"
+    }
+  ]
+}
