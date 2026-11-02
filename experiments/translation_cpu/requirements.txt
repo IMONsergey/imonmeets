@@ -1,0 +1,5 @@
+faster-whisper==1.2.1
+av==16.0.1
+argostranslate==1.11.0
+piper-tts==1.8.0
+soundfile==0.14.0
