@@ -16,11 +16,24 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
   const emailDelivery = env.EMAIL_DELIVERY_MODE || "capture";
   if (emailDelivery !== "capture" && emailDelivery !== "external")
     throw new Error("EMAIL_DELIVERY_MODE must be capture or external");
+  const emailProvider = env.EMAIL_PROVIDER || "smtp";
+  if (emailProvider !== "smtp" && emailProvider !== "resend")
+    throw new Error("EMAIL_PROVIDER must be smtp or resend");
   const registrationEnabled = env.REGISTRATION_ENABLED !== "false";
-  const emailConfigured = Boolean(env.SMTP_HOST && env.SMTP_FROM);
+  const resendApiKey = env.RESEND_API_KEY?.trim() || "";
   const captureMailHost = ["mailpit", "localhost", "127.0.0.1", "::1"].includes(
     (env.SMTP_HOST || "").trim().toLowerCase(),
   );
+  if (emailProvider === "resend" && emailDelivery !== "external")
+    throw new Error("Resend provider requires EMAIL_DELIVERY_MODE=external");
+  if (emailProvider === "resend" && (!resendApiKey || !env.SMTP_FROM))
+    throw new Error("Resend provider requires RESEND_API_KEY and SMTP_FROM");
+  if (emailProvider === "smtp" && !env.SMTP_HOST && !dev)
+    throw new Error("SMTP_HOST is required when EMAIL_PROVIDER=smtp");
+  const emailConfigured =
+    emailProvider === "resend"
+      ? Boolean(resendApiKey && env.SMTP_FROM)
+      : Boolean(env.SMTP_HOST && env.SMTP_FROM);
   const googleClientId = env.GOOGLE_CLIENT_ID?.trim() || "";
   const googleClientSecret = env.GOOGLE_CLIENT_SECRET?.trim() || "";
   if (Boolean(googleClientId) !== Boolean(googleClientSecret))
@@ -30,7 +43,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
   const googleOAuthConfigured = Boolean(googleClientId && googleClientSecret);
   if (!dev && !emailConfigured)
     throw new Error(
-      "SMTP_HOST and SMTP_FROM required; explicitly set DEV_ALLOW_UNVERIFIED_EMAIL=true for local development",
+      "An email transport and sender are required; explicitly set DEV_ALLOW_UNVERIFIED_EMAIL=true for local development",
     );
   if (env.NODE_ENV === "production") {
     if (!appUrl.startsWith("https://"))
@@ -51,7 +64,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
         "Production capture email requires REGISTRATION_ENABLED=false",
       );
   }
-  if (emailDelivery === "capture" && emailConfigured && !captureMailHost)
+  if (
+    emailProvider === "smtp" &&
+    emailDelivery === "capture" &&
+    emailConfigured &&
+    !captureMailHost
+  )
     throw new Error(
       "EMAIL_DELIVERY_MODE=capture requires a local capture SMTP host; use external only after verified sender setup",
     );
@@ -73,6 +91,27 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
       throw new Error(`${name} must be a positive integer`);
     return value;
   };
+  const emailDailyLimit = positive(
+    "EMAILS_PER_DAY",
+    emailProvider === "resend" ? 45 : 500,
+  );
+  const emailWorkspaceDailyLimit = positive(
+    "EMAILS_PER_WORKSPACE_DAY",
+    emailProvider === "resend" ? 45 : 100,
+  );
+  const email30dLimit = positive(
+    "EMAILS_PER_30D_BUCKET",
+    emailProvider === "resend" ? 1000 : 15000,
+  );
+  if (
+    emailProvider === "resend" &&
+    (emailDailyLimit > 45 ||
+      emailWorkspaceDailyLimit > 45 ||
+      email30dLimit > 1000)
+  )
+    throw new Error(
+      "Resend Free local limits may not exceed 45 per 24h bucket and 1000 per 30d bucket",
+    );
   const analysis = {
     workerUrl: env.ANALYSIS_WORKER_URL || "",
     workerSecret: env.ANALYSIS_WORKER_SECRET || "",
@@ -137,8 +176,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
       members: positive("MAX_MEMBERS_PER_WORKSPACE", 100),
       invitations: positive("MAX_PENDING_INVITATIONS", 100),
       inviteHourly: positive("INVITATIONS_PER_USER_HOUR", 20),
-      emailDaily: positive("EMAILS_PER_WORKSPACE_DAY", 100),
-      globalEmailDaily: positive("EMAILS_PER_DAY", 500),
+      emailDaily: emailWorkspaceDailyLimit,
+      globalEmailDaily: emailDailyLimit,
+      email30d: email30dLimit,
       recordings: positive("MAX_ACTIVE_RECORDINGS", 2),
       activeRooms: positive("MAX_ACTIVE_ROOMS", 20),
     },
@@ -154,6 +194,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     databaseUrl: env.DATABASE_URL,
     emailConfigured,
     emailDelivery,
+    emailProvider,
+    resendApiKey,
     googleOAuthConfigured,
     google: { clientId: googleClientId, clientSecret: googleClientSecret },
     mediaConfigured,

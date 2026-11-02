@@ -45,7 +45,7 @@
 2. Add optional Google credentials/config to `loadConfig` and Better Auth `socialProviders.google`; require Google's verified email and disable implicit account linking so existing accounts cannot be silently linked. Keep explicit linking flow separate and authenticated.
 3. Expose only a boolean Google-enabled flag via `/api/config`; add Google button and robust callback/cancel/error UI in `Auth.tsx` using Better Auth's existing `/api/auth` endpoint.
 4. Add unit/browser tests for configured/unconfigured provider, redirect/cancel/error, closed registration, existing accounts, protected routes and logout. Do not run heavy suites until Comand heavy slot is free.
-5. Recheck runtime Vercel/server env variable *names and presence only*, never reveal values. OAuth client creation and credentials require owner action; do not create or modify OAuth clients.
+5. Recheck runtime Vercel/server env variable _names and presence only_, never reveal values. OAuth client creation and credentials require owner action; do not create or modify OAuth clients.
 6. SMTP remains an external blocker. Choose a sender provider with owner approval, then configure credentials privately and DNS records from provider instructions. Do not open registration or send unapproved external mail.
 7. Do not publish a new preview or alter public permissions without the required owner confirmation. Existing preview is `https://imonmeets.vercel.app`.
 
@@ -85,6 +85,7 @@
 ### Final verification
 
 Heavy verification was submitted and completed through the existing single-slot imon-job queue:
+
 - Job ID: 20261102T080319-3c7d6df318
 - State: succeeded, exit code 0, timed out false, disk reserve not breached.
 - Prettier: all selected source/docs/config files pass.
@@ -114,6 +115,7 @@ Earlier queued attempts 20261102T074332-2ddd2a06df, 20261102T074911-0df6e26530, 
 ### Exact Google Console values
 
 For current APP_URL=https://imonmeets.vercel.app and Better Auth basePath=/api/auth:
+
 - Authorized JavaScript origin: https://imonmeets.vercel.app
 - Authorized redirect URI: https://imonmeets.vercel.app/api/auth/callback/google
 
@@ -165,3 +167,71 @@ An independent read-only review identified that the earlier Settings UI required
 - git diff --check: passed before commit.
 
 No production services, credentials, accounts, DNS or deployments were changed. The main repository remains unchanged. All follow-up work is committed on feature/imonmeets-auth-google-20261102. The worktree is clean; the commit has not been pushed.
+
+## Resend HTTPS transport and deployment continuation (2026-11-02 12:10 UTC)
+
+### Final verified code state
+
+- Worktree: /home/sergey/imonmeets-auth-google-20261102
+- Branch: feature/imonmeets-auth-google-20261102
+- Base auth commit before Resend changes: c1f0ebce266eaca323d121a93d63ff2f3e448ff1
+- Main repo /home/sergey/imonmeets remains at 8439524dd27f379a6cfad893a4a00cb916488455, clean and unchanged.
+- Full final verification: imon-job 20261102T120333-848374854d, succeeded, exit 0, timed_out=false, diskReserveBreached=false.
+- Formatting, API/web/E2E typecheck, web/API production build all passed.
+- Tests: API 60/60, web 18/18, SDK 7/7, browser 3/3; total 88 passed, 0 failed, 0 skipped.
+- The API run included actual PostgreSQL integration against a temporary local PostgreSQL 17 container, loopback-only port 55439, tmpfs data directory, dedicated database and randomly isolated schemas. No production DB was accessed.
+- Existing Vite warning: Join bundle 693.36 kB (>500 kB); build succeeds, warning predates this change.
+- Detailed receipt: docs/receipts/2026-11-02-resend-verification.md.
+
+### Resend implementation
+
+- Explicit EMAIL_PROVIDER=resend / EMAIL_DELIVERY_MODE=external selects HTTPS API; SMTP and local capture remain available as separate modes.
+- Request and idempotency key use the same normalized recipient. Sender is trimmed consistently.
+- PostgreSQL table im_email_deliveries is added via the existing migrate service. It stores only idempotency hash, recipient hash, state, provider ID, HTTP status and coarse error details; no message body or auth tokens.
+- Reservation is committed before HTTP. Accepted duplicate -> no-op. Existing sending/uncertain -> unresolved error and no replay. A failed ledger reservation prevents HTTP. A failed provider-ID persistence after HTTP leaves a fail-closed unresolved record. This is explicitly not an exactly-once guarantee.
+- HTTPS uses redirect rejection, no-store, platform TLS verification, 10-second timeout, no automatic retries; handles 429, 5xx/408, other 4xx and malformed success responses.
+- Free budgets: 45 global/24h, 45 workspace/24h, 1,000 global/30d, existing 5 per recipient/hour. 1,000/30d ensures <=3,000 across a 31-day calendar month; 45/24h ensures <=90 in any rolling 24h. Resend config rejects larger limits. SMTP behavior retains original budget keys; 30-day cap is Resend-only.
+- A private pending environment and private rollback snapshot exist under /home/sergey/.config/imonmeets-accounts/, both mode 0600. Key values are never printed. Pending config: Resend HTTPS, no-reply@notify.imon.world, registration false, 45 daily, 45 workspace daily, 1,000 per 30d. The active /home/sergey/imonmeets/.env and running deployment were not changed.
+- No external mail was sent; the prior delivered test was not repeated.
+
+### New owner-approved hosting target (not yet modified)
+
+User approved moving the full ImonMeets project to the user's own servers while preserving Vercel for rollback. Requested public URL: https://meets.imon.world.
+
+Reported topology to verify independently before changing:
+
+- Main host: imon-workstation, 94.249.186.240, 64 GB class; app/API and frontend image reportedly serve on 127.0.0.1:3540.
+- Existing Postgres named volume: imonmeets_db-data.
+- LiveKit UDP/TCP ports: 7880/7881/7882; TURN 3478/5349.
+- Recordings: /home/sergey/.local/share/imonmeets-recordings.
+- Edge host: imonvpn-03, 201.34.145.204, nginx :443 already serves Apcosys/Comand/node/VPN. Preserve every existing vhost and VPN/Comand/Telegram service. Never modify port 443 on the main host; it is used by VPN.
+- Mac SSH alias imon-vpn-origin through imon-vpn-relay reportedly works.
+- Planned edge-only meets.imon.world vhost, DNS A record to 201.34.145.204, TLS certificate, and a separate loopback-only tunnel from edge port 13540 to main host 3540.
+- Create a dedicated, least-privilege service identity for only this tunnel. Do not extend existing Comand identity.
+- Do not migrate between servers. Main app/DB/media remain on main host. Preserve media URLs for now.
+- Set public app origin and embed allowed origin to https://meets.imon.world; Google callback becomes https://meets.imon.world/api/auth/callback/google.
+- Keep Vercel project/deployment unchanged for rollback.
+- Before any production change, prove DB backup and restore in a disposable isolated DB; separately verify recordings backup/restore. Save old image and exact config privately. No down -v, no restoring over active DB.
+- No DNS/firewall/production change until current backup and restore state has been proven. Keep registration false. No external emails during migration.
+- Main host 443 is used by VPN; do not touch it.
+- Edge must strip client-supplied forwarding/proxy-secret headers and set trusted values. Do not trust direct client headers. Use a dedicated per-route identity/token stored privately only if app ingress can safely distinguish edge from Vercel rollback. Do not broaden the Comand key.
+
+### Google Cloud/browser blocker
+
+- User explicitly requested use of Browser tool in this ordinary chat to open the user's local Google Cloud tab and complete the existing project OAuth client.
+- Browser list_tabs failed: Browser access requires the originating browser context. Open ChatGPT in the browser with the connected extension and try again.
+- RDC device inventory shows MacBook-Pro-erdc.local online, but this is not Browser tab-control capability. Do not claim that the Mac browser was controlled.
+- User reported Google account session is already open in Cloud, OMNEXE Music, selected account fenomenos360@gmail.com; parent cloud console returned Site Unavailable.
+- Reported project exists: name ImonMeets, project ID imonmeets, organization/parent fenomenos-org. Verify through the user's existing local Browser context when available; do not create a duplicate project/client.
+- User approved OAuth web client with basic openid email profile and private server-side secret storage. Do not ask for passwords in chat. If local Browser context remains unavailable, report this exact blocker and leave the console step for the owner; never claim access.
+- No Google credentials, Cloud settings or OAuth clients were created/changed during this work.
+
+### Immediate continuation sequence
+
+1. Verify clean commit HEAD and receipt/checkpoint after this update.
+2. Verify backup inventory, latest DB backup and successful restore in disposable DB; separately verify recording copy/restore. Do not modify live volumes.
+3. Inspect main host identity, current Docker containers/images/volumes, listening sockets, app health and running compose configuration without dumping secrets.
+4. Inspect edge host via approved Mac SSH relay; inventory nginx vhosts/certificates/ports and active services read-only. Preserve Apcosys, Comand, node and VPN.
+5. Verify DNS current record for meets.imon.world without changing it. Prepare isolated vhost/tunnel config and dedicated least-privilege identity. Apply only after backups and routing validation.
+6. Keep Vercel active for rollback. Do not publish, alter Google credentials, send mail or open registration during cutover.
+7. Browser Google Cloud remains blocked until Browser extension supplies an originating browser context. Do not substitute remote desktop GUI without the requested Browser capability.

@@ -5,6 +5,18 @@ import { billingSchema } from "./billing-schema.js";
 export const schema = `
 CREATE TABLE IF NOT EXISTS im_rate_limits(key text PRIMARY KEY,count integer NOT NULL,expires_at timestamptz NOT NULL);
 CREATE INDEX IF NOT EXISTS im_rate_expiry ON im_rate_limits(expires_at);
+CREATE TABLE IF NOT EXISTS im_email_deliveries (
+  idempotency_key text PRIMARY KEY,
+  recipient_hash text NOT NULL,
+  state text NOT NULL CHECK(state IN ('sending','accepted','uncertain','rate_limited','rejected')),
+  provider_id text,
+  http_status integer,
+  error_kind text,
+  retry_after_seconds integer,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS im_email_deliveries_state_updated ON im_email_deliveries(state,updated_at);
 CREATE TABLE IF NOT EXISTS im_workspaces (id text PRIMARY KEY,name text NOT NULL,created_at timestamptz NOT NULL DEFAULT now());
 CREATE TABLE IF NOT EXISTS im_members (id text PRIMARY KEY,workspace_id text NOT NULL REFERENCES im_workspaces(id) ON DELETE CASCADE,user_id text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,role text NOT NULL CHECK(role IN ('owner','admin','member')),UNIQUE(workspace_id,user_id));
 CREATE UNIQUE INDEX IF NOT EXISTS im_one_owner ON im_members(workspace_id) WHERE role='owner';

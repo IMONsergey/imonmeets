@@ -451,6 +451,14 @@ export async function createApp(
               86400,
               db,
             );
+            if (c.emailProvider === "resend")
+              await requireBudget(
+                limiter,
+                "smtp:global:30d",
+                c.limits.email30d,
+                30 * 86400,
+                db,
+              );
           });
       }
       const headers = fromNodeHeaders(req.headers);
@@ -1416,6 +1424,14 @@ export async function createApp(
           86400,
           db,
         );
+        if (c.emailProvider === "resend")
+          await requireBudget(
+            limiter,
+            "smtp:global:30d",
+            c.limits.email30d,
+            30 * 86400,
+            db,
+          );
       }
       const count = await db.query(
         "SELECT count(*)::int AS n FROM im_invitations WHERE workspace_id=$1 AND consumed_at IS NULL AND expires_at>now()",
