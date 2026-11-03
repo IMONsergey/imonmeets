@@ -1779,16 +1779,29 @@ export async function createApp(
     const u = (await user(req))!,
       { workspaceId } = params(req),
       m = await membership(workspaceId!, u.id);
+    const query = z
+      .object({ before: z.uuid().optional() })
+      .strict()
+      .parse(req.query);
+    // Keep the anchor in PostgreSQL: timestamps retain their microseconds and a
+    // soft-deleted last row still locates the next page. A foreign workspace's
+    // cursor cannot select an anchor or disclose its records.
+    const result = await pool.query(
+      `SELECT rec.*,r.title AS room_title,r.created_by,
+       EXISTS(SELECT 1 FROM im_recording_analysis a WHERE a.recording_id=rec.id AND a.expires_at>now()) AS has_transcript
+       FROM im_recordings rec JOIN im_rooms r ON r.id=rec.room_id
+       WHERE rec.workspace_id=$1 AND rec.deleted_at IS NULL
+       AND ($2::text IS NULL OR (rec.started_at,rec.id)<(SELECT started_at,id FROM im_recordings WHERE workspace_id=$1 AND id=$2))
+       ORDER BY rec.started_at DESC,rec.id DESC LIMIT 101`,
+      [workspaceId, query.before ?? null],
+    );
+    const page = result.rows.slice(0, 100);
     return {
-      recordings: (
-        await pool.query(
-          "SELECT rec.*,r.title AS room_title,r.created_by,EXISTS(SELECT 1 FROM im_recording_analysis a WHERE a.recording_id=rec.id AND a.expires_at>now()) AS has_transcript FROM im_recordings rec JOIN im_rooms r ON r.id=rec.room_id WHERE rec.workspace_id=$1 AND rec.deleted_at IS NULL ORDER BY rec.started_at DESC",
-          [workspaceId],
-        )
-      ).rows.map((r) => ({
+      recordings: page.map((r) => ({
         ...recordingJson(r),
         canManage: canManage(m.role, r.created_by, u.id),
       })),
+      nextCursor: result.rows.length > 100 ? page.at(-1)!.id : null,
     };
   });
   app.post(

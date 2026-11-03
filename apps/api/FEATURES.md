@@ -53,9 +53,11 @@ Email/password sign-in can return `{twoFactorRedirect:true}` instead of an authe
 
 Deleting an account does not erase joint workspace content that belongs to the remaining team. A minimal payment ledger retains immutable provider/order references, pseudonymous former user/workspace IDs, amounts, and service periods for reconciliation. It contains no card data, mailbox contents, or stored payer email. Provider-side accounting retention is a separate operational/legal policy.
 
-Database backup expiration is controlled by the backup service, not this endpoint. In particular, an endpoint must not promise seven-day erasure while off-host copies have a longer retention period. Restoring an older backup requires replaying deletion requests before reopening the service to customers. The current deployment has no independent deletion-tombstone journal outside the database backup.
+Database backup expiration is controlled by the backup service, not this endpoint. In particular, an endpoint must not promise seven-day erasure while off-host copies have a longer retention period. This release candidate implements a durable deletion journal, independently acknowledged receiver, database/genesis binding and offline replay before reopening a restored service. The older deployed image and the independent receiver's actual deployment are separate acceptance states. Follow `docs/deletion-database-binding.md`; an existing populated database cannot silently enroll an empty replacement history.
 
 ## Recording retention and deletion
+
+`GET /api/workspaces/:w/recordings` returns at most 100 records with the existing `recordings` array and an additive `nextCursor`. Pass that cursor as `?before=<id>` to read the next page. Ordering uses the exact database `(started_at,id)` pair, including its timestamp precision. A soft-deleted anchor remains usable; a foreign workspace's cursor cannot reveal an anchor or its records. The UI loads further history only on request and preserves expanded pages during refresh and cleanup.
 
 `RECORDING_RETENTION_DAYS` defaults to 14, capped at 365. A recording receives a durable expiration time. Complete and failed recordings can be removed by an owner, admin, or room creator using `DELETE /api/workspaces/:w/recordings/:id`.
 

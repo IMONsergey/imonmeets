@@ -60,18 +60,90 @@ export function Recordings({ workspace, config, notify }: PageProps) {
     id: string;
     url: string;
   }>();
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [loading, setLoading] = useState<"" | "refresh" | "append" | "poll">(
+    "",
+  );
+  const cursor = useRef<string | null>(null);
+  const loadedPages = useRef(1);
+  const request = useRef<AbortController | null>(null);
+  const currentWorkspace = useRef(workspace.id);
+  currentWorkspace.current = workspace.id;
   const load = useCallback(
-    () =>
-      api<{ recordings: Recording[] }>(`/workspaces/${workspace.id}/recordings`)
-        .then((r) => {
-          setRecordings(r.recordings);
-          setError("");
-        })
-        .catch((e) => setError(e.message)),
+    async (mode: "refresh" | "append" | "poll" = "refresh") => {
+      if (currentWorkspace.current !== workspace.id) return;
+      if (mode !== "refresh" && request.current) return;
+      if (mode === "append" && !cursor.current) return;
+      request.current?.abort();
+      const controller = new AbortController();
+      request.current = controller;
+      setLoading(mode);
+      setError("");
+      try {
+        const gathered: Recording[] = [];
+        let before = mode === "append" ? cursor.current : null;
+        let pages = 0;
+        // Refresh only the pages the person has already requested. Background
+        // polling never walks the whole archive or discards expanded history.
+        const count = mode === "append" ? 1 : loadedPages.current;
+        do {
+          const result = await api<{
+            recordings: Recording[];
+            nextCursor?: string | null;
+          }>(
+            `/workspaces/${workspace.id}/recordings${before ? "?before=" + encodeURIComponent(before) : ""}`,
+            undefined,
+            undefined,
+            { signal: controller.signal },
+          );
+          if (controller.signal.aborted || request.current !== controller)
+            return;
+          gathered.push(...result.recordings);
+          before = result.nextCursor ?? null;
+          pages++;
+        } while (before && pages < count);
+        if (currentWorkspace.current !== workspace.id) return;
+        loadedPages.current =
+          mode === "append" ? loadedPages.current + pages : pages;
+        cursor.current = before;
+        setNextCursor(before);
+        setRecordings((previous) =>
+          mode === "append"
+            ? [
+                ...new Map(
+                  [...(previous ?? []), ...gathered].map((row) => [
+                    row.id,
+                    row,
+                  ]),
+                ).values(),
+              ]
+            : gathered,
+        );
+      } catch (error) {
+        if (!controller.signal.aborted && request.current === controller)
+          setError((error as Error).message);
+      } finally {
+        if (request.current === controller) {
+          request.current = null;
+          setLoading("");
+        }
+      }
+    },
     [workspace.id],
   );
   useEffect(() => {
+    loadedPages.current = 1;
+    cursor.current = null;
+    setNextCursor(null);
+    setRecordings(undefined);
+    setDownloadReady(undefined);
+    setDeleting(undefined);
+    setTranscript(undefined);
     void load();
+    return () => {
+      request.current?.abort();
+      request.current = null;
+    };
   }, [load]);
   useEffect(() => {
     if (
@@ -81,7 +153,7 @@ export function Recordings({ workspace, config, notify }: PageProps) {
           r.deletionPending,
       )
     ) {
-      const timer = setInterval(() => void load(), 10000);
+      const timer = setInterval(() => void load("poll"), 10000);
       return () => clearInterval(timer);
     }
   }, [recordings, load]);
@@ -92,7 +164,9 @@ export function Recordings({ workspace, config, notify }: PageProps) {
         title="Записи встреч"
         text="Облачные записи встреч вашего пространства."
       >
-        <Button onClick={() => void load()}>Обновить</Button>
+        <Button busy={loading === "refresh"} onClick={() => void load()}>
+          Обновить
+        </Button>
       </PageHeading>
       <ErrorBox error={error} />
       {!config.recordingConfigured && (
@@ -109,7 +183,10 @@ export function Recordings({ workspace, config, notify }: PageProps) {
           <h2>
             Все записи
             {recordings && (
-              <span className="workspace-count">{recordings.length}</span>
+              <span className="workspace-count">
+                {recordings.length}
+                {nextCursor ? "+" : ""}
+              </span>
             )}
           </h2>
           <span className="workspace-muted">
@@ -263,6 +340,17 @@ export function Recordings({ workspace, config, notify }: PageProps) {
                 </div>
               </div>
             ))}
+            {nextCursor && (
+              <div className="modal-actions">
+                <Button
+                  busy={loading === "append"}
+                  disabled={!!loading || !!busy}
+                  onClick={() => void load("append")}
+                >
+                  Показать еще
+                </Button>
+              </div>
+            )}
           </div>
         ) : error ? (
           <Empty

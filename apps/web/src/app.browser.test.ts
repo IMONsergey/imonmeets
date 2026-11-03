@@ -7,6 +7,7 @@ import { build } from "vite";
 import { chromium, expect } from "@playwright/test";
 import "./suite.browser.test";
 import "./rooms.browser.test";
+import "./recordings.browser.test";
 import "./embed.browser.test";
 import "./identity.browser.test";
 
