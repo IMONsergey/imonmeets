@@ -1,3 +1,4 @@
+import "./public.browser.test";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { fileURLToPath } from "node:url";

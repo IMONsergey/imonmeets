@@ -622,11 +622,9 @@ export async function createApp(
     const kind = (req.params as { kind: string }).kind;
     const docs = c.publicInformation.documents;
     if (!docs || (kind !== "privacy" && kind !== "terms"))
-      return reply
-        .code(404)
-        .send({
-          error: { code: "NOT_FOUND", message: "Документ еще не опубликован." },
-        });
+      return reply.code(404).send({
+        error: { code: "NOT_FOUND", message: "Документ еще не опубликован." },
+      });
     reply.header("Cache-Control", "no-cache");
     return {
       version: docs.version,

@@ -527,7 +527,7 @@ test("OAuth MFA holds back the full session, preserves invitation intent and con
   try {
     const callback = await mockOAuthLogin(h.auth, "mfa-signin");
     assert.equal(
-      h.database.session.length,
+      (h.database.session ?? []).length,
       0,
       "OAuth callback must delete the pre-MFA session",
     );
@@ -561,7 +561,7 @@ test("OAuth MFA holds back the full session, preserves invitation intent and con
       body: JSON.stringify({ code: "000000" }),
     });
     assert.notEqual(denied.status, 200);
-    assert.equal(h.database.session.length, 0);
+    assert.equal((h.database.session ?? []).length, 0);
     const accepted = await authRequest(
       h.auth,
       "two-factor/verify-backup-code",
@@ -579,7 +579,7 @@ test("OAuth MFA holds back the full session, preserves invitation intent and con
       body: JSON.stringify({ code: h.backupCodes[1], trustDevice: false }),
     });
     assert.notEqual(replay.status, 200);
-    assert.equal(h.database.session.length, 1);
+    assert.equal((h.database.session ?? []).length, 1);
   } finally {
     await new Promise<void>((resolve) =>
       h.issuer.server.close(() => resolve()),
@@ -613,7 +613,7 @@ test("OAuth MFA expires pending proof and keeps protected account APIs unavailab
       body: JSON.stringify({ code: h.backupCodes[0], trustDevice: false }),
     });
     assert.notEqual(expired.status, 200);
-    assert.equal(h.database.session.length, 0);
+    assert.equal((h.database.session ?? []).length, 0);
   } finally {
     await new Promise<void>((resolve) =>
       h.issuer.server.close(() => resolve()),
