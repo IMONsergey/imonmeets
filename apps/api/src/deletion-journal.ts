@@ -445,6 +445,12 @@ export class DeletionJournal {
     private genesis: Envelope<z.infer<typeof genesisSchema>>,
     private request: typeof fetch,
   ) {}
+  get identity() {
+    return {
+      journalId: this.genesis.body.journalId,
+      genesisSha256: digest(this.genesis),
+    };
+  }
   get directory() {
     return this.config.directory;
   }

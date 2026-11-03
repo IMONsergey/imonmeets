@@ -8,7 +8,12 @@ import { once } from "node:events";
 import { Readable } from "node:stream";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { createWitnessStore, createWitnessServer, digest } from "./server.mjs";
+import {
+  initializeWitnessStorage,
+  createWitnessStore,
+  createWitnessServer,
+  digest,
+} from "./server.mjs";
 import {
   initializeDeletionJournal,
   openDeletionJournal,
@@ -39,14 +44,16 @@ test(
     );
     const genesis = JSON.parse(genesisRaw);
     const pair = generateKeyPairSync("ed25519");
-    const store = await createWitnessStore({
+    const receiverConfig = {
       directory: receiverDirectory,
       journalId: genesis.body.journalId,
       genesisSha256: digest(genesis),
       genesis,
       journalKey: config.key,
       signingKey: pair.privateKey.export({ type: "pkcs8", format: "pem" }),
-    });
+    };
+    await initializeWitnessStorage(receiverConfig);
+    const store = await createWitnessStore(receiverConfig);
     const certPath = path.join(root, "tls-cert.pem"),
       keyPath = path.join(root, "tls-key.pem");
     execFileSync(
@@ -209,6 +216,7 @@ test(
     assert.equal(state.ok, true);
     assert.equal(state.proofValid, true);
     assert.equal(state.journalComplete, true);
+    assert.equal(state.capacityAvailable, true);
     assert.equal(JSON.stringify(state).includes(genesis.body.journalId), false);
     assert.equal(JSON.stringify(state).includes("synthetic_user"), false);
     assert.equal(JSON.stringify(state).includes(config.key), false);

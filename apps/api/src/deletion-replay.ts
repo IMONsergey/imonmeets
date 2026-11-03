@@ -1,3 +1,4 @@
+import { ensureDeletionJournalBinding } from "./deletion-binding.js";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
 import { EgressStatus } from "livekit-server-sdk";
 import { transaction } from "./db.js";
@@ -341,6 +342,7 @@ export async function replayDeletionJournal(
   ).rows[0];
   if (!relations?.ready)
     throw new Error("Apply database migrations before deletion recovery");
+  await ensureDeletionJournalBinding(pool, journal.identity);
   const snapshot = await journal.snapshot();
   const independentlyProtected = await journal.verifyIndependentCheckpoint(
     snapshot,

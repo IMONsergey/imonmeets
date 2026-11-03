@@ -1,3 +1,4 @@
+import { deletionBindingSchema } from "./deletion-binding-schema.js";
 import { operationReviewSchema } from "./operation-review-schema.js";
 import { Pool, type PoolClient } from "pg";
 import { moderationSchema } from "./moderation-schema.js";
@@ -54,6 +55,7 @@ ${moderationSchema}
 ${billingSchema}
 ${operationReviewSchema}
 ${analysisSchema}
+${deletionBindingSchema}
 `;
 export async function transaction<T>(
   pool: Pool,

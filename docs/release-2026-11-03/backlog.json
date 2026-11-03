@@ -12,7 +12,9 @@
       "task": "Зафиксировать состав первого продаваемого продукта",
       "acceptance": "Утверждены покупатель, сценарий, включенные функции, языки, ограничения, поддерживаемые устройства; обещания сайта совпадают с приемкой",
       "dependsOn": "-",
-      "evidence": "E01,E05,E10"
+      "evidence": "E01,E05,E10",
+      "implementationStatus": "Решение владельца",
+      "implementationNote": "Цель полного продукта сохранена. Состав первого платного предложения нужно зафиксировать отдельно от экспериментального перевода."
     },
     {
       "id": "REL-02",
@@ -23,7 +25,9 @@
       "task": "Свести фактический деплой, ветки и документацию",
       "acceptance": "Один release manifest связывает Git SHA, image digest, миграции, config hash, приемку; изменения auth не теряются при сборке из main",
       "dependsOn": "-",
-      "evidence": "E01,E09"
+      "evidence": "E01,E09",
+      "implementationStatus": "Итоговая интеграция и приемка",
+      "implementationNote": "Доступ Desktop Commander восстановлен. Общая ветка объединяется; подготовлены archive-bound build receipt и immutable image identity. Итоговый build должен быть подтвержден результатом текущего прогона."
     },
     {
       "id": "REL-03",
@@ -34,7 +38,9 @@
       "task": "Исправить commercial-readiness checker",
       "acceptance": "Resend признается транспортом; доказательства привязаны к версии и конфигурации, имеют срок актуальности; неизвестное не выдается за PASS",
       "dependsOn": "REL-02",
-      "evidence": "E04,E14"
+      "evidence": "E04,E14",
+      "implementationStatus": "Код проверен",
+      "implementationNote": "Readiness учитывает Resend, реальное получение писем, стандартный443, точный release/config, документы и независимый журнал удалений. Неизвестное сохраняет запрет запуска."
     },
     {
       "id": "REL-04",
@@ -45,7 +51,9 @@
       "task": "Утвердить измеримые пределы тарифа",
       "acceptance": "Для каждого тарифа указаны одновременные комнаты, участники, качество, запись, хранение, перевод; пределы подтверждены измерениями",
       "dependsOn": "CALL-06,REC-03,TR-18",
-      "evidence": "E02,E15"
+      "evidence": "E02,E15",
+      "implementationStatus": "Открыто",
+      "implementationNote": "Продаваемые лимиты участников, комнат, записи и перевода не подтверждены нагрузкой."
     },
     {
       "id": "REL-05",
@@ -56,7 +64,9 @@
       "task": "Провести итоговую приемку точной продаваемой версии",
       "acceptance": "В реестре нет открытых P0 для выбранных функций; сохранены результаты сценариев, rollback и ответственный за запуск",
       "dependsOn": "Все P0 выбранного scope",
-      "evidence": "E04"
+      "evidence": "E04",
+      "implementationStatus": "Общая приемка выполняется",
+      "implementationNote": "Запускается итоговый общий прогон. Внешние и продуктовые P0 остаются отдельными условиями production запуска."
     },
     {
       "id": "REL-06",
@@ -78,7 +88,9 @@
       "task": "Выбрать схему HTTPS и TURN на 443",
       "acceptance": "Проверены дополнительный IPv4, стоимость, host bindings VPN и откат; утвержден маршрут для HTTP/WSS и TURN/TLS, без конфликта сокетов",
       "dependsOn": "LEG-01",
-      "evidence": "E02,E03"
+      "evidence": "E02,E03",
+      "implementationStatus": "Конфигурация подготовлена",
+      "implementationNote": "Отдельный IPv4, SNI для HTTPS/WSS/TURN443, сохранение текущего VPN listener. Доступность и цена адреса не подтверждены."
     },
     {
       "id": "NET-02",
@@ -89,7 +101,9 @@
       "task": "Перевести публичный сайт на https://meets.imon.world",
       "acceptance": "Валидный TLS на 443, HTTP перенаправляется на канонический HTTPS, :8443 не нужен пользователю, VPN проходит отдельную проверку",
       "dependsOn": "NET-01",
-      "evidence": "E03"
+      "evidence": "E03",
+      "implementationStatus": "Ожидает инфраструктуру",
+      "implementationNote": "Генератор канонического HTTPS готов. Рабочий сайт еще не переведен с8443 на443."
     },
     {
       "id": "NET-03",
@@ -100,7 +114,9 @@
       "task": "Перевести media, TURN и downloads на собственные имена",
       "acceptance": "Собственные rtc/turn/assets домены, сертификаты и advertised URLs; WSS, TURN/TLS и S3 signed downloads работают; SigV4 проверен с точным новым host; sslip.io не нужен клиенту",
       "dependsOn": "NET-01",
-      "evidence": "E02"
+      "evidence": "E02",
+      "implementationStatus": "Конфигурация подготовлена",
+      "implementationNote": "Подготовлены отдельные web/rtc/turn/storage hostnames, безопасный signed-download proxy и TURN/TLS443. DNS, SAN TLS и внешняя приемка впереди."
     },
     {
       "id": "NET-04",
@@ -111,7 +127,9 @@
       "task": "Обновить все ссылки и доверенные origins",
       "acceptance": "APP_URL, cookie scope, CORS/CSRF, invite/reset/verify, SDK, OAuth и Vercel согласованы; старые ссылки имеют понятную миграцию",
       "dependsOn": "NET-02,NET-03",
-      "evidence": "E05,E07"
+      "evidence": "E05,E07",
+      "implementationStatus": "Частично",
+      "implementationNote": "Кандидат требует стандартные HTTPS/WSS origins; действующие OAuth, внешние приглашения, SDK и production env еще нужно перенести и принять."
     },
     {
       "id": "NET-05",
@@ -122,7 +140,9 @@
       "task": "Принять звонки при полностью закрытом UDP",
       "acceptance": "На внешней ограниченной сети есть настоящий relay через TCP/TLS443, звук и экран работают; ICE transport подтвержден диагностикой",
       "dependsOn": "NET-03",
-      "evidence": "E15"
+      "evidence": "E15",
+      "implementationStatus": "Открыто",
+      "implementationNote": "Настоящий внешний relay при закрытом UDP не проверен."
     },
     {
       "id": "NET-06",
@@ -133,7 +153,9 @@
       "task": "Сохранить реальный client IP и ограничения доступа",
       "acceptance": "L4/L7 proxy chain доверяет только своим адресам; PROXY/XFF не подделываются; лимиты не видят всех клиентов как localhost",
       "dependsOn": "NET-01",
-      "evidence": "E07"
+      "evidence": "E07",
+      "implementationStatus": "Кандидат проверен",
+      "implementationNote": "Реальные nginx/HAProxy подтвердили PROXYv2, замену поддельных forwarded headers и закрытый admission. Публичная цепочка еще не установлена."
     },
     {
       "id": "NET-07",
@@ -188,7 +210,9 @@
       "task": "Добавить повторную проверку личности для Google-only аккаунтов",
       "acceptance": "Удаление, передача владения и управление MFA доступны после свежего provider reauth или другой принятой step-up проверки, без несуществующего пароля",
       "dependsOn": "AUTH-03",
-      "evidence": "E07"
+      "evidence": "E07",
+      "implementationStatus": "Код проверен",
+      "implementationNote": "Google-only пользователь может добавить пароль через одноразовое подтверждение текущего verified email, связанное с конкретной сессией; остальные сессии отзываются."
     },
     {
       "id": "AUTH-05",
@@ -199,7 +223,9 @@
       "task": "Согласовать Google OAuth с локальной MFA",
       "acceptance": "Политика определена и реализована для всех методов входа; OAuth callback не обходит обещанную пользователю MFA; есть acceptance тест",
       "dependsOn": "AUTH-03",
-      "evidence": "E07"
+      "evidence": "E07",
+      "implementationStatus": "Код проверен",
+      "implementationNote": "OAuth callback не выдает полноценную сессию до локальной MFA; закрыт обход второго фактора, проверены replay/expiry/remember-device."
     },
     {
       "id": "AUTH-06",
@@ -210,7 +236,9 @@
       "task": "Принять безопасное связывание и восстановление аккаунтов",
       "acceptance": "Проверены существующий email, linking/unlinking, отказ Google, revoked grant, потеря MFA, повторный callback; нет захвата чужого аккаунта",
       "dependsOn": "AUTH-04,AUTH-05",
-      "evidence": "E07"
+      "evidence": "E07",
+      "implementationStatus": "Частично",
+      "implementationNote": "Расширена локальная auth-приемка. Реальный Google client/callback/link/revoke на каноническом домене еще не принят."
     },
     {
       "id": "AUTH-07",
@@ -221,7 +249,9 @@
       "task": "Принять существующие MFA и сессии",
       "acceptance": "Включение, recovery codes, повторное использование, часы, disable, отзыв устройств и истечение сессии проверены на текущей версии",
       "dependsOn": "AUTH-01",
-      "evidence": "E07,E09"
+      "evidence": "E07,E09",
+      "implementationStatus": "Частично",
+      "implementationNote": "MFA, recovery, сессии и интерфейс проверены локально; действующие устройства владельца и production-вход впереди."
     },
     {
       "id": "MAIL-01",
@@ -232,7 +262,9 @@
       "task": "Отделить попытку запроса от расхода квоты отправки",
       "acceptance": "Запросы reset для несуществующих адресов не исчерпывают 45 реальных писем; бюджет резервируется идемпотентно для отправляемого письма, abuse cap остается",
       "dependsOn": "-",
-      "evidence": "E07"
+      "evidence": "E07",
+      "implementationStatus": "Код проверен",
+      "implementationNote": "Квота резервируется на логическую отправку; неизвестный reset-адрес и дубль не расходуют дополнительные реальные письма; конкурентный последний слот сериализован."
     },
     {
       "id": "MAIL-02",
@@ -265,7 +297,9 @@
       "task": "Добавить статус доставки и обработку bounce",
       "acceptance": "Доставка, ошибка, bounce/suppression и квоты видны оператору; sending/uncertain безопасно сверяются по provider evidence и idempotency key, ledger завершается без двойной отправки; созданный invite не считается автоматически доставленным",
       "dependsOn": "MAIL-03",
-      "evidence": "E07"
+      "evidence": "E07",
+      "implementationStatus": "Частично",
+      "implementationNote": "Durable ledger, deterministic message ID и безопасная сверка uncertain-доставки готовы. Реальные inbox/bounce/suppression и эксплуатация транспорта еще требуют приемки."
     },
     {
       "id": "CALL-01",
@@ -276,7 +310,9 @@
       "task": "Переработать общий IP rate limit и polling",
       "acceptance": "Законные участники из одной офисной NAT не получают 429 от chat/waiting polls; пользовательские лимиты отделены от coarse IP защиты",
       "dependsOn": "NET-06",
-      "evidence": "E07,E08"
+      "evidence": "E07,E08",
+      "implementationStatus": "Код проверен",
+      "implementationNote": "Пересмотрены общий IP budget и персональные poll limits; добавлены backoff и разделение защиты от офисной NAT-нагрузки."
     },
     {
       "id": "CALL-02",
@@ -287,7 +323,9 @@
       "task": "Определить и исправить квоту комнат",
       "acceptance": "Закрытая/архивная комната не блокирует нормальную работу навсегда; есть архив/удаление и согласованное поведение истории и тарифа",
       "dependsOn": "REL-04,DATA-02",
-      "evidence": "E07"
+      "evidence": "E07",
+      "implementationStatus": "Код проверен",
+      "implementationNote": "Квота относится к открытым комнатам, добавлены архив/восстановление и ограниченная выдача списка с сохранением истории."
     },
     {
       "id": "CALL-03",
@@ -298,7 +336,9 @@
       "task": "Добавить точечное удаление и блокировку гостя",
       "acceptance": "Организатор может удалить нарушителя и запретить повторный вход с прежними полномочиями; остальные участники остаются в звонке",
       "dependsOn": "-",
-      "evidence": "E17"
+      "evidence": "E17",
+      "implementationStatus": "Код и сигнализация проверены",
+      "implementationNote": "Kick/ban, отзыв identity и защита четырех LiveKit endpoints прошли на настоящем SFU. Полный media сценарий отдельно не засчитан. Требуются включенный signaling authorization и отсутствие прямого публичного обхода защищенного ingress; production-контур еще не установлен."
     },
     {
       "id": "CALL-04",
@@ -309,7 +349,9 @@
       "task": "Принять реальный аудио/видеозвонок и экран",
       "acceptance": "Два и более внешних клиента: камера, звук, демонстрация, смена устройств, mute, permissions, organizer controls и завершение без потери состояния",
       "dependsOn": "NET-03",
-      "evidence": "E05,E15"
+      "evidence": "E05,E15",
+      "implementationStatus": "Открыто",
+      "implementationNote": "Проверены настоящие signaling participants; установление синтетического video peer connection в изоляции не принято. Внешние звук/видео/экран обязательны."
     },
     {
       "id": "CALL-05",
@@ -353,7 +395,9 @@
       "task": "Принять waiting room, роли и гонки доступа",
       "acceptance": "Admission, revoke, rotation links, removal member и host permissions проверены конкурентно; старые tokens не возвращают доступ",
       "dependsOn": "CALL-03",
-      "evidence": "E07,E09"
+      "evidence": "E07,E09",
+      "implementationStatus": "Частично",
+      "implementationNote": "Реальная сигнализация проверила старые grants/identity, ротацию поколения, waiting без JWT и failclosed503. Полная внешняя приемка ролей и media впереди."
     },
     {
       "id": "CALL-09",
@@ -386,7 +430,9 @@
       "task": "Сделать восстановление uncertain Egress управляемым",
       "acceptance": "После неопределенного старта оператор безопасно сверяет внешний Egress и снимает/подтверждает reservation; нет вечной блокировки max1 и двойной записи",
       "dependsOn": "REC-01",
-      "evidence": "E17"
+      "evidence": "E17",
+      "implementationStatus": "Код проверен, провайдерская приемка",
+      "implementationNote": "Preview/apply reconciliation использует новый canonical provider read, role/row locks и exact room generation/object key. Отсутствие записи в list не выдается за доказанный отказ."
     },
     {
       "id": "REC-03",
@@ -452,7 +498,9 @@
       "task": "Определить приватность внутри workspace",
       "acceptance": "Явно утверждено, видят ли все members все комнаты/чаты/записи; если нужны приватные встречи, реализован ACL и миграция",
       "dependsOn": "REL-01",
-      "evidence": "E17"
+      "evidence": "E17",
+      "implementationStatus": "Решение владельца",
+      "implementationNote": "Текущая workspace-wide видимость явно объяснена в помощи. Приватные meeting ACL и миграция еще не реализованы."
     },
     {
       "id": "DATA-02",
@@ -463,7 +511,9 @@
       "task": "Сделать удаления устойчивыми к восстановлению backup",
       "acceptance": "Независимый deletion ledger и процедура replay исключают возвращение удаленных аккаунтов, записей и текстов после restore",
       "dependsOn": "OPS-01",
-      "evidence": "E17"
+      "evidence": "E17",
+      "implementationStatus": "Интеграция подготовленного кода",
+      "implementationNote": "37 journal/replay проверок с настоящим pg_dump/restore прошли отдельно. DB binding и receiver high-water включаются в общий прогон; независимое размещение и полный DR еще впереди."
     },
     {
       "id": "DATA-03",
@@ -474,7 +524,9 @@
       "task": "Принять export/delete/transfer ownership",
       "acceptance": "Проверены состав экспорта, права, конфликты оплаты/записи, удаление связанных данных и восстановление после сбоя; Google-only покрыт при включении",
       "dependsOn": "DATA-02,AUTH-04",
-      "evidence": "E07,E08"
+      "evidence": "E07,E08",
+      "implementationStatus": "Частично",
+      "implementationNote": "Проверены ручные удаления и связанные auth/ownership сценарии, включая настоящий pg_dump/restore. Полная production export/delete/transfer приемка впереди."
     },
     {
       "id": "SEC-01",
@@ -485,7 +537,9 @@
       "task": "Провести targeted security acceptance текущего релиза",
       "acceptance": "Tenant isolation, IDOR, CSRF/CORS, XSS в чате/названиях, webhook auth/replay, токены записей, role races и proxy trust проверены без атак на production",
       "dependsOn": "REL-02,NET-06",
-      "evidence": "E07,E09"
+      "evidence": "E07,E09",
+      "implementationStatus": "Частично",
+      "implementationNote": "Проверены MFA, tenant/role/provider guards, отзыв grants, proxy trust и replay границы. Это не итоговая security-приемка всех продаваемых функций."
     },
     {
       "id": "SEC-02",
@@ -496,7 +550,9 @@
       "task": "Проверить секреты, зависимости и происхождение сборки",
       "acceptance": "Нет секретов в Git/image/frontend/logs; проведен актуальный audit/SBOM, закреплены images и модели; ротация документирована",
       "dependsOn": "REL-02",
-      "evidence": "E01"
+      "evidence": "E01",
+      "implementationStatus": "Частично",
+      "implementationNote": "Закреплены модели/образы и source provenance, обязательный archive-bound build receipt, приватные deployment файлы исключены из build context. Полная production secrets/SBOM/rotation приемка впереди."
     },
     {
       "id": "SEC-03",
@@ -540,7 +596,9 @@
       "task": "Выполнить восстановление на чистом окружении",
       "acceptance": "Восстановлены БД, медиа, конфигурация и ключи доступа из контролируемого набора; измерены RPO/RTO, применены удаления; проверены перезагрузка и отсутствие recording mount, при пропаже mount запись медиа в корневую файловую систему запрещена",
       "dependsOn": "OPS-01,DATA-02",
-      "evidence": "E13"
+      "evidence": "E13",
+      "implementationStatus": "Частично",
+      "implementationNote": "Восстановление старого DB snapshot и replay ручных удалений проверены в изоляции. Восстановление всего сервиса и медиа после реальной потери узла еще не принято."
     },
     {
       "id": "OPS-03",
@@ -562,7 +620,9 @@
       "task": "Принять deploy, rollback и миграции",
       "acceptance": "По точному manifest выполнены rehearsal и возврат; активные звонки/записи корректно drain, схемы БД совместимы с откатом",
       "dependsOn": "REL-02",
-      "evidence": "E01,E13"
+      "evidence": "E01,E13",
+      "implementationStatus": "Частично",
+      "implementationNote": "Подготовлены archive-bound build и release manifest. Итоговый образ не собран; production rollout/drain/rollback с новыми prerequisites журнала не выполнены."
     },
     {
       "id": "OPS-05",
@@ -573,7 +633,9 @@
       "task": "Подготовить эксплуатационные инструкции и поддержку",
       "acceptance": "Есть действия при падении media/БД, заполнении диска, зависшем платеже/записи, утечке и отказе транспорта; определены контакты и часы поддержки",
       "dependsOn": "PAY-03,REC-02,OPS-03",
-      "evidence": "E17"
+      "evidence": "E17",
+      "implementationStatus": "Частично",
+      "implementationNote": "Написаны инструкции по почте, платежам, Egress, моделям, ingress, release identity и журналу. Контакты, график поддержки и независимое дежурство еще не определены."
     },
     {
       "id": "OPS-06",
@@ -617,7 +679,9 @@
       "task": "Разрешать зависшие платежи без повторного списания",
       "acceptance": "Неопределенный платеж без provider_id имеет безопасный admin reconcile с audit; резерв не блокирует workspace навсегда",
       "dependsOn": "PAY-02",
-      "evidence": "E17"
+      "evidence": "E17",
+      "implementationStatus": "Код проверен",
+      "implementationNote": "Preview/apply с новым canonical read, idempotence key и повторной проверкой роли/версии. Старые неизвестные платежи не создают новое списание."
     },
     {
       "id": "PAY-04",
@@ -628,7 +692,9 @@
       "task": "Сверять возвраты и успешно оплаченные заказы",
       "acceptance": "Потерянный webhook о refund обнаруживается периодической сверкой; определены частичный возврат, chargeback и entitlement transitions",
       "dependsOn": "PAY-03",
-      "evidence": "E17"
+      "evidence": "E17",
+      "implementationStatus": "Код проверен",
+      "implementationNote": "Успешные заказы периодически сверяются; частичный refund отличается от полного, выдача/отзыв права идемпотентны и не снимают последующие продления."
     },
     {
       "id": "PAY-05",
@@ -672,7 +738,9 @@
       "task": "Опубликовать реальные условия и политику данных",
       "acceptance": "Публичные homepage/privacy/terms/оферта с реквизитами, контактами, retention, записью/AI, оплатой/возвратами; нет placeholders; версии согласий фиксируются",
       "dependsOn": "LEG-01,PAY-01,DATA-01",
-      "evidence": "E06,E08,E17"
+      "evidence": "E06,E08,E17",
+      "implementationStatus": "Механизм публикации готов",
+      "implementationNote": "Условия и политика публикуются только из явно одобренного manifest с точным SHA, оператором и версией. Реальные юридические тексты и решение оператора не созданы за владельца."
     },
     {
       "id": "LEG-03",
@@ -694,7 +762,9 @@
       "task": "Подготовить публичный продуктовый сайт",
       "acceptance": "Ясные сценарии, реальные ограничения, тарифы, поддержка, privacy/terms, доступная форма входа; unknown route показывает 404 вместо dashboard",
       "dependsOn": "REL-01,LEG-02",
-      "evidence": "E05,E08"
+      "evidence": "E05,E08",
+      "implementationStatus": "Код проверен",
+      "implementationNote": "Добавлены публичная главная, о сервисе, помощь, документы/закрытое состояние и404; нет обещания непринятого голосового перевода."
     },
     {
       "id": "UX-01",
@@ -705,7 +775,9 @@
       "task": "Привести статусы функций к пользовательскому смыслу",
       "acceptance": "Различаются возможность сервера, доступность тарифа и личная настройка; MFA configured не означает MFA включена, beta/недоступные функции обозначены",
       "dependsOn": "REL-01",
-      "evidence": "E05"
+      "evidence": "E05",
+      "implementationStatus": "Частично",
+      "implementationNote": "Личный статус MFA отделен от доступности сервиса; capability states и ограничения функций приведены к фактической конфигурации."
     },
     {
       "id": "UX-02",
@@ -716,7 +788,9 @@
       "task": "Доработать пустые, ошибочные и закрытые состояния",
       "acceptance": "У закрытой регистрации есть контакт/действие; ошибки сети и квот объясняют выход; нет внутренних инструкций обратиться к администратору сервера без контакта",
       "dependsOn": "REL-06",
-      "evidence": "E05"
+      "evidence": "E05",
+      "implementationStatus": "Частично",
+      "implementationNote": "Улучшены закрытая регистрация, неизвестная страница, отсутствие опубликованных документов, архив и ошибки доступа. Полный UX-аудит всех отказов остается."
     },
     {
       "id": "UX-03",
@@ -727,7 +801,9 @@
       "task": "Принять доступность и адаптивность основных сценариев",
       "acceptance": "Клавиатура, focus, screen reader, контраст, zoom, 320-390px и длинные тексты проверены; активная вкладка настроек видна при горизонтальной прокрутке",
       "dependsOn": "CALL-07",
-      "evidence": "E05"
+      "evidence": "E05",
+      "implementationStatus": "Частично",
+      "implementationNote": "Проверены Chromium, mobile320px, видимость активной вкладки настроек и безопасный plain-text legal rendering. Реальная матрица устройств и полная доступность впереди."
     },
     {
       "id": "UX-04",
@@ -738,7 +814,9 @@
       "task": "Завершить языки, тексты и помощь",
       "acceptance": "Склонения, timezone labels, единые термины, поддерживаемые UI языки, инструкции разрешений и FAQ согласованы с фактическими возможностями",
       "dependsOn": "REL-01",
-      "evidence": "E05"
+      "evidence": "E05",
+      "implementationStatus": "Частично",
+      "implementationNote": "Добавлена помощь по входу, приватности пространства и ограничениям AI. Полная локализация и пользовательская редактура впереди."
     },
     {
       "id": "AI-01",
@@ -749,7 +827,9 @@
       "task": "Фиксировать реальные модели analysis worker",
       "acceptance": "Ответ worker содержит hash фактически загруженного артефакта; модель, ресурсы, очередь и лимит длительности соответствуют заявленным сценариям",
       "dependsOn": "SEC-02",
-      "evidence": "E17"
+      "evidence": "E17",
+      "implementationStatus": "Код проверен",
+      "implementationNote": "Worker проверяет hashes реальных файлов; GGUF launcher удерживает измеренный artifact и проверяет alias/model в ответах. Реальные deployment images/cold load еще не приняты."
     },
     {
       "id": "AI-02",
@@ -771,7 +851,9 @@
       "task": "Принять SDK как отдельный контракт",
       "acceptance": "Собственный внешний origin, least privilege tokens, allowed origins, versioning, ошибки, revoke, примеры и документация подтверждены; доступ не шире web UI",
       "dependsOn": "NET-04,SEC-01",
-      "evidence": "E09"
+      "evidence": "E09",
+      "implementationStatus": "Частично",
+      "implementationNote": "SDK regression и hosted iframe сценарии проходят локально. Внешний origin на новом каноническом домене и контракт продаваемой интеграции еще требуют приемки."
     },
     {
       "id": "INT-02",
@@ -793,7 +875,9 @@
       "task": "Сохранить текущую подготовку",
       "acceptance": "Tools и manifest/lineage доказательства закреплены в воспроизводимом checkpoint; окружение не коммитить; hashes совпадают; никакого пересоздания выборки",
       "dependsOn": "REL-02",
-      "evidence": "E10,E11,E12"
+      "evidence": "E10,E11,E12",
+      "implementationStatus": "Выполнено",
+      "implementationNote": "Экспериментальная ветка сохранена, final HEAD ff685fbc9b9dcc3b39efe48dd21b9bb1b6e65c4d; model/audio bytes не добавлены в Git."
     },
     {
       "id": "TR-02",
@@ -804,7 +888,9 @@
       "task": "Довести exact artifact lineage",
       "acceptance": "Для каждого загружаемого MT/ASR/TTS artifact есть revision, SHA-256, upstream, license text, attribution, решение о применимости",
       "dependsOn": "TR-01",
-      "evidence": "E10,E11,E12"
+      "evidence": "E10,E11,E12",
+      "implementationStatus": "Частично",
+      "implementationNote": "Записаны exact artifacts и provenance. Правовая цепочка четырех TTS voices остается неподтвержденной."
     },
     {
       "id": "TR-03",
@@ -815,7 +901,9 @@
       "task": "Выбрать допустимые MT candidates",
       "acceptance": "Нет NC/unknown модели в продакшен-наборе; сравниваются действительно разные checkpoints либо явно wrapper/conversion",
       "dependsOn": "TR-02",
-      "evidence": "E10,E11,E12"
+      "evidence": "E10,E11,E12",
+      "implementationStatus": "Эксперимент выполнен",
+      "implementationNote": "Проверены шесть прямых MT направлений из официальных original artifacts, без unsafe pickle/remote-code. Выбор коммерческого качества не закрыт."
     },
     {
       "id": "TR-04",
@@ -826,7 +914,9 @@
       "task": "Реальный MT40 gold experiment",
       "acceptance": "Все выбранные 40 IDs по заявленным направлениям + авторские критические cases; сохранены input/output, target token, model hash, время, errors; bounded jobs с продолжением по направлению",
       "dependsOn": "TR-03",
-      "evidence": "E10,E11,E12"
+      "evidence": "E10,E11,E12",
+      "implementationStatus": "Эксперимент выполнен",
+      "implementationNote": "331 исходный output:240 на фиксированных FLEURS gold IDs и91 авторский/регрессионный; дополнительно331 same-model ablation и72 heldout outputs."
     },
     {
       "id": "TR-05",
@@ -837,7 +927,9 @@
       "task": "Разобрать качество MT",
       "acceptance": "Билингвальная проверка отрицаний/чисел/валют/имен/смысловых пропусков; все известные критические regressions закрыты; никакого «PASS» только по BLEU/chrF",
       "dependsOn": "TR-04",
-      "evidence": "E10,E11,E12"
+      "evidence": "E10,E11,E12",
+      "implementationStatus": "Качество не принято",
+      "implementationNote": "Зафиксированы потери отмены/самокоррекции, искажения сумм/валют/времени. Сегментация помогает части предложений, но не устраняет критические ошибки."
     },
     {
       "id": "TR-06",
@@ -848,7 +940,9 @@
       "task": "Реальный ASR audio experiment",
       "acceptance": "Существующая selection_manifest использована без изменения; получены и захешированы нужные клипы; WER/CER по языкам, ошибки entities/negation, timestamps и latency",
       "dependsOn": "TR-01,TR-05",
-      "evidence": "E10,E11,E12"
+      "evidence": "E10,E11,E12",
+      "implementationStatus": "Эксперимент выполнен",
+      "implementationNote": "160 фиксированных WAV, две ASR модели,320 результатов. WER/CER/p95/RTF измерены; это не streaming latency и не шумные живые совещания."
     },
     {
       "id": "TR-07",
@@ -870,7 +964,9 @@
       "task": "Коммерчески допустимые голоса",
       "acceptance": "На каждый продаваемый язык есть проверенные weights/data terms; отдельный listening test произношения имен/чисел/денег",
       "dependsOn": "TR-02",
-      "evidence": "E10,E11,E12"
+      "evidence": "E10,E11,E12",
+      "implementationStatus": "Заблокировано правами и приемкой",
+      "implementationNote": "Четыре голоса не допущены к коммерческому включению; TTS inference и listening acceptance не заявляются."
     },
     {
       "id": "TR-09",
@@ -892,7 +988,9 @@
       "task": "Изолируемое выполнение моделей",
       "acceptance": "Stage deadlines; зависшая модель не удерживает worker навсегда; cancel закрывает процесс/ресурсы в установленное время; нет поздней публикации",
       "dependsOn": "TR-09",
-      "evidence": "E10,E11,E12"
+      "evidence": "E10,E11,E12",
+      "implementationStatus": "Частично",
+      "implementationNote": "56 control tests,12 real audio→ASR→MT traces и4 отмены прогретого worker/PID reap. Native decoder entry marker отдельно не снимался; production stage lifecycle впереди."
     },
     {
       "id": "TR-11",
@@ -969,7 +1067,9 @@
       "task": "Измерить latency",
       "acceptance": "p50/p95/p99 до первого transcript, final transcript, first translated text/audio; cold/warm и разные длины фраз; отдельно очередь и inference",
       "dependsOn": "TR-10,TR-14",
-      "evidence": "E10,E11,E12"
+      "evidence": "E10,E11,E12",
+      "implementationStatus": "Частично",
+      "implementationNote": "Измерена обработка целых WAV и text MT. p95/p99 до первого streaming transcript/audio в реальном звонке еще не измерены."
     },
     {
       "id": "TR-18",
@@ -1035,7 +1135,9 @@
       "task": "Ограниченный pilot",
       "acceptance": "Носители языков проверили заявленные пары; зафиксированы незакрытые ошибки и подтвержденная емкость; продуктовая формулировка соответствует доказательствам",
       "dependsOn": "TR-05,TR-07,TR-08,TR-18,TR-20,TR-22",
-      "evidence": "E10,E11,E12"
+      "evidence": "E10,E11,E12",
+      "implementationStatus": "Открыто",
+      "implementationNote": "Pilot с носителями языков не начинался; качество, голоса, streaming, емкость и реальные браузеры еще не приняты."
     },
     {
       "id": "TR-24",
@@ -1197,5 +1299,7 @@
     "releaseBranch": "release/commercial-readiness-20261103",
     "authorization": "Взять в работу весь аудит, довести проект до коммерческой готовности",
     "rule": "Закрытие задачи требует commit и приемки; внешние условия не заменяются кодом"
-  }
+  },
+  "implementationUpdatedAt": "2026-11-03T08:13:59.438618+00:00",
+  "productionDeployed": false
 }
