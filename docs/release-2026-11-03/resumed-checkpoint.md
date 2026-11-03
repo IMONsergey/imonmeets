@@ -45,10 +45,10 @@ These later candidates remain on separate branches and are not integrated into r
 
 | Branch | Commit | Focused evidence |
 | --- | --- | --- |
-| fix/google-oauth-scope-guard-20261103 | 34beb48afdc80d369d0242371e0cb2505c186cf5 | 6 pure Google scope-guard tests passed |
+| fix/google-oauth-scope-guard-20261103 | 34beb48afdc80d369d0242371e0cb2505c186cf5 | 6 pure tests and focused handler/provider verification passed |
 | feature/edge-vps-ingress-20261103 | f5eb135d30c650b6a32c39a9d4c8bf124ec9ce19 | 17 pure edge-generator tests passed; runtime pending |
 
-The primary agent independently repeated all 6 Google guard tests and all 17 edge tests successfully. These checks do not replace application-image, provider-handler or real-network acceptance. The focused Google handler/provider job 20261103T124406-02299fe759 remains pending in the normal imon-job queue.
+The primary agent independently repeated all 6 Google guard tests and all 17 edge tests successfully. These pure checks do not replace application-image or real-provider/network acceptance. The normal imon-job queue completed focused Google handler/provider job 20261103T124406-02299fe759 successfully at 2026-11-03T13:30:08.721634Z with exit code 0 and status PASS_FOCUSED_HANDLER_PROVIDER, bound to the exact 34beb48afdc80d369d0242371e0cb2505c186cf5 candidate and eight pinned source hashes. Its output SHA256 is 055b167b340bf86cb6ec25c62329cd6f1f3ed9cbf27efdad1773e1059096637f; see [the focused receipt](../verification/google-oauth-focused-20261103.json). This receipt retains productionChanges:false and externalProviderAcceptance:false.
 
 The edge candidate prepares an external HAProxy on the already-paid VPS address, with original TLS streams forwarded through explicitly declared closed-tunnel endpoints to nginx and coturn on the primary host, plus a separate local witness TLS backend. It does not create the tunnel, select actual tunnel addresses, provide HTTP/ACME bootstrap, change DNS or start services. Real HAProxy/TLS routing, tunnel confinement and failure behavior, resource capacity and external TURN/media remain pending. Desktop Commander rejected a read-only Docker metadata command; runtime validation remains pending. The candidate does not establish that public port 443 is operational.
 
@@ -116,7 +116,7 @@ The user approved Google's policy acceptance. Create branding completed, followe
 
 Transfer of the client's secret into the private Meets configuration has not been completed. Downloading the credential JSON could not be confirmed: the browser tool timed out during the download action, then Chrome disconnected. Two metadata-only inspections of recent files in the standard Downloads location found no matching new credential JSON. This does not establish that the browser downloaded nothing elsewhere. No client identifier or secret is recorded in this checkpoint.
 
-Client creation and policy acceptance do not enable production Google sign-in. Credential custody, the queued handler/provider checks and a controlled login against the final HTTPS origin remain incomplete.
+Client creation and policy acceptance do not enable production Google sign-in. Focused candidate handler/provider verification has passed; credential transfer into private Meets configuration and a controlled real Google login against the final HTTPS origin remain incomplete.
 
 ## Live service and remaining commissioning gates
 
@@ -130,7 +130,7 @@ Next steps, in order:
 2. Establish the witness's intended DNS/TLS endpoint and approved durable authority/key custody. Preserve existing application credentials. Enroll only an actually reviewed writer-fenced legacy baseline; never use the earlier draft's hash as approval.
 3. Render the complete candidate Compose configuration including the existing private runtime overlay and use the new static preflight before changing services.
 4. Perform the controlled migration/deployment and actual independent witness/recovery acceptance. The old 9bb2dab image cannot resume write-capable operation after deletion-authority enrollment.
-5. Complete the existing OAuth client credential transfer into private Meets configuration, finish the queued handler/provider verification and verify a controlled Google login against the canonical final HTTPS origin and callback. Policy acceptance and client creation are already complete; production Google sign-in remains disabled.
+5. Complete the existing OAuth client credential transfer into private Meets configuration, include the reviewed isolated scope-guard candidate in the intended release and verify a controlled real Google login against the canonical final HTTPS origin and callback. Policy acceptance, client creation and focused handler/provider verification are complete; production Google sign-in remains disabled.
 6. Run the updated external TURN443 audio/video/chat proof only in an authorized disposable room, followed by actual constrained-network/device checks.
 7. Complete the still-missing long RoomComposite/S3 recording acceptance. Short WebEgress and padded 512 MiB crypto receipts do not prove 30 minutes of recording.
 8. Resolve the remaining commercial identity/payment/legal and translation-quality/voice gates before enabling those features.

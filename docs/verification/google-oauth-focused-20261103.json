@@ -1,0 +1,35 @@
+{
+  "candidateCommit": "34beb48afdc80d369d0242371e0cb2505c186cf5",
+  "runtime": {
+    "node": "v24.21.0",
+    "binarySha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+    "betterAuth": "1.7.14",
+    "tsx": "4.20.6"
+  },
+  "sourceHashes": {
+    "apps/api/src/google-oauth-policy.ts": "ca6fbd2d0c4b569dea84bc083ea1c895f3efb3458b0023f4c19568dfe8e7bf3c",
+    "apps/api/src/app.ts": "91d37902791e158b5159195667f4057837f819aa192cce6f1775c2743f45d70f",
+    "apps/api/src/auth.ts": "bc4d9be0914585b91506036394f50abf51ae4a52dfdb8542dde8d11c93a4b8ad",
+    "apps/api/test/auth-google.test.ts": "7e3aa3388de5870d5bfbc889c893f78f06ee4d1c2eaa5b4d1f78f52f0afe1d57",
+    "scripts/test-google-oauth-policy.mjs": "691e5a1fbb75b70c6665519f74b59079e58165501f4b9b885fdb113564718270",
+    "package.json": "358febb426cb2a5115f316a38dc5b9feb891c704e2fcc6d775ded94bd8af59f3",
+    ".github/workflows/ci.yml": "f51f7f59244e39cd083ac76f2fef9dc28228ce5e93cba887b300ce4b7d93d349",
+    "docs/google-oauth.md": "07b6c866cd6b5fccf193c60491307221cf78b01267507a831913ddc321b0ba74"
+  },
+  "command": [
+    "/opt/imon-runtime/node/bin/node",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-isolation=none",
+    "--test-reporter=tap",
+    "--test-name-pattern=Google scope policy",
+    "apps/api/test/auth-google.test.ts"
+  ],
+  "exitCode": 0,
+  "completedAt": "2026-11-03T13:30:08.721634+00:00",
+  "outputSha256": "055b167b340bf86cb6ec25c62329cd6f1f3ed9cbf27efdad1773e1059096637f",
+  "status": "PASS_FOCUSED_HANDLER_PROVIDER",
+  "productionChanges": false,
+  "externalProviderAcceptance": false
+}
