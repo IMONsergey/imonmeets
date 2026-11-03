@@ -1,0 +1,18 @@
+{
+  "unit": "imonmeets-mt-mt40-ar-en-20261103T054636Z-4008184",
+  "started_at": "2026-11-03T05:46:36Z",
+  "finished_at": "2026-11-03T05:47:13.217401+00:00",
+  "runtime_max_seconds": 900,
+  "exit_code": 0,
+  "command": [
+    "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/.venv-marian/bin/python",
+    "tools/run_mt40.py",
+    "ar-en"
+  ],
+  "log": "imonmeets-mt-mt40-ar-en-20261103T054636Z-4008184.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}
