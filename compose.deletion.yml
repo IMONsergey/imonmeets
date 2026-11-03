@@ -1,0 +1,7 @@
+# Application-side journal mount. The receiver belongs on an independent host.
+services:
+  app:
+    environment:
+      DELETION_JOURNAL_DIR: /var/lib/imonmeets/deletion-journal
+    volumes:
+      - ${DELETION_JOURNAL_HOST_DIR:?Initialize private durable journal before startup}:/var/lib/imonmeets/deletion-journal

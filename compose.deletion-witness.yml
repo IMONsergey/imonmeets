@@ -1,0 +1,43 @@
+# Standalone deployment on an independently operated host, not an app overlay.
+name: imonmeets-deletion-witness
+services:
+  witness:
+    image: ${WITNESS_IMAGE:?Use an immutable tested witness image}
+    network_mode: host
+    environment:
+      WITNESS_DIRECTORY: /data
+      WITNESS_PORT: "3551"
+      WITNESS_STORAGE_ROLE: ${WITNESS_STORAGE_ROLE:?Approve actual independent durable storage}
+      WITNESS_ALLOWED_JOURNAL_ID: ${WITNESS_ALLOWED_JOURNAL_ID:?Enroll exact journal}
+      WITNESS_ALLOWED_GENESIS_SHA256: ${WITNESS_ALLOWED_GENESIS_SHA256:?Enroll exact canonical genesis hash}
+      WITNESS_GENESIS_PATH: /run/imon/genesis.json
+      WITNESS_SIGNING_KEY_FILE: /run/imon/signing.pem
+      WITNESS_JOURNAL_KEY: ${WITNESS_JOURNAL_KEY:?Provide existing journal verification key}
+      WITNESS_API_TOKEN: ${WITNESS_API_TOKEN:?Provide dedicated application-to-receiver token}
+    volumes:
+      - ${WITNESS_DATA_DIRECTORY:?Prepare private persistent directory}:/data
+      - ${WITNESS_PRIVATE_DIRECTORY:?Prepare private enrolled genesis and signing key}:/run/imon:ro
+    init: true
+    read_only: true
+    tmpfs: [/tmp:size=8m, mode=1777]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    cpus: 0.5
+    mem_limit: 256m
+    restart: unless-stopped
+    stop_grace_period: 15s
+    logging:
+      driver: json-file
+      options: { max-size: "5m", max-file: "2" }
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          "fetch('http://127.0.0.1:3551/health',{headers:{Authorization:'Bearer '+process.env.WITNESS_API_TOKEN}}).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 6s
+      retries: 3

@@ -195,6 +195,12 @@ test(
         page.getByText("Включена у вас", { exact: true }),
       ).toBeVisible();
       await page.goto("https://public.invalid/about");
+      await expect(
+        page.getByRole("heading", {
+          name: "Обсуждайте, показывайте, принимайте решения.",
+        }),
+      ).toBeVisible();
+      await page.evaluate(() => document.fonts.ready);
       assert.ok(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= window.innerWidth,

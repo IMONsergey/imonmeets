@@ -13,6 +13,13 @@ const present = (value) => typeof value === "string" && value.trim().length > 0;
 const releaseFields = ["RELEASE_COMMIT", "RELEASE_IMAGE_DIGEST"];
 const emailProvider = (env) => env.EMAIL_PROVIDER || "smtp";
 const fields = {
+  deletion: [
+    "APP_URL",
+    "DELETION_JOURNAL_DIR",
+    "DELETION_RESTORE_REQUIRED",
+    "DELETION_WITNESS_URL",
+    "DELETION_WITNESS_PUBLIC_KEY",
+  ],
   legal: [
     "APP_URL",
     "PUBLIC_LEGAL_APPROVED",
@@ -108,6 +115,7 @@ export function evaluateReadiness({
   mail,
   offsite,
   alerts,
+  deletion,
   acceptance = {},
   now = Date.now(),
 } = {}) {
@@ -181,6 +189,56 @@ export function evaluateReadiness({
     publicBlockers.push("APPROVED_PUBLIC_DOCUMENTS_AND_SUPPORT_REQUIRED");
   if (!legalAccepted)
     publicBlockers.push("PUBLIC_DOCUMENTS_ACCEPTANCE_REQUIRED");
+  let deletionEndpoint = false;
+  try {
+    const url = new URL(env.DELETION_WITNESS_URL);
+    deletionEndpoint =
+      url.protocol === "https:" &&
+      !url.username &&
+      !url.password &&
+      !url.search &&
+      !url.hash;
+  } catch {
+    /* Missing independent receiver stays unready. */
+  }
+  const deletionConfigured =
+    deletionEndpoint &&
+    present(env.DELETION_JOURNAL_DIR) &&
+    (env.DELETION_JOURNAL_KEY || "").length >= 32 &&
+    (env.DELETION_WITNESS_TOKEN || "").length >= 32 &&
+    present(env.DELETION_WITNESS_PUBLIC_KEY);
+  const deletionAccepted = accepted(
+    env,
+    acceptance,
+    "deletion",
+    [
+      "independentHostVerified",
+      "intentAcknowledgedBeforeMutation",
+      "oldBackupReplay",
+      "replayBeforeServe",
+      "mediaCleanupVerified",
+    ],
+    now,
+  );
+  const deletionCurrent = Boolean(
+    deletion?.ok === true &&
+    deletion.proofValid === true &&
+    deletion.capacityAvailable === true &&
+    deletion.journalComplete === true &&
+    deletion.configurationHash === configurationHash(env, "deletion") &&
+    isFresh(deletion.checkedAt, now, 5 * MINUTE),
+  );
+  checks.independentDeletions = {
+    configured: Boolean(deletionConfigured),
+    accepted: deletionAccepted,
+    current: deletionCurrent,
+  };
+  if (!deletionConfigured)
+    publicBlockers.push("INDEPENDENT_DELETION_RECEIVER_CONFIGURATION_REQUIRED");
+  if (!deletionAccepted)
+    publicBlockers.push("INDEPENDENT_DELETION_RESTORE_ACCEPTANCE_REQUIRED");
+  if (!deletionCurrent)
+    publicBlockers.push("FRESH_COMPLETE_DELETION_JOURNAL_PROOF_REQUIRED");
   let mediaEndpoint = false;
   let mediaPort = false;
   try {
@@ -469,7 +527,14 @@ export async function main(args = process.argv.slice(2)) {
     const key = args[i].replace(/^--/, "");
     if (
       !args[i].startsWith("--") ||
-      !["env", "state-dir", "acceptance", "offsite", "alerts"].includes(key) ||
+      ![
+        "env",
+        "state-dir",
+        "acceptance",
+        "offsite",
+        "alerts",
+        "deletion",
+      ].includes(key) ||
       !args[i + 1] ||
       args[i + 1].startsWith("--")
     ) {
@@ -477,7 +542,7 @@ export async function main(args = process.argv.slice(2)) {
         JSON.stringify({
           error: "INVALID_ARGUMENTS",
           usage:
-            "check-launch-readiness.mjs [--env PATH] [--state-dir PATH] [--acceptance PATH] [--offsite PATH] [--alerts PATH] [--configuration-hashes]",
+            "check-launch-readiness.mjs [--env PATH] [--state-dir PATH] [--acceptance PATH] [--offsite PATH] [--alerts PATH] [--deletion PATH] [--configuration-hashes]",
         }),
       );
       return 2;
@@ -499,20 +564,26 @@ export async function main(args = process.argv.slice(2)) {
     );
     return 0;
   }
-  const [operations, mail, acceptance, offsite, alerts] = await Promise.all([
-    readBounded(path.join(options["state-dir"], "health.json")),
-    readBounded(path.join(options["state-dir"], "mail-delivery-check.json")),
-    readBounded(
-      options.acceptance ||
-        path.join(options["state-dir"], "launch-acceptance.json"),
-    ),
-    readBounded(
-      options.offsite || path.join(options["state-dir"], "offsite-status.json"),
-    ),
-    readBounded(
-      options.alerts || path.join(options["state-dir"], "alerts-status.json"),
-    ),
-  ]);
+  const [operations, mail, acceptance, offsite, alerts, deletion] =
+    await Promise.all([
+      readBounded(path.join(options["state-dir"], "health.json")),
+      readBounded(path.join(options["state-dir"], "mail-delivery-check.json")),
+      readBounded(
+        options.acceptance ||
+          path.join(options["state-dir"], "launch-acceptance.json"),
+      ),
+      readBounded(
+        options.offsite ||
+          path.join(options["state-dir"], "offsite-status.json"),
+      ),
+      readBounded(
+        options.alerts || path.join(options["state-dir"], "alerts-status.json"),
+      ),
+      readBounded(
+        options.deletion ||
+          path.join(options["state-dir"], "deletion-status.json"),
+      ),
+    ]);
   const result = evaluateReadiness({
     env,
     operations,
@@ -520,6 +591,7 @@ export async function main(args = process.argv.slice(2)) {
     acceptance,
     offsite,
     alerts,
+    deletion,
   });
   console.log(JSON.stringify(result, null, 2));
   // Preview with deliberately disabled features is not an unhealthy service.

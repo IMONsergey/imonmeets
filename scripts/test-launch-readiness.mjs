@@ -21,6 +21,11 @@ function fixture() {
     PUBLIC_LEGAL_APPROVED: "true",
     PUBLIC_LEGAL_MANIFEST_SHA256: "c".repeat(64),
     SUPPORT_EMAIL: "support@example.test",
+    DELETION_JOURNAL_DIR: "/private/synthetic-journal",
+    DELETION_JOURNAL_KEY: "synthetic-journal-secret-not-a-production-key",
+    DELETION_WITNESS_URL: "https://receiver.example.test",
+    DELETION_WITNESS_TOKEN: "synthetic-receiver-secret-not-a-production-key",
+    DELETION_WITNESS_PUBLIC_KEY: "synthetic-enrolled-public-key",
     REGISTRATION_ENABLED: "true",
     EMAIL_DELIVERY_MODE: "external",
     SMTP_HOST: "smtp.example.test",
@@ -58,6 +63,15 @@ function fixture() {
       configurationHash: configurationHash(env, "smtp"),
     },
     acceptance: {
+      deletion: {
+        acceptedAt: timestamp,
+        configurationHash: configurationHash(env, "deletion"),
+        independentHostVerified: true,
+        intentAcknowledgedBeforeMutation: true,
+        oldBackupReplay: true,
+        replayBeforeServe: true,
+        mediaCleanupVerified: true,
+      },
       legal: {
         acceptedAt: timestamp,
         configurationHash: configurationHash(env, "legal"),
@@ -102,6 +116,14 @@ function fixture() {
       ok: true,
       independentMonitor: true,
       configurationHash: configurationHash(env, "alerts"),
+    },
+    deletion: {
+      checkedAt: timestamp,
+      ok: true,
+      proofValid: true,
+      journalComplete: true,
+      capacityAvailable: true,
+      configurationHash: configurationHash(env, "deletion"),
     },
   };
 }
@@ -639,4 +661,88 @@ test("legal approval requires actual reviewed public documents and fresh exact e
   const unreviewed = fixture();
   unreviewed.acceptance.legal.dataFlowsReviewed = false;
   assert.equal(evaluateReadiness(unreviewed).publicLaunchReady, false);
+});
+
+test("signed deletion liveness does not replace independent old-backup replay acceptance", () => {
+  for (const change of [
+    (input) => {
+      delete input.acceptance.deletion;
+    },
+    (input) => {
+      input.acceptance.deletion.independentHostVerified = false;
+    },
+    (input) => {
+      input.acceptance.deletion.intentAcknowledgedBeforeMutation = false;
+    },
+    (input) => {
+      input.acceptance.deletion.oldBackupReplay = false;
+    },
+    (input) => {
+      input.acceptance.deletion.replayBeforeServe = false;
+    },
+    (input) => {
+      input.acceptance.deletion.mediaCleanupVerified = false;
+    },
+  ]) {
+    const input = fixture();
+    change(input);
+    const result = evaluateReadiness(input);
+    assert.equal(result.serviceHealthy, true);
+    assert.equal(result.publicLaunchReady, false);
+    assert.ok(
+      result.blockers.publicLaunch.includes(
+        "INDEPENDENT_DELETION_RESTORE_ACCEPTANCE_REQUIRED",
+      ),
+    );
+  }
+});
+
+test("missing, stale or mismatched deletion checkpoints and configuration keep launch closed", () => {
+  for (const change of [
+    (input) => {
+      delete input.deletion;
+    },
+    (input) => {
+      input.deletion.ok = false;
+    },
+    (input) => {
+      input.deletion.proofValid = false;
+    },
+    (input) => {
+      input.deletion.journalComplete = false;
+    },
+    (input) => {
+      input.deletion.capacityAvailable = false;
+    },
+    (input) => {
+      input.deletion.checkedAt = new Date(now - 6 * 60_000).toISOString();
+    },
+    (input) => {
+      input.env.DELETION_WITNESS_PUBLIC_KEY = "different-enrollment";
+    },
+    (input) => {
+      input.env.DELETION_WITNESS_URL = "https://another.example.test";
+    },
+  ]) {
+    const input = fixture();
+    change(input);
+    const result = evaluateReadiness(input);
+    assert.equal(result.publicLaunchReady, false);
+    assert.ok(
+      result.blockers.publicLaunch.includes(
+        "FRESH_COMPLETE_DELETION_JOURNAL_PROOF_REQUIRED",
+      ),
+    );
+  }
+  const input = fixture();
+  delete input.env.DELETION_JOURNAL_KEY;
+  assert.ok(
+    evaluateReadiness(input).blockers.publicLaunch.includes(
+      "INDEPENDENT_DELETION_RECEIVER_CONFIGURATION_REQUIRED",
+    ),
+  );
+  const serialized = JSON.stringify(evaluateReadiness(fixture()));
+  assert.equal(serialized.includes("synthetic-journal-secret"), false);
+  assert.equal(serialized.includes("synthetic-receiver-secret"), false);
+  assert.equal(serialized.includes("receiver.example.test"), false);
 });

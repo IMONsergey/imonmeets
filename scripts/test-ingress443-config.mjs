@@ -15,14 +15,23 @@ const valid = {
 
 test("wildcard address cannot bind across the separately preserved VPN interface", () => {
   for (const key of ["INGRESS_PUBLIC_IP", "VPN_PUBLIC_IP"]) {
-    assert.throws(() => ingressConfig({ ...valid, [key]: "0.0.0.0" }), /explicit non-wildcard IPv4/);
+    assert.throws(
+      () => ingressConfig({ ...valid, [key]: "0.0.0.0" }),
+      /explicit non-wildcard IPv4/,
+    );
   }
-  assert.throws(() => ingressConfig({ ...valid, INGRESS_PUBLIC_IP: valid.VPN_PUBLIC_IP }), /different/);
+  assert.throws(
+    () => ingressConfig({ ...valid, INGRESS_PUBLIC_IP: valid.VPN_PUBLIC_IP }),
+    /different/,
+  );
 });
 
 test("the generated candidate binds only the explicitly selected address", () => {
   const result = renderIngress(ingressConfig(valid));
   assert.match(result.haproxy, /bind 203\.0\.113\.20:443/);
   assert.match(result.nginx, /listen 203\.0\.113\.20:80/);
-  assert.doesNotMatch(result.haproxy + result.nginx, /0\.0\.0\.0|203\.0\.113\.21/);
+  assert.doesNotMatch(
+    result.haproxy + result.nginx,
+    /0\.0\.0\.0|203\.0\.113\.21/,
+  );
 });

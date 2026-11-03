@@ -447,8 +447,20 @@ test(
         .getByRole("button", { name: "Выйти из аккаунта", exact: true })
         .click();
       await expect(
-        page.getByRole("heading", { name: "Войти", exact: true }),
+        page.getByRole("heading", {
+          name: "Войти",
+          exact: true,
+        }),
       ).toBeVisible();
+      await expect(
+        verifiedTab.getByRole("heading", {
+          name: "Обсуждайте, показывайте, принимайте решения.",
+          exact: true,
+        }),
+      ).toBeVisible();
+      await expect(page.getByLabel("Меню аккаунта")).toHaveCount(0);
+      await expect(verifiedTab.getByLabel("Меню аккаунта")).toHaveCount(0);
+      await verifiedTab.goto("https://audit.invalid/settings");
       await expect(
         verifiedTab.getByRole("heading", { name: "Войти", exact: true }),
       ).toBeVisible();
