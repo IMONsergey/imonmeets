@@ -47,9 +47,15 @@ function origin(value, protocol, name) {
 export function ingressConfig(env) {
   const ip = env.INGRESS_PUBLIC_IP;
   const vpnIp = env.VPN_PUBLIC_IP;
-  if (isIP(ip || "") !== 4 || isIP(vpnIp || "") !== 4 || ip === vpnIp) {
+  if (
+    isIP(ip || "") !== 4 ||
+    isIP(vpnIp || "") !== 4 ||
+    ip === "0.0.0.0" ||
+    vpnIp === "0.0.0.0" ||
+    ip === vpnIp
+  ) {
     throw new Error(
-      "INGRESS_PUBLIC_IP must be an explicit IPv4 different from VPN_PUBLIC_IP",
+      "INGRESS_PUBLIC_IP must be an explicit non-wildcard IPv4 different from VPN_PUBLIC_IP",
     );
   }
   const app = origin(env.APP_URL, "https:", "APP_URL");
