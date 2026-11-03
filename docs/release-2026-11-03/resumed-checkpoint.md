@@ -43,7 +43,7 @@ Main and production were not advanced. The translated-text branch is preserved s
 
 The SKRIME account contains an active EPYC KVM Server 1G purchased on 3 November, quoted at EUR 1.49/month and expiring 3 December. The additional IPv4 on the primary server is still not ordered. The purchase was verified in the account; this resumed work did not place another order.
 
-The new VPS was accessed using its existing provider-issued credential. No password was reset and no permanent SSH key was added.
+The new VPS was accessed using its existing provider-issued credential. No password was reset and no permanent SSH key was added. The temporary SSH control socket and helper on the Mac were removed after staging. The VPS remains STAGED_NOT_ENROLLED.
 
 Actual host observations:
 
@@ -88,11 +88,18 @@ Installed helper SHA256: bea6f233adb41d516b5e6d053b5f07d082831b5fdc87be0e0df2ae5
 
 Its hard per-object bound is now 512 MiB; total cache stays 1 GiB. Configuration, keys, encryption format, retention, scheduler, active pull.py and pull-recording-backup.py were unchanged. This update supports the difference between Egress's 350 MiB stop threshold and its bounded finalized output; it is not a 30-minute recording acceptance.
 
+The latest ordinary scheduled cycle after the helper update was checked at 2026-11-03T12:06:40.612094Z, with backupCreatedAt 2026-11-03T12:00:09.627658Z:
+
+- ok:true
+- backupOk:true
+- automatic:true
+- recordingSyncOk:true
+
 ## Live service and remaining commissioning gates
 
 Fresh /api/health and /api/config responses returned HTTP 200 with database, media and recording configured. Registration, Google OAuth, billing, transcription and summary remain disabled. Existing external Resend configuration is present.
 
-meets.imon.world still resolves to the original primary address. rtc.imon.world, turn.imon.world and recordings.imon.world do not resolve. The primary TCP 443 remains occupied by the existing VPN, and it was not changed.
+REG.RU access was restored and the actual imon.world zone was inspected read-only. The zone contains meets A 94.249.186.240; rtc, turn, recordings and witness records are absent. No DNS records were changed. meets.imon.world still resolves to the original primary address; rtc.imon.world, turn.imon.world and recordings.imon.world do not resolve. The primary TCP 443 remains occupied by the existing VPN, and it was not changed.
 
 Next steps, in order:
 
