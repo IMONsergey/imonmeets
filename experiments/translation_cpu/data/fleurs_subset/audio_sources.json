@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "selection_sha256": "caf155b7d8b440132295416f7d0ebd210061add74672e39d7e929dffb60ae62a",
+  "sources": {
+    "ru_ru": {
+      "repository": "google/fleurs",
+      "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+      "split": "test",
+      "config": "ru_ru",
+      "path": "data/ru_ru/audio/test.tar.gz",
+      "sha256": "8a0d6a0d23c3421f50c575bcf65d875cd19dadae2f7cabb415024f81b65178b1",
+      "bytes": 433142634,
+      "url": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/ru_ru/audio/test.tar.gz",
+      "license": "CC-BY-4.0"
+    },
+    "en_us": {
+      "repository": "google/fleurs",
+      "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+      "split": "test",
+      "config": "en_us",
+      "path": "data/en_us/audio/test.tar.gz",
+      "sha256": "d9c2e37b41aacd41bc283554a0a82b5476b36887049774ecb2819dcaaa55a356",
+      "bytes": 289851356,
+      "url": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/en_us/audio/test.tar.gz",
+      "license": "CC-BY-4.0"
+    },
+    "cmn_hans_cn": {
+      "repository": "google/fleurs",
+      "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+      "split": "test",
+      "config": "cmn_hans_cn",
+      "path": "data/cmn_hans_cn/audio/test.tar.gz",
+      "sha256": "09d19ad18f5d7e91076880807e866cd16abd924c7052b55f71cdae91714fc166",
+      "bytes": 525346466,
+      "url": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/cmn_hans_cn/audio/test.tar.gz",
+      "license": "CC-BY-4.0"
+    },
+    "ar_eg": {
+      "repository": "google/fleurs",
+      "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+      "split": "test",
+      "config": "ar_eg",
+      "path": "data/ar_eg/audio/test.tar.gz",
+      "sha256": "787dc348725c0924ff58c8e379d4ef41a7e488dc2ab2990a0eba4a063856edb1",
+      "bytes": 243532527,
+      "url": "https://huggingface.co/datasets/google/fleurs/resolve/70bb2e84b976b7e960aa89f1c648e09c59f894dd/data/ar_eg/audio/test.tar.gz",
+      "license": "CC-BY-4.0"
+    }
+  }
+}

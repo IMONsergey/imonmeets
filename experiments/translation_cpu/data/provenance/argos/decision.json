@@ -1,0 +1,153 @@
+{
+  "date": "2026-11-03",
+  "existing_inventory_sha256": "facd8f99bb5fc2e4c05a7603303a7a209adf91d99deb34501476c0e9278591b0",
+  "models": [
+    {
+      "package": "ar_en",
+      "metadata": {
+        "package_version": "1.0",
+        "argos_version": "1.0",
+        "from_code": "ar",
+        "from_name": "Arabic",
+        "to_code": "en",
+        "to_name": "English"
+      },
+      "model_bin_sha256": "b4a1df5f74720089425e983e4795d6e91f7de7df730c56c365240a3c4a79a43e",
+      "evidence_files": [
+        {
+          "path": "ar_en.metadata.json",
+          "sha256": "ecafea9ed8f8513026dc21117f875a27c6cc54b0feee50bb33cbb664f85ba794"
+        },
+        {
+          "path": "ar_en.README.md",
+          "sha256": "55fcbecc3d76c0955d070289390f4a72925203f0ad2ab42884d52ffcd73a7428"
+        }
+      ],
+      "decision": "not selected for new inference",
+      "reason": "Exact per-weight grant and source checkpoint are not established by the preserved package metadata/README; runtime license is not a weight grant"
+    },
+    {
+      "package": "en_ar",
+      "metadata": {
+        "package_version": "1.0",
+        "argos_version": "1.0",
+        "from_code": "en",
+        "from_name": "English",
+        "to_code": "ar",
+        "to_name": "Arabic"
+      },
+      "model_bin_sha256": "c479480b93dfb0b197a5ea9708f3cfcf45bc0b7eef2465deb555d93c94da3909",
+      "evidence_files": [
+        {
+          "path": "en_ar.metadata.json",
+          "sha256": "5fe4a31450309d8b77c1003d7e4a794175e01ca00cb77e8f3be0bcf8bbeac15c"
+        },
+        {
+          "path": "en_ar.README.md",
+          "sha256": "42b80c2d427dfc82b9f33f0193189d558961683cbf3e000fe88a6f8e4b83c4ef"
+        }
+      ],
+      "decision": "not selected for new inference",
+      "reason": "Exact per-weight grant and source checkpoint are not established by the preserved package metadata/README; runtime license is not a weight grant"
+    },
+    {
+      "package": "translate-en_ru-1_9",
+      "metadata": {
+        "package_version": "1.9",
+        "argos_version": "1.9",
+        "from_code": "en",
+        "from_name": "English",
+        "to_code": "ru",
+        "to_name": "Russian",
+        "reference": "https://community.libretranslate.com/t/new-argos-model-en-ru-and-ru-en/872/"
+      },
+      "model_bin_sha256": "c262cce6a506447d4b3c7a899787694df13783340ba67f0df3ecbf046ae27924",
+      "evidence_files": [
+        {
+          "path": "translate-en_ru-1_9.metadata.json",
+          "sha256": "a40657925da1c25d98d8a6bc53c436a5b1179bd8771e016147d88587edf1b529"
+        },
+        {
+          "path": "translate-en_ru-1_9.README.md",
+          "sha256": "ae9d1fa7d28837433eb979e5e442c3907fa84d10458ff9f3d23eb372bf0061cd"
+        }
+      ],
+      "decision": "not selected for new inference",
+      "reason": "Exact per-weight grant and source checkpoint are not established by the preserved package metadata/README; runtime license is not a weight grant"
+    },
+    {
+      "package": "translate-en_zh-1_9",
+      "metadata": {
+        "package_version": "1.9",
+        "argos_version": "1.9.0",
+        "from_code": "en",
+        "from_name": "English",
+        "to_code": "zh",
+        "to_name": "Chinese"
+      },
+      "model_bin_sha256": "1a039114d9456b6528fabb65b455b6f156319634a0f984b1f6018f7737d67598",
+      "evidence_files": [
+        {
+          "path": "translate-en_zh-1_9.metadata.json",
+          "sha256": "106086bc1b77d2d5c298aa38be69e8e87263eeb4167b4614b08a030c43d31b6a"
+        },
+        {
+          "path": "translate-en_zh-1_9.README.md",
+          "sha256": "050e546664f0e70d80b6f83aa1da5f04ee85335f4a1b62d1c89184f76100b5dc"
+        }
+      ],
+      "decision": "not selected for new inference",
+      "reason": "README claims original OPUS CC-BY-4.0, but exact upstream checkpoint is absent; independence from the OPUS baseline is not established"
+    },
+    {
+      "package": "translate-ru_en-1_9",
+      "metadata": {
+        "package_version": "1.9",
+        "argos_version": "1.9",
+        "from_code": "ru",
+        "from_name": "Russian",
+        "to_code": "en",
+        "to_name": "English",
+        "reference": "https://community.libretranslate.com/t/new-argos-model-en-ru-and-ru-en/872/"
+      },
+      "model_bin_sha256": "026d5f34266b4235c13fc29c665f151b88d0c1b02b0be7f87734fe9c511e20bc",
+      "evidence_files": [
+        {
+          "path": "translate-ru_en-1_9.metadata.json",
+          "sha256": "2034d666010673068722bc15af5bb8561173665872867c89a1b99695f0fb25d0"
+        },
+        {
+          "path": "translate-ru_en-1_9.README.md",
+          "sha256": "5a157fd062b9786eb4c7d5aa8fce0f3f01de0fa71c2f34fbf16e222c66ecd090"
+        }
+      ],
+      "decision": "not selected for new inference",
+      "reason": "Exact per-weight grant and source checkpoint are not established by the preserved package metadata/README; runtime license is not a weight grant"
+    },
+    {
+      "package": "translate-zh_en-1_9",
+      "metadata": {
+        "package_version": "1.9",
+        "argos_version": "1.9.0",
+        "from_code": "zh",
+        "from_name": "Chinese",
+        "to_code": "en",
+        "to_name": "English"
+      },
+      "model_bin_sha256": "edd8c8a6863d36959613ff291074627a1635fab2f51b872ef437e924d238921a",
+      "evidence_files": [
+        {
+          "path": "translate-zh_en-1_9.metadata.json",
+          "sha256": "e42259bbbec6cd09ecd16d97d614bebbf1e7351130c6970fe77a2f1ed7f99cca"
+        },
+        {
+          "path": "translate-zh_en-1_9.README.md",
+          "sha256": "1bb7a1261520b8f7d1f94b7fd108c0ccfd7333a3e40a2256df274df0a2ff1cc8"
+        }
+      ],
+      "decision": "not selected for new inference",
+      "reason": "README claims original OPUS CC-BY-4.0, but exact upstream checkpoint is absent; independence from the OPUS baseline is not established"
+    }
+  ],
+  "comparison_policy": "Do not compare Argos against the same unknown OPUS source as independent models. New official-original OPUS results are a single model-family baseline; no model-quality superiority over Argos is claimed."
+}

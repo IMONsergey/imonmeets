@@ -1,0 +1,24 @@
+{
+  "unit": "imonmeets-mt-tar-boundaries-20261103T054713Z-4009604",
+  "started_at": "2026-11-03T05:47:13Z",
+  "finished_at": "2026-11-03T05:47:22.999900+00:00",
+  "runtime_max_seconds": 60,
+  "exit_code": 0,
+  "command": [
+    "/usr/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_fleurs_audio_safety.py",
+    "-v"
+  ],
+  "log": "imonmeets-mt-tar-boundaries-20261103T054713Z-4009604.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}

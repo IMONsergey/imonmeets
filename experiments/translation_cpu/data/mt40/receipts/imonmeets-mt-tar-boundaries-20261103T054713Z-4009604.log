@@ -1,0 +1,10 @@
+test_hash_covers_all_compressed_bytes (test_fleurs_audio_safety.FleursAudioSafetyTests.test_hash_covers_all_compressed_bytes) ... ok
+test_only_selected_wav_is_kept (test_fleurs_audio_safety.FleursAudioSafetyTests.test_only_selected_wav_is_kept) ... ok
+test_paths_links_and_devices_are_rejected (test_fleurs_audio_safety.FleursAudioSafetyTests.test_paths_links_and_devices_are_rejected) ... ok
+test_size_cap_stops_stream (test_fleurs_audio_safety.FleursAudioSafetyTests.test_size_cap_stops_stream) ... ok
+test_wrong_directory_cannot_masquerade_as_selected_clip (test_fleurs_audio_safety.FleursAudioSafetyTests.test_wrong_directory_cannot_masquerade_as_selected_clip) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+OK

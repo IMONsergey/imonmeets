@@ -1,0 +1,15 @@
+test_case_and_punctuation_do_not_count_as_recognition_error (test_asr40_metrics.Asr40MetricsTests.test_case_and_punctuation_do_not_count_as_recognition_error) ... ok
+test_chinese_uses_characters_not_whitespace_words (test_asr40_metrics.Asr40MetricsTests.test_chinese_uses_characters_not_whitespace_words) ... ok
+test_deletion_insertion_and_substitution_count (test_asr40_metrics.Asr40MetricsTests.test_deletion_insertion_and_substitution_count) ... ok
+test_negation_deletion_is_visible (test_asr40_metrics.Asr40MetricsTests.test_negation_deletion_is_visible) ... ok
+test_number_and_currency_changes_remain_errors (test_asr40_metrics.Asr40MetricsTests.test_number_and_currency_changes_remain_errors) ... ok
+test_all_directions_preserve_exact_ids_and_gold_target (test_mt40_contract.MT40ContractTests.test_all_directions_preserve_exact_ids_and_gold_target) ... ok
+test_no_empty_silence_is_sent_to_mt (test_mt40_contract.MT40ContractTests.test_no_empty_silence_is_sent_to_mt) ... ok
+test_pivot_input_identity_matches_real_first_hop_cases (test_mt40_contract.MT40ContractTests.test_pivot_input_identity_matches_real_first_hop_cases) ... ok
+test_self_translation_rejected (test_mt40_contract.MT40ContractTests.test_self_translation_rejected) ... ok
+test_target_tokens_are_literal_prefixes (test_mt40_contract.MT40ContractTests.test_target_tokens_are_literal_prefixes) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.030s
+
+OK

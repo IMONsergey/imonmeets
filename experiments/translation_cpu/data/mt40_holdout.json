@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "authored_before_sentence_ablation": true,
+  "purpose": "Additional unseen-by-the-wrapper author-written semantic acceptance cases. Keep separate from the 40 unchanged FLEURS gold IDs and from development regressions. No model output has been consulted for these references.",
+  "cases": [
+    {"id":"cancel-fifty-send-fifteen","slots":{"cancelled_amount":50,"final_amount":15,"currency":"EUR","negation":true},"texts":{"en":"Send fifty euros. No, cancel that. Send fifteen euros instead.","ru":"Отправьте пятьдесят евро. Нет, отмените это. Вместо этого отправьте пятнадцать евро.","zh":"汇五十欧元。不，取消。改为汇十五欧元。","ar":"أرسل خمسين يورو. لا، ألغِ ذلك. أرسل خمسة عشر يورو بدلاً من ذلك."}},
+    {"id":"decimal-two-amounts","slots":{"amount":2350.07,"contrast_amount":2350.70,"currency":"USD","negation":true},"texts":{"en":"The total is 2,350.07 dollars, not 2,350.70 dollars.","ru":"Итоговая сумма — 2350,07 доллара, а не 2350,70 доллара.","zh":"总额是2350.07美元，不是2350.70美元。","ar":"المجموع 2350.07 دولاراً، وليس 2350.70 دولاراً."}},
+    {"id":"plan-not-payment","slots":{"approved":"plan","not_approved":"payment","amount":900,"currency":"RUB","negation":true},"texts":{"en":"We approved the plan, but we did not approve the payment of nine hundred rubles.","ru":"Мы одобрили план, но не одобрили платеж в размере девятисот рублей.","zh":"我们批准了计划，但没有批准九百卢布的付款。","ar":"وافقنا على الخطة، لكننا لم نوافق على دفع تسعمئة روبل."}},
+    {"id":"separate-currencies","slots":{"price_amount":70,"price_currency":"EUR","delivery_amount":5,"delivery_currency":"USD","negation":true},"texts":{"en":"The price is seventy euros. Delivery costs five dollars. Do not add them as one currency.","ru":"Цена — семьдесят евро. Доставка стоит пять долларов. Не складывайте их как одну валюту.","zh":"价格是七十欧元。运费是五美元。不要把它们当作同一种货币相加。","ar":"السعر سبعون يورو. تكلفة التوصيل خمسة دولارات. لا تجمعهما كعملة واحدة."}},
+    {"id":"fourteen-not-forty","slots":{"amount":14,"contrast_amount":40,"negation":true,"self_correction":true},"texts":{"en":"I meant ... no, the quantity is fourteen, not forty.","ru":"Я имел в виду... нет, количество — четырнадцать, а не сорок.","zh":"我的意思是……不，数量是十四，不是四十。","ar":"كنت أقصد... لا، الكمية أربعة عشر، وليست أربعين."}},
+    {"id":"name-before-arrival","slots":{"name":"Ivan Petrov","time":"15:15","negation":true,"condition":"do not start before arrival"},"texts":{"en":"Dr. Ivan Petrov will join at 3:15 p.m. Do not start before he arrives.","ru":"Доктор Иван Петров подключится в 15:15. Не начинайте до его прихода.","zh":"伊万·彼得罗夫博士将在下午三点十五分加入。他到达之前不要开始。","ar":"سينضم الدكتور إيفان بيتروف في الثالثة والربع بعد الظهر. لا تبدأ قبل وصوله."}}
+  ]
+}
