@@ -1,0 +1,20 @@
+{
+  "unit": "imonmeets-mt-asr40-base-ar-20261103T060100Z-4140439",
+  "started_at": "2026-11-03T06:01:00Z",
+  "finished_at": "2026-11-03T06:04:20.504540+00:00",
+  "runtime_max_seconds": 900,
+  "exit_code": 0,
+  "command": [
+    "/home/sergey/imonmeets-translation-cpu-20261102/.venv/bin/python",
+    "tools/run_asr40.py",
+    "ar",
+    "--model",
+    "base"
+  ],
+  "log": "imonmeets-mt-asr40-base-ar-20261103T060100Z-4140439.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}
