@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { TrackSource } from "livekit-server-sdk";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
-import { createAuth, createMailer } from "./auth.js";
+import { createAuth, createMailer, MailDeliveryError } from "./auth.js";
 import type { Config } from "./config.js";
 import { createPool, transaction } from "./db.js";
 import {
@@ -436,30 +436,12 @@ export async function createApp(
           .object({ email: z.email().max(254) })
           .safeParse(req.body);
         if (candidate.success)
-          await transaction(pool, async (db) => {
-            await requireBudget(
-              limiter,
-              `smtp:recipient:${candidate.data.email.toLowerCase()}`,
-              5,
-              3600,
-              db,
-            );
-            await requireBudget(
-              limiter,
-              "smtp:global",
-              c.limits.globalEmailDaily,
-              86400,
-              db,
-            );
-            if (c.emailProvider === "resend")
-              await requireBudget(
-                limiter,
-                "smtp:global:30d",
-                c.limits.email30d,
-                30 * 86400,
-                db,
-              );
-          });
+          await requireBudget(
+            limiter,
+            `email-request:${candidate.data.email.toLowerCase()}`,
+            5,
+            3600,
+          );
       }
       const headers = fromNodeHeaders(req.headers);
       headers.set("x-imon-client-ip", clientIp(req, c.originProxySecret));
@@ -1415,24 +1397,6 @@ export async function createApp(
         86400,
         db,
       );
-      if (c.emailConfigured) {
-        await requireBudget(limiter, `smtp:recipient:${b.email}`, 5, 3600, db);
-        await requireBudget(
-          limiter,
-          "smtp:global",
-          c.limits.globalEmailDaily,
-          86400,
-          db,
-        );
-        if (c.emailProvider === "resend")
-          await requireBudget(
-            limiter,
-            "smtp:global:30d",
-            c.limits.email30d,
-            30 * 86400,
-            db,
-          );
-      }
       const count = await db.query(
         "SELECT count(*)::int AS n FROM im_invitations WHERE workspace_id=$1 AND consumed_at IS NULL AND expires_at>now()",
         [workspaceId],
@@ -1455,6 +1419,7 @@ export async function createApp(
       return r.rows[0];
     });
     const inviteUrl = `${c.appUrl}/invite#token=${token}`;
+    let emailDelivery: "not_configured" | "accepted" | "uncertain" | "rejected" | "rate_limited" | "ledger" = "not_configured";
     if (c.emailConfigured) {
       try {
         await sendMail(
@@ -1462,11 +1427,13 @@ export async function createApp(
           "Приглашение в IMON Meets",
           `Вас пригласили в рабочее пространство. Войдите с адресом ${b.email}, подтвердите почту и откройте ссылку: ${inviteUrl}`,
         );
+        emailDelivery = "accepted";
       } catch (e) {
-        req.log.error({ err: e }, "Invitation email delivery failed");
+        emailDelivery = e instanceof MailDeliveryError ? e.kind : "uncertain";
+        req.log.error({ kind: emailDelivery }, "Invitation email delivery failed");
       }
     }
-    return { invitation: invitationJson(result), inviteUrl };
+    return { invitation: invitationJson(result), inviteUrl, emailDelivery };
   });
   app.delete(
     "/api/workspaces/:workspaceId/invitations/:invitationId",
