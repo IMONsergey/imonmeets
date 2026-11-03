@@ -1,0 +1,321 @@
+{
+  "schema": 1,
+  "generated_at": "2026-11-03T10:20:40.725019+00:00",
+  "verification_head": "edce77925eb3a892645643725924ac1c4d748940",
+  "inference_source_commit": "edce77925eb3a892645643725924ac1c4d748940",
+  "preserved_tracked_files_verified": 361,
+  "new_results_verified": 218,
+  "fleurs_results": 160,
+  "authored_results": 58,
+  "all_bindings_verified": true,
+  "verification_cgroup": {
+    "cpu_max": "100000 100000",
+    "memory_max": 2147483648,
+    "pids_max": "128",
+    "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-ru-pivot-bindings-20261103T102040Z-2233298.service"
+  },
+  "timing_contract": "second_hop_seconds is new inference; historical_first_hop_plus_new_second_hop_seconds sums separately measured stages and is NOT continuous end-to-end latency.",
+  "continuous_end_to_end_timing": false,
+  "quality_accepted": false,
+  "asr_run": false,
+  "tts_run": false,
+  "livekit_run": false,
+  "new_downloads": false,
+  "raw_outputs_rewritten": false,
+  "verifier_source": {
+    "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/summarize_ru_pivot.py",
+    "bytes": 11879,
+    "sha256": "90c0bd37cd47149214f58ab31dd041592708de5a67156184f588639a40014798",
+    "mtime_ns": 1793701240448251319
+  },
+  "preflight": {
+    "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/ru_pivot_20261103/preflight.json",
+    "bytes": 175698,
+    "sha256": "71cf7839c404bfe48839f36bece064a0b9e9c0249e4537c582c3a82d164a3d9d",
+    "mtime_ns": 1793700994608320388
+  },
+  "chain_ledger": {
+    "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/ru_pivot_20261103/chains.jsonl",
+    "bytes": 757130,
+    "sha256": "4a696ab4358240d0dbe25ef559eced7610e80b634f8345cbdb0df126d11dc2a2",
+    "mtime_ns": 1793701240722254587
+  },
+  "routes": [
+    {
+      "direction": "ru-zh",
+      "cases": 55,
+      "fleurs": 40,
+      "authored": 15,
+      "second_hop_seconds": {
+        "p50": 0.368766,
+        "p95": 0.735054,
+        "max": 0.920367,
+        "sum": 21.176296
+      },
+      "historical_first_hop_seconds": {
+        "p50": 0.40719,
+        "p95": 0.771585,
+        "max": 0.995964,
+        "sum": 23.244686
+      },
+      "historical_first_hop_plus_new_second_hop_seconds": {
+        "p50": 0.777461,
+        "p95": 1.400148,
+        "max": 1.916331,
+        "sum": 44.420982
+      },
+      "new_model_load_seconds": 0.214682,
+      "max_rss_kib": 159692,
+      "runtime_versions": {
+        "ctranslate2": "4.8.4",
+        "sentencepiece": "0.2.2",
+        "numpy": "2.5.4"
+      },
+      "observed_cgroup_limits": {
+        "cpu_max": "100000 100000",
+        "memory_max": 2147483648,
+        "pids_max": "128",
+        "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-ru-pivot-ru-zh-20261103T101638Z-2197553.service"
+      },
+      "model_chain": [
+        "96804810a5bdecd5e118f6b67fb979025c10670cb4bad56f887511c4fb76cd89",
+        "b4fedbc97c2006f6d8fc089e58a2eb7385cb66b16a5dbbf136e23e6490fcfb80"
+      ],
+      "second_target_token": ">>cmn_Hans<<",
+      "raw_output": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ru-zh.jsonl",
+        "bytes": 102733,
+        "sha256": "6a614c93f92e826255b35c14007ee7c39229d09e870ba555ce373b24ba458ada",
+        "mtime_ns": 1793701020579629932
+      },
+      "stage_summary": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ru-zh.summary.json",
+        "bytes": 1746,
+        "sha256": "a3b5e2a7b8d44b41b471e40b91ba8eb73d25da4eef729817b5a91cf79a013928",
+        "mtime_ns": 1793701020601630194
+      },
+      "receipt": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ru-pivot-ru-zh-20261103T101638Z-2197553.json",
+        "bytes": 679,
+        "sha256": "8dd43607588f9b3789d1c4cf4687aaa1fa8a98699e73a69cffac9bd8f8edd2bb",
+        "mtime_ns": 1793701020727631696
+      },
+      "log": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ru-pivot-ru-zh-20261103T101638Z-2197553.log",
+        "bytes": 4677,
+        "sha256": "d31bdb87a3ff3c6e437e13776f5faef545b1e22ec26b3711ed46e795460c3c9b",
+        "mtime_ns": 1793701020601630194
+      },
+      "invocation_started_at": "2026-11-03T10:16:38Z",
+      "invocation_finished_at": "2026-11-03T10:17:00.728615+00:00",
+      "invocation_wall_including_lock_and_launch_seconds": 22.728615
+    },
+    {
+      "direction": "zh-ru",
+      "cases": 54,
+      "fleurs": 40,
+      "authored": 14,
+      "second_hop_seconds": {
+        "p50": 0.462092,
+        "p95": 0.924037,
+        "max": 1.128436,
+        "sum": 26.078326
+      },
+      "historical_first_hop_seconds": {
+        "p50": 0.47325,
+        "p95": 1.032405,
+        "max": 1.306547,
+        "sum": 28.594323
+      },
+      "historical_first_hop_plus_new_second_hop_seconds": {
+        "p50": 0.918409,
+        "p95": 1.84809,
+        "max": 2.434983,
+        "sum": 54.672649
+      },
+      "new_model_load_seconds": 0.294126,
+      "max_rss_kib": 163352,
+      "runtime_versions": {
+        "ctranslate2": "4.8.4",
+        "sentencepiece": "0.2.2",
+        "numpy": "2.5.4"
+      },
+      "observed_cgroup_limits": {
+        "cpu_max": "100000 100000",
+        "memory_max": 2147483648,
+        "pids_max": "128",
+        "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-ru-pivot-zh-ru-20261103T101715Z-2202892.service"
+      },
+      "model_chain": [
+        "c66ca93eaa07e094903e1ea8278282ba17a9e2f1eb7de454b7b7ce5ff112664b",
+        "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d"
+      ],
+      "second_target_token": null,
+      "raw_output": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/zh-ru.jsonl",
+        "bytes": 106946,
+        "sha256": "c617fde08fbcceabbaab19adeba8e7fa08b42a2abcaa857614d9fc24d47b6102",
+        "mtime_ns": 1793701062956135055
+      },
+      "stage_summary": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/zh-ru.summary.json",
+        "bytes": 1735,
+        "sha256": "f6374652cbe63044c61b99af0b44c213f666479dc6b94c2793be03fcda8fbe5f",
+        "mtime_ns": 1793701062977135305
+      },
+      "receipt": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ru-pivot-zh-ru-20261103T101715Z-2202892.json",
+        "bytes": 679,
+        "sha256": "58dc1fbc6d0eaf878b6544030263b0b1c1b1affb3e7d78ba20a5336bf563b65a",
+        "mtime_ns": 1793701063152137391
+      },
+      "log": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ru-pivot-zh-ru-20261103T101715Z-2202892.log",
+        "bytes": 4603,
+        "sha256": "0160563c188aea598706857559a79c13094063b6a430af46dddb38732499a5e3",
+        "mtime_ns": 1793701062977135305
+      },
+      "invocation_started_at": "2026-11-03T10:17:15Z",
+      "invocation_finished_at": "2026-11-03T10:17:43.152300+00:00",
+      "invocation_wall_including_lock_and_launch_seconds": 28.1523
+    },
+    {
+      "direction": "ru-ar",
+      "cases": 55,
+      "fleurs": 40,
+      "authored": 15,
+      "second_hop_seconds": {
+        "p50": 0.421822,
+        "p95": 0.849247,
+        "max": 1.223659,
+        "sum": 24.891993
+      },
+      "historical_first_hop_seconds": {
+        "p50": 0.40719,
+        "p95": 0.771585,
+        "max": 0.995964,
+        "sum": 23.244686
+      },
+      "historical_first_hop_plus_new_second_hop_seconds": {
+        "p50": 0.83763,
+        "p95": 1.554166,
+        "max": 2.219623,
+        "sum": 48.136679
+      },
+      "new_model_load_seconds": 0.254986,
+      "max_rss_kib": 160288,
+      "runtime_versions": {
+        "ctranslate2": "4.8.4",
+        "sentencepiece": "0.2.2",
+        "numpy": "2.5.4"
+      },
+      "observed_cgroup_limits": {
+        "cpu_max": "100000 100000",
+        "memory_max": 2147483648,
+        "pids_max": "128",
+        "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-ru-pivot-ru-ar-20261103T101823Z-2213391.service"
+      },
+      "model_chain": [
+        "96804810a5bdecd5e118f6b67fb979025c10670cb4bad56f887511c4fb76cd89",
+        "26e8e9d443cf45e455ceeed557deec0e541f5e647c88bd98f5f1f3ade8ce7d5f"
+      ],
+      "second_target_token": ">>ara<<",
+      "raw_output": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ru-ar.jsonl",
+        "bytes": 110216,
+        "sha256": "a8fb710b2c7e7eedb28426db8caf9d6d28871507248655157bcbe614908d6a7c",
+        "mtime_ns": 1793701129948933717
+      },
+      "stage_summary": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ru-ar.summary.json",
+        "bytes": 1741,
+        "sha256": "436fdc1201d60f3b1604a26c80d524b07edd701c8001829f53afe308eb370fa8",
+        "mtime_ns": 1793701129966933932
+      },
+      "receipt": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ru-pivot-ru-ar-20261103T101823Z-2213391.json",
+        "bytes": 679,
+        "sha256": "08eae6fa0e0a7359c01bd2878a541f34ee9bd1c4ba9349d47ee975f9b44ec733",
+        "mtime_ns": 1793701130103935565
+      },
+      "log": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ru-pivot-ru-ar-20261103T101823Z-2213391.log",
+        "bytes": 4676,
+        "sha256": "6a63b1e0c28c47660a184f5c9fce7438d2322b4929a19df4d1b55c98e7443bbf",
+        "mtime_ns": 1793701129966933932
+      },
+      "invocation_started_at": "2026-11-03T10:18:23Z",
+      "invocation_finished_at": "2026-11-03T10:18:50.104735+00:00",
+      "invocation_wall_including_lock_and_launch_seconds": 27.104735
+    },
+    {
+      "direction": "ar-ru",
+      "cases": 54,
+      "fleurs": 40,
+      "authored": 14,
+      "second_hop_seconds": {
+        "p50": 0.4359,
+        "p95": 0.980607,
+        "max": 1.622793,
+        "sum": 27.735198
+      },
+      "historical_first_hop_seconds": {
+        "p50": 0.551855,
+        "p95": 1.125727,
+        "max": 1.691998,
+        "sum": 32.039174
+      },
+      "historical_first_hop_plus_new_second_hop_seconds": {
+        "p50": 0.99625,
+        "p95": 2.187158,
+        "max": 3.314791,
+        "sum": 59.774372
+      },
+      "new_model_load_seconds": 0.251037,
+      "max_rss_kib": 167632,
+      "runtime_versions": {
+        "ctranslate2": "4.8.4",
+        "sentencepiece": "0.2.2",
+        "numpy": "2.5.4"
+      },
+      "observed_cgroup_limits": {
+        "cpu_max": "100000 100000",
+        "memory_max": 2147483648,
+        "pids_max": "128",
+        "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-ru-pivot-ar-ru-20261103T101933Z-2223450.service"
+      },
+      "model_chain": [
+        "49dfeb382ec074451936b9ec4e7b671402ae6927c3f1a62ca95a492b7f021235",
+        "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d"
+      ],
+      "second_target_token": null,
+      "raw_output": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ar-ru.jsonl",
+        "bytes": 110901,
+        "sha256": "84c881ec84027ebc9077694e2d3b76cbb6abcc3a341669c123e2d0a4dbd227f8",
+        "mtime_ns": 1793701202654800632
+      },
+      "stage_summary": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ar-ru.summary.json",
+        "bytes": 1736,
+        "sha256": "35108d4e4c497c3d6f2549d4fcbd31ba062641462da5062a66ea7e36d21b4031",
+        "mtime_ns": 1793701202735801598
+      },
+      "receipt": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ru-pivot-ar-ru-20261103T101933Z-2223450.json",
+        "bytes": 679,
+        "sha256": "749a6e9a6023c78f3fd99c99439a4c0f706da2d61930222b1dd0ba5047241220",
+        "mtime_ns": 1793701202986804591
+      },
+      "log": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ru-pivot-ar-ru-20261103T101933Z-2223450.log",
+        "bytes": 4601,
+        "sha256": "406979dd9d6214b1753dffbd0e1b5322fc913791f0d75b58f60e09add55e4d38",
+        "mtime_ns": 1793701202735801598
+      },
+      "invocation_started_at": "2026-11-03T10:19:33Z",
+      "invocation_finished_at": "2026-11-03T10:20:02.988635+00:00",
+      "invocation_wall_including_lock_and_launch_seconds": 29.988635
+    }
+  ]
+}

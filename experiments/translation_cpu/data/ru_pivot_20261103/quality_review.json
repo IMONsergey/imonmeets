@@ -1,0 +1,1132 @@
+{
+  "schema": 1,
+  "reviewed_at": "2026-11-03T10:23:13.573903+00:00",
+  "reviewer": "translation_audit assistant",
+  "native_human_acceptance": false,
+  "quality_accepted": false,
+  "release_decision": "blocked_by_confirmed_semantic_errors",
+  "raw_outputs_modified": false,
+  "numbers_or_currency_postprocessed": false,
+  "chain_ledger_sha256": "4a696ab4358240d0dbe25ef559eced7610e80b634f8345cbdb0df126d11dc2a2",
+  "scope": {
+    "all_authored_results_screened": 58,
+    "authored_contrast_results": 48,
+    "historical_authored_results": 10,
+    "diagnostic_fleurs_results_screened": 16,
+    "fleurs_ids": [
+      "fleurs-1661",
+      "fleurs-1697",
+      "fleurs-1842",
+      "fleurs-2009"
+    ],
+    "fleurs_sample_is_preregistered_random_or_blind": false,
+    "remaining_fleurs_results_without_semantic_screen": 144,
+    "no_statistical_accuracy_claim": true,
+    "duplicates_note": "Some original authored examples repeat contrast cases; counts are result rows, not independent semantic trials."
+  },
+  "findings": [
+    {
+      "finding_id": "TR29-Q01",
+      "direction": "ru-zh",
+      "case_id": "contrast-usd-1200",
+      "severity": "critical",
+      "introduced_at": "second_hop",
+      "finding_ru": "В исходнике и actual English указаны доллары; китайский output сохраняет 1200, но дает разговорное 块 без идентификации USD. Это утрата явной валюты, не доказанная конвертация в юани.",
+      "input": "Цена составляет тысячу двести долларов.",
+      "actual_first_hop_output": "The price is a thousand two hundred dollars.",
+      "actual_second_hop_input": "The price is a thousand two hundred dollars.",
+      "output": "价钱是一千两百块",
+      "reference": "价格是一千二百美元。",
+      "input_sha256": "3bdb124248e915e293c5d388e6b8391039cb40f836d12ff280aeeb36f28cdb26",
+      "first_hop_output_sha256": "853b637660fd7dd776074ae3a6cc10de8aa13ee9d6ab78ba76cc9483dfedee92",
+      "second_hop_input_sha256": "853b637660fd7dd776074ae3a6cc10de8aa13ee9d6ab78ba76cc9483dfedee92",
+      "output_sha256": "7b1ff260f6ca1feeab4800680482cf60854594a71f0ba505a04ddcabeab32208",
+      "first_hop_raw_jsonl_line_sha256": "722bc4dfb8dad179d0eb58e4c243fcff997199a178ef94b5541a836a1e582690",
+      "second_hop_raw_jsonl_line_sha256": "4d726565088141d51ff273822f34f365c9ad4c34a89fc5b79c1fd2c38e31742a",
+      "first_hop_line_number": 44,
+      "second_hop_line_number": 44
+    },
+    {
+      "finding_id": "TR29-Q02",
+      "direction": "ru-zh",
+      "case_id": "contrast-cny-contrast",
+      "severity": "critical",
+      "introduced_at": "second_hop",
+      "finding_ru": "Корректные в actual English 125000 юаней и отрицание 12 юаней превращены в 12万元 и 12万元: 120000 и 120000. Повреждены обе суммы и различающее их противопоставление.",
+      "input": "Общая сумма составляет сто двадцать пять тысяч юаней, а не двенадцать юаней.",
+      "actual_first_hop_output": "The total amount is RMB 125 000, not RMB 12.",
+      "actual_second_hop_input": "The total amount is RMB 125 000, not RMB 12.",
+      "output": "总额为12万元,而非12万元。",
+      "reference": "总价是十二万五千元，不是十二元。",
+      "input_sha256": "0513b86a8ab5bebd7edf5340a9294a3b1c7e6534cf093af553dea291fa7dd025",
+      "first_hop_output_sha256": "f2f3bfcaca21beef1f77b147ca92cd9acd685744df1567306b666c829a96b7d0",
+      "second_hop_input_sha256": "f2f3bfcaca21beef1f77b147ca92cd9acd685744df1567306b666c829a96b7d0",
+      "output_sha256": "b33ab19289afeeffc4fa47ae2133dd686db8fca2641b11369e1e43d341b75c83",
+      "first_hop_raw_jsonl_line_sha256": "7a706f3e88f9c1f890f52ae17b348a7fe8097c7e311ed4e2d24cc151762d689a",
+      "second_hop_raw_jsonl_line_sha256": "10c5ec77d8d5d325f9c19c1ce3a9e54c2384136b7f1fe182a2610b6e1cdc96f0",
+      "first_hop_line_number": 46,
+      "second_hop_line_number": 46
+    },
+    {
+      "finding_id": "TR29-Q03",
+      "direction": "ru-zh",
+      "case_id": "contrast-decimal-eur",
+      "severity": "critical",
+      "introduced_at": "second_hop",
+      "finding_ru": "Actual English сохраняет 1050 EUR и пять центов. Китайский output дает 1500 EUR и 5美分: меняет основную сумму и явно обозначает американские центы.",
+      "input": "Сумма составляет тысячу пятьдесят евро и пять центов.",
+      "actual_first_hop_output": "The amount is one thousand fifty euros and five cents.",
+      "actual_second_hop_input": "The amount is one thousand fifty euros and five cents.",
+      "output": "金额是1500欧元和5美分。",
+      "reference": "金额是一千零五十欧元零五欧分。",
+      "input_sha256": "3e425821715655f344852153c35efd227f2356b8577b6286e9652f89b1d45962",
+      "first_hop_output_sha256": "d79f2527b77b8ad391765b9bea00aba17ac29e36ae499b252a5416af4b71e546",
+      "second_hop_input_sha256": "d79f2527b77b8ad391765b9bea00aba17ac29e36ae499b252a5416af4b71e546",
+      "output_sha256": "dc33d069f11fd4d46fccb8d8d36c7b5e4c6f4ba3295272893489ea53627a2c50",
+      "first_hop_raw_jsonl_line_sha256": "3bbd99fb02b20c9d749d01fb9ba16e2b73d87d1aed46fdd0fdbdb7e372a72640",
+      "second_hop_raw_jsonl_line_sha256": "b997c03ddd046f64dc8831ed61a36117e455f81be32c9054855e012d994ab964",
+      "first_hop_line_number": 47,
+      "second_hop_line_number": 47
+    },
+    {
+      "finding_id": "TR29-Q04",
+      "direction": "ru-zh",
+      "case_id": "contrast-self-correction",
+      "severity": "critical",
+      "introduced_at": "first_hop",
+      "finding_ru": "Последнее поручение отправить только 10 EUR исчезло уже в сохраненном RU→EN output. Второй hop получает текст без поручения и суммы и не восстанавливает их. Подмена слова transfer на translation также возникла до второго hop.",
+      "input": "Перевод составляет... нет, отмените это. Отправьте только десять евро.",
+      "actual_first_hop_output": "The translation is... no, cancel it.",
+      "actual_second_hop_input": "The translation is... no, cancel it.",
+      "output": "翻译是... 不 取消",
+      "reference": "转账金额是……不，取消。只汇十欧元。",
+      "input_sha256": "b2ce20b9177e5a276f2b37f50bb0c1bd1cb28380bb96da131e32d28bdaa07796",
+      "first_hop_output_sha256": "a6dc964a732a4ba69922baf68890b8f6a8c0d9674387ab1a2f16a9396a60f7cd",
+      "second_hop_input_sha256": "a6dc964a732a4ba69922baf68890b8f6a8c0d9674387ab1a2f16a9396a60f7cd",
+      "output_sha256": "57599639c8f92e981ad1f70db29f268492dbbc624b5e9163dd9b27a10ca15f6f",
+      "first_hop_raw_jsonl_line_sha256": "3c1c36c98e76653f33028705d003a6a688991c25d2c26dfadd5383348669aa62",
+      "second_hop_raw_jsonl_line_sha256": "f33fa650778622770327ae4c693268d13f486e0282983a90051987ebf17ecf99",
+      "first_hop_line_number": 51,
+      "second_hop_line_number": 51
+    },
+    {
+      "finding_id": "TR29-Q05",
+      "direction": "ru-ar",
+      "case_id": "contrast-self-correction",
+      "severity": "critical",
+      "introduced_at": "first_hop",
+      "finding_ru": "Последнее поручение отправить только 10 EUR исчезло уже в сохраненном RU→EN output. Второй hop получает текст без поручения и суммы и не восстанавливает их. Подмена слова transfer на translation также возникла до второго hop.",
+      "input": "Перевод составляет... нет, отмените это. Отправьте только десять евро.",
+      "actual_first_hop_output": "The translation is... no, cancel it.",
+      "actual_second_hop_input": "The translation is... no, cancel it.",
+      "output": "الترجمة هي... لا، إلغاء ذلك.",
+      "reference": "التحويل هو... لا، ألغِ ذلك. أرسل عشرة يورو فقط.",
+      "input_sha256": "b2ce20b9177e5a276f2b37f50bb0c1bd1cb28380bb96da131e32d28bdaa07796",
+      "first_hop_output_sha256": "a6dc964a732a4ba69922baf68890b8f6a8c0d9674387ab1a2f16a9396a60f7cd",
+      "second_hop_input_sha256": "a6dc964a732a4ba69922baf68890b8f6a8c0d9674387ab1a2f16a9396a60f7cd",
+      "output_sha256": "c021bd0882130a7ef214a04e1e8985f3f2119a055cb2850a8f38bb3e7dff5ec4",
+      "first_hop_raw_jsonl_line_sha256": "3c1c36c98e76653f33028705d003a6a688991c25d2c26dfadd5383348669aa62",
+      "second_hop_raw_jsonl_line_sha256": "7823e983902c04ef8eb1703415a6c36bee2d656329db42ebe019ab89e1a10b87",
+      "first_hop_line_number": 51,
+      "second_hop_line_number": 51
+    },
+    {
+      "finding_id": "TR29-Q06",
+      "direction": "zh-ru",
+      "case_id": "contrast-cny-contrast",
+      "severity": "critical",
+      "introduced_at": "first_hop",
+      "finding_ru": "Китайские юани заменены долларами уже в actual ZH→EN. Новый EN→RU faithfully сохраняет ошибочные USD. Второй case является повтором прежнего авторского текста, не независимым новым доказательством.",
+      "input": "总价是十二万五千元，不是十二元。",
+      "actual_first_hop_output": "The total price is $125,000, not $12.",
+      "actual_second_hop_input": "The total price is $125,000, not $12.",
+      "output": "Общая цена - 125 000 долларов, а не 12 долларов.",
+      "reference": "Общая сумма составляет сто двадцать пять тысяч юаней, а не двенадцать юаней.",
+      "input_sha256": "39edd3f0f2b43d093144510e85b126acb788129d8b0995d9511d2b70000a8a57",
+      "first_hop_output_sha256": "613a0ec01868010ab9e331d1ba275e67e9097a59232c80881384df5d73b9d41c",
+      "second_hop_input_sha256": "613a0ec01868010ab9e331d1ba275e67e9097a59232c80881384df5d73b9d41c",
+      "output_sha256": "eb679b6000fb627675467e711057db53b818095916001b2c4bb7a5e56c32c4b5",
+      "first_hop_raw_jsonl_line_sha256": "92d5a89f04fea3d91785501de0e860375695a473862316234c749b75c41b5677",
+      "second_hop_raw_jsonl_line_sha256": "d4d539ad346d3d68f46c51439b17c372c853a38e80c35c35dcd22e628afdb0eb",
+      "first_hop_line_number": 46,
+      "second_hop_line_number": 46
+    },
+    {
+      "finding_id": "TR29-Q07",
+      "direction": "zh-ru",
+      "case_id": "original-zh-ru-money-005",
+      "severity": "critical",
+      "introduced_at": "first_hop",
+      "finding_ru": "Китайские юани заменены долларами уже в actual ZH→EN. Новый EN→RU faithfully сохраняет ошибочные USD. Второй case является повтором прежнего авторского текста, не независимым новым доказательством.",
+      "input": "总价是十二万五千元，不是十二元。",
+      "actual_first_hop_output": "The total price is $125,000, not $12.",
+      "actual_second_hop_input": "The total price is $125,000, not $12.",
+      "output": "Общая цена - 125 000 долларов, а не 12 долларов.",
+      "reference": null,
+      "input_sha256": "39edd3f0f2b43d093144510e85b126acb788129d8b0995d9511d2b70000a8a57",
+      "first_hop_output_sha256": "613a0ec01868010ab9e331d1ba275e67e9097a59232c80881384df5d73b9d41c",
+      "second_hop_input_sha256": "613a0ec01868010ab9e331d1ba275e67e9097a59232c80881384df5d73b9d41c",
+      "output_sha256": "eb679b6000fb627675467e711057db53b818095916001b2c4bb7a5e56c32c4b5",
+      "first_hop_raw_jsonl_line_sha256": "003ef43f4af3d3320043f33cd674b2fc2a578133549584c4a734e83ddd39d82c",
+      "second_hop_raw_jsonl_line_sha256": "d96e854031f773e57fd065c40c0c06f772408bcdcf32b390e1567bd22df38524",
+      "first_hop_line_number": 53,
+      "second_hop_line_number": 53
+    },
+    {
+      "finding_id": "TR29-Q08",
+      "direction": "zh-ru",
+      "case_id": "contrast-decimal-eur",
+      "severity": "critical",
+      "introduced_at": "first_hop",
+      "finding_ru": "Исходные 1050 EUR и 0.05 EUR превращены в 1050 EUR и 50 EUR в первом hop. Финальный русский output сохраняет ошибочные 50 евро.",
+      "input": "金额是一千零五十欧元零五欧分。",
+      "actual_first_hop_output": "The amount is Euro1050 and Euro50.",
+      "actual_second_hop_input": "The amount is Euro1050 and Euro50.",
+      "output": "Эта сумма составляет 1050 евро и 50 евро.",
+      "reference": "Сумма составляет тысячу пятьдесят евро и пять центов.",
+      "input_sha256": "1c0f5be706c51c50d3db60ae99c2b32f9e06c7557c4c9fa8dec98bb306e952e5",
+      "first_hop_output_sha256": "aa9ee8c893074ae6c7629c28f3dd97e980a0ae47d607523f928d556846bfc2ce",
+      "second_hop_input_sha256": "aa9ee8c893074ae6c7629c28f3dd97e980a0ae47d607523f928d556846bfc2ce",
+      "output_sha256": "efd07a982237c7402eedc22d958bd84e5d67122aeebaf4e519e0bdd3644c8d35",
+      "first_hop_raw_jsonl_line_sha256": "638c8d1e3846457a31487b1f12938b77e4c414342ed409134549ace59d4294b2",
+      "second_hop_raw_jsonl_line_sha256": "cb097ac5802c9f0a0e61504e4267f4898723ae1ac097dbe6db1aecc8f9b4df80",
+      "first_hop_line_number": 47,
+      "second_hop_line_number": 47
+    },
+    {
+      "finding_id": "TR29-Q09",
+      "direction": "zh-ru",
+      "case_id": "contrast-sergey-meeting-price",
+      "severity": "critical",
+      "introduced_at": "second_hop",
+      "finding_ru": "Actual English содержит отдельное предложение The price is $12,000.; новый русский output целиком его теряет, оставляя приветствие и начало встречи.",
+      "input": "你好，谢尔盖。我们现在可以开始会议。价格是一万二千美元。",
+      "actual_first_hop_output": "Hello, Sergei. We can start the meeting now. The price is $12,000.",
+      "actual_second_hop_input": "Hello, Sergei. We can start the meeting now. The price is $12,000.",
+      "output": "Здравствуй, Сергей, мы можем начать собрание сейчас.",
+      "reference": "Здравствуйте, Сергей. Мы можем начать встречу сейчас. Цена составляет двенадцать тысяч долларов.",
+      "input_sha256": "2f4452fe482c4656aa616e9adcddd7e7d05f494fa418208db94de944997ea889",
+      "first_hop_output_sha256": "25faadb2b4e1127e68a3d6e8876ffbd1706f64f51aa434b63be5a268608e7220",
+      "second_hop_input_sha256": "25faadb2b4e1127e68a3d6e8876ffbd1706f64f51aa434b63be5a268608e7220",
+      "output_sha256": "ebf465d2695a59ce5c243baf23065ab7b7370f0f4fa3bdcc2a61a90727d9373f",
+      "first_hop_raw_jsonl_line_sha256": "bd77af06d8bb3bd072c776076917270fe7eba6a707d47cd80ff2ca477d7eb2b0",
+      "second_hop_raw_jsonl_line_sha256": "596756338de59dc1333c15dbed96432cb14aa3ea31e6ed625a4ada7dc04b3df5",
+      "first_hop_line_number": 49,
+      "second_hop_line_number": 49
+    },
+    {
+      "finding_id": "TR29-Q10",
+      "direction": "zh-ru",
+      "case_id": "contrast-self-correction",
+      "severity": "critical",
+      "introduced_at": "second_hop",
+      "finding_ru": "Actual English еще содержит Ten euros only.; финальный русский output теряет поручение и сумму, оставляя только отмену.",
+      "input": "转账金额是……不，取消。只汇十欧元。",
+      "actual_first_hop_output": "Transfers are... no, cancels. Ten euros only.",
+      "actual_second_hop_input": "Transfers are... no, cancels. Ten euros only.",
+      "output": "Переводы... нет, отменяется.",
+      "reference": "Перевод составляет... нет, отмените это. Отправьте только десять евро.",
+      "input_sha256": "2beaa243a083e95765ec5904f99ad9f6ec62e1ce3627d2487bd6f58ae9721042",
+      "first_hop_output_sha256": "4edf593a33592d0eaff9c1c8eaddcd411c2c43e8cca39abd696afbe9ad541201",
+      "second_hop_input_sha256": "4edf593a33592d0eaff9c1c8eaddcd411c2c43e8cca39abd696afbe9ad541201",
+      "output_sha256": "d6737e936af9fdbab6dff51da5de0e6f4babf7e5639f1e70811922abfb003e47",
+      "first_hop_raw_jsonl_line_sha256": "740c672a07eec6ad866b74ecfaaecade9787b36419b6e4684416e9b9ffb1c12a",
+      "second_hop_raw_jsonl_line_sha256": "c9e90c6f7e6c60b469bc90829d6e573b2919c20b431d8a7e64ce3581f223f8a9",
+      "first_hop_line_number": 51,
+      "second_hop_line_number": 51
+    },
+    {
+      "finding_id": "TR29-Q11",
+      "direction": "ar-ru",
+      "case_id": "contrast-sergey-meeting-price",
+      "severity": "critical",
+      "introduced_at": "first_hop",
+      "finding_ru": "Цена 12000 USD отсутствует уже в actual AR→EN output и не попадает в финальный русский перевод.",
+      "input": "مرحباً سيرغي. يمكننا بدء الاجتماع الآن. السعر اثنا عشر ألف دولار.",
+      "actual_first_hop_output": "Hey, Sergei, we can start the meeting now.",
+      "actual_second_hop_input": "Hey, Sergei, we can start the meeting now.",
+      "output": "Эй, Сергей, мы можем начать собрание.",
+      "reference": "Здравствуйте, Сергей. Мы можем начать встречу сейчас. Цена составляет двенадцать тысяч долларов.",
+      "input_sha256": "ea9fd1b0407663b1e5ca7698663889cc9db07cb507f1c0ed3798acd8ce6ca838",
+      "first_hop_output_sha256": "1bb1782ac7b3f1c26f660c77d1cf77af8d507099c8bbe65317b0a53b62a28680",
+      "second_hop_input_sha256": "1bb1782ac7b3f1c26f660c77d1cf77af8d507099c8bbe65317b0a53b62a28680",
+      "output_sha256": "e043a0a6e09268b2e9520b96d00700b9d5327825a3955be1473428a5443565de",
+      "first_hop_raw_jsonl_line_sha256": "fdfb4f035108dd687643b6133d93473c5e4fd80657c26ffdb35d2599ad6c9379",
+      "second_hop_raw_jsonl_line_sha256": "3afae30e821b289e46af6debcc4b7f5052736649ae59fe3a5593f5efe9a3945f",
+      "first_hop_line_number": 49,
+      "second_hop_line_number": 49
+    },
+    {
+      "finding_id": "TR29-Q12",
+      "direction": "ar-ru",
+      "case_id": "contrast-self-correction",
+      "severity": "critical",
+      "introduced_at": "first_hop",
+      "finding_ru": "Поручение отправить только 10 EUR потеряно в actual AR→EN. Второй этап переводит оставшуюся отмену без нового поручения.",
+      "input": "التحويل هو... لا، ألغِ ذلك. أرسل عشرة يورو فقط.",
+      "actual_first_hop_output": "The transfer is... no, cancel that.",
+      "actual_second_hop_input": "The transfer is... no, cancel that.",
+      "output": "Перевод... нет, отмени это.",
+      "reference": "Перевод составляет... нет, отмените это. Отправьте только десять евро.",
+      "input_sha256": "b8ef74187aee71b764cd84ef7ad9fc7ea73dcc5d53e34b3119a35c9b5ac0f1bc",
+      "first_hop_output_sha256": "15550557b8410144beaa8937232ebf76f12312747b35153819fffc61e5c771df",
+      "second_hop_input_sha256": "15550557b8410144beaa8937232ebf76f12312747b35153819fffc61e5c771df",
+      "output_sha256": "594473cc4038d844f3235a5afe6dc80fe1b8ce793a6d57e511e59149344a3021",
+      "first_hop_raw_jsonl_line_sha256": "7a6aa3c981a5b352b65af6ca04430a7a854deaed5e30ec0532a6149871a3017a",
+      "second_hop_raw_jsonl_line_sha256": "aa38680adac9f329ae89b9d69ed06328398097f191ecb2559c1a9988e51f433c",
+      "first_hop_line_number": 51,
+      "second_hop_line_number": 51
+    },
+    {
+      "finding_id": "TR29-Q13",
+      "direction": "ar-ru",
+      "case_id": "original-ar-ru-money-006",
+      "severity": "critical",
+      "introduced_at": "first_hop",
+      "finding_ru": "В исходном арабском противопоставлены 12000 USD и 1200 USD. Actual AR→EN теряет тысячу во второй сумме и дает 200 USD; русский output сохраняет это искажение.",
+      "input": "السعر اثنا عشر ألف دولار وليس ألفاً ومئتي دولار.",
+      "actual_first_hop_output": "The price is twelve thousand dollars, not two hundred dollars.",
+      "actual_second_hop_input": "The price is twelve thousand dollars, not two hundred dollars.",
+      "output": "Цена 12 тысяч долларов, а не 200 долларов.",
+      "reference": null,
+      "input_sha256": "e33e9b0f6afe0c3b575f0d7565a3acd7c32d61c9dd869cc2444e337f545405c6",
+      "first_hop_output_sha256": "be5016e8cd98d75d570333a22ce422c3192e2dde50c615153d24faf61adf39a2",
+      "second_hop_input_sha256": "be5016e8cd98d75d570333a22ce422c3192e2dde50c615153d24faf61adf39a2",
+      "output_sha256": "806aa62a2fea99b140dcec079365bf301e43b6e89d38838ac424c0d496001533",
+      "first_hop_raw_jsonl_line_sha256": "156958113b1c2d5223bf148490a1acf8b6258d183eee2edb39c7573bee410fc2",
+      "second_hop_raw_jsonl_line_sha256": "7982207d4845a1204d4bff843d00e2b5d399942f3ca3f834f53fc56033cae403",
+      "first_hop_line_number": 53,
+      "second_hop_line_number": 53
+    },
+    {
+      "finding_id": "TR29-Q14",
+      "direction": "ru-zh",
+      "case_id": "original-ru-en-negation-004",
+      "severity": "semantic_risk",
+      "introduced_at": "first_hop",
+      "finding_ru": "Условие подтверждения именно суммы превращено в неоднозначное until it is confirmed. Финальный output не называет сумму; нельзя считать доказанным сохранение объекта подтверждения.",
+      "input": "Не отправляйте счет до подтверждения суммы.",
+      "actual_first_hop_output": "Don't send the bill until it's confirmed.",
+      "actual_second_hop_input": "Don't send the bill until it's confirmed.",
+      "output": "在确认之前不要寄帐单",
+      "reference": null,
+      "input_sha256": "5962246affb2cf9a686e54a0d9e5fd408d606be491fb410c827a54882b0483b2",
+      "first_hop_output_sha256": "92cacfb475bbf93428c7d6e22983700e354a5f1d6af22784114caba255cf76fd",
+      "second_hop_input_sha256": "92cacfb475bbf93428c7d6e22983700e354a5f1d6af22784114caba255cf76fd",
+      "output_sha256": "06e1eceee1a85356ada55ec3127098be25e99bc5ba2e1272d092c9cc9b6ec762",
+      "first_hop_raw_jsonl_line_sha256": "e80b49bbfec0c1417544ebcfa652208fa886c940dbc4775680a69ff2bdcca642",
+      "second_hop_raw_jsonl_line_sha256": "467d79c34d43bbbcdc73bf23c787433ac23cbe2185774987947209cd551ad939",
+      "first_hop_line_number": 54,
+      "second_hop_line_number": 54
+    },
+    {
+      "finding_id": "TR29-Q15",
+      "direction": "ru-ar",
+      "case_id": "original-ru-en-negation-004",
+      "severity": "semantic_risk",
+      "introduced_at": "first_hop",
+      "finding_ru": "Условие подтверждения именно суммы превращено в неоднозначное until it is confirmed. Финальный output не называет сумму; нельзя считать доказанным сохранение объекта подтверждения.",
+      "input": "Не отправляйте счет до подтверждения суммы.",
+      "actual_first_hop_output": "Don't send the bill until it's confirmed.",
+      "actual_second_hop_input": "Don't send the bill until it's confirmed.",
+      "output": "لا ترسل الفاتورة حتى يتم تأكيدها",
+      "reference": null,
+      "input_sha256": "5962246affb2cf9a686e54a0d9e5fd408d606be491fb410c827a54882b0483b2",
+      "first_hop_output_sha256": "92cacfb475bbf93428c7d6e22983700e354a5f1d6af22784114caba255cf76fd",
+      "second_hop_input_sha256": "92cacfb475bbf93428c7d6e22983700e354a5f1d6af22784114caba255cf76fd",
+      "output_sha256": "f8161ab635e65a41a76f497365dd4ff5ae3597d5f93fd20ae647945a43c8d689",
+      "first_hop_raw_jsonl_line_sha256": "e80b49bbfec0c1417544ebcfa652208fa886c940dbc4775680a69ff2bdcca642",
+      "second_hop_raw_jsonl_line_sha256": "1b11a54275390521bd8aa1f8e65ff493d56a90c38721f13ec59611da96b42bd4",
+      "first_hop_line_number": 54,
+      "second_hop_line_number": 54
+    },
+    {
+      "finding_id": "TR29-Q16",
+      "direction": "ru-zh",
+      "case_id": "contrast-name-five-minutes",
+      "severity": "semantic_risk",
+      "introduced_at": "second_hop_after_ambiguous_first_hop",
+      "finding_ru": "RU говорит о подключении через пять минут. English be on неоднозначен; китайское 上场 скорее обозначает выход на сцену/площадку. Это риск неверного действия, время и имя сохранены.",
+      "input": "Мария Волкова подключится через пять минут.",
+      "actual_first_hop_output": "Maria Volkova will be on in five minutes.",
+      "actual_second_hop_input": "Maria Volkova will be on in five minutes.",
+      "output": "玛利亚・沃尔科娃五分钟后就要上场了",
+      "reference": "玛丽亚·沃尔科娃将在五分钟后加入。",
+      "input_sha256": "86d296a8d9acff3592491e3a17d7a6cb53068329c60f3eafa1841c4cef6711c0",
+      "first_hop_output_sha256": "d0be3be09ac258f7c1272bc424123a629f80b87c63e75a23edf4320264d8bdd3",
+      "second_hop_input_sha256": "d0be3be09ac258f7c1272bc424123a629f80b87c63e75a23edf4320264d8bdd3",
+      "output_sha256": "539cee8a72b54754e48640c1cf68281b1e3e3ee60a3ede1c6797bc27cc6320f1",
+      "first_hop_raw_jsonl_line_sha256": "2255701d691bcf8b62c501cbefe6f6e25eb7b511ddf17aaf46ce396fc27843e0",
+      "second_hop_raw_jsonl_line_sha256": "2a7bd490a3ba085d6fb79ebd563c1c33775c35699050726eb3f19e68ae30da06",
+      "first_hop_line_number": 52,
+      "second_hop_line_number": 52
+    },
+    {
+      "finding_id": "TR29-Q17",
+      "direction": "ru-zh",
+      "case_id": "original-ru-en-name-009",
+      "severity": "semantic_risk",
+      "introduced_at": "second_hop_after_ambiguous_first_hop",
+      "finding_ru": "Повтор contrast-name-five-minutes: присоединение к встрече передано через 上场; не считать независимым новым сценарием.",
+      "input": "Мария Волкова подключится через пять минут.",
+      "actual_first_hop_output": "Maria Volkova will be on in five minutes.",
+      "actual_second_hop_input": "Maria Volkova will be on in five minutes.",
+      "output": "玛利亚・沃尔科娃五分钟后就要上场了",
+      "reference": null,
+      "input_sha256": "86d296a8d9acff3592491e3a17d7a6cb53068329c60f3eafa1841c4cef6711c0",
+      "first_hop_output_sha256": "d0be3be09ac258f7c1272bc424123a629f80b87c63e75a23edf4320264d8bdd3",
+      "second_hop_input_sha256": "d0be3be09ac258f7c1272bc424123a629f80b87c63e75a23edf4320264d8bdd3",
+      "output_sha256": "539cee8a72b54754e48640c1cf68281b1e3e3ee60a3ede1c6797bc27cc6320f1",
+      "first_hop_raw_jsonl_line_sha256": "3c9f61a036dc4f2463ad4aae8fab74ad3aab90350a5f48c6db73c8562ff5c776",
+      "second_hop_raw_jsonl_line_sha256": "1202dab98d70f31fb9695bfacf0e283e2337bf8d5dd974b6406714bec0d764d2",
+      "first_hop_line_number": 55,
+      "second_hop_line_number": 55
+    },
+    {
+      "finding_id": "TR29-Q18",
+      "direction": "ru-zh",
+      "case_id": "contrast-time-1515",
+      "severity": "native_review_required",
+      "introduced_at": "first_hop_and_second_hop_ambiguity",
+      "finding_ru": "Четкое 15:15 стало английским 15 o clock, 15 minutes и затем буквальной конструкцией в target. Здесь НЕ заявляется доказанная замена на 15:00: требуется носитель и проверка произнесения итоговой фразы.",
+      "input": "Встреча начинается в пятнадцать часов пятнадцать минут.",
+      "actual_first_hop_output": "The meeting starts at 15 o'clock, 15 minutes.",
+      "actual_second_hop_input": "The meeting starts at 15 o'clock, 15 minutes.",
+      "output": "会议于15点开始,15分钟",
+      "reference": "会议在下午三点十五分开始。",
+      "input_sha256": "9c74a2be462065c1bbaa62bee1356591ed65e811c93ef4c2d4cedd687cc59439",
+      "first_hop_output_sha256": "af4dc8303af9730bf7db5bb591c2037cfd210df6774ec4e39b6c470fd09c0c9f",
+      "second_hop_input_sha256": "af4dc8303af9730bf7db5bb591c2037cfd210df6774ec4e39b6c470fd09c0c9f",
+      "output_sha256": "e09f74e567b312dbf97c987d570788bcf73ff12f2eb999397795fa2e56b83c62",
+      "first_hop_raw_jsonl_line_sha256": "35f46baae99f8e6c972bfe69a4846fc50379e7ec228bd2fef7206d588c307b45",
+      "second_hop_raw_jsonl_line_sha256": "9d97783eaf1eb44a3a1e44131d49681ad4b7d13123b74e366fdeda0fce359efb",
+      "first_hop_line_number": 50,
+      "second_hop_line_number": 50
+    },
+    {
+      "finding_id": "TR29-Q19",
+      "direction": "ru-ar",
+      "case_id": "contrast-time-1515",
+      "severity": "native_review_required",
+      "introduced_at": "first_hop_and_second_hop_ambiguity",
+      "finding_ru": "Четкое 15:15 стало английским 15 o clock, 15 minutes и затем буквальной конструкцией в target. Здесь НЕ заявляется доказанная замена на 15:00: требуется носитель и проверка произнесения итоговой фразы.",
+      "input": "Встреча начинается в пятнадцать часов пятнадцать минут.",
+      "actual_first_hop_output": "The meeting starts at 15 o'clock, 15 minutes.",
+      "actual_second_hop_input": "The meeting starts at 15 o'clock, 15 minutes.",
+      "output": "يَبْدأُ الإجتماع في السّاعة 15، 15 دقيقة.",
+      "reference": "يبدأ الاجتماع في الساعة الثالثة والربع بعد الظهر.",
+      "input_sha256": "9c74a2be462065c1bbaa62bee1356591ed65e811c93ef4c2d4cedd687cc59439",
+      "first_hop_output_sha256": "af4dc8303af9730bf7db5bb591c2037cfd210df6774ec4e39b6c470fd09c0c9f",
+      "second_hop_input_sha256": "af4dc8303af9730bf7db5bb591c2037cfd210df6774ec4e39b6c470fd09c0c9f",
+      "output_sha256": "17c1947441136f180c0f7d31afd8a747b5c56b900f14a4bd4390df4f00c8b11e",
+      "first_hop_raw_jsonl_line_sha256": "35f46baae99f8e6c972bfe69a4846fc50379e7ec228bd2fef7206d588c307b45",
+      "second_hop_raw_jsonl_line_sha256": "51f25cf56c2919fdd016a039a89b0cef23267acb491efa4c8e6a655a7ffb6810",
+      "first_hop_line_number": 50,
+      "second_hop_line_number": 50
+    },
+    {
+      "finding_id": "TR29-Q20",
+      "direction": "ru-ar",
+      "case_id": "contrast-cny-contrast",
+      "severity": "native_review_required",
+      "introduced_at": "target_number_format",
+      "finding_ru": "Output содержит логическую последовательность 000 125 в RTL-тексте. Не классифицировать это как доказанную подмену значения по одному порядку цифр в JSON; нужны native review, UI bidi и TTS acceptance.",
+      "input": "Общая сумма составляет сто двадцать пять тысяч юаней, а не двенадцать юаней.",
+      "actual_first_hop_output": "The total amount is RMB 125 000, not RMB 12.",
+      "actual_second_hop_input": "The total amount is RMB 125 000, not RMB 12.",
+      "output": "والمبلغ الإجمالي هو 000 125 يوان، وليس 12 يوان.",
+      "reference": "المجموع مئة وخمسة وعشرون ألف يوان، وليس اثني عشر يواناً.",
+      "input_sha256": "0513b86a8ab5bebd7edf5340a9294a3b1c7e6534cf093af553dea291fa7dd025",
+      "first_hop_output_sha256": "f2f3bfcaca21beef1f77b147ca92cd9acd685744df1567306b666c829a96b7d0",
+      "second_hop_input_sha256": "f2f3bfcaca21beef1f77b147ca92cd9acd685744df1567306b666c829a96b7d0",
+      "output_sha256": "c7d5d2a59b5e859eb9694e3a59c38c6f9d50cad49c2074311bccd79688174ea1",
+      "first_hop_raw_jsonl_line_sha256": "7a706f3e88f9c1f890f52ae17b348a7fe8097c7e311ed4e2d24cc151762d689a",
+      "second_hop_raw_jsonl_line_sha256": "64bb146f88c71cc66ef8d96188e93ed88195d21733aed42e8f6acb03048569e1",
+      "first_hop_line_number": 46,
+      "second_hop_line_number": 46
+    },
+    {
+      "finding_id": "TR29-Q21",
+      "direction": "ar-ru",
+      "case_id": "contrast-conditional-negation",
+      "severity": "semantic_risk",
+      "introduced_at": "both_hops",
+      "finding_ru": "Исходное запрещающее указание передано декларативным You do not approve / Вы не одобряете; review contract также стало пересмотрите контракт. Требуется приемка инструкции/условия, но здесь не заявляется исчезновение самого отрицания.",
+      "input": "لا توافق على السعر قبل مراجعة العقد.",
+      "actual_first_hop_output": "You don't approve the price before you review the contract.",
+      "actual_second_hop_input": "You don't approve the price before you review the contract.",
+      "output": "Вы не одобряете цену до того, как пересмотрите контракт.",
+      "reference": "Не одобряйте цену до проверки договора.",
+      "input_sha256": "e54bd0cdd9af35fc89101a1e88e092530018e401742c185e277656a6bda0b7da",
+      "first_hop_output_sha256": "6339d94b272d031af1468fc9f349fad1984c0e7110529205a48b75559a4f5eb7",
+      "second_hop_input_sha256": "6339d94b272d031af1468fc9f349fad1984c0e7110529205a48b75559a4f5eb7",
+      "output_sha256": "16bf2decabacbcabf9843ed928dc3b080f1aa64dc777586e314857cde27cef1f",
+      "first_hop_raw_jsonl_line_sha256": "b4a2f12af99166497d5975ebcb000ef25046e4727f8d848196b9e581ac0d4551",
+      "second_hop_raw_jsonl_line_sha256": "669a9e6b0f0a29653ff22cb6b01ee6413df51833668e94781620216fdcf10ecf",
+      "first_hop_line_number": 48,
+      "second_hop_line_number": 48
+    },
+    {
+      "finding_id": "TR29-Q22",
+      "direction": "ar-ru",
+      "case_id": "original-ar-en-negation-012",
+      "severity": "semantic_risk",
+      "introduced_at": "both_hops",
+      "finding_ru": "Исходное запрещающее указание передано декларативным You do not approve / Вы не одобряете; review contract также стало пересмотрите контракт. Требуется приемка инструкции/условия, но здесь не заявляется исчезновение самого отрицания.",
+      "input": "لا توافق على السعر قبل مراجعة العقد.",
+      "actual_first_hop_output": "You don't approve the price before you review the contract.",
+      "actual_second_hop_input": "You don't approve the price before you review the contract.",
+      "output": "Вы не одобряете цену до того, как пересмотрите контракт.",
+      "reference": null,
+      "input_sha256": "e54bd0cdd9af35fc89101a1e88e092530018e401742c185e277656a6bda0b7da",
+      "first_hop_output_sha256": "6339d94b272d031af1468fc9f349fad1984c0e7110529205a48b75559a4f5eb7",
+      "second_hop_input_sha256": "6339d94b272d031af1468fc9f349fad1984c0e7110529205a48b75559a4f5eb7",
+      "output_sha256": "16bf2decabacbcabf9843ed928dc3b080f1aa64dc777586e314857cde27cef1f",
+      "first_hop_raw_jsonl_line_sha256": "7c1a827bb303d4bd199fc0ccb41629dcbe9e7edef7e48fe283484ef1f783ff3e",
+      "second_hop_raw_jsonl_line_sha256": "fddc032b4a2f09da492ed7bcb1031eebc732a8d686bacac149ab6f837fb83a37",
+      "first_hop_line_number": 54,
+      "second_hop_line_number": 54
+    },
+    {
+      "finding_id": "TR29-Q23",
+      "direction": "zh-ru",
+      "case_id": "contrast-conditional-negation",
+      "severity": "semantic_risk",
+      "introduced_at": "second_hop",
+      "finding_ru": "The contract has been reviewed передано как контракт будет пересмотрен. Запрет до условия сохранен, но проверка и изменение договора могут быть поняты по-разному; это отдельный контекстный риск, не доказанная потеря отрицания.",
+      "input": "审查合同之前，不要批准价格。",
+      "actual_first_hop_output": "The price should not be approved until the contract has been reviewed.",
+      "actual_second_hop_input": "The price should not be approved until the contract has been reviewed.",
+      "output": "Цена не должна утверждаться до тех пор, пока контракт не будет пересмотрен.",
+      "reference": "Не одобряйте цену до проверки договора.",
+      "input_sha256": "661e4286f428644f538e95c1927e0690feff2f1e41b58075b7a2348ced525c37",
+      "first_hop_output_sha256": "d90ce8b8fb7a4111aa91a4878adf0ee5018f85094beba5c42a69652f6e67bc57",
+      "second_hop_input_sha256": "d90ce8b8fb7a4111aa91a4878adf0ee5018f85094beba5c42a69652f6e67bc57",
+      "output_sha256": "1ddc2a66d243e34c368665baaba6fb1e17ef7e2bf1592d550c037489fb4da42a",
+      "first_hop_raw_jsonl_line_sha256": "5e50619a7e41d8907de48d43dc9a04563b9782368630b8a8dde4f224f676ab72",
+      "second_hop_raw_jsonl_line_sha256": "2dc86eae1ee30b53a3df7b294970f7f62c9d8daab2553ec96935cb9c11063511",
+      "first_hop_line_number": 48,
+      "second_hop_line_number": 48
+    },
+    {
+      "finding_id": "TR29-Q24",
+      "direction": "ru-zh",
+      "case_id": "fleurs-1842",
+      "severity": "semantic_error",
+      "introduced_at": "first_hop",
+      "finding_ru": "Термины пера бородки и бородочки стали beards and beards в RU→EN; второй hop переносит буквальные бороды в итоговый китайский/арабский текст. Нужен терминологический контроль, а не исправление только цифр.",
+      "input": "Так как у перьев динозавров отсутствует хорошо развитый стержень, называемый рахисом, но все же имеются другие отличительные черты — бородки и бородочки — исследователи пришли к выводу, что рахис, скорее всего, появился позднее путем эволюционного развития других отличительных черт.",
+      "actual_first_hop_output": "Since dinosaur feathers do not have a well-developed rod known as rachis, but still have other features — beards and beards — researchers have concluded that rachis is likely to later emerge from the evolutionary development of other features.",
+      "actual_second_hop_input": "Since dinosaur feathers do not have a well-developed rod known as rachis, but still have other features — beards and beards — researchers have concluded that rachis is likely to later emerge from the evolutionary development of other features.",
+      "output": "由于恐龙羽毛没有一种很发达的杆子,即拉奇丝,但是仍然有其他特征——胡子和胡子——研究者得出结论,拉奇丝可能随后从其他特征的演变中产生。",
+      "reference": "恐龙的羽毛并没有发育良好的主干——这称为“羽轴”，但还是有羽毛的其他特征，比如羽枝和羽小枝，研究人员推断羽轴的进化可能比这些其他特征晚。",
+      "input_sha256": "c1d1a75b197bdc43915940aab30ee6e3512db6da27320a77bb87a1de4c0d2530",
+      "first_hop_output_sha256": "853cb4e88eed86c32a47c26fc667c999d0b247c13fc3ce52a2a6348757727705",
+      "second_hop_input_sha256": "853cb4e88eed86c32a47c26fc667c999d0b247c13fc3ce52a2a6348757727705",
+      "output_sha256": "1ecf07bab60cb87eb99863e3647386d969ff4a0702249c14b726cab5c3cbe064",
+      "first_hop_raw_jsonl_line_sha256": "ee6ae84bd9854abf34d52a2a8a5655148fc77a672d2ca9498b3153435645dcf5",
+      "second_hop_raw_jsonl_line_sha256": "434ac3e838d94f10b8c1704861207cc24d56fcda25bf1d271c067e43c3525310",
+      "first_hop_line_number": 22,
+      "second_hop_line_number": 22
+    },
+    {
+      "finding_id": "TR29-Q25",
+      "direction": "ru-ar",
+      "case_id": "fleurs-1842",
+      "severity": "semantic_error",
+      "introduced_at": "first_hop",
+      "finding_ru": "Термины пера бородки и бородочки стали beards and beards в RU→EN; второй hop переносит буквальные бороды в итоговый китайский/арабский текст. Нужен терминологический контроль, а не исправление только цифр.",
+      "input": "Так как у перьев динозавров отсутствует хорошо развитый стержень, называемый рахисом, но все же имеются другие отличительные черты — бородки и бородочки — исследователи пришли к выводу, что рахис, скорее всего, появился позднее путем эволюционного развития других отличительных черт.",
+      "actual_first_hop_output": "Since dinosaur feathers do not have a well-developed rod known as rachis, but still have other features — beards and beards — researchers have concluded that rachis is likely to later emerge from the evolutionary development of other features.",
+      "actual_second_hop_input": "Since dinosaur feathers do not have a well-developed rod known as rachis, but still have other features — beards and beards — researchers have concluded that rachis is likely to later emerge from the evolutionary development of other features.",
+      "output": "وبما ان ريش الديناصورات لا يحتوي على قضيب متطور يُعرف باسم الراتشي ، لكنه لا يزال يحتوي على ميزات اخرى — اللحى واللحية — استنتج الباحثون ان الراتشي من المرجح ان يخرج لاحقا من التطور التطوري لملامح اخرى .",
+      "reference": "لأن ريش الديناصورات لا يحتوي سلسلة عظمية مكتملة التطور، تدعى \"العمود الفقري\"، ولكنها تمتلك خصائص أخرى للريش - كالنتوءات والنتوءات الصغرى - خلص الباحثون أن العمود الفقري كان على الأرجح نشأة تطورية لاحقة لهذه الخصائص الأخرى.",
+      "input_sha256": "c1d1a75b197bdc43915940aab30ee6e3512db6da27320a77bb87a1de4c0d2530",
+      "first_hop_output_sha256": "853cb4e88eed86c32a47c26fc667c999d0b247c13fc3ce52a2a6348757727705",
+      "second_hop_input_sha256": "853cb4e88eed86c32a47c26fc667c999d0b247c13fc3ce52a2a6348757727705",
+      "output_sha256": "6b1988abc3c12a96439ac0ef1c287687dbc990b4c770987645b95e283f35c141",
+      "first_hop_raw_jsonl_line_sha256": "ee6ae84bd9854abf34d52a2a8a5655148fc77a672d2ca9498b3153435645dcf5",
+      "second_hop_raw_jsonl_line_sha256": "244604e6c834e45d6d69117d1c083e72ee16dcdfa8042bf3ab7541446b715ebb",
+      "first_hop_line_number": 22,
+      "second_hop_line_number": 22
+    },
+    {
+      "finding_id": "TR29-Q26",
+      "direction": "zh-ru",
+      "case_id": "fleurs-1842",
+      "severity": "semantic_error",
+      "introduced_at": "both_hops",
+      "finding_ru": "羽枝/羽小枝 превратились в plums and plums уже в English; итог дает сливы и сливы. Английское ошибочное feat axes затем переводится как топоры. Цепочка усугубляет терминологическую ошибку.",
+      "input": "恐龙的羽毛并没有发育良好的主干——这称为“羽轴”，但还是有羽毛的其他特征，比如羽枝和羽小枝，研究人员推断羽轴的进化可能比这些其他特征晚。",
+      "actual_first_hop_output": "The feathers of dinosaurs do not have a well-developed backbone — which is known as “feat axes”, but there are other features of the feathers, such as plums and plums, which researchers assume may have evolved later than the others.",
+      "actual_second_hop_input": "The feathers of dinosaurs do not have a well-developed backbone — which is known as “feat axes”, but there are other features of the feathers, such as plums and plums, which researchers assume may have evolved later than the others.",
+      "output": "Перья динозавров не имеют хорошо развитого позвоночника, известного как Δfeat топоры, но есть и другие особенности перьев, такие как сливы и сливы, которые, как полагают исследователи, эволюционировали позже остальных.",
+      "reference": "Так как у перьев динозавров отсутствует хорошо развитый стержень, называемый рахисом, но все же имеются другие отличительные черты — бородки и бородочки — исследователи пришли к выводу, что рахис, скорее всего, появился позднее путем эволюционного развития других отличительных черт.",
+      "input_sha256": "1a969a83cfe33f29ac58a4fec2fdab5663cdb5026df0927d673f53f9057181d4",
+      "first_hop_output_sha256": "ac5a06119609dd3cde05135eb0a978adda9ddab56260c1f4b2a9e556acb45a21",
+      "second_hop_input_sha256": "ac5a06119609dd3cde05135eb0a978adda9ddab56260c1f4b2a9e556acb45a21",
+      "output_sha256": "bafc551b57003704a3b6a8153f6efcd5291f748070977d9730d31c68043153e6",
+      "first_hop_raw_jsonl_line_sha256": "01596c7fa1b71956bdeece69da37c7310eee03c02d50e40b4ee264015f5c66e0",
+      "second_hop_raw_jsonl_line_sha256": "22a873364d738dfb2e4df998e9f252877d5ecf3febe11f515948032585f8fdc5",
+      "first_hop_line_number": 22,
+      "second_hop_line_number": 22
+    },
+    {
+      "finding_id": "TR29-Q27",
+      "direction": "zh-ru",
+      "case_id": "fleurs-1697",
+      "severity": "semantic_error",
+      "introduced_at": "second_hop_after_ambiguous_first_hop",
+      "finding_ru": "Generic medication в исходном китайском/арабском передано через English drugs; второй hop выбирает русское наркотики, необоснованно сужая значение исходных лекарств.",
+      "input": "他一直无法用药物来缓解疼痛，因为比赛禁止参赛者服用这些药物。",
+      "actual_first_hop_output": "He has been unable to use drugs to relieve the pain because the contestants are prohibited from taking them.",
+      "actual_second_hop_input": "He has been unable to use drugs to relieve the pain because the contestants are prohibited from taking them.",
+      "output": "Он не смог использовать наркотики, чтобы облегчить боль, потому что участникам было запрещено принимать их.",
+      "reference": "Он не смог принять препараты, необходимые для облегчения боли, так как они запрещены в Играх.",
+      "input_sha256": "44e77369befda958c742c267ac77522077961fa6509b3ec1a33562390b837d08",
+      "first_hop_output_sha256": "767bb90ed6e080411d3cbc42f174897bbdfcec803373afd52b59ab51e1392030",
+      "second_hop_input_sha256": "767bb90ed6e080411d3cbc42f174897bbdfcec803373afd52b59ab51e1392030",
+      "output_sha256": "a204995fd8ccda847a0dd563fad81aa9462096615cdcd0dc6ee0b8eb966f4c8e",
+      "first_hop_raw_jsonl_line_sha256": "64dce91d47955d3b53ed10778dcce77d96e6f3dd8125523e40cd4a5ba4662b24",
+      "second_hop_raw_jsonl_line_sha256": "bafc49e0ec6220a3dfbc060777bc66229d55195b1336befac8841a7dcd80c02b",
+      "first_hop_line_number": 5,
+      "second_hop_line_number": 5
+    },
+    {
+      "finding_id": "TR29-Q28",
+      "direction": "ar-ru",
+      "case_id": "fleurs-1697",
+      "severity": "semantic_error",
+      "introduced_at": "second_hop_after_ambiguous_first_hop",
+      "finding_ru": "Generic medication в исходном китайском/арабском передано через English drugs; второй hop выбирает русское наркотики, необоснованно сужая значение исходных лекарств.",
+      "input": "لم يستطع تناول الأدوية اللازمة للتغلّب على الألم إذ أن استخدامها ممنوع في الألعاب.",
+      "actual_first_hop_output": "He couldn't take the drugs he needed to overcome the pain because it was forbidden to use them in games.",
+      "actual_second_hop_input": "He couldn't take the drugs he needed to overcome the pain because it was forbidden to use them in games.",
+      "output": "Он не мог принять наркотики, которые ему были нужны, чтобы преодолеть боль, потому что было запрещено использовать их в играх.",
+      "reference": "Он не смог принять препараты, необходимые для облегчения боли, так как они запрещены в Играх.",
+      "input_sha256": "0ab193a32d3086807703c6de6ae03a666431d460c9d5bf9f72758eb23317578c",
+      "first_hop_output_sha256": "171af56b58e0f49a2cc928b39f8c41f608937bfc977ca5cf6ec7cfe58198c283",
+      "second_hop_input_sha256": "171af56b58e0f49a2cc928b39f8c41f608937bfc977ca5cf6ec7cfe58198c283",
+      "output_sha256": "22fbfd50b36f07bb9c159ab1b1f91df40f98f6bd6174cdae89af0fae1316d427",
+      "first_hop_raw_jsonl_line_sha256": "2d011a4ef250f3b88417dccb22c9b2ce8ad9a4f757677eb84a6398331504aece",
+      "second_hop_raw_jsonl_line_sha256": "2990037c2ce2fd5421265e89ee38565f418012fba3eee39011614190cbe907b6",
+      "first_hop_line_number": 5,
+      "second_hop_line_number": 5
+    }
+  ],
+  "reviewed_cases": [
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1661",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1697",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1842",
+      "finding_ids": [
+        "TR29-Q24"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-2009",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-approve-positive",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-approve-negative",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-usd-12000",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-usd-1200",
+      "finding_ids": [
+        "TR29-Q01"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-rub-12000",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-cny-contrast",
+      "finding_ids": [
+        "TR29-Q02"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-decimal-eur",
+      "finding_ids": [
+        "TR29-Q03"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-conditional-negation",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-sergey-meeting-price",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-time-1515",
+      "finding_ids": [
+        "TR29-Q18"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-self-correction",
+      "finding_ids": [
+        "TR29-Q04"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-name-five-minutes",
+      "finding_ids": [
+        "TR29-Q16"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "original-ru-en-price-002",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "original-ru-en-negation-004",
+      "finding_ids": [
+        "TR29-Q14"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "original-ru-en-name-009",
+      "finding_ids": [
+        "TR29-Q17"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1661",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1697",
+      "finding_ids": [
+        "TR29-Q27"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1842",
+      "finding_ids": [
+        "TR29-Q26"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-2009",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-approve-positive",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-approve-negative",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-usd-12000",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-usd-1200",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-rub-12000",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-cny-contrast",
+      "finding_ids": [
+        "TR29-Q06"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-decimal-eur",
+      "finding_ids": [
+        "TR29-Q08"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-conditional-negation",
+      "finding_ids": [
+        "TR29-Q23"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-sergey-meeting-price",
+      "finding_ids": [
+        "TR29-Q09"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-time-1515",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-self-correction",
+      "finding_ids": [
+        "TR29-Q10"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-name-five-minutes",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "original-zh-ru-money-005",
+      "finding_ids": [
+        "TR29-Q07"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "original-zh-en-time-011",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1661",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1697",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1842",
+      "finding_ids": [
+        "TR29-Q25"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-2009",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-approve-positive",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-approve-negative",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-usd-12000",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-usd-1200",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-rub-12000",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-cny-contrast",
+      "finding_ids": [
+        "TR29-Q20"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-decimal-eur",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-conditional-negation",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-sergey-meeting-price",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-time-1515",
+      "finding_ids": [
+        "TR29-Q19"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-self-correction",
+      "finding_ids": [
+        "TR29-Q05"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-name-five-minutes",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "original-ru-en-price-002",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "original-ru-en-negation-004",
+      "finding_ids": [
+        "TR29-Q15"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "original-ru-en-name-009",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1661",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1697",
+      "finding_ids": [
+        "TR29-Q28"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1842",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-2009",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-approve-positive",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-approve-negative",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-usd-12000",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-usd-1200",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-rub-12000",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-cny-contrast",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-decimal-eur",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-conditional-negation",
+      "finding_ids": [
+        "TR29-Q21"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-sergey-meeting-price",
+      "finding_ids": [
+        "TR29-Q11"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-time-1515",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-self-correction",
+      "finding_ids": [
+        "TR29-Q12"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-name-five-minutes",
+      "finding_ids": [],
+      "screen_status": "no_critical_defect_identified_in_this_assistant_screen_not_a_quality_pass"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "original-ar-ru-money-006",
+      "finding_ids": [
+        "TR29-Q13"
+      ],
+      "screen_status": "finding_recorded"
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "original-ar-en-negation-012",
+      "finding_ids": [
+        "TR29-Q22"
+      ],
+      "screen_status": "finding_recorded"
+    }
+  ],
+  "dataset_reference_caveats": [
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1842",
+      "note_ru": "Сам исходный арабский FLEURS текст описывает bone chain/spinal column, тогда как русский reference говорит о рахисе. Эту межъязыковую неоднозначность исходного источника нельзя полностью приписывать новому MT. Raw corpus не исправлялся; нужны отдельные native annotations выравнивания reference/source."
+    }
+  ],
+  "next_acceptance": [
+    "Frozen regression suite for confirmed numeric/currency/omission errors across both actual hops",
+    "Independent native semantic review of all retained source/intermediate/target cases and heldout data",
+    "If a candidate passes quality, separately measure continuous two-hop MT with routing/load/queue and later real ASR/TTS/LiveKit end-to-end latency",
+    "Approved voice/base/data/runtime chain remains independent and blocked"
+  ]
+}

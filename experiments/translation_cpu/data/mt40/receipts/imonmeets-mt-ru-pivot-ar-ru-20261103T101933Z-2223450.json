@@ -1,0 +1,18 @@
+{
+  "unit": "imonmeets-mt-ru-pivot-ar-ru-20261103T101933Z-2223450",
+  "started_at": "2026-11-03T10:19:33Z",
+  "finished_at": "2026-11-03T10:20:02.988635+00:00",
+  "runtime_max_seconds": 180,
+  "exit_code": 0,
+  "command": [
+    "/home/sergey/imonmeets-translation-cpu-20261102/.venv/bin/python",
+    "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/run_mt40.py",
+    "ar-ru"
+  ],
+  "log": "imonmeets-mt-ru-pivot-ar-ru-20261103T101933Z-2223450.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}

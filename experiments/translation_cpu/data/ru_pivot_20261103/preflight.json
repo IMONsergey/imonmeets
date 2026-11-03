@@ -1,0 +1,2732 @@
+{
+  "schema": 1,
+  "created_at": "2026-11-03T10:16:18.174956+00:00",
+  "source_commit": "edce77925eb3a892645643725924ac1c4d748940",
+  "source_tree": "a4896f790e3515c8e8cb8d20d9348490f6698626",
+  "branch": "experiment/translation-ru-pivot-20261103",
+  "worktree": "/home/sergey/imonmeets-translation-ru-pivot-20261103",
+  "runner_source_unchanged": true,
+  "accepted_chain_worktree": "/home/sergey/imonmeets-translation-review-20261103",
+  "runtime_python": "/home/sergey/imonmeets-translation-cpu-20261102/.venv/bin/python",
+  "no_new_downloads": true,
+  "no_selection_regeneration": true,
+  "no_tts": true,
+  "resource_plan": {
+    "cpu_quota": "100%",
+    "memory_max_bytes": 2147483648,
+    "runtime_max_seconds_per_direction": 180,
+    "shared_lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+  },
+  "timing_contract": "New inference_seconds measures second hop only; pipeline_mt_seconds is historical first-hop duration plus new second hop, not continuous end-to-end.",
+  "routes": {
+    "ru-zh": {
+      "cases": 55,
+      "fleurs": 40,
+      "first_direction": "ru-en",
+      "second_direction": "en-zh",
+      "first_outputs": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ru-en.jsonl",
+        "sha256": "d2edc3d854ef729d459eb30031388dd9f798a4d79b17a62e81345c4242590d16",
+        "bytes": 90405,
+        "mtime_ns": 1793700977870120903
+      },
+      "second_target_token": ">>cmn_Hans<<",
+      "cases_sha256": "9a3927ab3196676248471271acb41b8bc73d162a9d70e70a242afd66723a78dd"
+    },
+    "zh-ru": {
+      "cases": 54,
+      "fleurs": 40,
+      "first_direction": "zh-en",
+      "second_direction": "en-ru",
+      "first_outputs": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/zh-en.jsonl",
+        "sha256": "f8bd26d117740de15b2495af370dd4d51ede419a62bee9dc2b726384360cc6b1",
+        "bytes": 76671,
+        "mtime_ns": 1793700977872120927
+      },
+      "second_target_token": null,
+      "cases_sha256": "e11b462dd17caeec64d5e93a1f23183f7982b29d9b7763d22672a1359f1cb8ae"
+    },
+    "ru-ar": {
+      "cases": 55,
+      "fleurs": 40,
+      "first_direction": "ru-en",
+      "second_direction": "en-ar",
+      "first_outputs": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ru-en.jsonl",
+        "sha256": "d2edc3d854ef729d459eb30031388dd9f798a4d79b17a62e81345c4242590d16",
+        "bytes": 90405,
+        "mtime_ns": 1793700977870120903
+      },
+      "second_target_token": ">>ara<<",
+      "cases_sha256": "7080ed00cb139f0c3ed0648301f81e67983033a3cfb48bb7554cbb92a2e0a991"
+    },
+    "ar-ru": {
+      "cases": 54,
+      "fleurs": 40,
+      "first_direction": "ar-en",
+      "second_direction": "en-ru",
+      "first_outputs": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ar-en.jsonl",
+        "sha256": "fe6a30c42875382732fe42ca9dca9da0bd5e447fd4af9375bd30a8ee96ecdc11",
+        "bytes": 84286,
+        "mtime_ns": 1793700977860120784
+      },
+      "second_target_token": null,
+      "cases_sha256": "63c8b14ef6b5109854604a03f04acece11a824125dbdcdc5b6bdd249b84208a7"
+    }
+  },
+  "models": {
+    "ru-en": {
+      "conversion": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/ru-en.conversion.json",
+        "sha256": "9c9fac480c2299e94783b5f635a44e7f12f22fee10a1b8b60c8a64ca8761b2e2",
+        "bytes": 3074,
+        "mtime_ns": 1793700977969122083
+      },
+      "model_sha256": "96804810a5bdecd5e118f6b67fb979025c10670cb4bad56f887511c4fb76cd89",
+      "source_archive_sha256": "0dec3116acadd21b647cbcf8455a5bea22e5242e82633c7551e4c4767e799e83",
+      "target_token": null,
+      "converted_files": [
+        {
+          "path": "LICENSE",
+          "bytes": 18652,
+          "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ru-en/LICENSE",
+          "mtime_ns": 1793684314186120524,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "README.md",
+          "bytes": 951,
+          "sha256": "b9ed01d90b56c1760ec9427161305d29c8268ddf9cb9cb597723bee36ded0360",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ru-en/README.md",
+          "mtime_ns": 1793684314186120524,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "config.json",
+          "bytes": 221,
+          "sha256": "152eb448f1020eb55f90971d7b95f61896abee8415d555ca51ae7897ac0a0e68",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ru-en/config.json",
+          "mtime_ns": 1793684321341207243,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "model.bin",
+          "bytes": 81422197,
+          "sha256": "96804810a5bdecd5e118f6b67fb979025c10670cb4bad56f887511c4fb76cd89",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ru-en/model.bin",
+          "mtime_ns": 1793684321341207243,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "shared_vocabulary.json",
+          "bytes": 2300269,
+          "sha256": "bf1812383ed402163a2ed1b553e175e7db96a54ed68b6c15566018fdf945ed99",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ru-en/shared_vocabulary.json",
+          "mtime_ns": 1793684321123204600,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "source.spm",
+          "bytes": 1080169,
+          "sha256": "745998e51ba5b058e38b7ac7765c25c43ed5c1c39cc92b27163b9b2e323c9d7c",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ru-en/source.spm",
+          "mtime_ns": 1793684316131144098,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "target.spm",
+          "bytes": 802781,
+          "sha256": "16bebef1389a0b8ab452772c4e35b9e605e5713f8ac7baa71ca701394eaa086d",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ru-en/target.spm",
+          "mtime_ns": 1793684316138144183,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        }
+      ]
+    },
+    "zh-en": {
+      "conversion": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/zh-en.conversion.json",
+        "sha256": "5c4e3873625ffbf8e781061bbe8ce03cfe463c65c3058e2734ee5f48c99bb761",
+        "bytes": 3060,
+        "mtime_ns": 1793700977973122131
+      },
+      "model_sha256": "c66ca93eaa07e094903e1ea8278282ba17a9e2f1eb7de454b7b7ce5ff112664b",
+      "source_archive_sha256": "9749101f963f552a270ff4de0c8b69c88f51c358d6b4cc87760aff2cffcf4067",
+      "target_token": null,
+      "converted_files": [
+        {
+          "path": "LICENSE",
+          "bytes": 18652,
+          "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/zh-en/LICENSE",
+          "mtime_ns": 1793684569016209810,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "README.md",
+          "bytes": 789,
+          "sha256": "0c3f28720fa95c3abede9934f4782c63f127917d470ad883d60a7b94841e9b13",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/zh-en/README.md",
+          "mtime_ns": 1793684569016209810,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "config.json",
+          "bytes": 221,
+          "sha256": "152eb448f1020eb55f90971d7b95f61896abee8415d555ca51ae7897ac0a0e68",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/zh-en/config.json",
+          "mtime_ns": 1793684576627302098,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "model.bin",
+          "bytes": 82713357,
+          "sha256": "c66ca93eaa07e094903e1ea8278282ba17a9e2f1eb7de454b7b7ce5ff112664b",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/zh-en/model.bin",
+          "mtime_ns": 1793684576626302085,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "shared_vocabulary.json",
+          "bytes": 1303998,
+          "sha256": "acbf13516c56af2bb78ebdb770c2e4648fd8232ddd17af75298119cbfa7ee33d",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/zh-en/shared_vocabulary.json",
+          "mtime_ns": 1793684575950293888,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "source.spm",
+          "bytes": 804677,
+          "sha256": "e27a3a1b539f4959ec72ea60e453f49156289f95d4e6000b29332efc45616203",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/zh-en/source.spm",
+          "mtime_ns": 1793684571610241265,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "target.spm",
+          "bytes": 806530,
+          "sha256": "6a881f4717cd7265f53fea54fd3dc689c767c05338fac7a4590f3088cb2d7855",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/zh-en/target.spm",
+          "mtime_ns": 1793684571617241349,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        }
+      ]
+    },
+    "ar-en": {
+      "conversion": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/ar-en.conversion.json",
+        "sha256": "b7c031a010db111861555b07616b0ba94623051b1f9c0297cca74479e63b7c61",
+        "bytes": 3072,
+        "mtime_ns": 1793700977959121964
+      },
+      "model_sha256": "49dfeb382ec074451936b9ec4e7b671402ae6927c3f1a62ca95a492b7f021235",
+      "source_archive_sha256": "2406c939b175616789999f370a3f487e90cd018e4590e8679cf91ee8caff2416",
+      "target_token": null,
+      "converted_files": [
+        {
+          "path": "LICENSE",
+          "bytes": 18652,
+          "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ar-en/LICENSE",
+          "mtime_ns": 1793684786981853022,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "README.md",
+          "bytes": 601,
+          "sha256": "b96814aad4b4ceed72a53dd2bd2d8ece4adad5326efc0e71cb5120190b64f85c",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ar-en/README.md",
+          "mtime_ns": 1793684786981853022,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "config.json",
+          "bytes": 221,
+          "sha256": "152eb448f1020eb55f90971d7b95f61896abee8415d555ca51ae7897ac0a0e68",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ar-en/config.json",
+          "mtime_ns": 1793684796041962905,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "model.bin",
+          "bytes": 81586517,
+          "sha256": "49dfeb382ec074451936b9ec4e7b671402ae6927c3f1a62ca95a492b7f021235",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ar-en/model.bin",
+          "mtime_ns": 1793684796041962905,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "shared_vocabulary.json",
+          "bytes": 1828507,
+          "sha256": "fd300311c28d6d3e347df902da557d2c3de0a0028fc9fe3260084de8477dc7b2",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ar-en/shared_vocabulary.json",
+          "mtime_ns": 1793684795690958648,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "source.spm",
+          "bytes": 917407,
+          "sha256": "484f7210e5f4466f7e5b99b660717c6ef2a6f90746196daba507795b69dc02a2",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ar-en/source.spm",
+          "mtime_ns": 1793684790885900371,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "target.spm",
+          "bytes": 801886,
+          "sha256": "156cae4f035ba812224e79d71626802a07296a3ad2ea5c6bc1f2cb35420dfeb4",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/ar-en/target.spm",
+          "mtime_ns": 1793684790892900456,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        }
+      ]
+    },
+    "en-ru": {
+      "conversion": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-ru.conversion.json",
+        "sha256": "50c1d9b16d551f6be119e74fd437435983fb1b94e68549652e83857907a2da02",
+        "bytes": 3074,
+        "mtime_ns": 1793700977965122035
+      },
+      "model_sha256": "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d",
+      "source_archive_sha256": "798027c7e4ae7ddf89fea13ce80de517b6726d7e710fa5a9b5a376316dbf1677",
+      "target_token": null,
+      "converted_files": [
+        {
+          "path": "LICENSE",
+          "bytes": 18652,
+          "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ru/LICENSE",
+          "mtime_ns": 1793684114141696512,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "README.md",
+          "bytes": 906,
+          "sha256": "5b06e18de0760979432961c923a9013ff92a8d29f7f64d0a97d91ba07fdca08f",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ru/README.md",
+          "mtime_ns": 1793684114140696500,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "config.json",
+          "bytes": 221,
+          "sha256": "152eb448f1020eb55f90971d7b95f61896abee8415d555ca51ae7897ac0a0e68",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ru/config.json",
+          "mtime_ns": 1793684120690775849,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "model.bin",
+          "bytes": 81422197,
+          "sha256": "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ru/model.bin",
+          "mtime_ns": 1793684120689775837,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "shared_vocabulary.json",
+          "bytes": 2300269,
+          "sha256": "bf1812383ed402163a2ed1b553e175e7db96a54ed68b6c15566018fdf945ed99",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ru/shared_vocabulary.json",
+          "mtime_ns": 1793684120356771802,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "source.spm",
+          "bytes": 802781,
+          "sha256": "16bebef1389a0b8ab452772c4e35b9e605e5713f8ac7baa71ca701394eaa086d",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ru/source.spm",
+          "mtime_ns": 1793684116106720317,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "target.spm",
+          "bytes": 1080169,
+          "sha256": "745998e51ba5b058e38b7ac7765c25c43ed5c1c39cc92b27163b9b2e323c9d7c",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ru/target.spm",
+          "mtime_ns": 1793684116118720462,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        }
+      ]
+    },
+    "en-zh": {
+      "conversion": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-zh.conversion.json",
+        "sha256": "47242357ea0da305a12d05985167b92fb22578b7d9792d88842b43f04d5e875f",
+        "bytes": 3070,
+        "mtime_ns": 1793700977967122059
+      },
+      "model_sha256": "b4fedbc97c2006f6d8fc089e58a2eb7385cb66b16a5dbbf136e23e6490fcfb80",
+      "source_archive_sha256": "ab90e5583fa3ec46d8c5c50f106cbd65221978cd052c7e2059981439325ae24b",
+      "target_token": ">>cmn_Hans<<",
+      "converted_files": [
+        {
+          "path": "LICENSE",
+          "bytes": 18652,
+          "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-zh/LICENSE",
+          "mtime_ns": 1793684353943602412,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "README.md",
+          "bytes": 893,
+          "sha256": "4b785d89b8e6b807c43a5dfa5f589dbcb6199ad0554085718ed0b4c3082536cc",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-zh/README.md",
+          "mtime_ns": 1793684353943602412,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "config.json",
+          "bytes": 221,
+          "sha256": "152eb448f1020eb55f90971d7b95f61896abee8415d555ca51ae7897ac0a0e68",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-zh/config.json",
+          "mtime_ns": 1793684360343679988,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "model.bin",
+          "bytes": 82713357,
+          "sha256": "b4fedbc97c2006f6d8fc089e58a2eb7385cb66b16a5dbbf136e23e6490fcfb80",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-zh/model.bin",
+          "mtime_ns": 1793684360343679988,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "shared_vocabulary.json",
+          "bytes": 1303887,
+          "sha256": "37314a6abb25ed8f8497498aeeb31fcea98de892bf00ff7c2e8c966b26fe0b82",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-zh/shared_vocabulary.json",
+          "mtime_ns": 1793684360067676642,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "source.spm",
+          "bytes": 806435,
+          "sha256": "5775ddc9e3ff2fae91554da56468ad35ff56edaba870fea74447bc7234bfdaa8",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-zh/source.spm",
+          "mtime_ns": 1793684355924626425,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "target.spm",
+          "bytes": 804600,
+          "sha256": "81dc94efa84e4025ef38d25d5d07429fe41e3eb29d44003f1db6fe98487b0052",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-zh/target.spm",
+          "mtime_ns": 1793684355930626497,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        }
+      ]
+    },
+    "en-ar": {
+      "conversion": {
+        "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-ar.conversion.json",
+        "sha256": "ffc577273d1167918552d5a9e4de968ce0e0ac85488b7bcc35724d2bef603aa9",
+        "bytes": 3221,
+        "mtime_ns": 1793700977963122012
+      },
+      "model_sha256": "26e8e9d443cf45e455ceeed557deec0e541f5e647c88bd98f5f1f3ade8ce7d5f",
+      "source_archive_sha256": "857a0d6383f4cb4b990a4915f3a21cb9ab9d00d8837d99ed73bd9f8a5df3af7a",
+      "target_token": ">>ara<<",
+      "converted_files": [
+        {
+          "path": "LICENSE",
+          "bytes": 18652,
+          "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ar/LICENSE",
+          "mtime_ns": 1793684742241310416,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "README.md",
+          "bytes": 1019,
+          "sha256": "3cd8e0684263e468267d6a9fbd9a1ac9b89b3212373b4b78fa213d06c6ff7f93",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ar/README.md",
+          "mtime_ns": 1793684742240310404,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "config.json",
+          "bytes": 221,
+          "sha256": "152eb448f1020eb55f90971d7b95f61896abee8415d555ca51ae7897ac0a0e68",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ar/config.json",
+          "mtime_ns": 1793684751102417878,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "model.bin",
+          "bytes": 81569877,
+          "sha256": "26e8e9d443cf45e455ceeed557deec0e541f5e647c88bd98f5f1f3ade8ce7d5f",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ar/model.bin",
+          "mtime_ns": 1793684751102417878,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "shared_vocabulary.json",
+          "bytes": 1815066,
+          "sha256": "1f3c24e6f4e03183b20b95b757f3b7df30512bdf9980a6818c5393b4f8b9aaf6",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ar/shared_vocabulary.json",
+          "mtime_ns": 1793684750891415319,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "source.spm",
+          "bytes": 801074,
+          "sha256": "81ac8f4d4ee271f4109eac67560a31f9c2d555463ba5eb95c32c6deee8ae819d",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ar/source.spm",
+          "mtime_ns": 1793684744472337473,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        },
+        {
+          "path": "target.spm",
+          "bytes": 916890,
+          "sha256": "67d0f6afb87768c078ee46c0756b8cc94b1ec23c5526b49ecf6c3b2f9197ec39",
+          "actual_path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/models/opus_ct2/en-ar/target.spm",
+          "mtime_ns": 1793684744480337570,
+          "byte_size_verified": true,
+          "sha_verification": "second-hop runner verifies all converted files before model load; historical first-hop result hash pinned below"
+        }
+      ]
+    }
+  },
+  "preserved_tracked_files": {
+    "experiments/translation_cpu/.gitignore": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/.gitignore",
+      "sha256": "1ccd08b28b33f29a4ac0dccb0a417e8a7674117a4d43c49c9b0025e6a2051866",
+      "bytes": 27,
+      "mtime_ns": 1793700977767119676
+    },
+    "experiments/translation_cpu/COMMERCIAL_REVIEW_2026-11-03.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/COMMERCIAL_REVIEW_2026-11-03.md",
+      "sha256": "5a273b9996b0eba2f4d794531d1c4c7f4da5aa4713bfc017258f92205594f35a",
+      "bytes": 28668,
+      "mtime_ns": 1793700977767119676
+    },
+    "experiments/translation_cpu/CONTINUATION.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/CONTINUATION.md",
+      "sha256": "f10b1a273301ae31a30d06bc27c5fbc7a6d8715294923447d4ed3c3905614c74",
+      "bytes": 2642,
+      "mtime_ns": 1793700977769119700
+    },
+    "experiments/translation_cpu/LICENSE_MANIFEST.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/LICENSE_MANIFEST.md",
+      "sha256": "1f27ac53f7b3c61873374dd79b1992809ac2d66371badf8b85e09cdbfeed90fc",
+      "bytes": 11309,
+      "mtime_ns": 1793700977769119700
+    },
+    "experiments/translation_cpu/LIFECYCLE_2026-11-03.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/LIFECYCLE_2026-11-03.md",
+      "sha256": "2ea2fdcdc609cff54427a566d75036bb151f5941079bb814fd2bb502ecf93ad0",
+      "bytes": 16344,
+      "mtime_ns": 1793700977769119700
+    },
+    "experiments/translation_cpu/OWNERSHIP_2026-11-03.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/OWNERSHIP_2026-11-03.md",
+      "sha256": "0c38d4b9c348e597385dc5046ec51dcadee21c769ba4d0a5b54b0bba1d5df337",
+      "bytes": 8489,
+      "mtime_ns": 1793700977770119712
+    },
+    "experiments/translation_cpu/README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/README.md",
+      "sha256": "cfb1a3c9777d9ff51ce3ac7ca4023fe4689dd54b7c3815f7ae775047d8d6a9d8",
+      "bytes": 8011,
+      "mtime_ns": 1793700977772119735
+    },
+    "experiments/translation_cpu/RESULTS_2026-11-03.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/RESULTS_2026-11-03.md",
+      "sha256": "80d16860fc27a625560d61978f322350bf6959904bf2b82ea9c1cfebfc0b1358",
+      "bytes": 18547,
+      "mtime_ns": 1793700977772119735
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ar.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ar.attempts.jsonl",
+      "sha256": "4fa2c52dbac87478603036c29c21ddace0b5f07bbf5eb81c1abd9a940f68f6fb",
+      "bytes": 11640,
+      "mtime_ns": 1793700977773119747
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ar.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ar.jsonl",
+      "sha256": "9895a9040361fc5b577ba3bd2ea6e9a7af4b735c3667012b78be795879c779e7",
+      "bytes": 92029,
+      "mtime_ns": 1793700977774119759
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ar.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ar.summary.json",
+      "sha256": "e27da4d280872a18c93bcff8ea4f87d9473f015e0275b67b6bf4446cde119dfc",
+      "bytes": 2126,
+      "mtime_ns": 1793700977774119759
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/en.attempts.jsonl",
+      "sha256": "bd37349ba93f11fcaa924615b2b665a5ff28d8574235d81a7b3465760b01c3ff",
+      "bytes": 11640,
+      "mtime_ns": 1793700977774119759
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/en.jsonl",
+      "sha256": "69158b7a83e0af941c94046e5bc9865d746fa182b0335b32247e57691d8252d0",
+      "bytes": 77690,
+      "mtime_ns": 1793700977776119783
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/en.summary.json",
+      "sha256": "2d595125df650526f38ca3f9652ea548a80d3a5850a031acf7d23ea8ca299914",
+      "bytes": 2128,
+      "mtime_ns": 1793700977776119783
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ru.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ru.attempts.jsonl",
+      "sha256": "cd67ee55e9a98edb110b83dd7499ecf2fa984a5971b9fe64164cd2f0abb885cc",
+      "bytes": 11640,
+      "mtime_ns": 1793700977776119783
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ru.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ru.jsonl",
+      "sha256": "584f0fdb553e9f8b90af007be136fb3865e04824a90357e41158615c4f57fdce",
+      "bytes": 108614,
+      "mtime_ns": 1793700977777119795
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ru.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/ru.summary.json",
+      "sha256": "f6816179ab8cd9c6dc09ccf31ad7efa07a5239c455dc32f472a67fd38e587da0",
+      "bytes": 2128,
+      "mtime_ns": 1793700977778119807
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/zh.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/zh.attempts.jsonl",
+      "sha256": "ffe0ecd6811da3db218364be3a2d1fc87ae6f28cc03dd65b1b3c535680198df7",
+      "bytes": 11640,
+      "mtime_ns": 1793700977780119831
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/zh.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/zh.jsonl",
+      "sha256": "2437abe35ed0bf98140d58161028ced4bc637d97d9ce62c4f1dd6aecc04e77bf",
+      "bytes": 72419,
+      "mtime_ns": 1793700977781119843
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/zh.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-base-20261103/zh.summary.json",
+      "sha256": "15d76c113bd11b3bf6bb0004f72de26e208dc1534eb6d88eb73548f00efb312b",
+      "bytes": 2113,
+      "mtime_ns": 1793700977781119843
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ar.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ar.attempts.jsonl",
+      "sha256": "bd7d03b488fd31b85c6dc9284582f3c1143233a32d0bbc6547d5b904003cdcb7",
+      "bytes": 11640,
+      "mtime_ns": 1793700977783119866
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ar.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ar.jsonl",
+      "sha256": "848f848358e5b872b36ac8e7176c19a238d5e1e0f2212aff2a8cf4f4c6e24f33",
+      "bytes": 91431,
+      "mtime_ns": 1793700977783119866
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ar.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ar.summary.json",
+      "sha256": "0cdca66c1636fee7ae760e4c739d1a67d3e1d465d929e6982d91b49d7df0d416",
+      "bytes": 2128,
+      "mtime_ns": 1793700977783119866
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/en.attempts.jsonl",
+      "sha256": "42d1b62bd7149ac7bd281fa4768bc37829580f069d206864cc455796014ca9cc",
+      "bytes": 11640,
+      "mtime_ns": 1793700977784119878
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/en.jsonl",
+      "sha256": "62152b03139db08e7b60c44c289d70e4842ad25fdf6c047b544b4c24127cf60b",
+      "bytes": 76613,
+      "mtime_ns": 1793700977785119890
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/en.summary.json",
+      "sha256": "140b611ef16da920f145f266e7dc85d4a6818084d863a88656d07e4abe8a8321",
+      "bytes": 2127,
+      "mtime_ns": 1793700977785119890
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ru.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ru.attempts.jsonl",
+      "sha256": "6910e39a3c7d8d93e33c1004cce98e3a35a99700e4f770138aba217cf2c4903e",
+      "bytes": 11640,
+      "mtime_ns": 1793700977786119902
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ru.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ru.jsonl",
+      "sha256": "b3ca6f70ee645782cf2b0a6c858b586de0b8cf12e3dfd622c776f158fe5ae349",
+      "bytes": 106467,
+      "mtime_ns": 1793700977788119926
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ru.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/ru.summary.json",
+      "sha256": "714ce9cbc368a1b7d51d162934a35899b90ee7840d1245590e64905f09435fe0",
+      "bytes": 2126,
+      "mtime_ns": 1793700977788119926
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/zh.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/zh.attempts.jsonl",
+      "sha256": "a0a5fb1faa30b2ffdf143f97d0bb956f51e056d0bd060d48464dbd6f1eb1a8fd",
+      "bytes": 11640,
+      "mtime_ns": 1793700977788119926
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/zh.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/zh.jsonl",
+      "sha256": "278f3da4469c420f27a076fbc12b2b66290b6d4416ce1a17212ece4bea214654",
+      "bytes": 72779,
+      "mtime_ns": 1793700977789119938
+    },
+    "experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/zh.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/asr40/faster-whisper-small-20261103/zh.summary.json",
+      "sha256": "d8f3311e0156e54c455906a5daeacb87e3d1f25923b0fee118f5ceb5564ea62f",
+      "bytes": 2116,
+      "mtime_ns": 1793700977789119938
+    },
+    "experiments/translation_cpu/data/corpus.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/corpus.json",
+      "sha256": "9c26e4bd28b69b3a61f5c1b694a2b032d8724f8254d8e61960cacb5c837679d8",
+      "bytes": 5470,
+      "mtime_ns": 1793700977790119950
+    },
+    "experiments/translation_cpu/data/fleurs_subset/audio-ar_eg.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/fleurs_subset/audio-ar_eg.json",
+      "sha256": "a5e387a7b4537f3fb1ec11292adeb087cddaf08a73ebe64d633ea3ff14c6ab4f",
+      "bytes": 13975,
+      "mtime_ns": 1793700977792119974
+    },
+    "experiments/translation_cpu/data/fleurs_subset/audio-cmn_hans_cn.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/fleurs_subset/audio-cmn_hans_cn.json",
+      "sha256": "700d6ecb5c2901f5cc2a21377e8a14bd7618ff2d5b32cc74c6ac5a68cadee5fa",
+      "bytes": 14018,
+      "mtime_ns": 1793700977792119974
+    },
+    "experiments/translation_cpu/data/fleurs_subset/audio-en_us.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/fleurs_subset/audio-en_us.json",
+      "sha256": "18976d22c361d1e2dc97262b30f44d502b8b3405fe6c9f4d7b168ea809d2336c",
+      "bytes": 13974,
+      "mtime_ns": 1793700977794119998
+    },
+    "experiments/translation_cpu/data/fleurs_subset/audio-ru_ru.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/fleurs_subset/audio-ru_ru.json",
+      "sha256": "189a7423d51ad65dd8517f44404fa0df4278e48a405bf6b17de9888285429f9e",
+      "bytes": 13988,
+      "mtime_ns": 1793700977794119998
+    },
+    "experiments/translation_cpu/data/fleurs_subset/audio_sources.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/fleurs_subset/audio_sources.json",
+      "sha256": "16664bd87db99dee2b16f722ac5f880237eb2e2643add3b0adf61c56a458cc17",
+      "bytes": 2135,
+      "mtime_ns": 1793700977794119998
+    },
+    "experiments/translation_cpu/data/fleurs_subset/selection_manifest.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/fleurs_subset/selection_manifest.json",
+      "sha256": "caf155b7d8b440132295416f7d0ebd210061add74672e39d7e929dffb60ae62a",
+      "bytes": 107931,
+      "mtime_ns": 1793700977795120010
+    },
+    "experiments/translation_cpu/data/fleurs_subset/source_tsv/ar_eg.test.tsv": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/fleurs_subset/source_tsv/ar_eg.test.tsv",
+      "sha256": "af9b9aa3f99c39f90e7f8417f10f2f45a7f783441c6a27abfc2c1bededed4af1",
+      "bytes": 324236,
+      "mtime_ns": 1793700977797120033
+    },
+    "experiments/translation_cpu/data/fleurs_subset/source_tsv/cmn_hans_cn.test.tsv": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/fleurs_subset/source_tsv/cmn_hans_cn.test.tsv",
+      "sha256": "5734461648f816181d7dab5fc79204b18c4b9bc2cd5138225b25c72d18385d21",
+      "bytes": 491487,
+      "mtime_ns": 1793700977801120081
+    },
+    "experiments/translation_cpu/data/fleurs_subset/source_tsv/en_us.test.tsv": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/fleurs_subset/source_tsv/en_us.test.tsv",
+      "sha256": "74c046239374deeb60fa63f258f907388093a32bcaa3140965f70ef05c79f7ca",
+      "bytes": 367864,
+      "mtime_ns": 1793700977804120117
+    },
+    "experiments/translation_cpu/data/fleurs_subset/source_tsv/ru_ru.test.tsv": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/fleurs_subset/source_tsv/ru_ru.test.tsv",
+      "sha256": "cd54f261220f49afbb4c128633a737eca4a22f6c0a8233d3cc891478d06676e6",
+      "bytes": 735258,
+      "mtime_ns": 1793700977807120153
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/launch-meta.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/launch-meta.json",
+      "sha256": "e0b3703fc738aa2b01695c15dad1b039d63da20d55985b330447fc54bc97e309",
+      "bytes": 332,
+      "mtime_ns": 1793700977808120165
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/launch.sh": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/launch.sh",
+      "sha256": "45b3f254eaa34e5e9d690cd739f0eee3eb94c055a31a34646bff8a4d453541ab",
+      "bytes": 1607,
+      "mtime_ns": 1793700977808120165
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/launcher.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/launcher.json",
+      "sha256": "7a989471edd59654f4eccba927066e6142d484651bbb49673fdb37165b7536a9",
+      "bytes": 438,
+      "mtime_ns": 1793700977809120176
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/real-smoke/result.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/real-smoke/result.json",
+      "sha256": "73a2071e2256663d2e447018ec713a945b083cc42856d2a576fea645554b295a",
+      "bytes": 769,
+      "mtime_ns": 1793700977809120176
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/verification.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/verification.json",
+      "sha256": "1658b81e0bf9d705003da91f3582dc2db7f2f59a22a5acd4777bac9885ab7c0b",
+      "bytes": 2303,
+      "mtime_ns": 1793700977811120200
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/verification.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t084316z-1353554/verification.log",
+      "sha256": "68074bc6de9e77fe5d6a1b6f7b94d3265dfa592942fa2111c3bc910ccd27d74e",
+      "bytes": 14776,
+      "mtime_ns": 1793700977812120212
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/launch-meta.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/launch-meta.json",
+      "sha256": "d642c77d06c770b48110a9cb9b5e804ba8f2b74074a20580c003c486a3e9a54f",
+      "bytes": 332,
+      "mtime_ns": 1793700977812120212
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/launch.sh": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/launch.sh",
+      "sha256": "4acd9e53ef33cdb44a545fec034809bd5b754acd0d9c1f599470a4dc0901e2d1",
+      "bytes": 1607,
+      "mtime_ns": 1793700977813120224
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/launcher.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/launcher.json",
+      "sha256": "645caf6704b185560e7643d58a171378cf361024e628c19f3478c7b7f3597d88",
+      "bytes": 438,
+      "mtime_ns": 1793700977813120224
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/real-smoke/result.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/real-smoke/result.json",
+      "sha256": "3ae59fa622860f60fdb7de6822db21ed67a58cd01aa7b1de538eef15ab27cbcf",
+      "bytes": 5811,
+      "mtime_ns": 1793700977813120224
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/verification.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/verification.json",
+      "sha256": "f98d661269a8a6423e18d52c2581a50046977ba3fcd485b8d58fec04f37f4a28",
+      "bytes": 2411,
+      "mtime_ns": 1793700977814120236
+    },
+    "experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/verification.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lifecycle/lifecycle-20261103t085141z-1429281/verification.log",
+      "sha256": "3bd9b2dd70201d4d2f416dabfcedce9649beb3c1d3a0ebe40858f4b4a600cfad",
+      "bytes": 13410,
+      "mtime_ns": 1793700977814120236
+    },
+    "experiments/translation_cpu/data/lineage/installed_artifacts.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/lineage/installed_artifacts.json",
+      "sha256": "facd8f99bb5fc2e4c05a7603303a7a209adf91d99deb34501476c0e9278591b0",
+      "bytes": 27157,
+      "mtime_ns": 1793700977815120248
+    },
+    "experiments/translation_cpu/data/mt40/failed-callback-beam-20261103/en-ru.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/failed-callback-beam-20261103/en-ru.attempts.jsonl",
+      "sha256": "e0f05aad727e94be01cc02d7240dfa12ed6f96b914f37494435f8020d1467361",
+      "bytes": 20284,
+      "mtime_ns": 1793700977817120272
+    },
+    "experiments/translation_cpu/data/mt40/failed-callback-beam-20261103/en-ru.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/failed-callback-beam-20261103/en-ru.jsonl",
+      "sha256": "1a1845b2ca415f616afbf9e3fcc798503cc3ba3316e978d568935630a49622d1",
+      "bytes": 84306,
+      "mtime_ns": 1793700977818120284
+    },
+    "experiments/translation_cpu/data/mt40/failed-callback-beam-20261103/en-ru.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/failed-callback-beam-20261103/en-ru.summary.json",
+      "sha256": "e6b1ea504bb8aeb40efb3d91f1e792a45385eb75dbb2659dac13dc832540246e",
+      "bytes": 1662,
+      "mtime_ns": 1793700977818120284
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ar-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ar-en.attempts.jsonl",
+      "sha256": "468ca8b33dfd3c1b01a63cd46811f6d91a0eaff66d08e4c5d7d4f805d9d57597",
+      "bytes": 13888,
+      "mtime_ns": 1793700977819120296
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ar-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ar-en.jsonl",
+      "sha256": "ed92f8b5de9f52a8a7d04fcea3d6280dd3702a8ad6ccd57f63ad7ccc7e02bab7",
+      "bytes": 82521,
+      "mtime_ns": 1793700977820120308
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ar-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ar-en.summary.json",
+      "sha256": "4abc281f73528f67e48e3d30725facdcb19167cd2db813eda16cbd430b3f8d70",
+      "bytes": 1782,
+      "mtime_ns": 1793700977820120308
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ar.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ar.attempts.jsonl",
+      "sha256": "d00319e0c6e9ac5e3bf9663e81d7c01bf7ad269c3cdea399a952b3d5b704ca09",
+      "bytes": 14460,
+      "mtime_ns": 1793700977821120319
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ar.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ar.jsonl",
+      "sha256": "ad533b12f244beeba4641073c0db877bcc79e701f72283c86d404b3e551463f3",
+      "bytes": 88514,
+      "mtime_ns": 1793700977822120331
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ar.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ar.summary.json",
+      "sha256": "89befefd8d552f474f17e3f5b1d415e459863c12b7d84a2ff02a7dc83b810965",
+      "bytes": 1787,
+      "mtime_ns": 1793700977824120355
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ru.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ru.attempts.jsonl",
+      "sha256": "d0ab319e9040d483af5d4d47ed59a2098bdac92157e5df2324fd7ea10c9b642e",
+      "bytes": 14460,
+      "mtime_ns": 1793700977826120379
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ru.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ru.jsonl",
+      "sha256": "b6c4bdc3f60407f1fc83c577fa03731476ef82473affcd251826130a52b7eb7d",
+      "bytes": 95490,
+      "mtime_ns": 1793700977827120391
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ru.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-ru.summary.json",
+      "sha256": "251694b7817f02efa410f2a5217aa4352129256c4d3924f4eed77e9ad560f90e",
+      "bytes": 1784,
+      "mtime_ns": 1793700977828120403
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-zh.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-zh.attempts.jsonl",
+      "sha256": "07560830ad494d62da5aebe4785a5c49784051a50dd85f79ac07c6a638499207",
+      "bytes": 14460,
+      "mtime_ns": 1793700977828120403
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-zh.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-zh.jsonl",
+      "sha256": "4d8abcee9d24e02a79cc93c10593b021c6e36c50bc5a482168fb7e33ce3d199e",
+      "bytes": 76364,
+      "mtime_ns": 1793700977829120415
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-zh.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/en-zh.summary.json",
+      "sha256": "f447041024789f3610bcfbf5bd0c66dc244eb782c68792f659e51a7dc81701d4",
+      "bytes": 1793,
+      "mtime_ns": 1793700977830120427
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ru-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ru-en.attempts.jsonl",
+      "sha256": "1be18a70f85b32e036a1ed0565d593078e305adde8f2998fbebd0a03a7f3a091",
+      "bytes": 14163,
+      "mtime_ns": 1793700977831120439
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ru-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ru-en.jsonl",
+      "sha256": "698e61a01ba78afa9feb74e4bf1e2726e25c266ef263475ff79717d7a1668ab4",
+      "bytes": 88714,
+      "mtime_ns": 1793700977832120451
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ru-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/ru-en.summary.json",
+      "sha256": "6c7b8c0ea5cee5a391166ab5a89e280a0005f85e1868a409ca5d5d35dcbfb52f",
+      "bytes": 1783,
+      "mtime_ns": 1793700977833120463
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/zh-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/zh-en.attempts.jsonl",
+      "sha256": "204bcddd154d55b724f7a025a524e569d84bba8aa5538aaba8b38e9f48a2c05c",
+      "bytes": 13880,
+      "mtime_ns": 1793700977833120463
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/zh-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/zh-en.jsonl",
+      "sha256": "746f369313e7f00e541371bed2f534551a49e38566d226e841e6df22501f4225",
+      "bytes": 75168,
+      "mtime_ns": 1793700977833120463
+    },
+    "experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/zh-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-core-sentences-20261103/zh-en.summary.json",
+      "sha256": "c847ea2f5ac31af0f4702ac7146686e119a539d2e7cc389f0a843c93199db5ec",
+      "bytes": 1783,
+      "mtime_ns": 1793700977835120486
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ar-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ar-en.attempts.jsonl",
+      "sha256": "1fbb59f6699e9878d37fb1a24a9817ffa5e559d96a3c38c718d2091ef212812f",
+      "bytes": 1702,
+      "mtime_ns": 1793700977836120498
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ar-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ar-en.jsonl",
+      "sha256": "e597ebb02780636901d4f266d5ea8e45169fb513ad468f8bd4db81f0a410ecd0",
+      "bytes": 8538,
+      "mtime_ns": 1793700977837120510
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ar-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ar-en.summary.json",
+      "sha256": "31aa82c580abd60733a318721d51a049dbc88ab70bf85521c9586881e88864bd",
+      "bytes": 1794,
+      "mtime_ns": 1793700977837120510
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ar.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ar.attempts.jsonl",
+      "sha256": "f00f560b244e32726301683b7dd3a78b81cb761c59cd0624033f92c941168939",
+      "bytes": 1702,
+      "mtime_ns": 1793700977838120522
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ar.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ar.jsonl",
+      "sha256": "6e145c387253049a6822b6bc3bb8aae1c29adaefee804c1eb86aec5013a1d02e",
+      "bytes": 8839,
+      "mtime_ns": 1793700977838120522
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ar.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ar.summary.json",
+      "sha256": "36681775591c0f0c7e252b41cf03c25b91dfff65fdd8e86b6a1f6ba3211d945c",
+      "bytes": 1800,
+      "mtime_ns": 1793700977839120534
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ru.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ru.attempts.jsonl",
+      "sha256": "a75617134c4470b781e901461bc29a09d78e37bd2446c2c53e390924dd85957a",
+      "bytes": 1702,
+      "mtime_ns": 1793700977839120534
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ru.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ru.jsonl",
+      "sha256": "743835b886013a6c38faab65c1723d9cf510096dc3dd436262a5fbba8d44aad1",
+      "bytes": 9219,
+      "mtime_ns": 1793700977840120546
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ru.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-ru.summary.json",
+      "sha256": "3c089609d827adcf458f93b3c109a4fbf62a76475b919b2e9bb8eb422dc8a42b",
+      "bytes": 1796,
+      "mtime_ns": 1793700977841120558
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-zh.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-zh.attempts.jsonl",
+      "sha256": "b4d15b6642f58e07adde02fc6c8c5d4d7a0b43353ff535cd92b5b7dba59ad4eb",
+      "bytes": 1702,
+      "mtime_ns": 1793700977841120558
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-zh.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-zh.jsonl",
+      "sha256": "5c1c4b90677529aad24c11ba1d1819b9e586db0f4b11a1fb0691016d772fdaa5",
+      "bytes": 8196,
+      "mtime_ns": 1793700977842120570
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-zh.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/en-zh.summary.json",
+      "sha256": "cb5bbb7a7a907a2c8656b4c580771856079b9a89cde553a901861397bb8fdbca",
+      "bytes": 1804,
+      "mtime_ns": 1793700977842120570
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ru-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ru-en.attempts.jsonl",
+      "sha256": "74da12b1ff42b15b0b3b1af1c03d6421e89014a34bdf1ed29b72a61d97532c29",
+      "bytes": 1702,
+      "mtime_ns": 1793700977843120582
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ru-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ru-en.jsonl",
+      "sha256": "eaa9b938d2c2927a5f432a3902a11f3c721081f301a4fb84a663a4125c9ff5de",
+      "bytes": 8893,
+      "mtime_ns": 1793700977845120606
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ru-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/ru-en.summary.json",
+      "sha256": "2f961789f9674d3bc3702963fd5face054a892a11478cadc3621bd3a78d77c03",
+      "bytes": 1793,
+      "mtime_ns": 1793700977846120617
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/zh-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/zh-en.attempts.jsonl",
+      "sha256": "c6a93e49bf7c72a701c0c744e9e89ea9ad26ac0a7558832b2692ff1ca31e245c",
+      "bytes": 1702,
+      "mtime_ns": 1793700977846120617
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/zh-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/zh-en.jsonl",
+      "sha256": "3217a04f5126bba011c1c32189e37a9ce80db061155d725164c12ba45a909d38",
+      "bytes": 8126,
+      "mtime_ns": 1793700977847120629
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/zh-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-sentences-20261103/zh-en.summary.json",
+      "sha256": "729b49fc2be62ae90fcce48710f59f4f6dd79e8607dddfa76e8dac8c2c00c430",
+      "bytes": 1794,
+      "mtime_ns": 1793700977848120641
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ar-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ar-en.attempts.jsonl",
+      "sha256": "94e3d3205cda0af47e831e96376a4bc6d4899e23ae41e272c183e39b1a261cf7",
+      "bytes": 1702,
+      "mtime_ns": 1793700977848120641
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ar-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ar-en.jsonl",
+      "sha256": "8afe1f08fae5b2d81d5199175081bd4e026c198c72f555dcb1146f72d5d19e12",
+      "bytes": 7943,
+      "mtime_ns": 1793700977849120653
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ar-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ar-en.summary.json",
+      "sha256": "201426549280388e52666c18fc5c0e00a916ed1c6eac859346d82697151e136f",
+      "bytes": 1784,
+      "mtime_ns": 1793700977849120653
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ar.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ar.attempts.jsonl",
+      "sha256": "cd8d21f5197dbf89019ece4dd4b5b5d5b9ff6b776f8f7d07129034d7a66a8fcc",
+      "bytes": 1702,
+      "mtime_ns": 1793700977850120665
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ar.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ar.jsonl",
+      "sha256": "e4f202f3842283eb10cb8966b0292033e0a683e8008b29c5c68078af46d40bcb",
+      "bytes": 8203,
+      "mtime_ns": 1793700977850120665
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ar.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ar.summary.json",
+      "sha256": "c9ef9730cab32a6b85e631a5739e44db64a0b46b0d1da7550da616d8c2469a02",
+      "bytes": 1789,
+      "mtime_ns": 1793700977851120677
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ru.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ru.attempts.jsonl",
+      "sha256": "8c7f14dfce3750861dbc1d99a3c3819ceac52b325ab441ff4e42c9d02cf066ef",
+      "bytes": 1702,
+      "mtime_ns": 1793700977853120701
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ru.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ru.jsonl",
+      "sha256": "ce66fcf3545672e19d8acbf4b010301825fd43a17a3d07956ea56d04bc975bbe",
+      "bytes": 8426,
+      "mtime_ns": 1793700977853120701
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ru.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-ru.summary.json",
+      "sha256": "ca6ba1269216b930dc3527dcc1fe4019def764786e07d28afbec76aa5145ec9d",
+      "bytes": 1785,
+      "mtime_ns": 1793700977854120713
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-zh.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-zh.attempts.jsonl",
+      "sha256": "6af91ab7657ba3971438474df0808acb226ae3047d0a5c65e0e63098a4eee21f",
+      "bytes": 1702,
+      "mtime_ns": 1793700977854120713
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-zh.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-zh.jsonl",
+      "sha256": "4a41777c1a8b8e7f48caa3399577d599edfbcc36d6746d63f264344a4c79aa3c",
+      "bytes": 7435,
+      "mtime_ns": 1793700977855120725
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-zh.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/en-zh.summary.json",
+      "sha256": "0b964d02f6c44565ebf3c80b890eb52cfd139ab2ea12ac7050419748c055216f",
+      "bytes": 1795,
+      "mtime_ns": 1793700977855120725
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ru-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ru-en.attempts.jsonl",
+      "sha256": "1160178fcd62ccdd76807e780c0df828b75fc7dd2d3685d880f2d657b73ed364",
+      "bytes": 1702,
+      "mtime_ns": 1793700977856120736
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ru-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ru-en.jsonl",
+      "sha256": "6fce615dfd685def683a598fbf1cfee8e1b679a20ab4aecf7211aada09bef521",
+      "bytes": 8218,
+      "mtime_ns": 1793700977856120736
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ru-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/ru-en.summary.json",
+      "sha256": "2d52be4dd032b22253ae503779d1d718a2f6c4484d174718424e49689215c09d",
+      "bytes": 1783,
+      "mtime_ns": 1793700977857120748
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/zh-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/zh-en.attempts.jsonl",
+      "sha256": "fcb765258aa09512ada8e31db3d294a0718d8024115bce203f2ff8009b6ddc9b",
+      "bytes": 1702,
+      "mtime_ns": 1793700977857120748
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/zh-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/zh-en.jsonl",
+      "sha256": "d931aa302501ff9df5fbcac7ee4e5f19133d92de1ada7e0a131351b14fad56b2",
+      "bytes": 7530,
+      "mtime_ns": 1793700977859120772
+    },
+    "experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/zh-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-heldout-whole-20261103/zh-en.summary.json",
+      "sha256": "cd6d9285643e60bed6d27db110898d1989a279f3de688ad0fc627a0c8b0f393e",
+      "bytes": 1784,
+      "mtime_ns": 1793700977859120772
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/ar-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ar-en.attempts.jsonl",
+      "sha256": "4594ae99fa16beb9919afb49f69ee4f392e83912723f5b1e9587593d3bb31c05",
+      "bytes": 19342,
+      "mtime_ns": 1793700977859120772
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/ar-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ar-en.jsonl",
+      "sha256": "fe6a30c42875382732fe42ca9dca9da0bd5e447fd4af9375bd30a8ee96ecdc11",
+      "bytes": 84286,
+      "mtime_ns": 1793700977860120784
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/ar-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ar-en.summary.json",
+      "sha256": "a1b6d45aac93d43c09e7efa988c86bed1532a3b4fd93d43d912f8defa51894c9",
+      "bytes": 1670,
+      "mtime_ns": 1793700977860120784
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/en-ar.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/en-ar.attempts.jsonl",
+      "sha256": "bbba38acaadc0a7eb211c12cedf975caa873b85155691b59d23cd18b51f61cfb",
+      "bytes": 20116,
+      "mtime_ns": 1793700977861120796
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/en-ar.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/en-ar.jsonl",
+      "sha256": "8296489c8c17b3738af35ac8436bc51b17c2d88723c1ef1d704bde500f689ce8",
+      "bytes": 86974,
+      "mtime_ns": 1793700977862120808
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/en-ar.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/en-ar.summary.json",
+      "sha256": "a50d55a046a9c867801399d3c178b33f2d3dec24cdb310cd7b4195669b8a58a1",
+      "bytes": 1674,
+      "mtime_ns": 1793700977863120820
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/en-ru.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/en-ru.attempts.jsonl",
+      "sha256": "96814fee917099b498f29a008b5a66ef976cd5a7b7461acef829e091d1dd6195",
+      "bytes": 20116,
+      "mtime_ns": 1793700977865120844
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/en-ru.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/en-ru.jsonl",
+      "sha256": "d1122c7efea2b6ce1a0adcb02cd86527d7547527c5a86eb71df0964ebd207355",
+      "bytes": 91258,
+      "mtime_ns": 1793700977865120844
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/en-ru.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/en-ru.summary.json",
+      "sha256": "3469ff692ebc52c32832abacc8faa4eb2d1dbcc2de151f7625e51ff9ecbf5902",
+      "bytes": 1674,
+      "mtime_ns": 1793700977866120856
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/en-zh.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/en-zh.attempts.jsonl",
+      "sha256": "5b68ce1bb14c7e4fc6fd69143914c8b6406db455d064939fc3cf34f222502296",
+      "bytes": 20116,
+      "mtime_ns": 1793700977867120868
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/en-zh.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/en-zh.jsonl",
+      "sha256": "4a520b80e4675116f0cfabda29b5b62382fbe472ac2986e7b2d72b7f90cd3659",
+      "bytes": 79178,
+      "mtime_ns": 1793700977868120880
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/en-zh.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/en-zh.summary.json",
+      "sha256": "68527f049f3270bf3e9879573296ce5c44ce5e3284fc8d96bb8aec2fcbb0fbee",
+      "bytes": 1680,
+      "mtime_ns": 1793700977868120880
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/ru-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ru-en.attempts.jsonl",
+      "sha256": "b2df8664e0b230cf1f50359aed8569fe58ec2a5a8b5d993b89c75290116a9589",
+      "bytes": 19718,
+      "mtime_ns": 1793700977870120903
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/ru-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ru-en.jsonl",
+      "sha256": "d2edc3d854ef729d459eb30031388dd9f798a4d79b17a62e81345c4242590d16",
+      "bytes": 90405,
+      "mtime_ns": 1793700977870120903
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/ru-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/ru-en.summary.json",
+      "sha256": "7ee7a6af87183eec63315381393230d8ec5074d48b5c0b09e8b0036d37818517",
+      "bytes": 1670,
+      "mtime_ns": 1793700977871120915
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/zh-en.attempts.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/zh-en.attempts.jsonl",
+      "sha256": "2dffe67063b16b41b62c8e45bda672c0da1bb08bb4e9d4b13b2fee3e0afbea6b",
+      "bytes": 19334,
+      "mtime_ns": 1793700977871120915
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/zh-en.jsonl": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/zh-en.jsonl",
+      "sha256": "f8bd26d117740de15b2495af370dd4d51ede419a62bee9dc2b726384360cc6b1",
+      "bytes": 76671,
+      "mtime_ns": 1793700977872120927
+    },
+    "experiments/translation_cpu/data/mt40/opus-original-20261103/zh-en.summary.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/opus-original-20261103/zh-en.summary.json",
+      "sha256": "a4e555e9c510e12d0be3f688f5746b248e8e5515b3ca33a198e8e095198b87e3",
+      "bytes": 1670,
+      "mtime_ns": 1793700977873120939
+    },
+    "experiments/translation_cpu/data/mt40/quality_review.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/quality_review.json",
+      "sha256": "b19e2667270f2afedac08827e78ea7c66684afae0af1fbb3c44a169abff7f8e8",
+      "bytes": 7984,
+      "mtime_ns": 1793700977873120939
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-archive-safety-20261103T053500Z-3911033.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-archive-safety-20261103T053500Z-3911033.json",
+      "sha256": "c8e5977488a3ea0c42ed2125b074dd787ff6b49d2e1a9e13f213cf95d53b69d0",
+      "bytes": 631,
+      "mtime_ns": 1793700977875120963
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-archive-safety-20261103T053500Z-3911033.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-archive-safety-20261103T053500Z-3911033.log",
+      "sha256": "8a8e39c194b94c613c5f32dd7343b37f660e7495747639e3d4456a29b1c66096",
+      "bytes": 1104,
+      "mtime_ns": 1793700977875120963
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-ar-20261103T060100Z-4140439.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-ar-20261103T060100Z-4140439.json",
+      "sha256": "4a2412708bde7bc08b3b8065bcd753f2c1ee675c174f2e635428983898ececdf",
+      "bytes": 621,
+      "mtime_ns": 1793700977875120963
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-ar-20261103T060100Z-4140439.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-ar-20261103T060100Z-4140439.log",
+      "sha256": "c9c279f63518f2c0452b40be7b4523b91c6d2332c27c07c1d03753b39f46932d",
+      "bytes": 4105,
+      "mtime_ns": 1793700977876120975
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-en-20261103T055007Z-4038223.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-en-20261103T055007Z-4038223.json",
+      "sha256": "4cdea655ce550e11eece793462d1d7b330f4b64c1ab93c5d0043f920eaa8d194",
+      "bytes": 621,
+      "mtime_ns": 1793700977877120987
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-en-20261103T055007Z-4038223.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-en-20261103T055007Z-4038223.log",
+      "sha256": "a6405c2bdf18f57da971c14b90c3c4af2ef0a1e6d21d3bd3112c26c5026e2cbe",
+      "bytes": 4105,
+      "mtime_ns": 1793700977877120987
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-ru-20261103T055213Z-4057828.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-ru-20261103T055213Z-4057828.json",
+      "sha256": "7f6d34af7b0d8c576261491e38257f73679453500f0853b53cf5efe851618c1a",
+      "bytes": 621,
+      "mtime_ns": 1793700977879121011
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-ru-20261103T055213Z-4057828.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-ru-20261103T055213Z-4057828.log",
+      "sha256": "092056837420482a207ede85137e4b3ac385a9acbda1f0278d5ff85eb2e1296f",
+      "bytes": 4105,
+      "mtime_ns": 1793700977879121011
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-zh-20261103T055711Z-4107229.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-zh-20261103T055711Z-4107229.json",
+      "sha256": "3ec2051180196f7c097453e4962f2fe9b8d473702f16c2af648160a59a866d99",
+      "bytes": 621,
+      "mtime_ns": 1793700977880121023
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-zh-20261103T055711Z-4107229.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-base-zh-20261103T055711Z-4107229.log",
+      "sha256": "64662f0d1a68e7b58493ea6a2f52a4cf075ae473cb487577f86b29a538c11c85",
+      "bytes": 4090,
+      "mtime_ns": 1793700977880121023
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-ar-20261103T062350Z-143727.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-ar-20261103T062350Z-143727.json",
+      "sha256": "0fcbddc9e2ebaa571c8dd54fb7433edd39586ed7bfddc21da359dcc4b17dcc6a",
+      "bytes": 622,
+      "mtime_ns": 1793700977880121023
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-ar-20261103T062350Z-143727.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-ar-20261103T062350Z-143727.log",
+      "sha256": "31e8d534a891470d12598a664be5a1290d6111d4bce95e1e3e8aacd90918ca7b",
+      "bytes": 4154,
+      "mtime_ns": 1793700977880121023
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-en-20261103T060420Z-4169926.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-en-20261103T060420Z-4169926.json",
+      "sha256": "6007b7b11731472b5511f28c11c40af8164810126dbd5bb235322085339473e6",
+      "bytes": 624,
+      "mtime_ns": 1793700977881121034
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-en-20261103T060420Z-4169926.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-en-20261103T060420Z-4169926.log",
+      "sha256": "690f232443128df93936c271bbf98e3cf1e07e70771fce3526cf97ca2c5583c0",
+      "bytes": 4145,
+      "mtime_ns": 1793700977881121034
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-ru-20261103T061017Z-28000.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-ru-20261103T061017Z-28000.json",
+      "sha256": "03b72ec118def9a4dae1d4693a3d2d0c8b7e106289353cdb0b46606d33e9f862",
+      "bytes": 620,
+      "mtime_ns": 1793700977882121046
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-ru-20261103T061017Z-28000.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-ru-20261103T061017Z-28000.log",
+      "sha256": "dc498cfc0f8d3d408273e97247ac358620fc290e06db6864ee2dba378471f5c0",
+      "bytes": 4150,
+      "mtime_ns": 1793700977883121058
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-zh-20261103T061816Z-96909.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-zh-20261103T061816Z-96909.json",
+      "sha256": "9944dddf5205fbfc72d4b28edeefb02fd8cfbc747ca15c62ec46f5a64d03b05e",
+      "bytes": 620,
+      "mtime_ns": 1793700977883121058
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-zh-20261103T061816Z-96909.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-asr40-small-zh-20261103T061816Z-96909.log",
+      "sha256": "d4a18bdba8daccd563f9919d1bb288883fd926d674bde58ab0a9ee79d836acdc",
+      "bytes": 4133,
+      "mtime_ns": 1793700977884121070
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-ar-eg-20261103T054932Z-4033071.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-ar-eg-20261103T054932Z-4033071.json",
+      "sha256": "605f644ea4c547f7998b622b58a6fc51c675d5d015539fdaa47700a06582287b",
+      "bytes": 611,
+      "mtime_ns": 1793700977884121070
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-ar-eg-20261103T054932Z-4033071.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-ar-eg-20261103T054932Z-4033071.log",
+      "sha256": "30d16fb7b17dc1f0ed237d4a57cd33b2b9d2a87b79e01ca7f448a7ad1d69f8df",
+      "bytes": 2244,
+      "mtime_ns": 1793700977885121082
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-boundaries-20261103T054647Z-4009629.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-boundaries-20261103T054647Z-4009629.json",
+      "sha256": "f214605a7ec5c0c8068c5d144cacd24928c216aa1057b3c9e241484e10c481df",
+      "bytes": 620,
+      "mtime_ns": 1793700977885121082
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-boundaries-20261103T054647Z-4009629.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-boundaries-20261103T054647Z-4009629.log",
+      "sha256": "b7030a20d51cee71cf6da3998be82e602861e868556f467b1e98fd99b42d78ed",
+      "bytes": 1469,
+      "mtime_ns": 1793700977885121082
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-cmn-hans-cn-20261103T054919Z-4031219.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-cmn-hans-cn-20261103T054919Z-4031219.json",
+      "sha256": "422501e046b0b72ce6315aa9d610ae5e87f84a50079a65daefd95bc59d6ec632",
+      "bytes": 629,
+      "mtime_ns": 1793700977886121094
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-cmn-hans-cn-20261103T054919Z-4031219.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-cmn-hans-cn-20261103T054919Z-4031219.log",
+      "sha256": "f3a4f1275e433684c561ce24ee88a34d23027c64f4d93afee3988ccf25646f4b",
+      "bytes": 2502,
+      "mtime_ns": 1793700977886121094
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-en-us-20261103T054748Z-4018044.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-en-us-20261103T054748Z-4018044.json",
+      "sha256": "19caace4f3c139e5588ec3f905ea411f25e018ca9cb70b32ffc4e3665ece146d",
+      "bytes": 611,
+      "mtime_ns": 1793700977887121106
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-en-us-20261103T054748Z-4018044.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-en-us-20261103T054748Z-4018044.log",
+      "sha256": "54325d8c64b583e9b4505981e7cb51ec654208248e37236577709a8f1fbafed8",
+      "bytes": 2244,
+      "mtime_ns": 1793700977887121106
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-ru-ru-20261103T054753Z-4018847.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-ru-ru-20261103T054753Z-4018847.json",
+      "sha256": "2ab57439ccc0b571f2dafba42c97a7e2884a0cebe3e72fada2310cf59a06eb3a",
+      "bytes": 611,
+      "mtime_ns": 1793700977888121118
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-ru-ru-20261103T054753Z-4018847.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-audio-ru-ru-20261103T054753Z-4018847.log",
+      "sha256": "3e4f77097fded15ff8e888caf2c7d38cda262e3f4570d49d7edb668506e9be72",
+      "bytes": 2244,
+      "mtime_ns": 1793700977888121118
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-ar-en-20261103T054626Z-4006789.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-ar-en-20261103T054626Z-4006789.json",
+      "sha256": "edd9878dd2ee125480aef75b3c6a68681d2bfa02d9ce60867b39d64416e4f224",
+      "bytes": 643,
+      "mtime_ns": 1793700977889121130
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-ar-en-20261103T054626Z-4006789.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-ar-en-20261103T054626Z-4006789.log",
+      "sha256": "bf21ed55349854bf000ac931e25641a8824b741d360f46a6e9efecc59e94d4cb",
+      "bytes": 852,
+      "mtime_ns": 1793700977889121130
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-ar-20261103T054541Z-4000338.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-ar-20261103T054541Z-4000338.json",
+      "sha256": "def4ce80c61c4b70c1546a87dad8944d518e5c082516a093c997ccfe2983de30",
+      "bytes": 643,
+      "mtime_ns": 1793700977890121142
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-ar-20261103T054541Z-4000338.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-ar-20261103T054541Z-4000338.log",
+      "sha256": "fa373c6b1428a6adf145deb0b37ee1d0b15279d8982fc06a5cc53ba5c51072bd",
+      "bytes": 851,
+      "mtime_ns": 1793700977890121142
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-ru-20261103T053513Z-3910994.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-ru-20261103T053513Z-3910994.json",
+      "sha256": "215347b6493733d0f18e255da92e50d209fae66f44cc5e928c32610d70242beb",
+      "bytes": 643,
+      "mtime_ns": 1793700977891121154
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-ru-20261103T053513Z-3910994.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-ru-20261103T053513Z-3910994.log",
+      "sha256": "eac6b6ef0f47c7d9d0472e275e79b26eb465aa97c52bd3309f9671a3571f61e5",
+      "bytes": 852,
+      "mtime_ns": 1793700977891121154
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-zh-20261103T053913Z-3946630.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-zh-20261103T053913Z-3946630.json",
+      "sha256": "76a3708a59d6147e2032b6c1e281cee2116daad4be385441d9c59415a447ea9a",
+      "bytes": 643,
+      "mtime_ns": 1793700977892121166
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-zh-20261103T053913Z-3946630.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-en-zh-20261103T053913Z-3946630.log",
+      "sha256": "325dffacc228ac690bdf7ccea3fb54dcd901972891ca6cd0ae0643c8c77e31fb",
+      "bytes": 856,
+      "mtime_ns": 1793700977892121166
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-ru-en-20261103T053833Z-3941250.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-ru-en-20261103T053833Z-3941250.json",
+      "sha256": "3e86a95771504b7aab542a0117eb2bb5910984a96a333a7854b2fd2d68d63262",
+      "bytes": 643,
+      "mtime_ns": 1793700977893121177
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-ru-en-20261103T053833Z-3941250.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-ru-en-20261103T053833Z-3941250.log",
+      "sha256": "bb0b7f5463a8ba2d74cf8c9b702a67c39db4b6b0b8b61e2205de2f51b882f88d",
+      "bytes": 852,
+      "mtime_ns": 1793700977893121177
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-zh-en-20261103T054242Z-3975233.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-zh-en-20261103T054242Z-3975233.json",
+      "sha256": "548aeaa4824f63e53418e3bd40ac07da7f451b828bc17daa323bee87da3e715e",
+      "bytes": 643,
+      "mtime_ns": 1793700977894121189
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-zh-en-20261103T054242Z-3975233.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-convert-zh-en-20261103T054242Z-3975233.log",
+      "sha256": "c0d97da506b5f288b39b3b148cb5ff8936a6e1c2ea3300a42c83cfa22fdcb663",
+      "bytes": 846,
+      "mtime_ns": 1793700977895121201
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-ar-en-retry-20261103T054620Z-4006000.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-ar-en-retry-20261103T054620Z-4006000.json",
+      "sha256": "3aca5429ebb891b339adcb72349761ce132ee49893b35a4384bd462d29dd387f",
+      "bytes": 572,
+      "mtime_ns": 1793700977895121201
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-ar-en-retry-20261103T054620Z-4006000.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-ar-en-retry-20261103T054620Z-4006000.log",
+      "sha256": "55545faa338ff9339b70c4244dd63172027cfc45586d8791a231eb03b1a52845",
+      "bytes": 1987,
+      "mtime_ns": 1793700977898121237
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ar-20261103T054326Z-3981197.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ar-20261103T054326Z-3981197.json",
+      "sha256": "8c6b68e54f0e8ee4d77b159d88a34b8ad338197ee0fdc7faa347e03c2f2952d9",
+      "bytes": 560,
+      "mtime_ns": 1793700977898121237
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ar-20261103T054326Z-3981197.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ar-20261103T054326Z-3981197.log",
+      "sha256": "238dc3dfb92da0d41a14aebcdd97f6ac6cf816cd78478b6f3b0f1a976c821ab6",
+      "bytes": 1402,
+      "mtime_ns": 1793700977898121237
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ar-retry-20261103T054536Z-3999690.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ar-retry-20261103T054536Z-3999690.json",
+      "sha256": "5d9e32a7526ac4eba30c875d5b14b1cf8ee0559ffc816d2fe535132212feec60",
+      "bytes": 572,
+      "mtime_ns": 1793700977898121237
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ar-retry-20261103T054536Z-3999690.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ar-retry-20261103T054536Z-3999690.log",
+      "sha256": "5a6b6ce52b2054ce1c4bf01276ffa027bd8a242626b09a4bbed810098983d52a",
+      "bytes": 3006,
+      "mtime_ns": 1793700977899121249
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ru-20261103T053221Z-3888890.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ru-20261103T053221Z-3888890.json",
+      "sha256": "18548ed330894f44be6a0807174b8ac511b66657047f3a0cf7b6395c67a54dff",
+      "bytes": 560,
+      "mtime_ns": 1793700977899121249
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ru-20261103T053221Z-3888890.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-ru-20261103T053221Z-3888890.log",
+      "sha256": "4efc7b68ce3ac6df9f3b36ebcce92aa002b25179eed06e3d3b4ac5cc45e6e974",
+      "bytes": 1988,
+      "mtime_ns": 1793700977900121261
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-zh-20261103T053906Z-3945686.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-zh-20261103T053906Z-3945686.json",
+      "sha256": "f255b519ea8c6a3b33a11ad0ceb07020c4a0437648421fce89b5e2c6f459cb00",
+      "bytes": 560,
+      "mtime_ns": 1793700977900121261
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-zh-20261103T053906Z-3945686.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-en-zh-20261103T053906Z-3945686.log",
+      "sha256": "09b71ee9e5f63655ff42063c96c69be8a475387302b666c3dceea8fd385b9ea2",
+      "bytes": 2049,
+      "mtime_ns": 1793700977900121261
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-ru-en-20261103T053829Z-3940701.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-ru-en-20261103T053829Z-3940701.json",
+      "sha256": "ef2326986cb17b8927343dc3908c2302deb55755b556d77f65f50927aa865aec",
+      "bytes": 560,
+      "mtime_ns": 1793700977901121273
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-ru-en-20261103T053829Z-3940701.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-ru-en-20261103T053829Z-3940701.log",
+      "sha256": "fae5bc7a2b731fbca564516d597e678a5bc62902b220723f4c4f681c42cb0bed",
+      "bytes": 1987,
+      "mtime_ns": 1793700977903121297
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-zh-en-20261103T053955Z-3952374.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-zh-en-20261103T053955Z-3952374.json",
+      "sha256": "ce36f4245056e07a2ca00bf1b6c785fc7584ad04fb7ee89c0868873dcbaa104d",
+      "bytes": 560,
+      "mtime_ns": 1793700977903121297
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-zh-en-20261103T053955Z-3952374.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-download-zh-en-20261103T053955Z-3952374.log",
+      "sha256": "d76bd7368ac4437f27110e9a62a3503965c68f455cc7f6922d2575ee828cc509",
+      "bytes": 2037,
+      "mtime_ns": 1793700977903121297
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-ar-en-20261103T063306Z-222687.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-ar-en-20261103T063306Z-222687.json",
+      "sha256": "be6861ead2b5e8c5eddf41eed0f203d0e918061c33ce0c43943ba607f79fd403",
+      "bytes": 688,
+      "mtime_ns": 1793700977903121297
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-ar-en-20261103T063306Z-222687.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-ar-en-20261103T063306Z-222687.log",
+      "sha256": "b597e206f52e3fbb667fb2e25c7e993a1008be2fa8299daf2c2ec5dd12856be2",
+      "bytes": 2204,
+      "mtime_ns": 1793700977903121297
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-ar-20261103T063234Z-217844.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-ar-20261103T063234Z-217844.json",
+      "sha256": "1b31c9fe6dffcf6fb7092339a084cc9e0bb5935bd0e7616fa70a3f8486068867",
+      "bytes": 688,
+      "mtime_ns": 1793700977904121309
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-ar-20261103T063234Z-217844.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-ar-20261103T063234Z-217844.log",
+      "sha256": "ca630ac783ad11496fac1108f23be237f0109e9a69c1853059bad44fb2f2d0b7",
+      "bytes": 2211,
+      "mtime_ns": 1793700977906121332
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-ru-20261103T060144Z-4148105.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-ru-20261103T060144Z-4148105.json",
+      "sha256": "5625d6b8e2ef0cbd15b9cddbaf3bfa14614b7651874df2db15b0ffc3b4edb4f1",
+      "bytes": 690,
+      "mtime_ns": 1793700977906121332
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-ru-20261103T060144Z-4148105.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-ru-20261103T060144Z-4148105.log",
+      "sha256": "c5e9c9021a0c816a5ede7a4344e275bfb66ac9936dfaaab70cba5e4d85490ed0",
+      "bytes": 2207,
+      "mtime_ns": 1793700977907121344
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-zh-20261103T063128Z-207747.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-zh-20261103T063128Z-207747.json",
+      "sha256": "dba87acc68df38422b55805df1f5c43b7c54cac4d24f519bfabb688ee2c7c432",
+      "bytes": 688,
+      "mtime_ns": 1793700977907121344
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-zh-20261103T063128Z-207747.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-en-zh-20261103T063128Z-207747.log",
+      "sha256": "9f10359b8226bf200af486f045a4b5d97b89608b8b31782880107247d9141091",
+      "bytes": 2215,
+      "mtime_ns": 1793700977907121344
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-ru-en-20261103T061819Z-97334.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-ru-en-20261103T061819Z-97334.json",
+      "sha256": "72730be7db71300fbb80e48371b476899718d31fd86b10dde4984f29c38cfc49",
+      "bytes": 686,
+      "mtime_ns": 1793700977907121344
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-ru-en-20261103T061819Z-97334.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-ru-en-20261103T061819Z-97334.log",
+      "sha256": "807d2ed09fb79de2c565d541465c1fcc041327b8c8a1b0664ac1dddb40252d84",
+      "bytes": 2201,
+      "mtime_ns": 1793700977908121356
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-zh-en-20261103T063202Z-212629.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-zh-en-20261103T063202Z-212629.json",
+      "sha256": "f303a46eb324b4a290681c6757a82964e6d5412e05930b976e565456a2713cf5",
+      "bytes": 688,
+      "mtime_ns": 1793700977908121356
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-zh-en-20261103T063202Z-212629.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-segment-zh-en-20261103T063202Z-212629.log",
+      "sha256": "e4a0b4966d5438292a96fce0d57ea188c9256ffbfe7fa801e346cd50dacba7ce",
+      "bytes": 2205,
+      "mtime_ns": 1793700977908121356
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-ar-en-20261103T063303Z-222179.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-ar-en-20261103T063303Z-222179.json",
+      "sha256": "853514420067e550568385ac6e7a35ef92736e784b65fb651b5f27a89447a214",
+      "bytes": 699,
+      "mtime_ns": 1793700977909121368
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-ar-en-20261103T063303Z-222179.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-ar-en-20261103T063303Z-222179.log",
+      "sha256": "fddff5ee9195114a2acad8e073727b08f51c26969a56d93002eb8eb1d5e2f9fe",
+      "bytes": 2164,
+      "mtime_ns": 1793700977909121368
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-ar-20261103T063232Z-217426.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-ar-20261103T063232Z-217426.json",
+      "sha256": "975b3840b7abc8a681688feb56507cd92c13266487704a166421d08206b3a570",
+      "bytes": 699,
+      "mtime_ns": 1793700977910121380
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-ar-20261103T063232Z-217426.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-ar-20261103T063232Z-217426.log",
+      "sha256": "47f3d51ffde34007cfdd49d9d26f1d3f03b5909cb9aca14d330c7102a35ae34c",
+      "bytes": 2171,
+      "mtime_ns": 1793700977910121380
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-ru-20261103T055745Z-4112111.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-ru-20261103T055745Z-4112111.json",
+      "sha256": "94123720620d4c042dd93fda25a85fbb3be0b5d8ca38c532226dbd2e76f0cd61",
+      "bytes": 701,
+      "mtime_ns": 1793700977911121392
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-ru-20261103T055745Z-4112111.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-ru-20261103T055745Z-4112111.log",
+      "sha256": "6e54909b0d6ce7e0ec2aa1a022802786c1589d3325c3571512e478e043630935",
+      "bytes": 2167,
+      "mtime_ns": 1793700977912121404
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-zh-20261103T063126Z-207346.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-zh-20261103T063126Z-207346.json",
+      "sha256": "5a66e0c6e54d39100861333233ccfab4a6ad711bac28c8942db4ba476f4ce033",
+      "bytes": 699,
+      "mtime_ns": 1793700977912121404
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-zh-20261103T063126Z-207346.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-en-zh-20261103T063126Z-207346.log",
+      "sha256": "455eaf3067a3dda46c9c1369edc9473251232161f9ed013fbe64034ae497df59",
+      "bytes": 2177,
+      "mtime_ns": 1793700977914121428
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-ru-en-20261103T061046Z-32315.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-ru-en-20261103T061046Z-32315.json",
+      "sha256": "95342c10cca62891524b3a68a2c7c41087b35af95735bc8442fb658529ae65f5",
+      "bytes": 697,
+      "mtime_ns": 1793700977914121428
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-ru-en-20261103T061046Z-32315.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-ru-en-20261103T061046Z-32315.log",
+      "sha256": "19f0a68eee8fa60998d28ab73ba9acb8c150212268ab28ef6e7bef7b4d65fe79",
+      "bytes": 2165,
+      "mtime_ns": 1793700977915121440
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-zh-en-20261103T063158Z-212279.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-zh-en-20261103T063158Z-212279.json",
+      "sha256": "6dcef7783ae2bca96f589835fab7fe39c685dc76f506fb733ca9e5442838eb7e",
+      "bytes": 699,
+      "mtime_ns": 1793700977915121440
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-zh-en-20261103T063158Z-212279.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-heldout-whole-zh-en-20261103T063158Z-212279.log",
+      "sha256": "b48811834a7b6393d32bfd4429a9b8e748b4b8615f03e5a9884967ea7591f991",
+      "bytes": 2167,
+      "mtime_ns": 1793700977915121440
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt-contract-20261103T053759Z-3936335.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt-contract-20261103T053759Z-3936335.json",
+      "sha256": "f6e9dc13095912b28b734f94746ed6a6a49431683834b432c2ceab342c94b532",
+      "bytes": 619,
+      "mtime_ns": 1793700977915121440
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt-contract-20261103T053759Z-3936335.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt-contract-20261103T053759Z-3936335.log",
+      "sha256": "c0a78a5cab67f25e1465ff330f2d82017038abf4e05c508232e44a94d775c0f5",
+      "bytes": 762,
+      "mtime_ns": 1793700977917121464
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-ar-en-20261103T054636Z-4008184.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-ar-en-20261103T054636Z-4008184.json",
+      "sha256": "db52259e971e0dc8b288f314d47e0581985bdc49f3e9934848813fe9c3c158cc",
+      "bytes": 625,
+      "mtime_ns": 1793700977918121475
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-ar-en-20261103T054636Z-4008184.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-ar-en-20261103T054636Z-4008184.log",
+      "sha256": "9f0c59c4ca07a0069a941f735fdc4717289cd89701c52593932174946a22924b",
+      "bytes": 4538,
+      "mtime_ns": 1793700977918121475
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ar-20261103T054551Z-4001833.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ar-20261103T054551Z-4001833.json",
+      "sha256": "54af484e18adf92ec72f89f7e03805e8878424080e7aa0fb1bca7a15061e92b5",
+      "bytes": 625,
+      "mtime_ns": 1793700977918121475
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ar-20261103T054551Z-4001833.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ar-20261103T054551Z-4001833.log",
+      "sha256": "0f15841ed6e76a895b13ab9de9b2e83c23e9a20b4fc988dbb6dfc21d1a5a73d6",
+      "bytes": 4684,
+      "mtime_ns": 1793700977919121487
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ru-20261103T053643Z-3925344.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ru-20261103T053643Z-3925344.json",
+      "sha256": "e12abe6e4de27a43a14a9e5f341fbccf79fc5b019fb3c510c403063cc8c1905f",
+      "bytes": 625,
+      "mtime_ns": 1793700977919121487
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ru-20261103T053643Z-3925344.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ru-20261103T053643Z-3925344.log",
+      "sha256": "3331793f369890a66f4675bc8ce5e9ff5a8990d80d32881312f433e5887e4df4",
+      "bytes": 11277,
+      "mtime_ns": 1793700977919121487
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ru-fixed-20261103T053721Z-3930719.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ru-fixed-20261103T053721Z-3930719.json",
+      "sha256": "df2e436b94f1d6fde7461cc57c306f0426692faa56dd5dce78b65a5e3ec992b7",
+      "bytes": 637,
+      "mtime_ns": 1793700977920121499
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ru-fixed-20261103T053721Z-3930719.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-ru-fixed-20261103T053721Z-3930719.log",
+      "sha256": "042b75176d636f8d3fd4839dcf87cd410533376373cc36c4c60146b441b3809d",
+      "bytes": 4679,
+      "mtime_ns": 1793700977920121499
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-zh-20261103T053921Z-3947660.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-zh-20261103T053921Z-3947660.json",
+      "sha256": "95055313814180553cd3489816346e0fd868c49e5984c725f1a8dcffc2cf90c7",
+      "bytes": 625,
+      "mtime_ns": 1793700977921121511
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-zh-20261103T053921Z-3947660.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-en-zh-20261103T053921Z-3947660.log",
+      "sha256": "ed5093a7c225825580e22964d90347dfd1a54d352536e8507b02139dbb451de9",
+      "bytes": 4687,
+      "mtime_ns": 1793700977921121511
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-ru-en-20261103T053842Z-3942298.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-ru-en-20261103T053842Z-3942298.json",
+      "sha256": "fea4400cf15ad5689808f18dcb6f5dcc981452df31ab0c7fed3aa97e80e959c1",
+      "bytes": 625,
+      "mtime_ns": 1793700977922121523
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-ru-en-20261103T053842Z-3942298.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-ru-en-20261103T053842Z-3942298.log",
+      "sha256": "6f7c4ab57d04a008da240ba38b14477904896c9cbc51885c7086310d2e8767d3",
+      "bytes": 4604,
+      "mtime_ns": 1793700977923121535
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-zh-en-20261103T054257Z-3977206.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-zh-en-20261103T054257Z-3977206.json",
+      "sha256": "57374478019c16f7df7734edbe7f575ec64d6b13cdde2c04425098df97aeacbf",
+      "bytes": 625,
+      "mtime_ns": 1793700977923121535
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-zh-en-20261103T054257Z-3977206.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-mt40-zh-en-20261103T054257Z-3977206.log",
+      "sha256": "520ce5c5df942d02a5772fb9ce30981b591e351dd8e7ac1251967261c1c7e9e8",
+      "bytes": 4536,
+      "mtime_ns": 1793700977925121559
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-focused-20261103T093348Z-1804947.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-focused-20261103T093348Z-1804947.json",
+      "sha256": "c2d831da9b95027e98245d92ffb2864de8d6db9cae92b540c185bb86d7666a21",
+      "bytes": 627,
+      "mtime_ns": 1793700977925121559
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-focused-20261103T093348Z-1804947.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-focused-20261103T093348Z-1804947.log",
+      "sha256": "92d6ff8b8fe54a0725e64344e5fa6eb836157b610051e5fde9407a72a87c6977",
+      "bytes": 1570,
+      "mtime_ns": 1793700977925121559
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-full-control-20261103T093642Z-1829963.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-full-control-20261103T093642Z-1829963.json",
+      "sha256": "8d274800998ca4bf9633891f3154c2241a3c890b9acc725b0d871d1d9b7423c8",
+      "bytes": 602,
+      "mtime_ns": 1793700977925121559
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-full-control-20261103T093642Z-1829963.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-full-control-20261103T093642Z-1829963.log",
+      "sha256": "b1493536dda0d2dc58e2193851dc7cc27d0dda63f21485cd94062edd8868d6f4",
+      "bytes": 15574,
+      "mtime_ns": 1793700977926121571
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-new-regressions-20261103T093624Z-1827254.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-new-regressions-20261103T093624Z-1827254.json",
+      "sha256": "010317c4ebfb959220e5caff753611521ed5bdbbec220c151cb020ac231de0c9",
+      "bytes": 651,
+      "mtime_ns": 1793700977927121583
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-new-regressions-20261103T093624Z-1827254.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-new-regressions-20261103T093624Z-1827254.log",
+      "sha256": "7c24d042c6a086f3100fa6b473f88212131cf12a9fb23c09eb1d60a76e6afe9a",
+      "bytes": 1564,
+      "mtime_ns": 1793700977929121607
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-red-20261103T093224Z-1792725.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-red-20261103T093224Z-1792725.json",
+      "sha256": "63f99027dd40d427e8cbba511f6f96089baa430984174fdddac45f3cbf7092f0",
+      "bytes": 627,
+      "mtime_ns": 1793700977929121607
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-red-20261103T093224Z-1792725.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-red-20261103T093224Z-1792725.log",
+      "sha256": "6479f91c316da3bb60b3a7ae0302ea5dd784dcf92458e52a8ae560ada2cdc65d",
+      "bytes": 1794,
+      "mtime_ns": 1793700977929121607
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-terminal-fds-20261103T094113Z-1870215.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-terminal-fds-20261103T094113Z-1870215.json",
+      "sha256": "75556f57cae22be35edec55f273623af7e0eaf638a66958b6a73133773aa8dab",
+      "bytes": 645,
+      "mtime_ns": 1793700977929121607
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-terminal-fds-20261103T094113Z-1870215.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-ownership-terminal-fds-20261103T094113Z-1870215.log",
+      "sha256": "3f1ae0b81c9abdd693b4864094fea0f30dcbfadbe4a25aa2e4a90a948e8f7af5",
+      "bytes": 1584,
+      "mtime_ns": 1793700977930121618
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-full-control-20261103T092127Z-1688583.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-full-control-20261103T092127Z-1688583.json",
+      "sha256": "372452339ff1fcb1ca72b02cb05cfe0c6ab40bfcfafd421170c5aa1e5d11d41f",
+      "bytes": 606,
+      "mtime_ns": 1793700977930121618
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-full-control-20261103T092127Z-1688583.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-full-control-20261103T092127Z-1688583.log",
+      "sha256": "53dc360ade99ac94e6a6ed1ef48b6f45b7d7c775fd7bbfb1e29d5ccfbff18ae3",
+      "bytes": 14107,
+      "mtime_ns": 1793700977931121630
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-green-20261103T092047Z-1682910.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-green-20261103T092047Z-1682910.json",
+      "sha256": "5f99e0b1f3975dd30d83efcf1085a4c123f8f30d8dff5f90d8a55abaa3fb1698",
+      "bytes": 638,
+      "mtime_ns": 1793700977932121642
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-green-20261103T092047Z-1682910.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-green-20261103T092047Z-1682910.log",
+      "sha256": "5af5255d05ea4787d55b84e99a93eeae4150ac3e7bb96a9d8dde15fefc89fdac",
+      "bytes": 1246,
+      "mtime_ns": 1793700977933121654
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-red-20261103T091939Z-1672144.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-red-20261103T091939Z-1672144.json",
+      "sha256": "458cd4f87c45076c633d690347c9cd65831ce89ca3b29510f3cb69bdad2f869a",
+      "bytes": 634,
+      "mtime_ns": 1793700977933121654
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-red-20261103T091939Z-1672144.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-participant-red-20261103T091939Z-1672144.log",
+      "sha256": "cf3ef238ceef458868034768dc8a1d04e84f25f7b4f86ed8b09a6bd6b90745ac",
+      "bytes": 1551,
+      "mtime_ns": 1793700977934121666
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-pgid-review-proof-20261103T092243Z-1700877.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-pgid-review-proof-20261103T092243Z-1700877.json",
+      "sha256": "d51027548139253ef79f5265ebb2419e07e0b3381401dc794eb6cd0d5db0a6fb",
+      "bytes": 558,
+      "mtime_ns": 1793700977935121678
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-pgid-review-proof-20261103T092243Z-1700877.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-pgid-review-proof-20261103T092243Z-1700877.log",
+      "sha256": "cc2573efee6f625cb700ac8303c8c78e99376e2579fb06106e2abd244203e2be",
+      "bytes": 608,
+      "mtime_ns": 1793700977935121678
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-process-stage-contract-20261103T055601Z-4096714.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-process-stage-contract-20261103T055601Z-4096714.json",
+      "sha256": "644a5d97c5c23ac5a240ec1ce85b6e87230087f7dca24ceca1d7fc4d0170d8be",
+      "bytes": 641,
+      "mtime_ns": 1793700977936121690
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-process-stage-contract-20261103T055601Z-4096714.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-process-stage-contract-20261103T055601Z-4096714.log",
+      "sha256": "40c8d7aae6a9f3bb33691b1692f5635232088016f1fa463f7abab650aeb5a57e",
+      "bytes": 1427,
+      "mtime_ns": 1793700977937121702
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-real-asr-mt-process-smoke-20261103T060146Z-4126414.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-real-asr-mt-process-smoke-20261103T060146Z-4126414.json",
+      "sha256": "cbfbd262aa597996374cf8a379329cd8bd8fc491ccda47d961c27c0f99fa3954",
+      "bytes": 622,
+      "mtime_ns": 1793700977937121702
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-real-asr-mt-process-smoke-20261103T060146Z-4126414.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-real-asr-mt-process-smoke-20261103T060146Z-4126414.log",
+      "sha256": "703e53e9ece0a9ab727af5d23e55bee87cb99e098795ef1be242c14e337a87f6",
+      "bytes": 557,
+      "mtime_ns": 1793700977937121702
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-ar-en-20261103T063237Z-218293.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-ar-en-20261103T063237Z-218293.json",
+      "sha256": "4ab3d50f169b3a49c392a361126bd7edd6810fc9b368b978cd6e3c0ba7342518",
+      "bytes": 642,
+      "mtime_ns": 1793700977938121714
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-ar-en-20261103T063237Z-218293.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-ar-en-20261103T063237Z-218293.log",
+      "sha256": "54fe899d86c3ce35b766fa87ff78fa68b5e25de5da865af8bdf8aa00acfbb08f",
+      "bytes": 5455,
+      "mtime_ns": 1793700977938121714
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-ar-20261103T063205Z-213397.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-ar-20261103T063205Z-213397.json",
+      "sha256": "5fc3801dbafa15f4cd1668257d718390afba77e87b7c18800ce81d9d6c8e96fb",
+      "bytes": 642,
+      "mtime_ns": 1793700977939121726
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-ar-20261103T063205Z-213397.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-ar-20261103T063205Z-213397.log",
+      "sha256": "c9a5c08d05883dac5bb271abc00d65cc206439bca392ac0f8a153671d4693b7c",
+      "bytes": 5629,
+      "mtime_ns": 1793700977939121726
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-ru-20261103T055455Z-4085571.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-ru-20261103T055455Z-4085571.json",
+      "sha256": "eab6a535869cee57527d0935a14eb80ff0c0a622029f44ece74ca3ccd6b38048",
+      "bytes": 644,
+      "mtime_ns": 1793700977940121737
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-ru-20261103T055455Z-4085571.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-ru-20261103T055455Z-4085571.log",
+      "sha256": "d91e460b94f1a758233b82b049122e876aec2d103c4c0f215791929651b2c164",
+      "bytes": 5628,
+      "mtime_ns": 1793700977940121737
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-zh-20261103T062353Z-144106.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-zh-20261103T062353Z-144106.json",
+      "sha256": "a13ffbd2572bc38a3535c944a80ffa8e1f84804f839e3cf36e1c9ffc50b3f5e5",
+      "bytes": 642,
+      "mtime_ns": 1793700977940121737
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-zh-20261103T062353Z-144106.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-en-zh-20261103T062353Z-144106.log",
+      "sha256": "351380188a0968c723f252093ca685fbf39a142cce247184fe7fe739054b8e3f",
+      "bytes": 5637,
+      "mtime_ns": 1793700977942121761
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-ru-en-20261103T060423Z-4170417.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-ru-en-20261103T060423Z-4170417.json",
+      "sha256": "6305ca8c6b45362f4ae24344142d9cbd35786dbc2b45b4e0b3f15e0a4813787d",
+      "bytes": 644,
+      "mtime_ns": 1793700977942121761
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-ru-en-20261103T060423Z-4170417.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-ru-en-20261103T060423Z-4170417.log",
+      "sha256": "a0f5cbd075ca1060bf6a3ad14b68215b4e6aaa425fb1c101b2363b9fc1784a49",
+      "bytes": 5539,
+      "mtime_ns": 1793700977942121761
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-zh-en-20261103T063131Z-208103.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-zh-en-20261103T063131Z-208103.json",
+      "sha256": "ebbf6d11b5df7dc9a9cf44554e7e688eac42f8f1d746f99d5e4db2d8ded1388c",
+      "bytes": 642,
+      "mtime_ns": 1793700977943121773
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-zh-en-20261103T063131Z-208103.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-segment-zh-en-20261103T063131Z-208103.log",
+      "sha256": "d15aa4aa50283b6cd152401841ea34a391f12814ea9a93701bf210b4bec71822",
+      "bytes": 5451,
+      "mtime_ns": 1793700977943121773
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-sentence-boundaries-20261103T055046Z-4043781.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-sentence-boundaries-20261103T055046Z-4043781.json",
+      "sha256": "2c2d1116828ca30978135efc0334a157c9ab3b1e8006924c1b0aef36e3f3e2b2",
+      "bytes": 639,
+      "mtime_ns": 1793700977943121773
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-sentence-boundaries-20261103T055046Z-4043781.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-sentence-boundaries-20261103T055046Z-4043781.log",
+      "sha256": "69fb05c00e4eb0df6a39aeae2e90d26dcacd457c184e49fe89fa62280a7af80b",
+      "bytes": 1126,
+      "mtime_ns": 1793700977944121785
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-tar-boundaries-20261103T054713Z-4009604.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-tar-boundaries-20261103T054713Z-4009604.json",
+      "sha256": "9516d4c8595ef4a27a717a54db93b9ef25aa0dfc513447fcac579b0f281c8e03",
+      "bytes": 631,
+      "mtime_ns": 1793700977944121785
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-tar-boundaries-20261103T054713Z-4009604.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-tar-boundaries-20261103T054713Z-4009604.log",
+      "sha256": "52a42a40a6335000a3f5a27542459df80a3099f02f1e00c51ceee74f8fa897f3",
+      "bytes": 771,
+      "mtime_ns": 1793700977945121797
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-translation-suite-20261103T055922Z-4126430.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-translation-suite-20261103T055922Z-4126430.json",
+      "sha256": "618d12f69766ed80826e7bb4ccc6d0a5485e09a1a6adbc5dba26b242e0716e40",
+      "bytes": 592,
+      "mtime_ns": 1793700977945121797
+    },
+    "experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-translation-suite-20261103T055922Z-4126430.log": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-translation-suite-20261103T055922Z-4126430.log",
+      "sha256": "485b7542b5da6de48ed10acdbf4aa61c2efcc6eddac29383887c45b072f00e64",
+      "bytes": 7819,
+      "mtime_ns": 1793700977945121797
+    },
+    "experiments/translation_cpu/data/mt40/runner-source-sha256.txt": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40/runner-source-sha256.txt",
+      "sha256": "991562b555c4f58d1849a89390d7f4031985c7b1bd3248297f192ee14a066080",
+      "bytes": 84,
+      "mtime_ns": 1793700977946121809
+    },
+    "experiments/translation_cpu/data/mt40_contrasts.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40_contrasts.json",
+      "sha256": "e4588bf7c5ba1acb6975529f42b1f8c02d3c7df89d70aecbd02d698c09bc3e3c",
+      "bytes": 4719,
+      "mtime_ns": 1793700977946121809
+    },
+    "experiments/translation_cpu/data/mt40_holdout.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/mt40_holdout.json",
+      "sha256": "a8b8bc9fb819288f607e189ab787772ea5e4232ddfe37425e767999415404dff",
+      "bytes": 3528,
+      "mtime_ns": 1793700977947121821
+    },
+    "experiments/translation_cpu/data/process_pipeline/results.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/process_pipeline/results.json",
+      "sha256": "1ab58dbfe75f628de4194f07876196661c920ea00c2623c5a23c541e4995889e",
+      "bytes": 26428,
+      "mtime_ns": 1793700977947121821
+    },
+    "experiments/translation_cpu/data/provenance/argos/ar_en.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/ar_en.README.md",
+      "sha256": "55fcbecc3d76c0955d070289390f4a72925203f0ad2ab42884d52ffcd73a7428",
+      "bytes": 290,
+      "mtime_ns": 1793700977948121833
+    },
+    "experiments/translation_cpu/data/provenance/argos/ar_en.metadata.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/ar_en.metadata.json",
+      "sha256": "ecafea9ed8f8513026dc21117f875a27c6cc54b0feee50bb33cbb664f85ba794",
+      "bytes": 158,
+      "mtime_ns": 1793700977948121833
+    },
+    "experiments/translation_cpu/data/provenance/argos/decision.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/decision.json",
+      "sha256": "0b6aebfc92f9c8a4a7d07ab8c92dd602f81555404d39cc79a4a76b3a76cfc603",
+      "bytes": 6028,
+      "mtime_ns": 1793700977949121845
+    },
+    "experiments/translation_cpu/data/provenance/argos/en_ar.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/en_ar.README.md",
+      "sha256": "42b80c2d427dfc82b9f33f0193189d558961683cbf3e000fe88a6f8e4b83c4ef",
+      "bytes": 290,
+      "mtime_ns": 1793700977949121845
+    },
+    "experiments/translation_cpu/data/provenance/argos/en_ar.metadata.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/en_ar.metadata.json",
+      "sha256": "5fe4a31450309d8b77c1003d7e4a794175e01ca00cb77e8f3be0bcf8bbeac15c",
+      "bytes": 158,
+      "mtime_ns": 1793700977950121857
+    },
+    "experiments/translation_cpu/data/provenance/argos/translate-en_ru-1_9.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/translate-en_ru-1_9.README.md",
+      "sha256": "ae9d1fa7d28837433eb979e5e442c3907fa84d10458ff9f3d23eb372bf0061cd",
+      "bytes": 7704,
+      "mtime_ns": 1793700977950121857
+    },
+    "experiments/translation_cpu/data/provenance/argos/translate-en_ru-1_9.metadata.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/translate-en_ru-1_9.metadata.json",
+      "sha256": "a40657925da1c25d98d8a6bc53c436a5b1179bd8771e016147d88587edf1b529",
+      "bytes": 255,
+      "mtime_ns": 1793700977951121869
+    },
+    "experiments/translation_cpu/data/provenance/argos/translate-en_zh-1_9.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/translate-en_zh-1_9.README.md",
+      "sha256": "050e546664f0e70d80b6f83aa1da5f04ee85335f4a1b62d1c89184f76100b5dc",
+      "bytes": 401,
+      "mtime_ns": 1793700977951121869
+    },
+    "experiments/translation_cpu/data/provenance/argos/translate-en_zh-1_9.metadata.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/translate-en_zh-1_9.metadata.json",
+      "sha256": "106086bc1b77d2d5c298aa38be69e8e87263eeb4167b4614b08a030c43d31b6a",
+      "bytes": 135,
+      "mtime_ns": 1793700977952121881
+    },
+    "experiments/translation_cpu/data/provenance/argos/translate-ru_en-1_9.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/translate-ru_en-1_9.README.md",
+      "sha256": "5a157fd062b9786eb4c7d5aa8fce0f3f01de0fa71c2f34fbf16e222c66ecd090",
+      "bytes": 7704,
+      "mtime_ns": 1793700977952121881
+    },
+    "experiments/translation_cpu/data/provenance/argos/translate-ru_en-1_9.metadata.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/translate-ru_en-1_9.metadata.json",
+      "sha256": "2034d666010673068722bc15af5bb8561173665872867c89a1b99695f0fb25d0",
+      "bytes": 255,
+      "mtime_ns": 1793700977953121892
+    },
+    "experiments/translation_cpu/data/provenance/argos/translate-zh_en-1_9.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/translate-zh_en-1_9.README.md",
+      "sha256": "1bb7a1261520b8f7d1f94b7fd108c0ccfd7333a3e40a2256df274df0a2ff1cc8",
+      "bytes": 393,
+      "mtime_ns": 1793700977953121892
+    },
+    "experiments/translation_cpu/data/provenance/argos/translate-zh_en-1_9.metadata.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/argos/translate-zh_en-1_9.metadata.json",
+      "sha256": "e42259bbbec6cd09ecd16d97d614bebbf1e7351130c6970fe77a2f1ed7f99cca",
+      "bytes": 135,
+      "mtime_ns": 1793700977955121916
+    },
+    "experiments/translation_cpu/data/provenance/opus/CC-BY-4.0.txt": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/CC-BY-4.0.txt",
+      "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411",
+      "bytes": 18657,
+      "mtime_ns": 1793700977955121916
+    },
+    "experiments/translation_cpu/data/provenance/opus/Tatoeba-Challenge-en-ar-README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/Tatoeba-Challenge-en-ar-README.md",
+      "sha256": "b022e548f7c23c36c66f65a1d7328072533077fe90982090df62659f86474fdf",
+      "bytes": 5468,
+      "mtime_ns": 1793700977956121928
+    },
+    "experiments/translation_cpu/data/provenance/opus/ar-en.LICENSE": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/ar-en.LICENSE",
+      "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+      "bytes": 18652,
+      "mtime_ns": 1793700977956121928
+    },
+    "experiments/translation_cpu/data/provenance/opus/ar-en.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/ar-en.README.md",
+      "sha256": "35e4a45fc28e591430ec663b3a5dff970311d90f94fcba3d9c983d5fe999a170",
+      "bytes": 818,
+      "mtime_ns": 1793700977958121952
+    },
+    "experiments/translation_cpu/data/provenance/opus/ar-en.conversion.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/ar-en.conversion.json",
+      "sha256": "b7c031a010db111861555b07616b0ba94623051b1f9c0297cca74479e63b7c61",
+      "bytes": 3072,
+      "mtime_ns": 1793700977959121964
+    },
+    "experiments/translation_cpu/data/provenance/opus/ar-en.download.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/ar-en.download.json",
+      "sha256": "3850a28e949ba828791caa4651525527d61d30ef33758850f6b81d9616107930",
+      "bytes": 2225,
+      "mtime_ns": 1793700977959121964
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-ar.LICENSE": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-ar.LICENSE",
+      "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+      "bytes": 18652,
+      "mtime_ns": 1793700977960121976
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-ar.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-ar.README.md",
+      "sha256": "7cc0866ce36041ab0f6e2d32241ebd55f3c372b44024f3fa36252da6b412129a",
+      "bytes": 2274,
+      "mtime_ns": 1793700977962122000
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-ar.conversion.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-ar.conversion.json",
+      "sha256": "ffc577273d1167918552d5a9e4de968ce0e0ac85488b7bcc35724d2bef603aa9",
+      "bytes": 3221,
+      "mtime_ns": 1793700977963122012
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-ar.download.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-ar.download.json",
+      "sha256": "bc149a365c75eb260c60aef0d1a28d64419efb276c385956a127dd3f16896690",
+      "bytes": 3376,
+      "mtime_ns": 1793700977963122012
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-ru.LICENSE": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-ru.LICENSE",
+      "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+      "bytes": 18652,
+      "mtime_ns": 1793700977964122024
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-ru.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-ru.README.md",
+      "sha256": "020bfd697b7d0da0338611cf445eb44ae45dda27ff49f2bf64e21ee46882b48b",
+      "bytes": 1123,
+      "mtime_ns": 1793700977965122035
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-ru.conversion.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-ru.conversion.json",
+      "sha256": "50c1d9b16d551f6be119e74fd437435983fb1b94e68549652e83857907a2da02",
+      "bytes": 3074,
+      "mtime_ns": 1793700977965122035
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-ru.download.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-ru.download.json",
+      "sha256": "0a5adc149ce3b6f75244f8af67bdabb434818128d80cea43a6301888c65ed62b",
+      "bytes": 2226,
+      "mtime_ns": 1793700977967122059
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-zh.LICENSE": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-zh.LICENSE",
+      "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+      "bytes": 18652,
+      "mtime_ns": 1793700977967122059
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-zh.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-zh.README.md",
+      "sha256": "83eee2a6598751f746a057e10d5c9dfd71d6b0cf0146f9e6c1bb3ebd6e90959b",
+      "bytes": 2670,
+      "mtime_ns": 1793700977967122059
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-zh.conversion.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-zh.conversion.json",
+      "sha256": "47242357ea0da305a12d05985167b92fb22578b7d9792d88842b43f04d5e875f",
+      "bytes": 3070,
+      "mtime_ns": 1793700977967122059
+    },
+    "experiments/translation_cpu/data/provenance/opus/en-zh.download.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/en-zh.download.json",
+      "sha256": "0fd91d4a8586bf4c8d64c8ab29f8a07227fb67c4441d60fc426dbd10696feeda",
+      "bytes": 2315,
+      "mtime_ns": 1793700977969122083
+    },
+    "experiments/translation_cpu/data/provenance/opus/ru-en.LICENSE": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/ru-en.LICENSE",
+      "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+      "bytes": 18652,
+      "mtime_ns": 1793700977969122083
+    },
+    "experiments/translation_cpu/data/provenance/opus/ru-en.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/ru-en.README.md",
+      "sha256": "58decd5dfb14dfd59bd63a80286869798f94b7d432d249dd289de467ba9a1417",
+      "bytes": 3159,
+      "mtime_ns": 1793700977969122083
+    },
+    "experiments/translation_cpu/data/provenance/opus/ru-en.conversion.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/ru-en.conversion.json",
+      "sha256": "9c9fac480c2299e94783b5f635a44e7f12f22fee10a1b8b60c8a64ca8761b2e2",
+      "bytes": 3074,
+      "mtime_ns": 1793700977969122083
+    },
+    "experiments/translation_cpu/data/provenance/opus/ru-en.download.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/ru-en.download.json",
+      "sha256": "508890bb73621a69e8bd9af52fbc05f18327940c160f44dd39972e8e205e5cf9",
+      "bytes": 2225,
+      "mtime_ns": 1793700977970122095
+    },
+    "experiments/translation_cpu/data/provenance/opus/sources.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/sources.json",
+      "sha256": "e4a236c0ef5f305baaecada8425806c2635a5044a1b558b109f7598a516133ae",
+      "bytes": 4953,
+      "mtime_ns": 1793700977971122107
+    },
+    "experiments/translation_cpu/data/provenance/opus/upstream-README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/upstream-README.md",
+      "sha256": "d5fa3a9481b9097c4a61c8b7e3dcb19cb8036f8d40cc04baa03a367ed9705bea",
+      "bytes": 10029,
+      "mtime_ns": 1793700977972122119
+    },
+    "experiments/translation_cpu/data/provenance/opus/zh-en.LICENSE": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/zh-en.LICENSE",
+      "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+      "bytes": 18652,
+      "mtime_ns": 1793700977972122119
+    },
+    "experiments/translation_cpu/data/provenance/opus/zh-en.README.md": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/zh-en.README.md",
+      "sha256": "7f4b7f90672cd55b85b213bbe21f4b2d0c92327e885734b7e86b019feb145a6b",
+      "bytes": 3174,
+      "mtime_ns": 1793700977973122131
+    },
+    "experiments/translation_cpu/data/provenance/opus/zh-en.conversion.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/zh-en.conversion.json",
+      "sha256": "5c4e3873625ffbf8e781061bbe8ce03cfe463c65c3058e2734ee5f48c99bb761",
+      "bytes": 3060,
+      "mtime_ns": 1793700977973122131
+    },
+    "experiments/translation_cpu/data/provenance/opus/zh-en.download.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/opus/zh-en.download.json",
+      "sha256": "3ac9786ad0e9ce45de21441b00f434d55bfdc80e8abfedd9c37c335a9797493f",
+      "bytes": 2303,
+      "mtime_ns": 1793700977974122143
+    },
+    "experiments/translation_cpu/data/provenance/tts_candidates/ar_JO-kareem.MODEL_CARD": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/tts_candidates/ar_JO-kareem.MODEL_CARD",
+      "sha256": "38e1e4f94c4cb9eda041a639096763a8c5681d0be5a5b3e22f990aed6bb4b86e",
+      "bytes": 283,
+      "mtime_ns": 1793700977975122154
+    },
+    "experiments/translation_cpu/data/provenance/tts_candidates/lessac-terms.txt": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/tts_candidates/lessac-terms.txt",
+      "sha256": "90daa40c39c81f11a54e6b87dec472620ff2110141f4eb34f87924491e6b218b",
+      "bytes": 31101,
+      "mtime_ns": 1793700977975122154
+    },
+    "experiments/translation_cpu/data/provenance/tts_candidates/piper-voices-card.txt": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/tts_candidates/piper-voices-card.txt",
+      "sha256": "33e93643fce5180886300f9f0070eeeab8af148efb8e84361f8904def80fd9fb",
+      "bytes": 497,
+      "mtime_ns": 1793700977977122178
+    },
+    "experiments/translation_cpu/data/provenance/tts_candidates/ru_RU-denis.MODEL_CARD": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/tts_candidates/ru_RU-denis.MODEL_CARD",
+      "sha256": "8b5d685dd80f8ad3f8dbbe1c56b16bb0809f00c144af3642dbcf3b707eb89c12",
+      "bytes": 276,
+      "mtime_ns": 1793700977977122178
+    },
+    "experiments/translation_cpu/data/provenance/tts_candidates/ru_RU-dmitri.MODEL_CARD": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/tts_candidates/ru_RU-dmitri.MODEL_CARD",
+      "sha256": "6d59c756776d57860232cea6484e1b2ea1fc1c8d2c3446ef246f706fd9875821",
+      "bytes": 277,
+      "mtime_ns": 1793700977979122202
+    },
+    "experiments/translation_cpu/data/provenance/tts_candidates/ru_RU-irina.MODEL_CARD": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/provenance/tts_candidates/ru_RU-irina.MODEL_CARD",
+      "sha256": "f4fc2deb0e8c6219f29202b8dd06c9638c5ffd50ad5c6b2c90cf1aa59d507593",
+      "bytes": 271,
+      "mtime_ns": 1793700977979122202
+    },
+    "experiments/translation_cpu/data/review_20261103/ownership_before_fix.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/review_20261103/ownership_before_fix.py",
+      "sha256": "10fd238ac9abeb73e6c64a70630bb66a9412851021b7de59ce54b559ff7830c7",
+      "bytes": 1778,
+      "mtime_ns": 1793700977980122214
+    },
+    "experiments/translation_cpu/data/review_20261103/ownership_source_and_evidence.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/review_20261103/ownership_source_and_evidence.json",
+      "sha256": "599e930aee4c219466e91c490c1b387a028e8f75dac7911b07e61fac061c15c2",
+      "bytes": 2177,
+      "mtime_ns": 1793700977982122238
+    },
+    "experiments/translation_cpu/data/review_20261103/ownership_terminal_source_and_evidence.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/review_20261103/ownership_terminal_source_and_evidence.json",
+      "sha256": "18c18808065bc4cb1efc86b28060b7b8c940e1aca78fc4bf6cbd7c6d48c76975",
+      "bytes": 2026,
+      "mtime_ns": 1793700977983122250
+    },
+    "experiments/translation_cpu/data/review_20261103/participant_identity_before_fix.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/review_20261103/participant_identity_before_fix.py",
+      "sha256": "c8eeed662fda36a47c86bbf7c27ae93e6d159f06652f517a3c5804e26f3f8da2",
+      "bytes": 1487,
+      "mtime_ns": 1793700977985122274
+    },
+    "experiments/translation_cpu/data/review_20261103/process_group_reap_probe.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/review_20261103/process_group_reap_probe.json",
+      "sha256": "cc2573efee6f625cb700ac8303c8c78e99376e2579fb06106e2abd244203e2be",
+      "bytes": 608,
+      "mtime_ns": 1793700977985122274
+    },
+    "experiments/translation_cpu/data/review_20261103/source_and_evidence.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/review_20261103/source_and_evidence.json",
+      "sha256": "a8fc38b2767e7a87cd87a36084579adb30431dcb81632f12c7d24f60eedff0de",
+      "bytes": 1750,
+      "mtime_ns": 1793700977985122274
+    },
+    "experiments/translation_cpu/data/verification_status.json": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/data/verification_status.json",
+      "sha256": "81b1f37130a4af8c4c85ee53cb5e9d05d30820a1aacd2a32544f15a018b468e5",
+      "bytes": 9735,
+      "mtime_ns": 1793700977985122274
+    },
+    "experiments/translation_cpu/owned_process.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/owned_process.py",
+      "sha256": "42bb722818e48f9cc91102d5057035f5f43f527fd5446657f470abffb338c823",
+      "bytes": 10342,
+      "mtime_ns": 1793700977985122274
+    },
+    "experiments/translation_cpu/process_stage.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/process_stage.py",
+      "sha256": "fad65414496ef71b7b56482b2b18243ec8e2e1e330cbcb7f445bb8017a934aec",
+      "bytes": 10665,
+      "mtime_ns": 1793700977987122298
+    },
+    "experiments/translation_cpu/real_engines.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/real_engines.py",
+      "sha256": "915942a4fc8a3f7bbf25cb57b3dfa03848a5d6f50bc5b51fc9e131acf2e6c24f",
+      "bytes": 2027,
+      "mtime_ns": 1793700977987122298
+    },
+    "experiments/translation_cpu/requirements-marian.txt": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/requirements-marian.txt",
+      "sha256": "d99cbe3940e9c5ca3b0ce1ccef72f36949259008bc181b5ba52c5e667f38b7d2",
+      "bytes": 67,
+      "mtime_ns": 1793700977987122298
+    },
+    "experiments/translation_cpu/requirements.txt": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/requirements.txt",
+      "sha256": "5fb7e8420dab64ecab9f437f15bf3eee3d6c47db8f1b507447c50924fa0aebd5",
+      "bytes": 91,
+      "mtime_ns": 1793700977988122309
+    },
+    "experiments/translation_cpu/run.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/run.py",
+      "sha256": "64e400dca07b385a95e00321d6e367d5f62b438cabbf394ec0b15c360276aeec",
+      "bytes": 9738,
+      "mtime_ns": 1793700977989122321
+    },
+    "experiments/translation_cpu/sentence_segments.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/sentence_segments.py",
+      "sha256": "74fea7357b293ac8f1ee5abfc1424fbdd6f9c3a2c6f679661b967ed5caeab1ac",
+      "bytes": 1890,
+      "mtime_ns": 1793700977989122321
+    },
+    "experiments/translation_cpu/streaming_adapter.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/streaming_adapter.py",
+      "sha256": "e517ca8c830168a4c718455f1bb93feee4d5fd572098553161fb797070b42904",
+      "bytes": 31392,
+      "mtime_ns": 1793700977990122333
+    },
+    "experiments/translation_cpu/tests/test_asr40_metrics.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_asr40_metrics.py",
+      "sha256": "b870097abc3767a30e0309d4e673bcf9906297408ad22ffe558e1e8c245e9281",
+      "bytes": 1222,
+      "mtime_ns": 1793700977990122333
+    },
+    "experiments/translation_cpu/tests/test_corpus.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_corpus.py",
+      "sha256": "d7ff53310ee1d7edf495038579c5e9e482aa979678530171a1106adc70f63343",
+      "bytes": 1376,
+      "mtime_ns": 1793700977991122345
+    },
+    "experiments/translation_cpu/tests/test_fleurs_audio_safety.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_fleurs_audio_safety.py",
+      "sha256": "f331d98f221dd8a0a92d741ddc2aacaa2edb72f00abf668d41b9ee0fccda22b8",
+      "bytes": 1712,
+      "mtime_ns": 1793700977992122357
+    },
+    "experiments/translation_cpu/tests/test_license_manifest.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_license_manifest.py",
+      "sha256": "3cec6079eb7f29e5fb4bb55ea80f5487066228c846c72a028e6ce0de2accf827",
+      "bytes": 1190,
+      "mtime_ns": 1793700977992122357
+    },
+    "experiments/translation_cpu/tests/test_lifecycle_bounds.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_lifecycle_bounds.py",
+      "sha256": "7aa93b3144bf7268654b14fc8a23a644e808c3d845b9cc4f74ccfc77204f2723",
+      "bytes": 23919,
+      "mtime_ns": 1793700977993122369
+    },
+    "experiments/translation_cpu/tests/test_mt40_contract.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_mt40_contract.py",
+      "sha256": "607d5766c574177aee9ab1bfc760c4125536b814af56795e23e64680ea14cda7",
+      "bytes": 2001,
+      "mtime_ns": 1793700977993122369
+    },
+    "experiments/translation_cpu/tests/test_opus_release_safety.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_opus_release_safety.py",
+      "sha256": "df828ad08c435ee9a1a62988cc56c0f958b6789b4e3e26bb5e6177bfad057094",
+      "bytes": 2377,
+      "mtime_ns": 1793700977994122381
+    },
+    "experiments/translation_cpu/tests/test_participant_identity.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_participant_identity.py",
+      "sha256": "818c94d55f52a4922c6d4973bcdc4742d75841e0e0941dffca6ab4114730096c",
+      "bytes": 6522,
+      "mtime_ns": 1793700977994122381
+    },
+    "experiments/translation_cpu/tests/test_process_ownership.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_process_ownership.py",
+      "sha256": "46a6f84b196fd414a399237ae9917a50aa7df1e70a78d8e8134a610d2c4f30dd",
+      "bytes": 12028,
+      "mtime_ns": 1793700977994122381
+    },
+    "experiments/translation_cpu/tests/test_process_stage.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_process_stage.py",
+      "sha256": "ae2c92af366d2f76d17dab4d72b9a6e6613cccf0854f0251a306cbc9792668ad",
+      "bytes": 5458,
+      "mtime_ns": 1793700977995122393
+    },
+    "experiments/translation_cpu/tests/test_sentence_segments.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_sentence_segments.py",
+      "sha256": "3e266c2e4b817fe4607072c2f1b7dc9dd0303ae97db360b5fd309b76a2fef4b2",
+      "bytes": 1678,
+      "mtime_ns": 1793700977995122393
+    },
+    "experiments/translation_cpu/tests/test_streaming_adapter.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_streaming_adapter.py",
+      "sha256": "973857b1c0b5f097ebde2c31ca4f938366201d67cad7f56e93b13dadfe10ce67",
+      "bytes": 9859,
+      "mtime_ns": 1793700977995122393
+    },
+    "experiments/translation_cpu/tests/test_worker_lifecycle.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tests/test_worker_lifecycle.py",
+      "sha256": "541df86dbb245c71eb9dc2c34f55885417833c83bba742ffdafc97ecf41db0da",
+      "bytes": 15320,
+      "mtime_ns": 1793700977996122405
+    },
+    "experiments/translation_cpu/tools/convert_opus_release.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/convert_opus_release.py",
+      "sha256": "d8c43943901a84a3e005257769e2d8047d7f77d01b8a0f506c2c235c4d117360",
+      "bytes": 6307,
+      "mtime_ns": 1793700977996122405
+    },
+    "experiments/translation_cpu/tools/fetch_opus_release.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/fetch_opus_release.py",
+      "sha256": "9543ae139baac4859dca93075f60b4eb101d04f91d1609c0b6ec024f706d440d",
+      "bytes": 4167,
+      "mtime_ns": 1793700977997122417
+    },
+    "experiments/translation_cpu/tools/fetch_selected_fleurs_audio.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/fetch_selected_fleurs_audio.py",
+      "sha256": "1091c994a6dd273665f4639b620c8d1b26c1f9480ad97ac2eb587673b5d388b6",
+      "bytes": 6391,
+      "mtime_ns": 1793700977997122417
+    },
+    "experiments/translation_cpu/tools/finalize_evidence.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/finalize_evidence.py",
+      "sha256": "93e16636c4d9152ee05df6e295f29fa185b2443d57aa5d7939eafaeda4b3375b",
+      "bytes": 6236,
+      "mtime_ns": 1793700977999122441
+    },
+    "experiments/translation_cpu/tools/inspect_installed_lineage.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/inspect_installed_lineage.py",
+      "sha256": "72606c338f014cc6c940c903fc8e05272c7aed9d6bd98720da11c919654499cf",
+      "bytes": 4724,
+      "mtime_ns": 1793700977999122441
+    },
+    "experiments/translation_cpu/tools/model_worker.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/model_worker.py",
+      "sha256": "f77751bf31d8a6b7eec684b99b7f49ac89cb204cba67bedf83af7dbb5fd034d0",
+      "bytes": 5390,
+      "mtime_ns": 1793700977999122441
+    },
+    "experiments/translation_cpu/tools/prepare_fleurs_subset.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/prepare_fleurs_subset.py",
+      "sha256": "9da0ad30d292d5b718f4ebeb1383a06b12f1ae94c428a6537f2069cac9b2e851",
+      "bytes": 4608,
+      "mtime_ns": 1793700978000122452
+    },
+    "experiments/translation_cpu/tools/probe_process_group_reap.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/probe_process_group_reap.py",
+      "sha256": "a7e37b5d99bfc3317e3c852c8863a34196b43ef9020248ca295e7ec88d6979c3",
+      "bytes": 1948,
+      "mtime_ns": 1793700978000122452
+    },
+    "experiments/translation_cpu/tools/run_adapter_lifecycle_smoke.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/run_adapter_lifecycle_smoke.py",
+      "sha256": "82a25745fe412222c62474cc1ed27870a1a59deec686746c459100ddaa6f5c13",
+      "bytes": 8355,
+      "mtime_ns": 1793700978000122452
+    },
+    "experiments/translation_cpu/tools/run_asr40.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/run_asr40.py",
+      "sha256": "d098ef4232cc983e3e551c317f37fb2563b9f17994582a7aadf93901875434f4",
+      "bytes": 8854,
+      "mtime_ns": 1793700978001122464
+    },
+    "experiments/translation_cpu/tools/run_bounded.sh": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/run_bounded.sh",
+      "sha256": "197b1b7a10e7078386d5dc874ab7956cebc91f3585c7583e9dd2dd89b1f9d761",
+      "bytes": 1919,
+      "mtime_ns": 1793700978001122464
+    },
+    "experiments/translation_cpu/tools/run_mt40.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/run_mt40.py",
+      "sha256": "92d86c61cf09411cb842d431f6f5b42d96b38f5c3bfd1e87f01abf3b46ea8038",
+      "bytes": 11840,
+      "mtime_ns": 1793700978003122488
+    },
+    "experiments/translation_cpu/tools/run_real_pipeline_smoke.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/run_real_pipeline_smoke.py",
+      "sha256": "d3463d813973a4b729c610dfeb7041d220f170fabbf6dc0c09f7420fb34c6826",
+      "bytes": 4310,
+      "mtime_ns": 1793700978004122500
+    },
+    "experiments/translation_cpu/tools/run_sentence_ablation.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/run_sentence_ablation.py",
+      "sha256": "5e98feaf2c3054c34a9caec8b0148d220d6daff1678bd8afa97f602505ef2af3",
+      "bytes": 7286,
+      "mtime_ns": 1793700978004122500
+    },
+    "experiments/translation_cpu/tools/summarize_experiments.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/summarize_experiments.py",
+      "sha256": "bc91ba1e9c10f7b3529de123d9ae624520b88ed2d71b044233e968a50a824ed1",
+      "bytes": 15044,
+      "mtime_ns": 1793700978004122500
+    },
+    "experiments/translation_cpu/tools/verify_lifecycle.py": {
+      "path": "/home/sergey/imonmeets-translation-ru-pivot-20261103/experiments/translation_cpu/tools/verify_lifecycle.py",
+      "sha256": "ea951cffa55c293daca2637c7dddb5431a74f758186815e110624dbb17b25bab",
+      "bytes": 5402,
+      "mtime_ns": 1793700978004122500
+    }
+  },
+  "historical_first_hop_files": {
+    "ru-en": {
+      "path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/mt40/opus-original-20261103/ru-en.jsonl",
+      "sha256": "d2edc3d854ef729d459eb30031388dd9f798a4d79b17a62e81345c4242590d16",
+      "bytes": 90405,
+      "mtime_ns": 1793684346169508181,
+      "started_at_min": "2026-11-03T05:38:42.658162+00:00",
+      "started_at_max": "2026-11-03T05:39:05.962090+00:00"
+    },
+    "zh-en": {
+      "path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/mt40/opus-original-20261103/zh-en.jsonl",
+      "sha256": "f8bd26d117740de15b2495af370dd4d51ede419a62bee9dc2b726384360cc6b1",
+      "bytes": 76671,
+      "mtime_ns": 1793684606613665704,
+      "started_at_min": "2026-11-03T05:42:57.748533+00:00",
+      "started_at_max": "2026-11-03T05:43:26.351930+00:00"
+    },
+    "ar-en": {
+      "path": "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/data/mt40/opus-original-20261103/ar-en.jsonl",
+      "sha256": "fe6a30c42875382732fe42ca9dca9da0bd5e447fd4af9375bd30a8ee96ecdc11",
+      "bytes": 84286,
+      "mtime_ns": 1793684833004411196,
+      "started_at_min": "2026-11-03T05:46:37.665808+00:00",
+      "started_at_max": "2026-11-03T05:47:12.682491+00:00"
+    }
+  },
+  "mtime_contract": "preserved_tracked_files and routes.first_outputs mtimes are checkout mtimes in the new worktree; historical_first_hop_files records original artifact file mtimes and row generation timestamps."
+}

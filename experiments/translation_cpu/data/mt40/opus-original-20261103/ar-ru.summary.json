@@ -1,0 +1,49 @@
+{
+  "run_id": "opus-original-20261103",
+  "direction": "ar-ru",
+  "config_id": "59feb2477b545c4d2e35698fc3775763835e099eec6921948bc7283166584d91",
+  "expected_cases": 54,
+  "gold_cases": 40,
+  "recorded_cases": 54,
+  "successful_inference": 54,
+  "errors": 0,
+  "quality_status": "unreviewed",
+  "model_load_seconds_this_invocation": 0.251037,
+  "stage_seconds": {
+    "p50": 0.4359,
+    "p95": 0.9806,
+    "max": 1.622793
+  },
+  "max_rss_kib": 167632,
+  "cgroup_limits": {
+    "cpu_max": "100000 100000",
+    "memory_max": 2147483648,
+    "pids_max": "128",
+    "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-ru-pivot-ar-ru-20261103T101933Z-2223450.service"
+  },
+  "fingerprints": {
+    "selection_sha256": "caf155b7d8b440132295416f7d0ebd210061add74672e39d7e929dffb60ae62a",
+    "cases_sha256": "63c8b14ef6b5109854604a03f04acece11a824125dbdcdc5b6bdd249b84208a7",
+    "model_sha256": "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d",
+    "first_model_sha256": "49dfeb382ec074451936b9ec4e7b671402ae6927c3f1a62ca95a492b7f021235",
+    "target_token": null,
+    "settings": {
+      "beam_size": 6,
+      "length_penalty": 1.0,
+      "max_input_tokens": 512,
+      "max_output_tokens": 512,
+      "per_item_seconds": 45,
+      "intra_threads": 1,
+      "inter_threads": 1,
+      "compute_type": "int8",
+      "normalization": "NFKC, remove non-printing characters, collapse whitespace; SentencePiece internal normalization"
+    }
+  },
+  "versions": {
+    "ctranslate2": "4.8.4",
+    "sentencepiece": "0.2.2",
+    "numpy": "2.5.4"
+  },
+  "finished_at": "2026-11-03T10:20:02.735245+00:00",
+  "output_sha256": "84c881ec84027ebc9077694e2d3b76cbb6abcc3a341669c123e2d0a4dbd227f8"
+}
