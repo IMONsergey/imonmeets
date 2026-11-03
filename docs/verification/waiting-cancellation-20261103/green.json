@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-11-03T09:28:19.797395+00:00",
+  "finishedAt": "2026-11-03T09:28:39.759327+00:00",
+  "exitCode": 0,
+  "sourceHead": "ddd429bf92b889b8ed424e345cf80b4b3e620c34",
+  "sourceFiles": {
+    "apps/web/src/pages/WaitingRoom.tsx": "d5a6d00fa573f0be2d39634163b4add100ebb92a6ce1ded0aa6ed58c9cab4219",
+    "apps/web/src/pages/Join.tsx": "5130dfff61418363d2c2aef81adf9cf0d80dfba811f5cbf73a6e3c1a799741fe",
+    "apps/web/src/waiting-cancellation.browser.test.ts": "fed1d6b2b63bda2cfdf843151701aac719d27d35a9bec306c4939919b82439ad"
+  },
+  "scope": "waiting cancellation browser regression green2",
+  "limits": {
+    "cpuQuota": "100%",
+    "memoryMax": "2G",
+    "tasksMax": 256,
+    "workers": 1
+  },
+  "externalCalls": false
+}

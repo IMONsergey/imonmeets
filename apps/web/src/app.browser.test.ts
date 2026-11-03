@@ -8,6 +8,7 @@ import { chromium, expect } from "@playwright/test";
 import "./suite.browser.test";
 import "./rooms.browser.test";
 import "./recordings.browser.test";
+import "./waiting-cancellation.browser.test";
 import "./embed.browser.test";
 import "./identity.browser.test";
 

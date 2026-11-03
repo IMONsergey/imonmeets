@@ -1,0 +1,14 @@
+▶ waiting cancellation cannot initiate or complete media admission
+  ✔ normal-admission (1985.074531ms)
+  ✔ poll-after-cancel (2001.783547ms)
+  ✔ grant-after-cancel (2215.256022ms)
+  ✔ cancel-failure (1955.060484ms)
+✔ waiting cancellation cannot initiate or complete media admission (12435.382203ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15840.787204

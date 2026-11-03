@@ -1,0 +1,74 @@
+▶ waiting cancellation cannot initiate or complete media admission
+  ✖ poll-after-cancel (1695.17983ms)
+  ✖ grant-after-cancel (1699.879108ms)
+  ✖ cancel-failure (7030.379746ms)
+✖ waiting cancellation cannot initiate or complete media admission (14954.375319ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18599.070214
+
+✖ failing tests:
+
+test at apps/web/src/waiting-cancellation.browser.test.ts:81:2045
+✖ poll-after-cancel (1695.17983ms)
+  AssertionError [ERR_ASSERTION]: Cancel must prevent a late waiting-status response from requesting admission
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (/home/sergey/imonmeets-calls-ui-audit-20261103/apps/web/src/waiting-cancellation.browser.test.ts:204:18)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async TestContext.<anonymous> (/home/sergey/imonmeets-calls-ui-audit-20261103/apps/web/src/waiting-cancellation.browser.test.ts:159:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at apps/web/src/waiting-cancellation.browser.test.ts:81:2045
+✖ grant-after-cancel (1699.879108ms)
+  AssertionError [ERR_ASSERTION]: Cancel must never transition into media connection from a late grant
+  
+  true !== false
+  
+      at TestContext.<anonymous> (/home/sergey/imonmeets-calls-ui-audit-20261103/apps/web/src/waiting-cancellation.browser.test.ts:201:18)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async TestContext.<anonymous> (/home/sergey/imonmeets-calls-ui-audit-20261103/apps/web/src/waiting-cancellation.browser.test.ts:159:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at apps/web/src/waiting-cancellation.browser.test.ts:81:2045
+✖ cancel-failure (7030.379746ms)
+  Error: expect(locator).toBeVisible() failed
+  
+  Locator: getByRole('button', { name: 'К проверке устройств', exact: true })
+  Expected: visible
+  Timeout: 5000ms
+  Error: element(s) not found
+  
+  Call log:
+    - Expect "toBeVisible" getByRole('button', { name: 'К проверке устройств', exact: true }) with timeout 5000ms
+    - waiting for getByRole('button', { name: 'К проверке устройств', exact: true })
+  
+      at captureRawStack (/home/sergey/imonmeets-release-20261103/node_modules/playwright-core/lib/coreBundle.js:9282:17)
+      at callMatcherAsStep (/home/sergey/imonmeets-release-20261103/node_modules/playwright/lib/matchers/expect.js:13316:57)
+      at Object.toBeVisible (/home/sergey/imonmeets-release-20261103/node_modules/playwright/lib/matchers/expect.js:13308:23)
+      at TestContext.<anonymous> (/home/sergey/imonmeets-calls-ui-audit-20261103/apps/web/src/waiting-cancellation.browser.test.ts:211:99)
+      at async TestContext.<anonymous> (/home/sergey/imonmeets-calls-ui-audit-20261103/apps/web/src/waiting-cancellation.browser.test.ts:159:7) {
+    matcherResult: { message: `expect(locator).toBeVisible() failed\n\nLocator: getByRole('button', { name: 'К проверке устройств', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect "toBeVisible" getByRole('button', { name: 'К проверке устройств', exact: true }) with timeout 5000ms\n  - waiting for getByRole('button', { name: 'К проверке устройств', exact: true })\n`, pass: false, actual: undefined, name: 'toBeVisible', expected: 'visible', log: [ `  - Expect "toBeVisible" getByRole('button', { name: 'К проверке устройств', exact: true }) with timeout 5000ms`, "  - waiting for getByRole('button', { name: 'К проверке устройств', exact: true })" ], timeout: 5000, ariaSnapshot: '- banner:\n  - link "IMON Meets":\n    - /url: /\n  - text: Вход во встречу\n- main:\n  - heading "Ждем разрешения организатора" [level=1]\n  - paragraph: Synthetic guest в зале ожидания. После разрешения вы подключитесь автоматически.\n  - status:\n    - img "Загрузка"\n    - text: Запрос на вход отправлен\n  - paragraph: Камера и микрофон не передают данные, пока вы ожидаете. Запрос действует до 3 нояб., 12:33.\n  - alert: Synthetic cancellation unavailable\n  - button "Проверить еще раз"\n  - button "Отменить запрос"\n- contentinfo: IMON Meets' }
+  }

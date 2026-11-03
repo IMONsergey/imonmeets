@@ -56,7 +56,7 @@ export function WaitingGuest({
 }: {
   slug: string;
   grant: WaitingGrant;
-  onAdmitted: (token: string) => Promise<void>;
+  onAdmitted: (token: string, signal: AbortSignal) => Promise<void>;
   onCancel: () => void;
   request?: typeof api;
   persist?: boolean;
@@ -66,16 +66,25 @@ export function WaitingGuest({
   );
   const [error, setError] = useState("");
   const [cancelling, setCancelling] = useState(false);
+  const [cancelFailed, setCancelFailed] = useState(false);
+  const cancelRequested = useRef(false);
+  const stopAdmission = useRef<(() => void) | null>(null);
   const [refresh, setRefresh] = useState(0);
   const admitted = useRef(onAdmitted);
   admitted.current = onAdmitted;
   useEffect(() => {
-    if (status !== "waiting") return;
+    if (status !== "waiting" || cancelRequested.current) return;
     const controller = new AbortController();
     let inFlight = false;
     let joining = false;
     const poll = async () => {
-      if (inFlight || joining) return;
+      if (
+        inFlight ||
+        joining ||
+        cancelRequested.current ||
+        controller.signal.aborted
+      )
+        return;
       inFlight = true;
       try {
         const result = await request<{
@@ -92,7 +101,7 @@ export function WaitingGuest({
         if (result.status === "admitted") {
           joining = true;
           try {
-            await admitted.current(grant.waitingToken);
+            await admitted.current(grant.waitingToken, controller.signal);
           } finally {
             joining = false;
           }
@@ -108,9 +117,14 @@ export function WaitingGuest({
     };
     void poll();
     const timer = setInterval(() => void poll(), 3000);
-    return () => {
+    const stop = () => {
       controller.abort();
       clearInterval(timer);
+    };
+    stopAdmission.current = stop;
+    return () => {
+      stop();
+      if (stopAdmission.current === stop) stopAdmission.current = null;
     };
   }, [slug, grant.waitingToken, status, refresh, request, persist]);
   return (
@@ -119,20 +133,24 @@ export function WaitingGuest({
         {status === "waiting" ? <Clock3 size={29} /> : <DoorOpen size={29} />}
       </div>
       <h1>
-        {status === "waiting"
-          ? "Ждем разрешения организатора"
-          : status === "denied"
-            ? "Организатор отклонил запрос"
-            : "Время ожидания истекло"}
+        {cancelFailed
+          ? "Автоматический вход остановлен"
+          : status === "waiting"
+            ? "Ждем разрешения организатора"
+            : status === "denied"
+              ? "Организатор отклонил запрос"
+              : "Время ожидания истекло"}
       </h1>
       <p>
-        {status === "waiting"
-          ? `${grant.name || "Вы"} в зале ожидания. После разрешения вы подключитесь автоматически.`
-          : status === "denied"
-            ? "Свяжитесь с организатором, если считаете, что произошла ошибка."
-            : "Вернитесь к проверке устройств и отправьте новый запрос."}
+        {cancelFailed
+          ? "Отмена на сервере не подтверждена. Повторите отмену или вернитесь к проверке устройств. Автоматического подключения не будет."
+          : status === "waiting"
+            ? `${grant.name || "Вы"} в зале ожидания. После разрешения вы подключитесь автоматически.`
+            : status === "denied"
+              ? "Свяжитесь с организатором, если считаете, что произошла ошибка."
+              : "Вернитесь к проверке устройств и отправьте новый запрос."}
       </p>
-      {status === "waiting" && (
+      {status === "waiting" && !cancelFailed && (
         <>
           <div className="waiting-status" role="status">
             <Spinner /> Запрос на вход отправлен
@@ -144,7 +162,7 @@ export function WaitingGuest({
         </>
       )}
       <ErrorBox error={error} />
-      {error && status === "waiting" && (
+      {error && status === "waiting" && !cancelRequested.current && (
         <Button onClick={() => setRefresh((value) => value + 1)}>
           Проверить еще раз
         </Button>
@@ -157,7 +175,12 @@ export function WaitingGuest({
             onCancel();
             return;
           }
+          // Cancellation intent wins immediately, before DELETE completes.
+          // It also aborts an admission request already started by the poll.
+          cancelRequested.current = true;
+          stopAdmission.current?.();
           setCancelling(true);
+          setCancelFailed(false);
           setError("");
           try {
             await request(
@@ -170,6 +193,7 @@ export function WaitingGuest({
             onCancel();
           } catch (e) {
             setError((e as Error).message);
+            setCancelFailed(true);
           } finally {
             setCancelling(false);
           }
@@ -177,6 +201,11 @@ export function WaitingGuest({
       >
         {status === "waiting" ? "Отменить запрос" : "К проверке устройств"}
       </Button>
+      {cancelFailed && (
+        <Button className="full" onClick={onCancel}>
+          К проверке устройств
+        </Button>
+      )}
     </div>
   );
 }

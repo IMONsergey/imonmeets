@@ -249,7 +249,12 @@ function MeetingJoin({
     left,
     actionBusy,
   ]);
-  async function enter(values: LocalUserChoices, waitingToken?: string) {
+  async function enter(
+    values: LocalUserChoices,
+    waitingToken?: string,
+    admissionSignal?: AbortSignal,
+  ) {
+    if (admissionSignal?.aborted) return;
     if (!values.username.trim()) {
       setError("Укажите ваше имя перед входом.");
       return;
@@ -264,8 +269,14 @@ function MeetingJoin({
           name: values.username.trim(),
           ...(waitingToken ? { waitingToken } : {}),
         },
+        undefined,
+        { signal: admissionSignal },
       );
-      if (!mounted.current || requestId !== joinRequest.current) {
+      if (
+        !mounted.current ||
+        requestId !== joinRequest.current ||
+        admissionSignal?.aborted
+      ) {
         if (embedded && next.status === "waiting")
           void request(
             `/rooms/${encodeURIComponent(slug)}/waiting`,
@@ -290,7 +301,11 @@ function MeetingJoin({
       setGrant(embedded ? { ...next, canManage: false } : next);
       setLeft(false);
     } catch (e) {
-      if (mounted.current && requestId === joinRequest.current) {
+      if (
+        mounted.current &&
+        requestId === joinRequest.current &&
+        !admissionSignal?.aborted
+      ) {
         setError((e as Error).message);
         if (waitingToken) throw e;
       }
@@ -472,7 +487,7 @@ function MeetingJoin({
               setWaiting(undefined);
               setError("");
             }}
-            onAdmitted={async (waitingToken) => {
+            onAdmitted={async (waitingToken, signal) => {
               const values = choices ?? {
                 username: waiting.name ?? user?.name ?? "Участник",
                 audioEnabled: false,
@@ -480,7 +495,7 @@ function MeetingJoin({
                 audioDeviceId: "default",
                 videoDeviceId: "default",
               };
-              await enter(values, waitingToken);
+              await enter(values, waitingToken, signal);
             }}
           />
         ) : left ? (

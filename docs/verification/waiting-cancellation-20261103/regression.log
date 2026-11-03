@@ -1,0 +1,16 @@
+✔ real browser: hosted guest iframe handshake, waiting, cookie isolation and explicit exit (7687.43021ms)
+✔ browser: MFA enrollment and recovery, private data, chat history and waiting cancellation (18744.475751ms)
+▶ waiting cancellation cannot initiate or complete media admission
+  ✔ normal-admission (1896.426232ms)
+  ✔ poll-after-cancel (1728.439851ms)
+  ✔ grant-after-cancel (2003.389087ms)
+  ✔ cancel-failure (2186.652678ms)
+✔ waiting cancellation cannot initiate or complete media admission (11894.459152ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 48142.884997
