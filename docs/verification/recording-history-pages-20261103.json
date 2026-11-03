@@ -1,0 +1,214 @@
+{
+  "schema": 1,
+  "feature": "bounded recording history and stable expanded page state",
+  "verifiedAt": "2026-11-03T09:32:26.040940+00:00",
+  "sourceBaseCommit": "ddd429bf92b889b8ed424e345cf80b4b3e620c34",
+  "candidateCodeCommit": "d55d597252c1a2459e45ba8891d8b4334be642e2",
+  "sourceBinding": "Checks ran on the isolated uncommitted patch over sourceBaseCommit. The patch was then committed without changing its production files. Measured production-file hashes are retained for correspondence; parent release still requires integrated verification.",
+  "productionChanges": false,
+  "realMailOrPayments": false,
+  "isolation": "Existing disposable loopback PostgreSQL imonmeets-commercial-tests-20261103 with unique test schema; all browser requests intercepted; no production account or media call.",
+  "resourceLimits": {
+    "CPUQuota": "100%",
+    "MemoryMax": "2G",
+    "RuntimeMaxSec": 240,
+    "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+  },
+  "results": {
+    "red": "Expected regression: baseline returned205 rows instead of100.",
+    "green": "1 API test passed,0 skipped;205 rows with equal microsecond timestamps; paging, deleted anchor, invalid/foreign cursors, tenant access.",
+    "typecheck": "API source/tests,web source and e2e/browser TypeScript passed.",
+    "browser": "First browser test failed because busy Spinner adds an accessible-name prefix; the disabled-state assertion was retained and its locator corrected.",
+    "browser2": "1 production-bundle browser test passed at390px; paging,retry,stale refresh,delete and workspace switch.",
+    "browser3": "Final expanded test passed at390px,including older-page polling without collapsed history.1 passed0 failed0 skipped."
+  },
+  "candidateFileSha256": {
+    "apps/api/src/app.ts": "7be62bbd96b828f9a96907d958f9a5da1bf2e696ff6a585661d6e1e08745dab1",
+    "apps/api/src/db.ts": "480baf2dfe4787e27f7db3294888269216cf75213b953abe0519a2faa80b1a77",
+    "apps/api/test/recording-list.integration.test.ts": "174186e073117d492cefeafd191b37036e2ff75f3ad4568bebe225d01cc35342",
+    "apps/web/src/pages/Workspace.tsx": "5a0bb2d793ed69b3d8ca19c7a3b32964b7e27e40b2ca626fdcdec5f43d021c89",
+    "apps/web/src/app.browser.test.ts": "cde18e756f02d1a271cfc9aa6bbbdf0ed1d9d94fb245c702bc6b23502dcf4d33",
+    "apps/web/src/recordings.browser.test.ts": "f3c3779bfe44fc08817622a75228cb6497efc9d5143b7c98d050555e3e8fdbc4"
+  },
+  "logSha256": {
+    "red": "e8ea3973a0a24526bf9071c0978b4d98bfb8576d34206e707c28a2f33d47c272",
+    "green": "6d4a8a9cd91865fb7d629dc22b6af8d61708b61a6a2b077c365939fdcf6c216f",
+    "typecheck": "97a5e255d90edf0152d59935722727b5be16838c13ea88355e66b826011a0d0f",
+    "browser": "afba893ed9437542c074f503251253a68cebc29d10f16ea248b47781064e15d5",
+    "browser2": "33fbeb8012957a5fd1627e0454a28b148ce708aae3038493bbb4142b18e04ae2",
+    "browser3": "84731d4d7f2db28d0b8f75dde18d4708c485ab25f557caec329b8aabe2433545"
+  },
+  "executionReceipts": {
+    "red": {
+      "phase": "red",
+      "source": "ddd429bf92b889b8ed424e345cf80b4b3e620c34",
+      "durationSeconds": 10.57,
+      "results": [
+        {
+          "command": [
+            "/opt/imon-runtime/node/bin/node",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-isolation=none",
+            "apps/api/test/recording-list.integration.test.ts"
+          ],
+          "exitCode": 1
+        }
+      ],
+      "sha256": {
+        "apps/api/src/app.ts": "5d9073d50736c86dcbd6275115f56a0b2928d5863ac1a3209f953860cb369a8e",
+        "apps/api/src/db.ts": "4927fb9f4494280b6d43d093b8b079c46430298b4050ae4c0d9ebf8dc6396bde",
+        "apps/api/test/recording-list.integration.test.ts": "ca7160d952f90e91519d4a5e5c2a49b368c10e4bc8761d66e9471ea63ee1a21d",
+        "apps/web/src/pages/Workspace.tsx": "02facb21a0b8b709ea222d4aeb52829863fddda873f4a4e1aa9d00344b56c4f6"
+      },
+      "scope": "isolated PostgreSQL unique schema, mocked media, no external provider or production calls"
+    },
+    "green": {
+      "phase": "green",
+      "source": "ddd429bf92b889b8ed424e345cf80b4b3e620c34",
+      "durationSeconds": 7.5,
+      "results": [
+        {
+          "command": [
+            "/opt/imon-runtime/node/bin/node",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-isolation=none",
+            "apps/api/test/recording-list.integration.test.ts"
+          ],
+          "exitCode": 0
+        }
+      ],
+      "sha256": {
+        "apps/api/src/app.ts": "7be62bbd96b828f9a96907d958f9a5da1bf2e696ff6a585661d6e1e08745dab1",
+        "apps/api/src/db.ts": "480baf2dfe4787e27f7db3294888269216cf75213b953abe0519a2faa80b1a77",
+        "apps/api/test/recording-list.integration.test.ts": "ca7160d952f90e91519d4a5e5c2a49b368c10e4bc8761d66e9471ea63ee1a21d",
+        "apps/web/src/pages/Workspace.tsx": "58e16068fd8679b36070c4e15d2f17f0e6558143bc01d166b211a2b346a519cd"
+      },
+      "scope": "isolated PostgreSQL unique schema, mocked media, no external provider or production calls"
+    },
+    "typecheck": {
+      "phase": "typecheck",
+      "source": "ddd429bf92b889b8ed424e345cf80b4b3e620c34",
+      "durationSeconds": 68.96,
+      "results": [
+        {
+          "command": [
+            "/opt/imon-runtime/node/bin/node",
+            "node_modules/prettier/bin/prettier.cjs",
+            "--write",
+            "apps/api/src/app.ts",
+            "apps/api/src/db.ts",
+            "apps/api/test/recording-list.integration.test.ts",
+            "apps/web/src/pages/Workspace.tsx",
+            "apps/web/src/recordings.browser.test.ts",
+            "apps/web/src/app.browser.test.ts"
+          ],
+          "exitCode": 0
+        },
+        {
+          "command": ["/opt/imon-runtime/node/bin/npm", "run", "typecheck"],
+          "exitCode": 0
+        }
+      ],
+      "sha256": {
+        "apps/api/src/app.ts": "7be62bbd96b828f9a96907d958f9a5da1bf2e696ff6a585661d6e1e08745dab1",
+        "apps/api/src/db.ts": "480baf2dfe4787e27f7db3294888269216cf75213b953abe0519a2faa80b1a77",
+        "apps/api/test/recording-list.integration.test.ts": "174186e073117d492cefeafd191b37036e2ff75f3ad4568bebe225d01cc35342",
+        "apps/web/src/pages/Workspace.tsx": "5a0bb2d793ed69b3d8ca19c7a3b32964b7e27e40b2ca626fdcdec5f43d021c89"
+      },
+      "scope": "isolated PostgreSQL unique schema, mocked media, no external provider or production calls"
+    },
+    "browser": {
+      "phase": "browser",
+      "source": "ddd429bf92b889b8ed424e345cf80b4b3e620c34",
+      "durationSeconds": 16.43,
+      "results": [
+        {
+          "command": [
+            "/opt/imon-runtime/node/bin/node",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-isolation=none",
+            "apps/web/src/recordings.browser.test.ts"
+          ],
+          "exitCode": 1
+        }
+      ],
+      "sha256": {
+        "apps/api/src/app.ts": "7be62bbd96b828f9a96907d958f9a5da1bf2e696ff6a585661d6e1e08745dab1",
+        "apps/api/src/db.ts": "480baf2dfe4787e27f7db3294888269216cf75213b953abe0519a2faa80b1a77",
+        "apps/api/test/recording-list.integration.test.ts": "174186e073117d492cefeafd191b37036e2ff75f3ad4568bebe225d01cc35342",
+        "apps/web/src/pages/Workspace.tsx": "5a0bb2d793ed69b3d8ca19c7a3b32964b7e27e40b2ca626fdcdec5f43d021c89"
+      },
+      "scope": "isolated PostgreSQL unique schema, mocked media, no external provider or production calls"
+    },
+    "browser2": {
+      "phase": "browser2",
+      "source": "ddd429bf92b889b8ed424e345cf80b4b3e620c34",
+      "durationSeconds": 12.31,
+      "results": [
+        {
+          "command": [
+            "/opt/imon-runtime/node/bin/node",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-isolation=none",
+            "apps/web/src/recordings.browser.test.ts"
+          ],
+          "exitCode": 0
+        }
+      ],
+      "sha256": {
+        "apps/api/src/app.ts": "7be62bbd96b828f9a96907d958f9a5da1bf2e696ff6a585661d6e1e08745dab1",
+        "apps/api/src/db.ts": "480baf2dfe4787e27f7db3294888269216cf75213b953abe0519a2faa80b1a77",
+        "apps/api/test/recording-list.integration.test.ts": "174186e073117d492cefeafd191b37036e2ff75f3ad4568bebe225d01cc35342",
+        "apps/web/src/pages/Workspace.tsx": "5a0bb2d793ed69b3d8ca19c7a3b32964b7e27e40b2ca626fdcdec5f43d021c89"
+      },
+      "scope": "isolated PostgreSQL unique schema, mocked media, no external provider or production calls"
+    },
+    "browser3": {
+      "phase": "browser3",
+      "source": "ddd429bf92b889b8ed424e345cf80b4b3e620c34",
+      "durationSeconds": 17.52,
+      "results": [
+        {
+          "command": [
+            "/opt/imon-runtime/node/bin/node",
+            "node_modules/prettier/bin/prettier.cjs",
+            "--write",
+            "apps/web/src/recordings.browser.test.ts"
+          ],
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "/opt/imon-runtime/node/bin/node",
+            "--import",
+            "tsx",
+            "--test",
+            "--test-isolation=none",
+            "apps/web/src/recordings.browser.test.ts"
+          ],
+          "exitCode": 0
+        }
+      ],
+      "sha256": {
+        "apps/api/src/app.ts": "7be62bbd96b828f9a96907d958f9a5da1bf2e696ff6a585661d6e1e08745dab1",
+        "apps/api/src/db.ts": "480baf2dfe4787e27f7db3294888269216cf75213b953abe0519a2faa80b1a77",
+        "apps/api/test/recording-list.integration.test.ts": "174186e073117d492cefeafd191b37036e2ff75f3ad4568bebe225d01cc35342",
+        "apps/web/src/pages/Workspace.tsx": "5a0bb2d793ed69b3d8ca19c7a3b32964b7e27e40b2ca626fdcdec5f43d021c89"
+      },
+      "scope": "isolated PostgreSQL unique schema, mocked media, no external provider or production calls"
+    }
+  },
+  "boundaries": [
+    "Stable cursor relies on retained soft-deleted recording rows while workspace exists.",
+    "Focused data/UI checks do not establish live Egress,storage recovery,load capacity,Firefox or Safari acceptance.",
+    "No source/provider assertion was weakened to obtain a pass."
+  ]
+}
