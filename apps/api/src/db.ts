@@ -2,6 +2,7 @@ import { Pool, type PoolClient } from "pg";
 import { suiteSchema } from "./suite-schema.js";
 import { analysisSchema } from "./analysis-schema.js";
 import { billingSchema } from "./billing-schema.js";
+import { mailSchema } from "./mail-schema.js";
 export const schema = `
 CREATE TABLE IF NOT EXISTS im_rate_limits(key text PRIMARY KEY,count integer NOT NULL,expires_at timestamptz NOT NULL);
 CREATE INDEX IF NOT EXISTS im_rate_expiry ON im_rate_limits(expires_at);
@@ -17,6 +18,7 @@ CREATE TABLE IF NOT EXISTS im_email_deliveries (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS im_email_deliveries_state_updated ON im_email_deliveries(state,updated_at);
+${mailSchema}
 CREATE TABLE IF NOT EXISTS im_workspaces (id text PRIMARY KEY,name text NOT NULL,created_at timestamptz NOT NULL DEFAULT now());
 CREATE TABLE IF NOT EXISTS im_members (id text PRIMARY KEY,workspace_id text NOT NULL REFERENCES im_workspaces(id) ON DELETE CASCADE,user_id text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,role text NOT NULL CHECK(role IN ('owner','admin','member')),UNIQUE(workspace_id,user_id));
 CREATE UNIQUE INDEX IF NOT EXISTS im_one_owner ON im_members(workspace_id) WHERE role='owner';
