@@ -1,0 +1,46 @@
+{
+  "run_id": "opus-core-sentences-20261103",
+  "direction": "en-ar",
+  "same_weights_wrapper_comparison": true,
+  "config_id": "16fa71650e286badd0033568c06752fed0f8f9c62d53fa5f97fa7e1045af4e56",
+  "expected_cases": 56,
+  "successful_inference": 56,
+  "errors": 0,
+  "quality_status": "unreviewed",
+  "model_load_seconds_this_invocation": 0.27979868500551675,
+  "stage_seconds": {
+    "p50": 0.421,
+    "p95": 0.8149,
+    "max": 1.263369
+  },
+  "max_rss_kib": 160532,
+  "fingerprints": {
+    "mode": "sentences",
+    "suite": "core",
+    "model_sha256": "26e8e9d443cf45e455ceeed557deec0e541f5e647c88bd98f5f1f3ade8ce7d5f",
+    "target_token": ">>ara<<",
+    "settings": {
+      "beam_size": 6,
+      "length_penalty": 1.0,
+      "max_input_tokens": 512,
+      "max_output_tokens": 512,
+      "per_item_seconds": 45,
+      "intra_threads": 1,
+      "inter_threads": 1,
+      "compute_type": "int8",
+      "normalization": "NFKC, remove non-printing characters, collapse whitespace; SentencePiece internal normalization"
+    },
+    "selection_sha256": "caf155b7d8b440132295416f7d0ebd210061add74672e39d7e929dffb60ae62a",
+    "cases_sha256": "27ed193f70fbc3bedacb058359e4166508a1f37ba181373a18498c808bd30441",
+    "runner_sha256": "5e98feaf2c3054c34a9caec8b0148d220d6daff1678bd8afa97f602505ef2af3",
+    "segmenter_sha256": "74fea7357b293ac8f1ee5abfc1424fbdd6f9c3a2c6f679661b967ed5caeab1ac"
+  },
+  "cgroup_limits": {
+    "cpu_max": "100000 100000",
+    "memory_max": 2147483648,
+    "pids_max": "128",
+    "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-segment-en-ar-20261103T063205Z-213397.service"
+  },
+  "output_sha256": "ad533b12f244beeba4641073c0db877bcc79e701f72283c86d404b3e551463f3",
+  "finished_at": "2026-11-03T06:32:31.937047+00:00"
+}

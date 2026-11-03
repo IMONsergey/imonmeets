@@ -1,0 +1,20 @@
+{
+  "unit": "imonmeets-mt-heldout-segment-en-ar-20261103T063234Z-217844",
+  "started_at": "2026-11-03T06:32:34Z",
+  "finished_at": "2026-11-03T06:32:37.611896+00:00",
+  "runtime_max_seconds": 300,
+  "exit_code": 0,
+  "command": [
+    "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/.venv-marian/bin/python",
+    "tools/run_sentence_ablation.py",
+    "en-ar",
+    "--suite",
+    "heldout"
+  ],
+  "log": "imonmeets-mt-heldout-segment-en-ar-20261103T063234Z-217844.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}

@@ -1,0 +1,17 @@
+{
+  "unit": "imonmeets-mt-real-asr-mt-process-smoke-20261103T060146Z-4126414",
+  "started_at": "2026-11-03T06:01:46Z",
+  "finished_at": "2026-11-03T06:05:16.936540+00:00",
+  "runtime_max_seconds": 600,
+  "exit_code": 0,
+  "command": [
+    "/home/sergey/imonmeets-translation-cpu-20261102/.venv/bin/python",
+    "tools/run_real_pipeline_smoke.py"
+  ],
+  "log": "imonmeets-mt-real-asr-mt-process-smoke-20261103T060146Z-4126414.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}

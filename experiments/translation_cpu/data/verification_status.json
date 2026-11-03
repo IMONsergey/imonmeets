@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-03T06:04:29.778710+00:00",
-  "git_head_at_generation": "02a67843c3359fd7ad29db02f0ecdfb350c498f6",
+  "generated_at": "2026-11-03T06:33:11.768501+00:00",
+  "git_head_at_generation": "437ba65e599db22d23a8664baaf328533d154cdb",
   "direct_mt_complete": true,
   "direct_mt_outputs": 331,
   "direct_gold_outputs": 240,
-  "asr_completed_language_model_jobs": 4,
-  "asr_outputs": 160,
-  "asr_complete": false,
-  "sentence_wrapper_jobs": 1,
-  "holdout_whole_jobs": 1,
-  "holdout_sentence_jobs": 1,
-  "wrapper_complete": false,
-  "real_process_pipeline_outputs": 1,
-  "real_native_cancel_checks": 0,
-  "process_smoke_complete": false,
+  "asr_completed_language_model_jobs": 8,
+  "asr_outputs": 320,
+  "asr_complete": true,
+  "sentence_wrapper_jobs": 6,
+  "holdout_whole_jobs": 6,
+  "holdout_sentence_jobs": 6,
+  "wrapper_complete": true,
+  "real_process_pipeline_outputs": 12,
+  "real_native_cancel_checks": 4,
+  "process_smoke_complete": true,
   "last_control_test_receipt": {
     "unit": "imonmeets-mt-translation-suite-20261103T055922Z-4126430",
     "started_at": "2026-11-03T05:59:22Z",
@@ -95,5 +95,6 @@
     ],
     "policy": "Keep original outputs immutable. Wrapper ablation uses the same hashes and does not count as an independent model. Never repair numbers/currencies after translation to turn a failure into a pass. Holdout/native-speaker verification remains separate."
   },
-  "production_changed": false
+  "production_changed": false,
+  "final_metadata_validation_errors": []
 }

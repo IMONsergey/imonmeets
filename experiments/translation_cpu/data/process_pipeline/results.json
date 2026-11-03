@@ -1,0 +1,434 @@
+{
+  "selection_sha256": "caf155b7d8b440132295416f7d0ebd210061add74672e39d7e929dffb60ae62a",
+  "cgroup_limits": {
+    "cpu_max": "100000 100000",
+    "memory_max": 2147483648,
+    "pids_max": "128",
+    "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-real-asr-mt-process-smoke-20261103T060146Z-4126414.service"
+  },
+  "results": [
+    {
+      "sentence_id": 1661,
+      "direction": "en-ru",
+      "cold_workers": true,
+      "audio_sha256": "8a90dfd1aebb2b9c8315d8293c720223d7436079ace5299ad30a3ba552915081",
+      "audio_seconds": 6.36,
+      "gold_transcript": "He did not set a figure for the cuts, saying they will be made based on China's economic output.",
+      "actual_asr_text": "He did not set a figure for the cut saying they will be made based on China's economic output.",
+      "actual_mt_input": "He did not set a figure for the cut saying they will be made based on China's economic output.",
+      "translated_text": "Он не установил цифру для сокращения, сказав, что они будут сделаны на основе экономического производства Китая.",
+      "gold_target_reference": "Он не назвал цифру для сокращений бюджетов, сказав, что они будут сделаны исходя из производительности экономики Китая.",
+      "asr_wall_seconds": 3.7634781529923202,
+      "mt_wall_seconds": 0.9545670669904212,
+      "total_after_full_utterance_seconds": 4.718056929996237,
+      "asr_worker": {
+        "text": "He did not set a figure for the cut saying they will be made based on China's economic output.",
+        "audio_duration_seconds": 6.36,
+        "language": "en",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 2.7457029949873686,
+        "worker_load_seconds": 0.8849859469919465
+      },
+      "mt_worker": {
+        "text": "Он не установил цифру для сокращения, сказав, что они будут сделаны на основе экономического производства Китая.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d",
+        "worker_inference_seconds": 0.4881112440052675,
+        "worker_load_seconds": 0.3643490069953259
+      },
+      "quality_status": "unreviewed"
+    },
+    {
+      "sentence_id": 1669,
+      "direction": "en-ru",
+      "cold_workers": false,
+      "audio_sha256": "06e28072fe3853efcfd1d1c3bc3613ba5ec76c0931e9018e44aac5d946d4e210",
+      "audio_seconds": 9.14,
+      "gold_transcript": "Police superintendent Chandra Shekhar Solanki said the accused appeared in court with covered faces.",
+      "actual_asr_text": "Police superintendent Shana Shankhar Solansky said he accused appeared in court with covered faces.",
+      "actual_mt_input": "Police superintendent Shana Shankhar Solansky said he accused appeared in court with covered faces.",
+      "translated_text": "Начальник полиции Шана Шенкар Солански сказал, что обвиняемый явился в суд с покрытыми лицами.",
+      "gold_target_reference": "Начальник полиции Чандра Шехар Соланки заявил, что обвиняемые были представлены перед судьями с закрытыми лицами.",
+      "asr_wall_seconds": 2.528783552988898,
+      "mt_wall_seconds": 0.6438094909972278,
+      "total_after_full_utterance_seconds": 3.172606823995011,
+      "asr_worker": {
+        "text": "Police superintendent Shana Shankhar Solansky said he accused appeared in court with covered faces.",
+        "audio_duration_seconds": 9.14,
+        "language": "en",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 2.5081499539955985,
+        "worker_load_seconds": 0.8849859469919465
+      },
+      "mt_worker": {
+        "text": "Начальник полиции Шана Шенкар Солански сказал, что обвиняемый явился в суд с покрытыми лицами.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d",
+        "worker_inference_seconds": 0.641548892002902,
+        "worker_load_seconds": 0.3643490069953259
+      },
+      "quality_status": "unreviewed"
+    },
+    {
+      "sentence_id": 1677,
+      "direction": "en-ru",
+      "cold_workers": false,
+      "audio_sha256": "042e268d1ee34e2d64ac1b65be374ae7f15cc9eb517a028b315b0f62ea4209ee",
+      "audio_seconds": 6.18,
+      "gold_transcript": "Today, the only insects that cannot fold back their wings are dragon flies and mayflies.",
+      "actual_asr_text": "Today, the only insects that cannot fold back their wings are dragonflies and Mayflies.",
+      "actual_mt_input": "Today, the only insects that cannot fold back their wings are dragonflies and Mayflies.",
+      "translated_text": "Сегодня единственные насекомые, которые не могут свернуть свои крылья, - это драконицы и Мэйфли.",
+      "gold_target_reference": "Стрекозы и поденки являются единственными насекомыми, которые не могут складывать крылья назад.",
+      "asr_wall_seconds": 2.4264465829910478,
+      "mt_wall_seconds": 0.673329309996916,
+      "total_after_full_utterance_seconds": 3.0997857529873727,
+      "asr_worker": {
+        "text": "Today, the only insects that cannot fold back their wings are dragonflies and Mayflies.",
+        "audio_duration_seconds": 6.18,
+        "language": "en",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 2.414432443008991,
+        "worker_load_seconds": 0.8849859469919465
+      },
+      "mt_worker": {
+        "text": "Сегодня единственные насекомые, которые не могут свернуть свои крылья, - это драконицы и Мэйфли.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d",
+        "worker_inference_seconds": 0.6721263649960747,
+        "worker_load_seconds": 0.3643490069953259
+      },
+      "quality_status": "unreviewed"
+    },
+    {
+      "sentence_id": 1661,
+      "direction": "ru-en",
+      "cold_workers": true,
+      "audio_sha256": "b0e4f0f98baeec754e723542ddb704f0c67aeeb0cb7528f648dc6842edac143f",
+      "audio_seconds": 9.06,
+      "gold_transcript": "Он не назвал цифру для сокращений бюджетов, сказав, что они будут сделаны исходя из производительности экономики Китая.",
+      "actual_asr_text": "Он не назвал цифру для сокращения бюджетов, что они будут сделаны, исходя из производительности экономики Китая.",
+      "actual_mt_input": "Он не назвал цифру для сокращения бюджетов, что они будут сделаны, исходя из производительности экономики Китая.",
+      "translated_text": "He did not mention the figure for budget cuts, which would be based on the productivity of China's economy.",
+      "gold_target_reference": "He did not set a figure for the cuts, saying they will be made based on China's economic output.",
+      "asr_wall_seconds": 4.731203884002753,
+      "mt_wall_seconds": 1.1172260999883292,
+      "total_after_full_utterance_seconds": 5.848440083995229,
+      "asr_worker": {
+        "text": "Он не назвал цифру для сокращения бюджетов, что они будут сделаны, исходя из производительности экономики Китая.",
+        "audio_duration_seconds": 9.06,
+        "language": "ru",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 3.046124852000503,
+        "worker_load_seconds": 1.5708465720090317
+      },
+      "mt_worker": {
+        "text": "He did not mention the figure for budget cuts, which would be based on the productivity of China's economy.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "96804810a5bdecd5e118f6b67fb979025c10670cb4bad56f887511c4fb76cd89",
+        "worker_inference_seconds": 0.6098305749910651,
+        "worker_load_seconds": 0.3806648000027053
+      },
+      "quality_status": "unreviewed"
+    },
+    {
+      "sentence_id": 1669,
+      "direction": "ru-en",
+      "cold_workers": false,
+      "audio_sha256": "730d46530c53a865831f3cd8a4227a222491f3d7d006083990b2c401f8b3d425",
+      "audio_seconds": 8.64,
+      "gold_transcript": "Начальник полиции Чандра Шехар Соланки заявил, что обвиняемые были представлены перед судьями с закрытыми лицами.",
+      "actual_asr_text": "Начальник полиции Чандра Шехар Саланки заявил, что обвиняемые были представлены на пересудьями, закрытыми лицами.",
+      "actual_mt_input": "Начальник полиции Чандра Шехар Саланки заявил, что обвиняемые были представлены на пересудьями, закрытыми лицами.",
+      "translated_text": "Police chief Chandra Shehar Salanki stated that the accused had been represented in private trials.",
+      "gold_target_reference": "Police superintendent Chandra Shekhar Solanki said the accused appeared in court with covered faces.",
+      "asr_wall_seconds": 4.840977026004111,
+      "mt_wall_seconds": 0.5327120120055042,
+      "total_after_full_utterance_seconds": 5.373698558003525,
+      "asr_worker": {
+        "text": "Начальник полиции Чандра Шехар Саланки заявил, что обвиняемые были представлены на пересудьями, закрытыми лицами.",
+        "audio_duration_seconds": 8.64,
+        "language": "ru",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 4.81299655600742,
+        "worker_load_seconds": 1.5708465720090317
+      },
+      "mt_worker": {
+        "text": "Police chief Chandra Shehar Salanki stated that the accused had been represented in private trials.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "96804810a5bdecd5e118f6b67fb979025c10670cb4bad56f887511c4fb76cd89",
+        "worker_inference_seconds": 0.5317817100003595,
+        "worker_load_seconds": 0.3806648000027053
+      },
+      "quality_status": "unreviewed"
+    },
+    {
+      "sentence_id": 1677,
+      "direction": "ru-en",
+      "cold_workers": false,
+      "audio_sha256": "5ccd4cf4b01bfb2b6d4ed25eddbd5b712c13754274ce349abaf5fe4ade133f46",
+      "audio_seconds": 7.56,
+      "gold_transcript": "Стрекозы и поденки являются единственными насекомыми, которые не могут складывать крылья назад.",
+      "actual_asr_text": "стрекозы и подденки являются единственными насекомыми, которые не могут складывать крылья назад.",
+      "actual_mt_input": "стрекозы и подденки являются единственными насекомыми, которые не могут складывать крылья назад.",
+      "translated_text": "Shocks and pans are the only insects that can't fold their wings back.",
+      "gold_target_reference": "Today, the only insects that cannot fold back their wings are dragon flies and mayflies.",
+      "asr_wall_seconds": 2.621241797998664,
+      "mt_wall_seconds": 0.4816697140049655,
+      "total_after_full_utterance_seconds": 3.102922612000839,
+      "asr_worker": {
+        "text": "стрекозы и подденки являются единственными насекомыми, которые не могут складывать крылья назад.",
+        "audio_duration_seconds": 7.56,
+        "language": "ru",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 2.607311554995249,
+        "worker_load_seconds": 1.5708465720090317
+      },
+      "mt_worker": {
+        "text": "Shocks and pans are the only insects that can't fold their wings back.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "96804810a5bdecd5e118f6b67fb979025c10670cb4bad56f887511c4fb76cd89",
+        "worker_inference_seconds": 0.48067569099657703,
+        "worker_load_seconds": 0.3806648000027053
+      },
+      "quality_status": "unreviewed"
+    },
+    {
+      "sentence_id": 1661,
+      "direction": "zh-en",
+      "cold_workers": true,
+      "audio_sha256": "0df04ad2bbc1abe94168b100b85b8bf374b5b2b527bf5ee1980d0bcf48c8c68e",
+      "audio_seconds": 12.96,
+      "gold_transcript": "他没有设定削减数额，只是表示将根据中国的经济产出来决定数额。",
+      "actual_asr_text": "他沒有設定削減數額,只是表示將根據中國的經濟產出來決定數額",
+      "actual_mt_input": "他沒有設定削減數額,只是表示將根據中國的經濟產出來決定數額",
+      "translated_text": "He didn't set the cut, he just said he'd decide according to China's economy.",
+      "gold_target_reference": "He did not set a figure for the cuts, saying they will be made based on China's economic output.",
+      "asr_wall_seconds": 4.999981523011229,
+      "mt_wall_seconds": 0.9986390769918216,
+      "total_after_full_utterance_seconds": 5.998634500007029,
+      "asr_worker": {
+        "text": "他沒有設定削減數額,只是表示將根據中國的經濟產出來決定數額",
+        "audio_duration_seconds": 12.96,
+        "language": "zh",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 2.8117517990031047,
+        "worker_load_seconds": 2.063332170000649
+      },
+      "mt_worker": {
+        "text": "He didn't set the cut, he just said he'd decide according to China's economy.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "c66ca93eaa07e094903e1ea8278282ba17a9e2f1eb7de454b7b7ce5ff112664b",
+        "worker_inference_seconds": 0.5718112199974712,
+        "worker_load_seconds": 0.32382919899828266
+      },
+      "quality_status": "unreviewed"
+    },
+    {
+      "sentence_id": 1669,
+      "direction": "zh-en",
+      "cold_workers": false,
+      "audio_sha256": "ea134b049e9e9abaa1f4a32413b4959aa09d63f21d3f9815f4f8d6e24538990b",
+      "audio_seconds": 5.76,
+      "gold_transcript": "警察局长钱德拉·谢卡尔·索兰基说，被告人出庭时都蒙住了脸。",
+      "actual_asr_text": "警察局長簽的來卸開爾蘇蘭基說被告人出頂時都盟住了臉。",
+      "actual_mt_input": "警察局長簽的來卸開爾蘇蘭基說被告人出頂時都盟住了臉。",
+      "translated_text": "The chief of police signed to remove the defendant's face when the defendant came to the top.",
+      "gold_target_reference": "Police superintendent Chandra Shekhar Solanki said the accused appeared in court with covered faces.",
+      "asr_wall_seconds": 3.0060532089992194,
+      "mt_wall_seconds": 0.5489403149986174,
+      "total_after_full_utterance_seconds": 3.5550032339961035,
+      "asr_worker": {
+        "text": "警察局長簽的來卸開爾蘇蘭基說被告人出頂時都盟住了臉。",
+        "audio_duration_seconds": 5.76,
+        "language": "zh",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 2.9927055320004,
+        "worker_load_seconds": 2.063332170000649
+      },
+      "mt_worker": {
+        "text": "The chief of police signed to remove the defendant's face when the defendant came to the top.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "c66ca93eaa07e094903e1ea8278282ba17a9e2f1eb7de454b7b7ce5ff112664b",
+        "worker_inference_seconds": 0.5480727919930359,
+        "worker_load_seconds": 0.32382919899828266
+      },
+      "quality_status": "unreviewed"
+    },
+    {
+      "sentence_id": 1677,
+      "direction": "zh-en",
+      "cold_workers": false,
+      "audio_sha256": "04940c7dca3b3189eb51f410f514673259dd9b35243a9a7e3d3472de1c5f0c81",
+      "audio_seconds": 7.98,
+      "gold_transcript": "如今，唯一不能向后折叠翅膀的昆虫是蜻蜓和蜉蝣。",
+      "actual_asr_text": "如今,唯一不能向后着迭翅膀的宽宠,是清廷和浮游。",
+      "actual_mt_input": "如今,唯一不能向后着迭翅膀的宽宠,是清廷和浮游。",
+      "translated_text": "Today, the only thing that can't turn back with wings is the court and the float.",
+      "gold_target_reference": "Today, the only insects that cannot fold back their wings are dragon flies and mayflies.",
+      "asr_wall_seconds": 3.1325613130029524,
+      "mt_wall_seconds": 0.6609811949892901,
+      "total_after_full_utterance_seconds": 3.793561298007262,
+      "asr_worker": {
+        "text": "如今,唯一不能向后着迭翅膀的宽宠,是清廷和浮游。",
+        "audio_duration_seconds": 7.98,
+        "language": "zh",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 3.111725901006139,
+        "worker_load_seconds": 2.063332170000649
+      },
+      "mt_worker": {
+        "text": "Today, the only thing that can't turn back with wings is the court and the float.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "c66ca93eaa07e094903e1ea8278282ba17a9e2f1eb7de454b7b7ce5ff112664b",
+        "worker_inference_seconds": 0.6599242320080521,
+        "worker_load_seconds": 0.32382919899828266
+      },
+      "quality_status": "unreviewed"
+    },
+    {
+      "sentence_id": 1661,
+      "direction": "ar-en",
+      "cold_workers": true,
+      "audio_sha256": "2e0532023ea3a9de62e21314c192033df5f4bbab1e46e024377fa712cb813f25",
+      "audio_seconds": 5.94,
+      "gold_transcript": "لم يحدد رقمًا للتخفيضات، قائلًا إنها ستعتمد على الناتج الاقتصادي للصين.",
+      "actual_asr_text": "لم يحدد رقم للتفيدات قائلاً إنها ستعتمل على نيتج الاقتفاضي للسين.",
+      "actual_mt_input": "لم يحدد رقم للتفيدات قائلاً إنها ستعتمل على نيتج الاقتفاضي للسين.",
+      "translated_text": "He didn't specify a number for the benefit saying that she'd be relying on the penetrating product.",
+      "gold_target_reference": "He did not set a figure for the cuts, saying they will be made based on China's economic output.",
+      "asr_wall_seconds": 4.449599199011573,
+      "mt_wall_seconds": 1.3146601299959002,
+      "total_after_full_utterance_seconds": 5.764277139009209,
+      "asr_worker": {
+        "text": "لم يحدد رقم للتفيدات قائلاً إنها ستعتمل على نيتج الاقتفاضي للسين.",
+        "audio_duration_seconds": 5.94,
+        "language": "ar",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 3.12334120599553,
+        "worker_load_seconds": 1.176936147006927
+      },
+      "mt_worker": {
+        "text": "He didn't specify a number for the benefit saying that she'd be relying on the penetrating product.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "49dfeb382ec074451936b9ec4e7b671402ae6927c3f1a62ca95a492b7f021235",
+        "worker_inference_seconds": 0.7163096980075352,
+        "worker_load_seconds": 0.4800762230006512
+      },
+      "quality_status": "unreviewed"
+    },
+    {
+      "sentence_id": 1669,
+      "direction": "ar-en",
+      "cold_workers": false,
+      "audio_sha256": "b484caffb0f59f453ffd8afeda678f877866280600a44095543f1913cb577ee0",
+      "audio_seconds": 7.62,
+      "gold_transcript": "وقال مدير الشرطة شاندرا شيخار سولانكي إن المتهمين مثلوا أمام المحكمة بوجوه مغطاة.",
+      "actual_asr_text": "وقال المديو الشوطة شاند واشيخال سوارينكي إن المتهمين المسلو أمام المحكمة بوقوه مغطة",
+      "actual_mt_input": "وقال المديو الشوطة شاند واشيخال سوارينكي إن المتهمين المسلو أمام المحكمة بوقوه مغطة",
+      "translated_text": "The Medio Chand and Ishikal Swarinki said that the accused who had been entertained before the court in his custody were covered up.",
+      "gold_target_reference": "Police superintendent Chandra Shekhar Solanki said the accused appeared in court with covered faces.",
+      "asr_wall_seconds": 3.4072590349969687,
+      "mt_wall_seconds": 0.7843208679987583,
+      "total_after_full_utterance_seconds": 4.191610012989258,
+      "asr_worker": {
+        "text": "وقال المديو الشوطة شاند واشيخال سوارينكي إن المتهمين المسلو أمام المحكمة بوقوه مغطة",
+        "audio_duration_seconds": 7.62,
+        "language": "ar",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 3.3877017720078584,
+        "worker_load_seconds": 1.176936147006927
+      },
+      "mt_worker": {
+        "text": "The Medio Chand and Ishikal Swarinki said that the accused who had been entertained before the court in his custody were covered up.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "49dfeb382ec074451936b9ec4e7b671402ae6927c3f1a62ca95a492b7f021235",
+        "worker_inference_seconds": 0.7834905479976442,
+        "worker_load_seconds": 0.4800762230006512
+      },
+      "quality_status": "unreviewed"
+    },
+    {
+      "sentence_id": 1677,
+      "direction": "ar-en",
+      "cold_workers": false,
+      "audio_sha256": "a9e6ea95028697d7d0304b3330d56c2fa92e4873ab1f2f951855732138e4ba74",
+      "audio_seconds": 10.44,
+      "gold_transcript": "الحشرات الوحيدة التي لا يُمكنها طي أجنحتها اليوم هي اليعسوب وذبابة مايو.",
+      "actual_asr_text": "الحشارات الوحيد التي لا يمكنها طيئ اجنحتها اليوم هي اليعسوب وذبابت مايو",
+      "actual_mt_input": "الحشارات الوحيد التي لا يمكنها طيئ اجنحتها اليوم هي اليعسوب وذبابت مايو",
+      "translated_text": "The only insignia that can't set its wings today is the dragonflies and the Mayo flies.",
+      "gold_target_reference": "Today, the only insects that cannot fold back their wings are dragon flies and mayflies.",
+      "asr_wall_seconds": 2.976718072008225,
+      "mt_wall_seconds": 0.5840347630000906,
+      "total_after_full_utterance_seconds": 3.5607763650041306,
+      "asr_worker": {
+        "text": "الحشارات الوحيد التي لا يمكنها طيئ اجنحتها اليوم هي اليعسوب وذبابت مايو",
+        "audio_duration_seconds": 10.44,
+        "language": "ar",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 2.951877321989741,
+        "worker_load_seconds": 1.176936147006927
+      },
+      "mt_worker": {
+        "text": "The only insignia that can't set its wings today is the dragonflies and the Mayo flies.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "49dfeb382ec074451936b9ec4e7b671402ae6927c3f1a62ca95a492b7f021235",
+        "worker_inference_seconds": 0.5831666019948898,
+        "worker_load_seconds": 0.4800762230006512
+      },
+      "quality_status": "unreviewed"
+    }
+  ],
+  "cancellations": [
+    {
+      "language": "en",
+      "real_asr_model_inference": true,
+      "worker_reaped": true,
+      "cancel_to_reaped_seconds": 0.02309793000167701
+    },
+    {
+      "language": "ru",
+      "real_asr_model_inference": true,
+      "worker_reaped": true,
+      "cancel_to_reaped_seconds": 0.0285269869986223
+    },
+    {
+      "language": "zh",
+      "real_asr_model_inference": true,
+      "worker_reaped": true,
+      "cancel_to_reaped_seconds": 0.049915175003116014
+    },
+    {
+      "language": "ar",
+      "real_asr_model_inference": true,
+      "worker_reaped": true,
+      "cancel_to_reaped_seconds": 0.04183286399929784
+    }
+  ],
+  "scope": "Whole-utterance real audio→ASR→MT through reusable isolated workers. No TTS or LiveKit. No first-audio latency measurement."
+}

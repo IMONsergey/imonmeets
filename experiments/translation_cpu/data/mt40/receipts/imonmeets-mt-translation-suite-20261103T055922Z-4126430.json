@@ -1,0 +1,22 @@
+{
+  "unit": "imonmeets-mt-translation-suite-20261103T055922Z-4126430",
+  "started_at": "2026-11-03T05:59:22Z",
+  "finished_at": "2026-11-03T06:01:46.251538+00:00",
+  "runtime_max_seconds": 90,
+  "exit_code": 0,
+  "command": [
+    "/usr/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+  ],
+  "log": "imonmeets-mt-translation-suite-20261103T055922Z-4126430.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}

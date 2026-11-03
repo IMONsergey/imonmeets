@@ -1,0 +1,46 @@
+{
+  "run_id": "opus-heldout-sentences-20261103",
+  "direction": "ru-en",
+  "same_weights_wrapper_comparison": true,
+  "config_id": "efdd05f10f967799b142de93f4669ae7f366c69d449078ac1800253bf75f6f86",
+  "expected_cases": 6,
+  "successful_inference": 6,
+  "errors": 0,
+  "quality_status": "unreviewed",
+  "model_load_seconds_this_invocation": 0.23335946700535715,
+  "stage_seconds": {
+    "p50": 0.3734,
+    "p95": 0.4898,
+    "max": 0.48977
+  },
+  "max_rss_kib": 150436,
+  "fingerprints": {
+    "mode": "sentences",
+    "suite": "heldout",
+    "model_sha256": "96804810a5bdecd5e118f6b67fb979025c10670cb4bad56f887511c4fb76cd89",
+    "target_token": null,
+    "settings": {
+      "beam_size": 6,
+      "length_penalty": 1.0,
+      "max_input_tokens": 512,
+      "max_output_tokens": 512,
+      "per_item_seconds": 45,
+      "intra_threads": 1,
+      "inter_threads": 1,
+      "compute_type": "int8",
+      "normalization": "NFKC, remove non-printing characters, collapse whitespace; SentencePiece internal normalization"
+    },
+    "selection_sha256": "caf155b7d8b440132295416f7d0ebd210061add74672e39d7e929dffb60ae62a",
+    "cases_sha256": "915042d98cfedd18c4e97d76789adf9142d553cbf003fbadb4b37f19f6b253d2",
+    "runner_sha256": "5e98feaf2c3054c34a9caec8b0148d220d6daff1678bd8afa97f602505ef2af3",
+    "segmenter_sha256": "74fea7357b293ac8f1ee5abfc1424fbdd6f9c3a2c6f679661b967ed5caeab1ac"
+  },
+  "cgroup_limits": {
+    "cpu_max": "100000 100000",
+    "memory_max": 2147483648,
+    "pids_max": "128",
+    "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-heldout-segment-ru-en-20261103T061819Z-97334.service"
+  },
+  "output_sha256": "eaa9b938d2c2927a5f432a3902a11f3c721081f301a4fb84a663a4125c9ff5de",
+  "finished_at": "2026-11-03T06:23:53.339993+00:00"
+}
