@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from typing import Callable
 
 from process_stage import StageCleanupError
+from quality_gate import QualityAssessment, assess_translation
 
 
 class BackpressureError(RuntimeError):
@@ -73,6 +74,11 @@ class TranslationResult:
     utterance_id: str
     revision: int
     track_handle: TrackHandle
+    quality: QualityAssessment
+
+    @property
+    def speech_blocked(self):
+        return not self.quality.speech_allowed
 
 
 @dataclass
@@ -170,7 +176,8 @@ class TranslationStreamAdapter:
     A higher revision may replace only an unfinished utterance with that sequence.
     Completed sequences remain stale without retaining a growing utterance-ID map.
     Byte/audio budgets include cancelled active work until its coroutine is reaped.
-    TTS is optional: with tts=None the result contains text and audio=b"".
+    TTS is optional and subject to quality/route admission. Current routes have
+    no voice grant: the result contains marked experimental text and audio=b"".
     """
 
     def __init__(self, asr, mt, tts=None, *, room_id="isolated", queue_size=4,
@@ -571,12 +578,18 @@ class TranslationStreamAdapter:
             translated = await self._mt(source, work.handle.source_language, work.handle.target_language)
             if not self._fresh(work):
                 return
-            speech = b"" if self._tts is None else await self._tts(translated, work.handle.target_language)
+            quality = assess_translation(source, translated, work.handle.source_language,
+                                         work.handle.target_language)
+            if not self._fresh(work):
+                return
+            speech = b""
+            if quality.speech_allowed and self._tts is not None:
+                speech = await self._tts(translated, work.handle.target_language)
             if not self._fresh(work):
                 return
             result = TranslationResult(work.handle.participant_id, work.handle.track_id,
                                        work.sequence, source, translated, speech,
-                                       work.utterance_id, work.revision, work.handle)
+                                       work.utterance_id, work.revision, work.handle, quality)
             if self._on_result is not None:
                 returned = self._on_result(result)
                 if inspect.isawaitable(returned):

@@ -1,0 +1,24 @@
+{
+  "unit": "imonmeets-mt-quality-gate-focused-20261103T104157Z-2431141",
+  "started_at": "2026-11-03T10:41:57Z",
+  "finished_at": "2026-11-03T10:41:57.829401+00:00",
+  "runtime_max_seconds": 90,
+  "exit_code": 0,
+  "command": [
+    "/usr/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "/home/sergey/imonmeets-translation-quality-gate-20261103/experiments/translation_cpu/tests",
+    "-p",
+    "test_quality_gate.py",
+    "-v"
+  ],
+  "log": "imonmeets-mt-quality-gate-focused-20261103T104157Z-2431141.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}

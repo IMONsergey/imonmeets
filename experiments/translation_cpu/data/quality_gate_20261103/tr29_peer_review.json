@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-11-03T10:49:15.401690+00:00",
+  "reviewer": "/root/product_audit",
+  "review_type": "independent assistant read-only review",
+  "reviewed_commit": "c4630044ffa325e40a4727546022b15c9336565d",
+  "reviewed_report": "RU_PIVOT_RESULTS_2026-11-03.md",
+  "report_sha256": "e5c42d85374ba428712be915392a57f98ea1fc8b279db388f07b398fb81ace86",
+  "quality_review_sha256": "56d1deee238c7f16ce2bb2018dca915ebede7082d975fc74c3224bc98e5d602b",
+  "scope": {
+    "all_authored_rows": 58,
+    "annotations": 28,
+    "all_annotation_texts_match_actual_jsonl": true,
+    "key_error_and_hop_attribution_confirmed": true,
+    "no_incorrect_categorical_claim_found": true,
+    "rtl_time_reference_and_non_statistical_count_caveats_confirmed": true
+  },
+  "native_human_acceptance": false,
+  "quality_gate_code_reviewed_by_this_peer": false,
+  "models_or_jobs_run": false,
+  "files_changed_by_peer": false
+}

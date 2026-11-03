@@ -1,0 +1,4607 @@
+{
+  "schema": 1,
+  "generated_at": "2026-11-03T10:45:17.386210+00:00",
+  "policy_version": "experimental-lexical-v1",
+  "saved_results_commit": "c4630044ffa325e40a4727546022b15c9336565d",
+  "original_inference_code_commit": "edce77925eb3a892645643725924ac1c4d748940",
+  "model_inference": false,
+  "tts_inference": false,
+  "production_changes": false,
+  "source_text_is_saved_gold_text_not_new_asr": true,
+  "reference_used_to_correct_text": false,
+  "raw_outputs_modified": false,
+  "scope": "Lexical diagnostics only; suspect frequency is not a model accuracy/false-positive measurement.",
+  "rows": 218,
+  "speech_grants": 0,
+  "routes": [
+    {
+      "direction": "ru-zh",
+      "cases": 55,
+      "raw_sha256": "6a614c93f92e826255b35c14007ee7c39229d09e870ba555ce373b24ba458ada",
+      "statuses": {
+        "needs_review": 42,
+        "no_risk_detected": 13
+      },
+      "reason_counts": {
+        "negation_scope_unverified": 13,
+        "route_experimental_voice_blocked": 55,
+        "numeric_form_unresolved": 24,
+        "numeric_content_missing_or_added": 9,
+        "negation_cue_missing_or_added": 10,
+        "multiple_numeric_bindings_unverified": 7,
+        "numeric_values_mismatch": 2,
+        "currency_markers_mismatch": 8,
+        "currency_identity_ambiguous": 6,
+        "multiple_currency_bindings_unverified": 2,
+        "cancellation_scope_unverified": 1
+      },
+      "speech_grants": 0
+    },
+    {
+      "direction": "zh-ru",
+      "cases": 54,
+      "raw_sha256": "c617fde08fbcceabbaab19adeba8e7fa08b42a2abcaa857614d9fc24d47b6102",
+      "statuses": {
+        "needs_review": 45,
+        "no_risk_detected": 9
+      },
+      "reason_counts": {
+        "negation_scope_unverified": 13,
+        "route_experimental_voice_blocked": 54,
+        "numeric_form_unresolved": 25,
+        "numeric_content_missing_or_added": 12,
+        "currency_markers_mismatch": 11,
+        "currency_identity_ambiguous": 7,
+        "negation_cue_missing_or_added": 8,
+        "multiple_numeric_bindings_unverified": 9,
+        "numeric_values_mismatch": 3,
+        "multiple_currency_bindings_unverified": 3,
+        "cancellation_scope_unverified": 1
+      },
+      "speech_grants": 0
+    },
+    {
+      "direction": "ru-ar",
+      "cases": 55,
+      "raw_sha256": "a8fb710b2c7e7eedb28426db8caf9d6d28871507248655157bcbe614908d6a7c",
+      "statuses": {
+        "needs_review": 34,
+        "no_risk_detected": 21
+      },
+      "reason_counts": {
+        "negation_scope_unverified": 15,
+        "route_experimental_voice_blocked": 55,
+        "negation_cue_missing_or_added": 5,
+        "numeric_form_unresolved": 14,
+        "multiple_numeric_bindings_unverified": 5,
+        "numeric_values_mismatch": 1,
+        "currency_markers_mismatch": 3,
+        "currency_identity_ambiguous": 5,
+        "percent_marker_mismatch": 1,
+        "multiple_currency_bindings_unverified": 2,
+        "numeric_content_missing_or_added": 1,
+        "cancellation_scope_unverified": 1
+      },
+      "speech_grants": 0
+    },
+    {
+      "direction": "ar-ru",
+      "cases": 54,
+      "raw_sha256": "84c881ec84027ebc9077694e2d3b76cbb6abcc3a341669c123e2d0a4dbd227f8",
+      "statuses": {
+        "needs_review": 34,
+        "no_risk_detected": 20
+      },
+      "reason_counts": {
+        "negation_scope_unverified": 18,
+        "route_experimental_voice_blocked": 54,
+        "currency_markers_mismatch": 6,
+        "currency_identity_ambiguous": 8,
+        "numeric_form_unresolved": 13,
+        "multiple_numeric_bindings_unverified": 5,
+        "negation_cue_missing_or_added": 2,
+        "numeric_values_mismatch": 3,
+        "cancellation_cue_missing_or_added": 1,
+        "percent_marker_mismatch": 1,
+        "numeric_content_missing_or_added": 5,
+        "multiple_currency_bindings_unverified": 3,
+        "cancellation_scope_unverified": 1
+      },
+      "speech_grants": 0
+    }
+  ],
+  "assessments": [
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1661",
+      "input_sha256": "50c54e06404739b2226a6a46986074796f406ca77153085fce7b536848581add",
+      "candidate_sha256": "bc6dbe92f8e10c2cd45aeb470376ba37f4e0e4d3bf593a4279984ffef4c1703c",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000519477
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1669",
+      "input_sha256": "d11e29120f1f5463ec5322680c8bb20cd048c74c023378dc0d0b1ebff7d1224d",
+      "candidate_sha256": "4531e4d26d5a932103f92b2be1dd9044c88cd5610202a179cc6638a8fb152cc3",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000263503
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1677",
+      "input_sha256": "8149d9935f362b05cb965e6ccc60b71e6d7257b1493cb2f838ca57f1636e7e09",
+      "candidate_sha256": "e4cf649fb8877de7b6c5c3e3743c2013e46782aa090ae724d0d515f8dc3fcc8d",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000182362
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1687",
+      "input_sha256": "013048f3d76246482a068ab8d00388b41a54880dc417e2db67895b965140541f",
+      "candidate_sha256": "0d21486b23ebc2985ab7b8c6305a08604b9dfd919a6bdae9244620b70186a4e9",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000165762
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1697",
+      "input_sha256": "f20a8b4b82f07e513bf83a9508ac47e19c0787278882c20cda3091b56dfdaf6a",
+      "candidate_sha256": "3215830d7d96edc6e29e3668a72ae38d7e67da0b78771d224e13cc0f76e30a9b",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000239413
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1709",
+      "input_sha256": "749a3cda17c9537c354affeae9e95df7c0f400844a64b2ae952ef867b80092c2",
+      "candidate_sha256": "87a02376c713449a78c8662b9e6feeb6ef42ef924a7bb0a394d031eadf346961",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000239644
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1717",
+      "input_sha256": "5ef57ae49ed4dbb358415cc954b4876bcfc5f6b3b1f628a3a9bbc5a70a74d180",
+      "candidate_sha256": "efb053195ff8d5af6d93fe00ff08c233cb51c9664bbe4935889df7dfb6664941",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000323174
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1725",
+      "input_sha256": "a4a2f615bd017b162000aae4464ccbe0407d37850c4be16084c0debc1407e987",
+      "candidate_sha256": "ea05db1f735eb64ed11df7175ef6cadac9366b1c5bc5894a0385af48526d1a30",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000678328
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1733",
+      "input_sha256": "f5e99db5b4a73cbddc2c9a6c7c9f705125cd6cebd28ccca716acb4abf413b462",
+      "candidate_sha256": "f552b1013d5a5a1dfd198210b0e5e9c9a8f41ca263215c464ff362eb39cb3eed",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000560467
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1741",
+      "input_sha256": "1f874bbe320b119b08ce07e8be2232c49969b9a6a2f008ea7591757b4b414d5d",
+      "candidate_sha256": "34871054dbd6ff375505a482d99e0dc4695d99c6a546e4493457fb6c88eef47e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000249533
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1748",
+      "input_sha256": "e2ecbf0d97e1b8b708d2786c1d1b482579e8c82abfd40dfe792c12de9398f489",
+      "candidate_sha256": "b6ceaed75635245012d9e1415cb3ffa12e8853c2805b360ce86da085eff3ae7e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000223833
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1757",
+      "input_sha256": "17d10677925d4a546ff587cea91854a0210485a7e6f5e4b75c7b7958dc1b5c31",
+      "candidate_sha256": "4ab4aacd3a2e8a85b350562fce0c520a52283ae56b57af3be09b453e2270947f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000224132
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1766",
+      "input_sha256": "dea46bdc84c119e743418f333e00bf7281069a265cc4edd551d50c2dfe396158",
+      "candidate_sha256": "bb8468cce6d0ee7f1872051c2ea6fd19d6dd476078866f212f91c1c31beb458b",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000248194
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1773",
+      "input_sha256": "a2f08c52352792163e47b3ed09ad66be37be61ccd2067aa26b6f64b363bb6c29",
+      "candidate_sha256": "4b7147a182975a6d850ef675ea956e75dab6f7941d31c1ad25c4aad91b8234dd",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000313513
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1782",
+      "input_sha256": "57126012c1b3c3e568f0ddcb359a7e9767eee8f7dc1e0b697af9041fcc03cb25",
+      "candidate_sha256": "02cb6a4038c98e0105d27b45977331150d94fa8fb387d5a1799d6feef97377c3",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000405405
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1793",
+      "input_sha256": "e8b66303e02d618c1ef07d81ea5a7cee49e79a841f72ab810cb956d7b071ef38",
+      "candidate_sha256": "1eb5bb95352969b435866fde8a86a517726fa49b4cadfd4afbb932b369cca5a5",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000249663
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1800",
+      "input_sha256": "a1bcd2d62f192b1b7c27ba4b665cfe7338f88acd8b8ebb9b92745b199746a0b9",
+      "candidate_sha256": "5bb972ae2523f9466b7775b0e3f5d973fd8023bc91c0d591eb5d1043210e1cd3",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_values_mismatch",
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "mismatch",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000311023
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1809",
+      "input_sha256": "56f746d3854db04aec1034aea1d8c4cdd97e890e5b444c271124cef09bfc9cb2",
+      "candidate_sha256": "b1a01b813f955dbc8350827af4cf7698027f9ed08354265e394abfc03b91a61b",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000347534
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1818",
+      "input_sha256": "70a3ea922f56be70bbdac4a81036550fd81b5bbc4a71f7d6e134f588dc57a29a",
+      "candidate_sha256": "56561d66c91f5ad71ae9817c2c11b6cf3dce7d9c45c7b22e3c4e0638927191aa",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000217882
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1826",
+      "input_sha256": "61c5bc9ea10c2267f5244dd4126a91e4b8b586c2e333d5b009983a4e97d68cd6",
+      "candidate_sha256": "8992504ef9f73cbb237a03efe11d3cf8befd813e03fa6322274024d05e4f1fa1",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000206912
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1835",
+      "input_sha256": "59032cefd7ac03f27ac7079f7bf5ae4938f3a496e45cfcb8e719fa81d17db8c0",
+      "candidate_sha256": "cafa34afc54cfcdd1e66d9f79c73eb75acf4f7866dd6bcd7752409d33b7de027",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000423926
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1842",
+      "input_sha256": "c1d1a75b197bdc43915940aab30ee6e3512db6da27320a77bb87a1de4c0d2530",
+      "candidate_sha256": "1ecf07bab60cb87eb99863e3647386d969ff4a0702249c14b726cab5c3cbe064",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000521736
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1853",
+      "input_sha256": "156e74ca3b5ba63b900dbb118d5d294bb8cdbad689f04563d9ea9c2677484268",
+      "candidate_sha256": "08be8a250a34e897eef87af671e0825f9f5b73877ae147be48ace2313e5192bb",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000283583
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1863",
+      "input_sha256": "0c24ca684900c12fb1a94a98c4791b4992f062a12c946562842064254172c846",
+      "candidate_sha256": "158e25a8c549162f37ac3faaf85ef2eb5eb27c99eb3e336d4a1e8f3fc7b6dbd5",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000325024
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1872",
+      "input_sha256": "97a73f6d7e84e87468879f9af376471370ed2f26ab90b6a19566beab620efd41",
+      "candidate_sha256": "f1c53a6ebad07723b99e96c643e2edc20248c13f5f953085e9c0cd3ac129e9b1",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000332984
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1883",
+      "input_sha256": "03b320e72d99c18320103cfa6c45cf9f5172a3d5e89d442d01f417ccce397893",
+      "candidate_sha256": "1979b749c4af85b70232055344c8301d3afeccc4884bdbe7ea63a50ca06e37d1",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_values_mismatch",
+          "multiple_numeric_bindings_unverified",
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "mismatch",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000381965
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1894",
+      "input_sha256": "3ecefee8416d94da2311de478d75a289a52663c6cc5b9afaa6320a8555a6d46b",
+      "candidate_sha256": "f006cdec50bc29e9298eb2f18e7934b64a25a50383a1ae360888c08471e88712",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000219012
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1901",
+      "input_sha256": "5bb172e2e3f4e1a6680341bbe6904c8335c0113be3eb754f2cc6b48d4835e76f",
+      "candidate_sha256": "7130b20e2da03652047393844f5cf22f38067dedb9a3be2648e5fa0254697933",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000406505
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1910",
+      "input_sha256": "edcdec4bfdbf124c10da513a9c6921e92f55266ce84d922c5ded72a1370f5f43",
+      "candidate_sha256": "1d7038da87d53017b3965bb5e707a4fed6294b81c272c923ed49ed9fc2f00643",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000177692
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1917",
+      "input_sha256": "466fbe48032f24557a49193d9597c7588cf340db809fe57341e0f499107c4e2e",
+      "candidate_sha256": "90eec8175dcf235b55983a55ab3c1ea8eb02403ba641d840e0f35b8dfc419d33",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000251823
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1928",
+      "input_sha256": "d15ef0716c174daf705f04428cb394e0b73d0ccf27fdb0dbededdfdca5b83fa2",
+      "candidate_sha256": "8f7e8b84ae577174efc69c9d77ff13fd351cdd3e3c1cc94aadacbf86c814681f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000360064
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1939",
+      "input_sha256": "58f5f7da7dd0bfa8d9317ccff5dc50ddc12de4e0e3a9b1cc181a4dd754e8d305",
+      "candidate_sha256": "a2610deada0d205117041e4510345984406f17c4d8cab2fd807ea2d1fb859466",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000262853
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1947",
+      "input_sha256": "1bd13c02d8f3fa5160718870df6ca126bb6feb1f31d2a57d0fea222ea9f6990e",
+      "candidate_sha256": "b88135dfd97871fa46fb972081d978f92beeee88894468db1a4caeabe19f1d74",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000304913
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1956",
+      "input_sha256": "2413f964a0a71ece88e4d411fde606d2228186ff1c13a050902d9da879373615",
+      "candidate_sha256": "486c909391e394e837a8c186d23e72fc28ebe97cf9322fe5f60bb0e082bce8e2",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000316784
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1964",
+      "input_sha256": "4046f02cd98b4b5a15b376c3be12ae053b7db3c964c0d3fe1e80acc5c34c13f4",
+      "candidate_sha256": "54c855cc3cd29163cd72483913d856ce4f066913ca2da02b5d552c33d386ff32",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000289913
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1974",
+      "input_sha256": "0da3bec1245a9666d4283a5785fe6b6f7fbfe935e56fee2e9527082060856902",
+      "candidate_sha256": "40402e2a6af72f743d3a809e256dab8e03a76d44f38d9b23332976c3cfde0e8e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000162412
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1982",
+      "input_sha256": "befc2bc31bb1d6d5df8cbefcd3a500e611024f53a82786eec7956b6ffa15dfcf",
+      "candidate_sha256": "cec5f6fa56638baa9a81feac2e551d4607e2849c1ff555d29836f448a11362c4",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000264733
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-1991",
+      "input_sha256": "cf44df32d6e008fdb6671f07046034946b3e1b6d21519de9a9476272a2b05bcc",
+      "candidate_sha256": "e19960265b439805f0aacba22d3cf4b3256d8c283de96c9ae550945206d7b33e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "currency_markers_mismatch",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000262624
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-2001",
+      "input_sha256": "8498a6bf56fe97ae20b41fd4c122fcaf1ec35a3f0409e66befdcdf86f4501b15",
+      "candidate_sha256": "e18ef6dc55f6f28585c60b09fd8748b6ee05b0d6f09c17b307b0b2c2088c3681",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000310384
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "fleurs-2009",
+      "input_sha256": "b268a27fd3c91bc7767befb5683a8fdacdac63bd626a494b5a75b495ca232bc7",
+      "candidate_sha256": "1516ceb258d80b57395f6981cd35fc11f81458b6bbf6d3a18487524d344c10cb",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000361944
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-approve-positive",
+      "input_sha256": "36cd14b2e38c1506e385a7f8dd550d1e948c3618401222a63eeee1ddc2ecef28",
+      "candidate_sha256": "688bc416a25e097d9a3e4d8462aa9ca914d71ee3143c1f85bf8d55a21bb402f4",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000105561
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-approve-negative",
+      "input_sha256": "2b8d16e6a419b9ea31abfd134ae500a81569861943ee2aefaf4ab5450b7d0a4c",
+      "candidate_sha256": "7bd1a46a763edcc312b39d45afe89dc0098b30f359f05c9e283fa26e49b1aee0",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 8.6361e-05
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-usd-12000",
+      "input_sha256": "22aaf1d789a922e596e8052cacc8ade8c73e0f965eb25616aed2b6cca81e2cdd",
+      "candidate_sha256": "7fe836409f4b3e52e93dfb0d366a483dc017e8bd30da6e71a196c14f3a4b6b40",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000126121
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-usd-1200",
+      "input_sha256": "3bdb124248e915e293c5d388e6b8391039cb40f836d12ff280aeeb36f28cdb26",
+      "candidate_sha256": "7b1ff260f6ca1feeab4800680482cf60854594a71f0ba505a04ddcabeab32208",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000123952
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-rub-12000",
+      "input_sha256": "72627cb6df180163297a4f952c006daa05d5e2aabad3b592660feddfb11007ac",
+      "candidate_sha256": "df9fc7a3711087968ef16ab1961dbaf46c21909bd67c8dc41ff7786d36d31bed",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "match",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000144172
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-cny-contrast",
+      "input_sha256": "0513b86a8ab5bebd7edf5340a9294a3b1c7e6534cf093af553dea291fa7dd025",
+      "candidate_sha256": "b33ab19289afeeffc4fa47ae2133dd686db8fca2641b11369e1e43d341b75c83",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "multiple_currency_bindings_unverified",
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000227313
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-decimal-eur",
+      "input_sha256": "3e425821715655f344852153c35efd227f2356b8577b6286e9652f89b1d45962",
+      "candidate_sha256": "dc33d069f11fd4d46fccb8d8d36c7b5e4c6f4ba3295272893489ea53627a2c50",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "multiple_currency_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000197573
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-conditional-negation",
+      "input_sha256": "8693722107f50f3a46b86f3d27e07269cb37c675727711f40956ef05bd2c311f",
+      "candidate_sha256": "1aee1862351ce32afff31d7d3ef9828afbbd40c81dd8158dfc1317ca7c0c8fd4",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000158532
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-sergey-meeting-price",
+      "input_sha256": "aa6346e6d2cf46f78aa8e63d6b11e468e6ea0a371e41ad31f10c3d614b3cdfa7",
+      "candidate_sha256": "8dadf4e81321abdcb02f69c3eb0ff7301e7b62c610d2e40046d39b81b79ba822",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000251793
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-time-1515",
+      "input_sha256": "9c74a2be462065c1bbaa62bee1356591ed65e811c93ef4c2d4cedd687cc59439",
+      "candidate_sha256": "e09f74e567b312dbf97c987d570788bcf73ff12f2eb999397795fa2e56b83c62",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000182522
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-self-correction",
+      "input_sha256": "b2ce20b9177e5a276f2b37f50bb0c1bd1cb28380bb96da131e32d28bdaa07796",
+      "candidate_sha256": "57599639c8f92e981ad1f70db29f268492dbbc624b5e9163dd9b27a10ca15f6f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "currency_markers_mismatch",
+          "negation_scope_unverified",
+          "cancellation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000195332
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "contrast-name-five-minutes",
+      "input_sha256": "86d296a8d9acff3592491e3a17d7a6cb53068329c60f3eafa1841c4cef6711c0",
+      "candidate_sha256": "539cee8a72b54754e48640c1cf68281b1e3e3ee60a3ede1c6797bc27cc6320f1",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000177872
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "original-ru-en-price-002",
+      "input_sha256": "72627cb6df180163297a4f952c006daa05d5e2aabad3b592660feddfb11007ac",
+      "candidate_sha256": "df9fc7a3711087968ef16ab1961dbaf46c21909bd67c8dc41ff7786d36d31bed",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "match",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000155382
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "original-ru-en-negation-004",
+      "input_sha256": "5962246affb2cf9a686e54a0d9e5fd408d606be491fb410c827a54882b0483b2",
+      "candidate_sha256": "06e1eceee1a85356ada55ec3127098be25e99bc5ba2e1272d092c9cc9b6ec762",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000161562
+    },
+    {
+      "direction": "ru-zh",
+      "case_id": "original-ru-en-name-009",
+      "input_sha256": "86d296a8d9acff3592491e3a17d7a6cb53068329c60f3eafa1841c4cef6711c0",
+      "candidate_sha256": "539cee8a72b54754e48640c1cf68281b1e3e3ee60a3ede1c6797bc27cc6320f1",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000144852
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1661",
+      "input_sha256": "bf1a762276bb64ee1b7f8588da08525eb2465db1596cb3c4fb325ea0cab1f231",
+      "candidate_sha256": "b79ae8f7d137bac195312a7b656ee655b072889b816054f2083d22ae6ff4fd99",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000363315
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1669",
+      "input_sha256": "63355cd9cf2311ae2febc8ca72dc43fc914d70e0d91dd9bfef6a124c9c73bd87",
+      "candidate_sha256": "a869e84ef820f6d4774f482218b336fba77c865c28e7c178db81c0774fd1dc7b",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000236223
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1677",
+      "input_sha256": "085341c2b1da7bb64b7e93d4327b5dd6f8f7f60c956a43bc97bebef336b20fc3",
+      "candidate_sha256": "61600a03209aff79e67f209e00cfb1fe4d30a8e84ee2b4ffcd7c301866561cac",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000273254
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1687",
+      "input_sha256": "e506ca681cd2b5b8c8d17c8c7a0df977b1ee5e49408cdbcf3103f4b43aa02b3f",
+      "candidate_sha256": "60993b4a4d119f1f28e8e350b93d3e2c364b1a446c933d0bb53bb93e3229f91a",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000245043
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1697",
+      "input_sha256": "44e77369befda958c742c267ac77522077961fa6509b3ec1a33562390b837d08",
+      "candidate_sha256": "a204995fd8ccda847a0dd563fad81aa9462096615cdcd0dc6ee0b8eb966f4c8e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000255773
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1709",
+      "input_sha256": "21fa40f43a1724c0c967b69d74c9bcb929c4682e68177b017aecd43a5bd7f6c6",
+      "candidate_sha256": "2d1f43d7e98bb7f50dda008124556fee18b7b9ccbed92653fa32aba1c04b15bf",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000410825
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1717",
+      "input_sha256": "e9b8466dece0feec1e1bc34b15d7ec2c75ee18e5b75a711776ec6fb92fdb80b2",
+      "candidate_sha256": "9dc5b7842f7b83e572f67e267394681d137f1c0a69e8413599802441d37b4ec3",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000307803
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1725",
+      "input_sha256": "4c25a44be319d890329d82893c42a8aecf23db4b9481f8d7a53acb25f73bdfff",
+      "candidate_sha256": "8329ae9123d6e6d03638271e81ec41d09478c8ec29c1128cba798c6ed0b3a766",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000459276
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1733",
+      "input_sha256": "ecda75981678b948383e399c24f9fd0d8205a2e5bfbb2c447dd80e5bb85657dc",
+      "candidate_sha256": "fc86033f1cb33b9089e4ee28f1fef28cf76fc1ddb12f16a6be59584724b63fa4",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000469556
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1741",
+      "input_sha256": "594e6c73e172559a338a7ba98d5ad4e4425c13477cd822904834f79a16d7fc41",
+      "candidate_sha256": "873ddb2e19e6073bf2e413b8fedaecb7cb1884a97809a4f6590fe789b693bbdd",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000202223
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1748",
+      "input_sha256": "2328c77ca8596d70975e433292b1a59e6e303648baaafd81a3c45a7d3bb21c16",
+      "candidate_sha256": "352a9cd6fd9a8342b660528552ce610fa8463fb6b11c69c7628114f813d25d54",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000255613
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1757",
+      "input_sha256": "8ba01cc758c6461a4e27acb783c8d6d070eac62c1575ee8d09bddd7b3ad09711",
+      "candidate_sha256": "860daa8abe530fa92ca4d8175d8ff40bfcbede37b65ff6f924b0f7d4e2af87c0",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000278803
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1766",
+      "input_sha256": "45135458070be99d428448566f33df7489d248d24811c9985c681b91a19fd1ba",
+      "candidate_sha256": "0797c844902cb91c35460b1545f5d6c866dc24fdabc035065c1ed9e4eba69ed8",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000347874
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1773",
+      "input_sha256": "e2c6f23563b0940fa4ce89c04847e00baf6062311159d4460edbf0dcfac6e9d2",
+      "candidate_sha256": "82d4f922c19da610b4e6e7a003ea89f4e13ba44b02c90b8a023f29d9c6add030",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000338934
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1782",
+      "input_sha256": "ed872c8529a9d1bc360912a1e8c514e8fd7fcaf300d268e52b25fcbf76f6b8bf",
+      "candidate_sha256": "6e8c6aa6d1f68fb53e26297b8dc9b287ea09f7901dec7ebe34cd6024e6ba21b7",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000494687
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1793",
+      "input_sha256": "d6b79d39272184d06859c8b2f0717beeb7576e5fc55bbd1bde168496eabe402b",
+      "candidate_sha256": "d66ab7ff6bef96536541f1e74e9ebee63f43a045da10d04132f07051aa207354",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000268824
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1800",
+      "input_sha256": "8837f227c1a87219163d8354d20eb4fcec80aa1cc16163b4e24ca98c0077a1d6",
+      "candidate_sha256": "8e3c4734e7c0dbe3513da14675b69ab579d803ffa443afda50251b3c0286ae8e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_values_mismatch",
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "mismatch",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000329924
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1809",
+      "input_sha256": "6b9b8d0dc4e7dfa5d499553dc4a657fd954f322cab3ac3c851933b063fc03613",
+      "candidate_sha256": "6676009633e681d9a6a7c835fe8ff4005456d491d30c19c18b764ce0d9cc7588",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000248253
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1818",
+      "input_sha256": "569f140319380d82b692e14739948237006577d7304b8ec51673479846c448f0",
+      "candidate_sha256": "82447de6f792d0e0c9c4fad4c29a2756e20351f33670c57a499dd53dba0d8921",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000229213
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1826",
+      "input_sha256": "eda3c3c5417744393650324c0af002d4e8c7c18b2bd5ecd9e653a5061cd8140a",
+      "candidate_sha256": "1fd455b13b925885f9a7f95a2a07a1d3571de373c0c31fac714459caddd89a5a",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000153572
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1835",
+      "input_sha256": "bc542fe4acd7f792c9d761e60f15d2dc3991a8a36cac8224fef6a330f6f44e51",
+      "candidate_sha256": "6d1b3807f2b162678591a2418bf57332d282f4484648cd9c85316d65e348a8cd",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000270334
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1842",
+      "input_sha256": "1a969a83cfe33f29ac58a4fec2fdab5663cdb5026df0927d673f53f9057181d4",
+      "candidate_sha256": "bafc551b57003704a3b6a8153f6efcd5291f748070977d9730d31c68043153e6",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000322474
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1853",
+      "input_sha256": "82c406bbb78f471f2e55dbc13dcf78b90211ebde6c0ad0d6f869757bb0fe7442",
+      "candidate_sha256": "f14e66664e1cc4e067af6535b1d198645b52b1c05324e468642854b8185abc5c",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000212452
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1863",
+      "input_sha256": "7c508d61fb7efdbec91fff418093ca0dba86b2824be51b31a5168f6256bb465b",
+      "candidate_sha256": "1f8acacefc6ae0c31f1b6f3e26dfa8a43436cb3cdb6c3f2d31111dcb0d7d1b72",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000217722
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1872",
+      "input_sha256": "a1263a64135a6e15030d6fb1893a4852c03b27e45eb9556a7665c6aca7b330ea",
+      "candidate_sha256": "bff830d8f1b72cc622f5e15ed8b85c476330890bc0ec4df683155c8e9cd67b00",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000316934
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1883",
+      "input_sha256": "acddf7b33dba632b9346b3d9c273c766288203af0ff1bca9f542b0b4c1636aad",
+      "candidate_sha256": "f7492d6d4a6b7b0fb6c0a69caa0c436e702ee616380fd7fa8cd6b8e8b718453a",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_values_mismatch",
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "mismatch",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000246963
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1894",
+      "input_sha256": "9220f0cfc8f253a2f762f2c3fd5847c0c4577d445b9beb80ce42fb0f15918dbf",
+      "candidate_sha256": "4ef81f1cdda1cbd8cef056b65af88cd2c2fe6c6a0e27c3ec308e9a114caec7da",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000141942
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1901",
+      "input_sha256": "1fe519b0fd9a2acd158b4db4d58f3e44e3b25f19211b5e5cdc32983b2732ad39",
+      "candidate_sha256": "173e518e3d6920976e1f5684e16f017199f89321e6e126a82646d909d620b9c0",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000258944
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1910",
+      "input_sha256": "e47b85da46fe9b951271c1abf110feff89d4a77d38d96766b09185d246ae5379",
+      "candidate_sha256": "9b90a515298b28f13d29b9adcdf57ab77559b8b79a1217de866005e956b53779",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000141102
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1917",
+      "input_sha256": "8174146c810bf86d5f66b0c7a1a721604a1c7da05b72967622eb7d185f3d0f5f",
+      "candidate_sha256": "2ab8ad787f60befd697069d9e097271f1dc065aff4a3d0b28ca317fec1aeac96",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000169832
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1928",
+      "input_sha256": "8ebdd027a3f67ee2536511361087dbd52454b1aff54d6f8c18e244cfd0d727d8",
+      "candidate_sha256": "59fd7f2cc87c479a0aabacfecce4476737e7e1b923abf6b3822ee417310dd8f2",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000216473
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1939",
+      "input_sha256": "a3010fd48d3bd230b1e0fc0bd89b0bbfdf8baf12d55baf603ec16b04d0eff8d8",
+      "candidate_sha256": "f85f093e04fc79cc12cd810923ec4ce4dbfbcbb49735d88486b1cb24b60984bb",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000192703
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1947",
+      "input_sha256": "89eb188458f880cae007a34bfbd48c2b52d78ad9ca510ebc9b156721db8952ab",
+      "candidate_sha256": "a0cdda16f293110468d26da45093b470f91090da7db0e623d408f5a4ea7ee834",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_values_mismatch",
+          "numeric_content_missing_or_added",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "mismatch",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000172652
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1956",
+      "input_sha256": "4278d1ece792f64c0b9cf32a2b056e71033c6148f34aee1616385cb33fca390f",
+      "candidate_sha256": "c3be2bf5da3467916fee1f34da6c92362c1425e5e960c99a4b324326663c3eaf",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000180232
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1964",
+      "input_sha256": "b874e412c13c6c3e5ef1fc97e7f9326411de88576acfa842d00e28edf6f03f89",
+      "candidate_sha256": "fbe0df6f683a9a9c1e945b1a5fed5e5f37d8e7697b6c726cb675ba00d9e043d9",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000293714
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1974",
+      "input_sha256": "fa07d00ca5c7b4bf488d91e02e476475fe6e702c995179f88fd5f8c7c3581a51",
+      "candidate_sha256": "fbfe7dde3af6c9a2b6794cc7e723b6515e86957088edeb0c2c6f1fdeff26a496",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000117402
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1982",
+      "input_sha256": "e326f084c95faeac67fe219d8b80083b9062b0cdbe56977ed491d64e0d478e69",
+      "candidate_sha256": "336bd570d873af9ed318950e2ed328ad5ac8bc25fe2caacea14d6d2b8bf63545",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000164203
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-1991",
+      "input_sha256": "d72067c936e67e92948a996d99839ae58db2e00ef2a33a03a5641fe132271db3",
+      "candidate_sha256": "a92467f69bca5d5179bdf1bc77b588a3619be71b5520244ff15011273887aa92",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "currency_markers_mismatch",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000185392
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-2001",
+      "input_sha256": "52c884ae474223cb20c6853fa638ef8daaf9853fa9cf5f16562ba22de2b140fe",
+      "candidate_sha256": "93a3eb8aa28b2dbb0e9c4d7cf633347a949325cf500430f36473acb72383ef22",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000239273
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "fleurs-2009",
+      "input_sha256": "6007cef2600716c8bfc9ae8d3d1c8912fda3414482ddea4e8fbb5e76cb3d7aeb",
+      "candidate_sha256": "43d00f32b3669f8bedf608ea5222bc66f693cd1703a5ec3616269d2be3529db7",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000296564
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-approve-positive",
+      "input_sha256": "d25ad48fc1ac414fee4e7bc06fdf8f61b7b267f4ee4a5638c83dd7aef90dbf81",
+      "candidate_sha256": "46f3398350a897ad9b1631bbc28b7fa616700e7755413a98cf30a6c009689e34",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 9.9442e-05
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-approve-negative",
+      "input_sha256": "f57c650c2477a3c24c6802daaab8e2614c10661e804e54ba5bdaaa215d1e747f",
+      "candidate_sha256": "489074233e57a555650168dbbaffacfadc6f6c63d483ff32c955a410f29c073f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 7.1761e-05
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-usd-12000",
+      "input_sha256": "3b26e577c66339a4787ebd0388a606440e020b87e8e8272182a1364f4c160b8f",
+      "candidate_sha256": "14b30929d6077cf234eee6415a695895c13378831f2d2fe26bb077945bcb4e62",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000110132
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-usd-1200",
+      "input_sha256": "7d98ec3e0102d983a2b5b8115e64d308a8d517a0e0c7a12bf05b3b91b1d12eed",
+      "candidate_sha256": "16bfa8dd1796d5e8ad3b2323b704ac58f2e2999e6aa92584e9a68c0bc5c03459",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000123121
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-rub-12000",
+      "input_sha256": "6519055603c09e3deedf99d1481755eb5870d169417173197deb9a919d7bb1b6",
+      "candidate_sha256": "67e642cb6cdc7590c787d77cf50c803568ec6e6e0e4d4ceba75c4cb85dbd8cd3",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "match",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000138192
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-cny-contrast",
+      "input_sha256": "39edd3f0f2b43d093144510e85b126acb788129d8b0995d9511d2b70000a8a57",
+      "candidate_sha256": "eb679b6000fb627675467e711057db53b818095916001b2c4bb7a5e56c32c4b5",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "multiple_currency_bindings_unverified",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000157372
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-decimal-eur",
+      "input_sha256": "1c0f5be706c51c50d3db60ae99c2b32f9e06c7557c4c9fa8dec98bb306e952e5",
+      "candidate_sha256": "efd07a982237c7402eedc22d958bd84e5d67122aeebaf4e519e0bdd3644c8d35",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "currency_markers_mismatch",
+          "multiple_currency_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000140212
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-conditional-negation",
+      "input_sha256": "661e4286f428644f538e95c1927e0690feff2f1e41b58075b7a2348ced525c37",
+      "candidate_sha256": "1ddc2a66d243e34c368665baaba6fb1e17ef7e2bf1592d550c037489fb4da42a",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000116051
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-sergey-meeting-price",
+      "input_sha256": "2f4452fe482c4656aa616e9adcddd7e7d05f494fa418208db94de944997ea889",
+      "candidate_sha256": "ebf465d2695a59ce5c243baf23065ab7b7370f0f4fa3bdcc2a61a90727d9373f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "currency_markers_mismatch",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000167552
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-time-1515",
+      "input_sha256": "e98a96fab457d8185e8226931c4d68bd88a1258a436f609c9aad776a397a867d",
+      "candidate_sha256": "4df40256a990f412f391f5f5b538b6cc054de10e4017dc9e4cdfd8b1643a4e1e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000169962
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-self-correction",
+      "input_sha256": "2beaa243a083e95765ec5904f99ad9f6ec62e1ce3627d2487bd6f58ae9721042",
+      "candidate_sha256": "d6737e936af9fdbab6dff51da5de0e6f4babf7e5639f1e70811922abfb003e47",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "currency_markers_mismatch",
+          "negation_scope_unverified",
+          "cancellation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000137593
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "contrast-name-five-minutes",
+      "input_sha256": "6167a8aef765564aa0430810845637810c8b76d51f6978321dbee23849c9e6ef",
+      "candidate_sha256": "535d99b727325e8c887a179a348e6b4e727660e0b17b11cfb0059ed6734b4683",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000145072
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "original-zh-ru-money-005",
+      "input_sha256": "39edd3f0f2b43d093144510e85b126acb788129d8b0995d9511d2b70000a8a57",
+      "candidate_sha256": "eb679b6000fb627675467e711057db53b818095916001b2c4bb7a5e56c32c4b5",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "multiple_currency_bindings_unverified",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000146092
+    },
+    {
+      "direction": "zh-ru",
+      "case_id": "original-zh-en-time-011",
+      "input_sha256": "e98a96fab457d8185e8226931c4d68bd88a1258a436f609c9aad776a397a867d",
+      "candidate_sha256": "4df40256a990f412f391f5f5b538b6cc054de10e4017dc9e4cdfd8b1643a4e1e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000140792
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1661",
+      "input_sha256": "50c54e06404739b2226a6a46986074796f406ca77153085fce7b536848581add",
+      "candidate_sha256": "aa81d01796b5c7674dafa0de6306dcc1074470ffe2c7c49748d08e40ce72d942",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000480396
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1669",
+      "input_sha256": "d11e29120f1f5463ec5322680c8bb20cd048c74c023378dc0d0b1ebff7d1224d",
+      "candidate_sha256": "7a12699991798f93f4fb7bf1245ce79fa1d57ab912166aa168d6627e3ee1a4a6",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000280403
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1677",
+      "input_sha256": "8149d9935f362b05cb965e6ccc60b71e6d7257b1493cb2f838ca57f1636e7e09",
+      "candidate_sha256": "ecc7b410b0ff32372521f85d2d9a4492c1f5255b90fe4106c120fac38f5cdb1e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000197373
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1687",
+      "input_sha256": "013048f3d76246482a068ab8d00388b41a54880dc417e2db67895b965140541f",
+      "candidate_sha256": "6fbf2ad03c6c9f669fa5ec25b62a73e109e4317dbfd94c00e9a0813d4c867bb9",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000259263
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1697",
+      "input_sha256": "f20a8b4b82f07e513bf83a9508ac47e19c0787278882c20cda3091b56dfdaf6a",
+      "candidate_sha256": "ea31ef2919c98a5e1c85e0aee14f228f408023a064077e2390f370cbae36ddee",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000303974
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1709",
+      "input_sha256": "749a3cda17c9537c354affeae9e95df7c0f400844a64b2ae952ef867b80092c2",
+      "candidate_sha256": "6b06ca188ab963d2a2e78247d4838691b5183fdafc1210231930bdb34c5fafa2",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000653517
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1717",
+      "input_sha256": "5ef57ae49ed4dbb358415cc954b4876bcfc5f6b3b1f628a3a9bbc5a70a74d180",
+      "candidate_sha256": "a34aaea1a38fc83e3bbdd13996aa790c453292ecaa6207dbca2a829a05b9ec0c",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000428085
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1725",
+      "input_sha256": "a4a2f615bd017b162000aae4464ccbe0407d37850c4be16084c0debc1407e987",
+      "candidate_sha256": "495f9da4b228bb75aec2ea3c76d00a838b70a3a7fb4d59b80419a17d51c8eee4",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000719099
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1733",
+      "input_sha256": "f5e99db5b4a73cbddc2c9a6c7c9f705125cd6cebd28ccca716acb4abf413b462",
+      "candidate_sha256": "f420ab8285e59e8c00593238b373c51c6e0201b373e3e6728e85b720f4861c76",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000691659
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1741",
+      "input_sha256": "1f874bbe320b119b08ce07e8be2232c49969b9a6a2f008ea7591757b4b414d5d",
+      "candidate_sha256": "d8e29667c437c595cc5faa12aa52061a1913e967499cfc58ed746c3c6149e690",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000209923
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1748",
+      "input_sha256": "e2ecbf0d97e1b8b708d2786c1d1b482579e8c82abfd40dfe792c12de9398f489",
+      "candidate_sha256": "2f5bb73424ac42e3d8a6b4b1333688e9bb4a0f28e16d924a7dbcb78c7dac72d4",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000187613
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1757",
+      "input_sha256": "17d10677925d4a546ff587cea91854a0210485a7e6f5e4b75c7b7958dc1b5c31",
+      "candidate_sha256": "7532c3699631a40391d096c7fae6d0f6dc38307560e11ab3accc1dcd15bf9969",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000572597
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1766",
+      "input_sha256": "dea46bdc84c119e743418f333e00bf7281069a265cc4edd551d50c2dfe396158",
+      "candidate_sha256": "93329bb42094779f53e62702fc7d28cc8978f64ee86a49f1ffd961d93034d71e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000491226
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1773",
+      "input_sha256": "a2f08c52352792163e47b3ed09ad66be37be61ccd2067aa26b6f64b363bb6c29",
+      "candidate_sha256": "bb3f50a99c2fbb76002df7adbc001785f48aa91eb545b4b92105497c68413014",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.001200545
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1782",
+      "input_sha256": "57126012c1b3c3e568f0ddcb359a7e9767eee8f7dc1e0b697af9041fcc03cb25",
+      "candidate_sha256": "37880b1f686f5a898cf151fabe8ddfc1803abc795a1bade4905ff1e9236b3052",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000561546
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1793",
+      "input_sha256": "e8b66303e02d618c1ef07d81ea5a7cee49e79a841f72ab810cb956d7b071ef38",
+      "candidate_sha256": "b4aa091d060a7c7e31c42cac721f4c2c383673fb62ba841b9913566faba8bc3c",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000470096
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1800",
+      "input_sha256": "a1bcd2d62f192b1b7c27ba4b665cfe7338f88acd8b8ebb9b92745b199746a0b9",
+      "candidate_sha256": "c33e0e2081192718444bf5c7ef0a61598793d4515345a8c830bdf708f0ef64a3",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000331333
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1809",
+      "input_sha256": "56f746d3854db04aec1034aea1d8c4cdd97e890e5b444c271124cef09bfc9cb2",
+      "candidate_sha256": "883a6a9935a8166adf4813e90b1afe4c36e117e1a47354d4e266f8a6c4dca0a9",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.00245198
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1818",
+      "input_sha256": "70a3ea922f56be70bbdac4a81036550fd81b5bbc4a71f7d6e134f588dc57a29a",
+      "candidate_sha256": "431bbd88775cf9235f25ca36ea4f21d55b492b25fbb288f9abbe76b25644568e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000360015
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1826",
+      "input_sha256": "61c5bc9ea10c2267f5244dd4126a91e4b8b586c2e333d5b009983a4e97d68cd6",
+      "candidate_sha256": "e8cc4c388d052737a4cdbc1ede37d4904908cb30bb765cf5dbe38f3a762ea21b",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000538887
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1835",
+      "input_sha256": "59032cefd7ac03f27ac7079f7bf5ae4938f3a496e45cfcb8e719fa81d17db8c0",
+      "candidate_sha256": "491d1222f922e200958238c9f325ee96c445e2b4e2f74a37f82c5c2636d73c32",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.001336387
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1842",
+      "input_sha256": "c1d1a75b197bdc43915940aab30ee6e3512db6da27320a77bb87a1de4c0d2530",
+      "candidate_sha256": "6b1988abc3c12a96439ac0ef1c287687dbc990b4c770987645b95e283f35c141",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000856031
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1853",
+      "input_sha256": "156e74ca3b5ba63b900dbb118d5d294bb8cdbad689f04563d9ea9c2677484268",
+      "candidate_sha256": "4d3ae5b4498074d6f1c58e360bc5788817cb072abe56bb0e92c5b6019ed217c8",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000380395
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1863",
+      "input_sha256": "0c24ca684900c12fb1a94a98c4791b4992f062a12c946562842064254172c846",
+      "candidate_sha256": "cfd05efc8888f9981c41fe2e3b7bad893575239707f01ffb712ee7f22f7312f4",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000519847
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1872",
+      "input_sha256": "97a73f6d7e84e87468879f9af376471370ed2f26ab90b6a19566beab620efd41",
+      "candidate_sha256": "c2da1bc7caa2bc14bd3d4d0daccab58296b657dc9c09e5521a2c338e047bc752",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000746679
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1883",
+      "input_sha256": "03b320e72d99c18320103cfa6c45cf9f5172a3d5e89d442d01f417ccce397893",
+      "candidate_sha256": "168f57f556d1578c7d59eb16bb4abeaf2a22f6f13b95b397703cefdf0af99281",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_values_mismatch",
+          "multiple_numeric_bindings_unverified",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "mismatch",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000757269
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1894",
+      "input_sha256": "3ecefee8416d94da2311de478d75a289a52663c6cc5b9afaa6320a8555a6d46b",
+      "candidate_sha256": "b6fdebcaf2aa5412e1f88bacff067708f01a3f5785324da5942bc47bfb79cb7f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000261513
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1901",
+      "input_sha256": "5bb172e2e3f4e1a6680341bbe6904c8335c0113be3eb754f2cc6b48d4835e76f",
+      "candidate_sha256": "794e48261d5988f5e507f89ac7980571a3d749b35eb4828ef703ab8ae8b79b90",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000691659
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1910",
+      "input_sha256": "edcdec4bfdbf124c10da513a9c6921e92f55266ce84d922c5ded72a1370f5f43",
+      "candidate_sha256": "88fccef816b138b156ad92b2ffe5991c2b0bffb0bdb470535170a05cd6adb4b0",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000191382
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1917",
+      "input_sha256": "466fbe48032f24557a49193d9597c7588cf340db809fe57341e0f499107c4e2e",
+      "candidate_sha256": "5c89f9992f209098f14c27694d58101f3c62c1f8097344f5f4b840050389854f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000474725
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1928",
+      "input_sha256": "d15ef0716c174daf705f04428cb394e0b73d0ccf27fdb0dbededdfdca5b83fa2",
+      "candidate_sha256": "5efa4f1a01aae75d0746f698d335fcf6aa4f72cc82f0c321472b9bd91f6dcfff",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "multiple_numeric_bindings_unverified",
+          "percent_marker_mismatch",
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000394485
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1939",
+      "input_sha256": "58f5f7da7dd0bfa8d9317ccff5dc50ddc12de4e0e3a9b1cc181a4dd754e8d305",
+      "candidate_sha256": "4606c44e08a2f7b00ccbdf8bf3ddca853408e2d899e9caef12b627def26a27c2",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000399665
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1947",
+      "input_sha256": "1bd13c02d8f3fa5160718870df6ca126bb6feb1f31d2a57d0fea222ea9f6990e",
+      "candidate_sha256": "eea693db1634d7994a1f793cfd829db15de17b666c596cb0ee6c1fca2f05f0c8",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000404885
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1956",
+      "input_sha256": "2413f964a0a71ece88e4d411fde606d2228186ff1c13a050902d9da879373615",
+      "candidate_sha256": "b96ca898ceeb07d91d7d03d4fa0a6e4ef04d9e6cab5ac6ea001e3fe815075b13",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000444466
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1964",
+      "input_sha256": "4046f02cd98b4b5a15b376c3be12ae053b7db3c964c0d3fe1e80acc5c34c13f4",
+      "candidate_sha256": "04587d302dc9ca94b38d1171208b3b52a07b6104710e276bbb3dbc2e9f8d2e21",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000484235
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1974",
+      "input_sha256": "0da3bec1245a9666d4283a5785fe6b6f7fbfe935e56fee2e9527082060856902",
+      "candidate_sha256": "b695ae61dd8bf22aa1ec2d45c58e6b56afc57bcea848d6019f9daf33dc5e7464",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000247513
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1982",
+      "input_sha256": "befc2bc31bb1d6d5df8cbefcd3a500e611024f53a82786eec7956b6ffa15dfcf",
+      "candidate_sha256": "efd56697a68c6c191adb6a0da37db427519de656a7df344f4253a216ca735007",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000762369
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-1991",
+      "input_sha256": "cf44df32d6e008fdb6671f07046034946b3e1b6d21519de9a9476272a2b05bcc",
+      "candidate_sha256": "3b80eca454adc97c7fa9fb103334d32544212c871c80dd7a9e223d96c46f33cd",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "currency_markers_mismatch",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000505307
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-2001",
+      "input_sha256": "8498a6bf56fe97ae20b41fd4c122fcaf1ec35a3f0409e66befdcdf86f4501b15",
+      "candidate_sha256": "28d4ce7c8733ce7286afe3822be9640ae8def16ed9c1a6f6687b3267b8aed379",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000460297
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "fleurs-2009",
+      "input_sha256": "b268a27fd3c91bc7767befb5683a8fdacdac63bd626a494b5a75b495ca232bc7",
+      "candidate_sha256": "d84b20bd85d03a511e2562b3ae6827e6f63fb89d62630f390f923be2030a9057",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000504836
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-approve-positive",
+      "input_sha256": "36cd14b2e38c1506e385a7f8dd550d1e948c3618401222a63eeee1ddc2ecef28",
+      "candidate_sha256": "c1fd532fa42bad3cb7e7433006d496eb36017f12b4802fe16487e70b075e15e3",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000111051
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-approve-negative",
+      "input_sha256": "2b8d16e6a419b9ea31abfd134ae500a81569861943ee2aefaf4ab5450b7d0a4c",
+      "candidate_sha256": "5731fc633b7896e818de18a5b44593000af59756590868e4a7d599a9167d79f1",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000118151
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-usd-12000",
+      "input_sha256": "22aaf1d789a922e596e8052cacc8ade8c73e0f965eb25616aed2b6cca81e2cdd",
+      "candidate_sha256": "170148d1a86a08e1b9f012d37348f7ec0fbf0458fd72f40f53f38e278cc9b5eb",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "unresolved",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000147481
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-usd-1200",
+      "input_sha256": "3bdb124248e915e293c5d388e6b8391039cb40f836d12ff280aeeb36f28cdb26",
+      "candidate_sha256": "e22ad6cc00a30fa4b7162b74085e36444d18bdb83f33898e50e1417296c7cc95",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "unresolved",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000163632
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-rub-12000",
+      "input_sha256": "72627cb6df180163297a4f952c006daa05d5e2aabad3b592660feddfb11007ac",
+      "candidate_sha256": "91406cc02732300d014c9c4d7200fae5f017b91c8b7c09212a7c83c4f1385c89",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "match",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000186242
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-cny-contrast",
+      "input_sha256": "0513b86a8ab5bebd7edf5340a9294a3b1c7e6534cf093af553dea291fa7dd025",
+      "candidate_sha256": "c7d5d2a59b5e859eb9694e3a59c38c6f9d50cad49c2074311bccd79688174ea1",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_currency_bindings_unverified",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "match",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000249003
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-decimal-eur",
+      "input_sha256": "3e425821715655f344852153c35efd227f2356b8577b6286e9652f89b1d45962",
+      "candidate_sha256": "9c82bdd3590ba237664dfa976f16b6f913b0bf78ad1e2c6c21a3697fd99a5491",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_identity_ambiguous",
+          "multiple_currency_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "unresolved",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000196452
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-conditional-negation",
+      "input_sha256": "8693722107f50f3a46b86f3d27e07269cb37c675727711f40956ef05bd2c311f",
+      "candidate_sha256": "825871e0ba807cf00963071b30403e7bd98619e75bca220a573a4d9a8e0b935d",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000190362
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-sergey-meeting-price",
+      "input_sha256": "aa6346e6d2cf46f78aa8e63d6b11e468e6ea0a371e41ad31f10c3d614b3cdfa7",
+      "candidate_sha256": "2d9b307605d6081ca21062a651371900eeb1eac6ae894ac37b97227786a57712",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "unresolved",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000428986
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-time-1515",
+      "input_sha256": "9c74a2be462065c1bbaa62bee1356591ed65e811c93ef4c2d4cedd687cc59439",
+      "candidate_sha256": "17c1947441136f180c0f7d31afd8a747b5c56b900f14a4bd4390df4f00c8b11e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000215392
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-self-correction",
+      "input_sha256": "b2ce20b9177e5a276f2b37f50bb0c1bd1cb28380bb96da131e32d28bdaa07796",
+      "candidate_sha256": "c021bd0882130a7ef214a04e1e8985f3f2119a055cb2850a8f38bb3e7dff5ec4",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "currency_markers_mismatch",
+          "negation_scope_unverified",
+          "cancellation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000220803
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "contrast-name-five-minutes",
+      "input_sha256": "86d296a8d9acff3592491e3a17d7a6cb53068329c60f3eafa1841c4cef6711c0",
+      "candidate_sha256": "bb00f76da8037d7072db7651763df9b7df3afa46cc867ca947f284204cb350b4",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000203323
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "original-ru-en-price-002",
+      "input_sha256": "72627cb6df180163297a4f952c006daa05d5e2aabad3b592660feddfb11007ac",
+      "candidate_sha256": "91406cc02732300d014c9c4d7200fae5f017b91c8b7c09212a7c83c4f1385c89",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "match",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000153222
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "original-ru-en-negation-004",
+      "input_sha256": "5962246affb2cf9a686e54a0d9e5fd408d606be491fb410c827a54882b0483b2",
+      "candidate_sha256": "f8161ab635e65a41a76f497365dd4ff5ae3597d5f93fd20ae647945a43c8d689",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000156232
+    },
+    {
+      "direction": "ru-ar",
+      "case_id": "original-ru-en-name-009",
+      "input_sha256": "86d296a8d9acff3592491e3a17d7a6cb53068329c60f3eafa1841c4cef6711c0",
+      "candidate_sha256": "bb00f76da8037d7072db7651763df9b7df3afa46cc867ca947f284204cb350b4",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000190752
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1661",
+      "input_sha256": "22fb97b58051e2a27ec638e104c77e6f40211d861fc42c9315ed09846a755196",
+      "candidate_sha256": "f65a8baa00dd122ca8647abafc1171b1b4761adae43983f89dcad18c38b04efb",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000327484
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1669",
+      "input_sha256": "65c38e093057b7c20edcf8fb6e75716f56d56fc63d9f0eac5a76015f1ed79117",
+      "candidate_sha256": "d1e640d3760934fb5d418714857caa67957f1518ba2fdaa6b45a0735180e56d5",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000352365
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1677",
+      "input_sha256": "be8e367568e90eb67f7f00c042bb4abe8c5203ac9267a20d0494fc52ba739493",
+      "candidate_sha256": "a4f25f10822acbb238d5337e38752d0fbac4aced1070f8209f29ba6298946ea2",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000466575
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1687",
+      "input_sha256": "ff68958822fdd7dcf030d89d9412b4bc9a6239edacac46f3df3aadf85a24a00b",
+      "candidate_sha256": "dee700a9f906c3c10699ed8c7cb9f7900b6e83df7ae9949a3403389d91f3b1f8",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000419935
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1697",
+      "input_sha256": "0ab193a32d3086807703c6de6ae03a666431d460c9d5bf9f72758eb23317578c",
+      "candidate_sha256": "22fbfd50b36f07bb9c159ab1b1f91df40f98f6bd6174cdae89af0fae1316d427",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.002629772
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1709",
+      "input_sha256": "f27ba55b8eba27d925dfde9e45c0b881431a4f3ad2284598b4bf57e0d761aae6",
+      "candidate_sha256": "92fd676301af7029ec13eb4b3085ab2436f4679d8108d0f795fe5b79ff5f4d12",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.00086596
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1717",
+      "input_sha256": "fed8237030d7d4399060841aa5cd5c137261640e4e0bf0d0c1371f6cec5ac973",
+      "candidate_sha256": "597ce0c126eed7f445aff438e17473ffaffff9c093c28d558d07f018c2358b42",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000453046
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1725",
+      "input_sha256": "f1fe0260d4d8e98f134c50744fc2a96f81c5a5ec0892da622f4227754791a984",
+      "candidate_sha256": "93c6f8240fd8e148eedb51eb6c834a7b2faf68826db6a4ca97ea9ae379174cb8",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000611418
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1733",
+      "input_sha256": "bcca6c1cf68e09552ef8498cd52f7922ef58a96a15f84b2ca65be55605c8ae96",
+      "candidate_sha256": "b4c0022555ab9096c85d438c29b89be5bacef0f1061bc0eec4370c4c5068097e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.00082872
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1741",
+      "input_sha256": "2890ed8b761e33671bb45e2a6f01fa9cf2bb0d56b6801877683961aa17a20342",
+      "candidate_sha256": "68d381e0f0e7360b1d51e901559e1fc5b5f5649eb26ea5459e01242d7e2288df",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000384255
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1748",
+      "input_sha256": "94da407a55aa49d960268308d2bb6f4c6273a04b270ea36cc47553f1fe904783",
+      "candidate_sha256": "0ea479b16e228ae86032788c5f07344142cab50b2891c79c6f0f32c6eb2e13ac",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000240744
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1757",
+      "input_sha256": "4291ce9270af98225475e7a9ed5bf464fb5363efd541b11423beabdb5e67fb37",
+      "candidate_sha256": "9f8ddbe177ab36b6d0a01f44f76f9f1715aec9e049be2e5d6c92759415a2922e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000459026
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1766",
+      "input_sha256": "224608454c9dc1a77f9c0568d2a7405969f3896f427026d6fa2219849dfadd28",
+      "candidate_sha256": "578f7dc650548f1839bd46be49d737ba0a62b5a74c4b3947a3638b2e9c7b3252",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000325494
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1773",
+      "input_sha256": "d20c6fcf778d77726e97b5ada3fa1ede9d14240ae852c9056702cb90bae3a8c5",
+      "candidate_sha256": "8f0f46afd9c70ff3273756b4d752c509665a1275af355ca0c00f19d07e0da74d",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000516926
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1782",
+      "input_sha256": "981168f2a77f86c54ef6742aba4ea194f87fa47cd70c2be72f5f112287641a46",
+      "candidate_sha256": "718b2dbc7a0bc1e7cd7a20d3019d334f99fe8962fa9b1cec40c966f9528fc26f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000667988
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1793",
+      "input_sha256": "12c902efc9f5a2b0b03b684b832f3655a2428ce4c34c5d89a70669f36eab21dd",
+      "candidate_sha256": "7e01ccee2dd3fad5d94e976ac102052fc214d64c2530b2e2cbaee3101a7cf35a",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000343334
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1800",
+      "input_sha256": "308080fae21e8fbc495871f72da2247e7318b0ff600c2bdd25e1e199ce99e30d",
+      "candidate_sha256": "e4d388fd3ae795faa4492dc3f08304bdc8fc528b0817d06a51e1d35b59defac0",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000410175
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1809",
+      "input_sha256": "bbf32f7156f545bcf236136a65a3215ff2cba6a67cf8b89179850b1423c6ca45",
+      "candidate_sha256": "5fe240b9479a50e740f3a15ec5f7d9a7ee0d521aff91b2896a2e6ece812142a1",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000631648
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1818",
+      "input_sha256": "d6e0cc9ff798c3802c0ce382644487e0efeddbfc18a4c7476cb653f9d3f25977",
+      "candidate_sha256": "1364afc1a3b6eb2d9ffbc0e545290e121cd75efa096b6f5a08cacad1583d6e20",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000266083
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1826",
+      "input_sha256": "b4a16f930edff9a2dc464af92f0d60a7a8efa3453a176cf545a0aa6f8918f8ce",
+      "candidate_sha256": "014ecee6e27cf106ab23ede15accfe394478deb0e21e8299e28b515f7454f23d",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000327664
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1835",
+      "input_sha256": "2198a9c979ddd371f1d8efc92b82f1d67d436099d4afece1756b82903c709f86",
+      "candidate_sha256": "416172a425cd69d094d5d3922453715f5b9d4c4652a98bf7c94557bb00561757",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "match",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000551087
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1842",
+      "input_sha256": "126de623646e89447b5ae7c1a3dbb5f276c764c39bd628eea0445b2ae5a91594",
+      "candidate_sha256": "7879b65a11224e39a86b8b4ff4fde5b284b8444fb35b29cbc3be4d4afc59f8b0",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000935592
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1853",
+      "input_sha256": "2f4362260136409179e0b7af207504217be51e66da6f81a28b62c68a66b5cbeb",
+      "candidate_sha256": "491a6656c4741e796e81d17ee6079368697c9b6146e59f88ac2d9ccf9d8f9392",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000321094
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1863",
+      "input_sha256": "7c958c4b6e9f4a1e65f7e9b5e96c3cbd1fec7968bb99de3d540dcb17f8614b67",
+      "candidate_sha256": "cd199f5adebd06750030bb9c9de37c81cf26248d6e0fb58b1334cb783521b2d6",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000280924
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1872",
+      "input_sha256": "770a28b442fab521a3d64d3b879d3f7f647f9cbaaf8274690c27f78dc6418f26",
+      "candidate_sha256": "917779bc293c3827ce7417cc7d513c89f2c9f46bcc81a9f1b063bf8359ca0004",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000388295
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1883",
+      "input_sha256": "11d0068dd809eafdc963d01bdca6b27d6df8f55e5df0500d9707ffbe5510f9f9",
+      "candidate_sha256": "d96515a81295d624740bd4dcbc2bda1dad5e50b17a014eedb897bc74d4370cfa",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_values_mismatch",
+          "multiple_numeric_bindings_unverified",
+          "negation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "mismatch",
+        "currency_check": "not_present",
+        "negation_check": "mismatch"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000447636
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1894",
+      "input_sha256": "9ee374cdef555b72133d95a58d93b611860ce35cdd79f0dff933b3d1ec5de8f1",
+      "candidate_sha256": "42aead2b896cedaf987289b28e2c628cf562892f688bf3cb0a23cfb8c5727e0b",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000248663
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1901",
+      "input_sha256": "b0c23663e7743465ed024d008527b388d58b3d84fb3cba7df7fb9365469b8d72",
+      "candidate_sha256": "6cf1b353f49707f19194003cf76b163e453f165dde310a7518a3545af3df90e9",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.00076871
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1910",
+      "input_sha256": "1e2ab0376719ec9b1195bda7d1084a5da657f7ca8619e5af4589e6af25a4bec3",
+      "candidate_sha256": "2d88f2657e4e1beef62332f4358e764642869d1d77f86ad382e6ed0862d64caf",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "cancellation_cue_missing_or_added",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000288343
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1917",
+      "input_sha256": "2618bc5679ac570a0c849ecacb0d77bf43d2be43c7eaa6b4692b2baac3bd489f",
+      "candidate_sha256": "aaa6e60d940e57ff640de029a7d664fc0ec29f8729b85dcc5aa501ae38004bfb",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000433075
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1928",
+      "input_sha256": "5ec2f9c21ad5998c9f73791d4b48c28a79227338ac96d8dfe560dbd555efa9d1",
+      "candidate_sha256": "de422f43f436d7df17152725b76d3f53d21af9ad281b668b9fa3d256e280a814",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "percent_marker_mismatch",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000504246
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1939",
+      "input_sha256": "da5d0ac7a836209304335d1458180a63731864e168150600d2294f4c4970838d",
+      "candidate_sha256": "4eeead4a2bd88ed82419e200878cf0d8906a1e5cfa6630b7fea06e81ee6e62b2",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000464835
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1947",
+      "input_sha256": "eb34e906091f2620bb6fd34fc0bf4086ebb2c233f9a105797a2eabdf5dbb4547",
+      "candidate_sha256": "bff51164417adced76c5eb2a55bb3aa1e9c909588c4ecfed75179761b48bcfa9",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000341065
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1956",
+      "input_sha256": "92af042ee8a0bf1a48ef49d571224c6204da60fabe1c902b160992510bcd26be",
+      "candidate_sha256": "158d71120ae686507f6a86c47dc8cfbf27a513ccaff279dc76ccbd049b9af02d",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000513006
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1964",
+      "input_sha256": "ceb87df64390544ab6d1edd4b18f72b3f740bac28db4f24f5fd7a04977f37ee9",
+      "candidate_sha256": "5dbe61732e7d26085bcb00c55d7c506daa0a6de231704f4e5263912a1534ee66",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_values_mismatch",
+          "numeric_content_missing_or_added",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "mismatch",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000625927
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1974",
+      "input_sha256": "52f7599c2cb5fa64ce4a35f18796830b41e3838b7a83e3940a20f17baa1812ff",
+      "candidate_sha256": "eb26e6d6ac24ae096828a743b4bb708ee855256bf49f1c9aa3d65b074b499a9f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000225312
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1982",
+      "input_sha256": "eac3ae4ba7a595adcc93532a26b381dcbe14c685c7e0f896521dee943f330ed0",
+      "candidate_sha256": "2f3e68d2ff8f9c5f4adb7c15e7b08459111a31db3608cf0afa5b5a22e47e9755",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000392945
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-1991",
+      "input_sha256": "03198a36fd779800c8aca4c5863606b06fc17301c1f5dda75ec881a3d6d115a5",
+      "candidate_sha256": "1cc2a24c0eca4b75a89d69709ca39b9cfeaf7bdf35cc16af1dddd703f605cc2f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "currency_markers_mismatch",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000410615
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-2001",
+      "input_sha256": "917ee3f9822e551bfe0f0017b65c86b27cacaf9a7080e3130271657000c4c0e6",
+      "candidate_sha256": "25b59f0825743ad6310cc64d6d19f00e1b4e3d83352504fb0d515bfb204c5ecc",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000544277
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "fleurs-2009",
+      "input_sha256": "c9af699999a128a7cf3d80d502b1cfbef72c079b4d46aeff7c39fe460368b648",
+      "candidate_sha256": "5577f5004e8b3e22ede9c3cb8c09f2e9e5c54ccce68d517dfcae029430c5d747",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.00082423
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-approve-positive",
+      "input_sha256": "a2c822ffd1f86f439d582ad8c683f46931602afc7cfdf1fabe76b0e3f0cba3b7",
+      "candidate_sha256": "280f947c0c325975ad14e090d74dfdce61e37f3ea09620d88cfb230dbcb5f066",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "no_risk_detected",
+        "reasons": [
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000129741
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-approve-negative",
+      "input_sha256": "50a29fe5f1b7de51b0b6577fb49eccadca1f121fe54bbd5c082a24dd377c45f5",
+      "candidate_sha256": "4d2bc8e1ff3c0a7a3f5ea166de98a50798d1fd63ca7cdc22e749ec0500257311",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000162462
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-usd-12000",
+      "input_sha256": "b51159e5e374613fed311f1a9d5bad520db8e1143ea23f187f590dc539306a9d",
+      "candidate_sha256": "14b30929d6077cf234eee6415a695895c13378831f2d2fe26bb077945bcb4e62",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "unresolved",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000148502
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-usd-1200",
+      "input_sha256": "50b7a0504a937913846f6b19904ac7557c6a53d55efb6b70aca1265ee54b6749",
+      "candidate_sha256": "16bfa8dd1796d5e8ad3b2323b704ac58f2e2999e6aa92584e9a68c0bc5c03459",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "unresolved",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000136611
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-rub-12000",
+      "input_sha256": "b46b9ed186d1439dbfbf78204475de5d2513efe943e038c1f60eb5ccddd5af1f",
+      "candidate_sha256": "08c261b624dc3ee7638221e1b419a9c4d8ebdda63105c7051c346cbec1285da2",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "match",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000133182
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-cny-contrast",
+      "input_sha256": "9c5aab59dcad80561d526c19994a971c68ef873476388c00ead1fe365226fd58",
+      "candidate_sha256": "c731227db5ff70db4bf582e2299103992db2171fa54708978b6ada95145709db",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_currency_bindings_unverified",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "match",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000274873
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-decimal-eur",
+      "input_sha256": "4b08c523ea874be58150e7698e2c227e96cd5d21eecb66254c203582f9272474",
+      "candidate_sha256": "1ef407894cf7cda2da1f870883d6b61165e7f819fc90d7808666ba2c3d098d9a",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "currency_identity_ambiguous",
+          "multiple_currency_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "unresolved",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000170262
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-conditional-negation",
+      "input_sha256": "e54bd0cdd9af35fc89101a1e88e092530018e401742c185e277656a6bda0b7da",
+      "candidate_sha256": "16bf2decabacbcabf9843ed928dc3b080f1aa64dc777586e314857cde27cef1f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000182642
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-sergey-meeting-price",
+      "input_sha256": "ea9fd1b0407663b1e5ca7698663889cc9db07cb507f1c0ed3798acd8ce6ca838",
+      "candidate_sha256": "e043a0a6e09268b2e9520b96d00700b9d5327825a3955be1473428a5443565de",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "currency_markers_mismatch",
+          "currency_identity_ambiguous",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000207053
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-time-1515",
+      "input_sha256": "5704dfbec30ea4f33d18ee237c2026c1fc2c4a8d7774b61a90192ddbe618adcd",
+      "candidate_sha256": "4df40256a990f412f391f5f5b538b6cc054de10e4017dc9e4cdfd8b1643a4e1e",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_values_mismatch",
+          "numeric_content_missing_or_added",
+          "multiple_numeric_bindings_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "mismatch",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000212233
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-self-correction",
+      "input_sha256": "b8ef74187aee71b764cd84ef7ad9fc7ea73dcc5d53e34b3119a35c9b5ac0f1bc",
+      "candidate_sha256": "594473cc4038d844f3235a5afe6dc80fe1b8ce793a6d57e511e59149344a3021",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "numeric_content_missing_or_added",
+          "currency_markers_mismatch",
+          "negation_scope_unverified",
+          "cancellation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "mismatch",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000180302
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "contrast-name-five-minutes",
+      "input_sha256": "4b6af1efbd19fadfb97e781db9a6cbd4e694ce2ca9d4c1d24c9813dbf468baa6",
+      "candidate_sha256": "535d99b727325e8c887a179a348e6b4e727660e0b17b11cfb0059ed6734b4683",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "not_present",
+        "negation_check": "not_present"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000163772
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "original-ar-ru-money-006",
+      "input_sha256": "e33e9b0f6afe0c3b575f0d7565a3acd7c32d61c9dd869cc2444e337f545405c6",
+      "candidate_sha256": "806aa62a2fea99b140dcec079365bf301e43b6e89d38838ac424c0d496001533",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "numeric_form_unresolved",
+          "multiple_numeric_bindings_unverified",
+          "currency_identity_ambiguous",
+          "multiple_currency_bindings_unverified",
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "unresolved",
+        "currency_check": "unresolved",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000231593
+    },
+    {
+      "direction": "ar-ru",
+      "case_id": "original-ar-en-negation-012",
+      "input_sha256": "e54bd0cdd9af35fc89101a1e88e092530018e401742c185e277656a6bda0b7da",
+      "candidate_sha256": "16bf2decabacbcabf9843ed928dc3b080f1aa64dc777586e314857cde27cef1f",
+      "assessment": {
+        "policy_version": "experimental-lexical-v1",
+        "route_status": "experimental",
+        "status": "needs_review",
+        "reasons": [
+          "negation_scope_unverified",
+          "route_experimental_voice_blocked"
+        ],
+        "numeric_check": "not_present",
+        "currency_check": "not_present",
+        "negation_check": "scope_unverified"
+      },
+      "speech_allowed": false,
+      "gate_wall_seconds": 0.000193862
+    }
+  ],
+  "source_files": {
+    "quality_gate.py": {
+      "path": "/home/sergey/imonmeets-translation-quality-gate-20261103/experiments/translation_cpu/quality_gate.py",
+      "sha256": "f7a95fae2ad4e90b1ed540345ef84487bae8643dc5ee59f0b44b3917b42b23b4",
+      "mtime_ns": 1793702499966392632
+    },
+    "streaming_adapter.py": {
+      "path": "/home/sergey/imonmeets-translation-quality-gate-20261103/experiments/translation_cpu/streaming_adapter.py",
+      "sha256": "a2e3320896e12590a4722c68ee977a00675d0323308197e1cf8b348abc0f2c42",
+      "mtime_ns": 1793702285818825520
+    },
+    "tests/test_quality_gate.py": {
+      "path": "/home/sergey/imonmeets-translation-quality-gate-20261103/experiments/translation_cpu/tests/test_quality_gate.py",
+      "sha256": "0d65567709c58b4f23244a33445cff8d2b94cd5d0b3a241d728ef472e2a2f018",
+      "mtime_ns": 1793702425937505475
+    },
+    "tests/test_streaming_adapter.py": {
+      "path": "/home/sergey/imonmeets-translation-quality-gate-20261103/experiments/translation_cpu/tests/test_streaming_adapter.py",
+      "sha256": "10b586ac1c7eaad60ea298eea9a8262c8a2afca435e949354d2ba3c94afb957c",
+      "mtime_ns": 1793702499967392644
+    },
+    "tests/test_lifecycle_bounds.py": {
+      "path": "/home/sergey/imonmeets-translation-quality-gate-20261103/experiments/translation_cpu/tests/test_lifecycle_bounds.py",
+      "sha256": "fcda57e3fcb224e61fbd5fdb774ad055f9f49f20ad7509ea421d69af311e3efb",
+      "mtime_ns": 1793702499967392644
+    }
+  },
+  "evaluator_source": {
+    "path": "/home/sergey/imonmeets-translation-quality-gate-20261103/experiments/translation_cpu/tools/evaluate_quality_gate.py",
+    "sha256": "b5da35d6519efad1d9f1a8ebb521ac2427a9a9005d5aea6740a1a3d7dd1bd1cb",
+    "mtime_ns": 1793702717085993339
+  },
+  "full_control_receipt": {
+    "path": "/home/sergey/imonmeets-translation-quality-gate-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-quality-gate-full-control-20261103T104230Z-2436339.json",
+    "sha256": "c49d1f869e3ac9ae319db637862cca335cc57acc206457adc6ba29c4c1bd1c2a",
+    "mtime_ns": 1793702597224557814
+  },
+  "full_control_log": {
+    "path": "/home/sergey/imonmeets-translation-quality-gate-20261103/experiments/translation_cpu/data/mt40/receipts/imonmeets-mt-quality-gate-full-control-20261103T104230Z-2436339.log",
+    "sha256": "999b43ac0f6f6d78cbb4ae091161ea9e1ab65e224f4469ef75acda6f5fcf632a",
+    "mtime_ns": 1793702597117556533
+  },
+  "full_control_tests": 121,
+  "full_control_seconds": 46.073,
+  "observed_cgroup": {
+    "cpu_max": "100000 100000",
+    "memory_max": 2147483648,
+    "pids_max": "128",
+    "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-quality-gate-saved-evidence-20261103T104517Z-2460908.service"
+  },
+  "gate_only_wall_seconds": {
+    "p50": 0.0003,
+    "p95": 0.0008,
+    "max": 0.002629772003274411,
+    "total": 0.07592930682585575
+  },
+  "performance_scope": "One saved text batch on shared CPU; not live pipeline latency, capacity or SLO."
+}

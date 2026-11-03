@@ -7,6 +7,8 @@ import sys
 import time
 import tracemalloc
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 import wave
 from pathlib import Path
 
@@ -340,7 +342,9 @@ class BoundsTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(engines.calls, [])
         self.assertEqual(results, [])
 
-    async def test_late_return_after_cancel_is_gated_at_every_stage(self):
+    # Synthetic TTS lifecycle only: no production/public voice-grant switch.
+    @patch("streaming_adapter.assess_translation", return_value=SimpleNamespace(speech_allowed=True))
+    async def test_late_return_after_cancel_is_gated_at_every_stage(self, _control_quality_fixture):
         for stage in ("asr", "mt", "tts"):
             with self.subTest(stage=stage):
                 adapter, engines, results = self.make()

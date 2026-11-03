@@ -1,6 +1,8 @@
 import asyncio
 import sys
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from streaming_adapter import BackpressureError, StaleFrameError, TranslationStreamAdapter as BoundedAdapter, UnknownTrackError
@@ -176,7 +178,9 @@ class AdapterTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(isinstance(active_result, asyncio.CancelledError) or active.cancelled())
         self.assertEqual(fresh_result.source_text, "fresh after cancel")
 
-    async def test_close_blocks_cancellation_resistant_engine_publication(self):
+    # Synthetic TTS lifecycle only: no production/public voice-grant switch.
+    @patch("streaming_adapter.assess_translation", return_value=SimpleNamespace(speech_allowed=True))
+    async def test_close_blocks_cancellation_resistant_engine_publication(self, _control_quality_fixture):
         started = asyncio.Event()
         release = asyncio.Event()
         results = []
