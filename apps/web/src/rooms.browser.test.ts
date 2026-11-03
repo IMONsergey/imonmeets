@@ -190,7 +190,7 @@ test(
       ).toBeVisible();
       await page
         .getByRole("dialog")
-        .getByRole("button", { name: "Закрыть", exact: true })
+        .getByLabel("Закрыть", { exact: true })
         .click();
       await page
         .getByRole("button", { name: "Вернуть из архива", exact: true })

@@ -261,6 +261,40 @@ test(
         assert.equal(response.statusCode, 200, response.body);
       }
       assert.equal(removalCalls.length, before + 2);
+      const rotated = await h.request(
+        "POST",
+        `/api/workspaces/${w.id}/rooms/${room.id}/rotate-link`,
+        {},
+        owner.cookie,
+      );
+      assert.equal(rotated.statusCode, 200, rotated.body);
+      assert.equal((await gate(own.token)).statusCode, 403);
+      const lateRaw = JSON.stringify({
+        id: randomUUID(),
+        event: "participant_joined",
+        room: { name: room.id },
+        participant: { identity: own.identity },
+      });
+      const lateSigner = new AccessToken(
+        h.c.livekit.apiKey,
+        h.c.livekit.apiSecret,
+        { ttl: 60 },
+      );
+      lateSigner.sha256 = createHash("sha256").update(lateRaw).digest("base64");
+      const late = await h.app.inject({
+        method: "POST",
+        url: "/api/livekit/webhook",
+        payload: lateRaw,
+        headers: {
+          "content-type": "application/webhook+json",
+          authorization: await lateSigner.toJwt(),
+        },
+      });
+      assert.equal(late.statusCode, 200, late.body);
+      assert.ok(
+        removalCalls.includes(own.identity),
+        "a pre-rotation handshake completing after retirement must be disconnected",
+      );
       await h.request(
         "POST",
         `/api/workspaces/${w.id}/rooms/${room.id}/close`,

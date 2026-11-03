@@ -392,13 +392,18 @@ export async function registerModeration(
       (await activeMediaSession(pool, roomName, identity))
     )
       return;
+    // Retirement can finish before an already-authorized old-generation
+    // handshake does. Resolve the stable room ID as well as the current name,
+    // otherwise a late participant could recreate the retired media room.
+    const stableId =
+      /^([0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12})(?:-g[1-9][0-9]{0,9})?$/i.exec(
+        roomName,
+      )?.[1];
+    if (!stableId) return;
     const room = (
-      await pool.query(
-        "SELECT id FROM im_rooms WHERE CASE WHEN media_generation=0 THEN id ELSE id||'-g'||media_generation END=$1",
-        [roomName],
-      )
+      await pool.query("SELECT id FROM im_rooms WHERE id=$1", [stableId])
     ).rows[0];
-    if (!room) return; // Old room generations are handled by room retirement.
+    if (!room) return;
     await pool.query(
       "INSERT INTO im_participant_removals(room_id,media_name,identity) VALUES($1,$2,$3) ON CONFLICT(media_name,identity) DO UPDATE SET next_attempt_at=now(),revision=im_participant_removals.revision+1",
       [room.id, roomName, identity],
