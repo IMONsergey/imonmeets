@@ -1,0 +1,87 @@
+{
+  "repository": "Helsinki-NLP/opus-mt-zh-en",
+  "card_revision": "cf109095479db38d6df799875e34039d4938aaa6",
+  "card_url": "https://huggingface.co/Helsinki-NLP/opus-mt-zh-en/blob/cf109095479db38d6df799875e34039d4938aaa6/README.md",
+  "card_sha256": "7f4b7f90672cd55b85b213bbe21f4b2d0c92327e885734b7e86b019feb145a6b",
+  "card_license": "cc-by-4.0",
+  "archive_url": "https://object.pouta.csc.fi/Tatoeba-MT-models/zho-eng/opus-2020-07-17.zip",
+  "original_weight_license": "CC-BY-4.0",
+  "target_token": null,
+  "retrieved_at": "2026-11-03T05:42:42.498438+00:00",
+  "archive_sha256": "9749101f963f552a270ff4de0c8b69c88f51c358d6b4cc87760aff2cffcf4067",
+  "archive_bytes": 288654138,
+  "download_seconds": 4.586,
+  "response_metadata": {
+    "Content-Length": "288654138",
+    "ETag": "\"8bcfef8e185db5605816ca3885d43720\"",
+    "Last-Modified": "Fri, 17 Jul 2020 21:07:43 GMT",
+    "Content-Type": "application/zip"
+  },
+  "archive_members": [
+    {
+      "name": "README.md",
+      "bytes": 789,
+      "compressed_bytes": 341
+    },
+    {
+      "name": "LICENSE",
+      "bytes": 18652,
+      "compressed_bytes": 5916
+    },
+    {
+      "name": "opus.spm32k-spm32k.transformer.model1.npz.best-perplexity.npz",
+      "bytes": 309987327,
+      "compressed_bytes": 287284082
+    },
+    {
+      "name": "opus.spm32k-spm32k.vocab.yml",
+      "bytes": 1070985,
+      "compressed_bytes": 506311
+    },
+    {
+      "name": "opus.spm32k-spm32k.transformer.valid1.log",
+      "bytes": 5547,
+      "compressed_bytes": 1001
+    },
+    {
+      "name": "opus.spm32k-spm32k.transformer.train1.log",
+      "bytes": 93073,
+      "compressed_bytes": 11650
+    },
+    {
+      "name": "source.spm",
+      "bytes": 804677,
+      "compressed_bytes": 431940
+    },
+    {
+      "name": "source.tcmodel",
+      "bytes": 0,
+      "compressed_bytes": 0
+    },
+    {
+      "name": "target.spm",
+      "bytes": 806530,
+      "compressed_bytes": 409710
+    },
+    {
+      "name": "decoder.yml",
+      "bytes": 259,
+      "compressed_bytes": 144
+    },
+    {
+      "name": "preprocess.sh",
+      "bytes": 844,
+      "compressed_bytes": 436
+    },
+    {
+      "name": "postprocess.sh",
+      "bytes": 80,
+      "compressed_bytes": 78
+    },
+    {
+      "name": "config.mk",
+      "bytes": 545,
+      "compressed_bytes": 307
+    }
+  ]
+}
