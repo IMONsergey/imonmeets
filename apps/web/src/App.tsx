@@ -41,6 +41,14 @@ import type { Session } from "./ui";
 import { Auth, Onboarding } from "./pages/Auth";
 import { Dashboard, Rooms } from "./pages/Meetings";
 import { AccountSettings, Invite, Recordings, Team } from "./pages/Workspace";
+import {
+  HelpPage,
+  LegalPage,
+  NotFoundPage,
+  PublicHome,
+  publicPaths,
+  publicTitles,
+} from "./pages/Public";
 const Join = lazy(() =>
   import("./pages/Join").then((m) => ({ default: m.Join })),
 );
@@ -252,8 +260,16 @@ export default function App() {
     "/reset-password",
     "/verify-email",
   ].includes(path);
+  const publicPath = publicPaths.includes(path) || (path === "/" && !session);
+  const knownPath =
+    publicPaths.includes(path) ||
+    nav.some((item) => item.path === path) ||
+    authPath ||
+    path.startsWith("/join/") ||
+    path === "/invite";
   useEffect(() => {
     const label =
+      publicTitles[path] ??
       nav.find((item) => item.path === path)?.label ??
       (path.startsWith("/join/")
         ? "Встреча"
@@ -265,7 +281,9 @@ export default function App() {
               ? "Подтверждение почты"
               : path === "/invite"
                 ? "Приглашение"
-                : "Доступ к аккаунту");
+                : knownPath
+                  ? "Доступ к аккаунту"
+                  : "Страница не найдена");
     document.title = `${label} | IMON Meets`;
     if (booting) return;
     const heading = document.querySelector<HTMLElement>("main h1");
@@ -278,13 +296,15 @@ export default function App() {
       !fatal &&
       !session &&
       !authPath &&
+      !publicPath &&
+      knownPath &&
       !path.startsWith("/join/") &&
       path !== "/invite"
     ) {
       rememberReturnTo(location.pathname + location.search + location.hash);
       go("/login");
     }
-  }, [booting, session, path, authPath, fatal]);
+  }, [booting, session, path, authPath, publicPath, knownPath, fatal]);
   async function logout() {
     try {
       await api("/auth/sign-out", {});
@@ -311,6 +331,21 @@ export default function App() {
         <Button onClick={() => location.reload()}>Попробовать снова</Button>
       </div>
     );
+  else if (!knownPath) content = <NotFoundPage signedIn={Boolean(session)} />;
+  else if (publicPath)
+    content =
+      path === "/help" ? (
+        <HelpPage config={config} signedIn={Boolean(session)} />
+      ) : path === "/privacy" || path === "/terms" ? (
+        <LegalPage
+          key={path}
+          kind={path.slice(1) as "privacy" | "terms"}
+          config={config}
+          signedIn={Boolean(session)}
+        />
+      ) : (
+        <PublicHome config={config} signedIn={Boolean(session)} />
+      );
   else if (path.startsWith("/join/") && !parseJoinSlug(path))
     content = (
       <div className="full-loader">

@@ -55,6 +55,14 @@ export type Config = {
   transcriptionConfigured?: boolean;
   summaryConfigured?: boolean;
   embedAllowedOrigins?: string[];
+  publicInformation?: {
+    supportEmail: string | null;
+    supportHours: string | null;
+    legalVersion: string | null;
+    legalPublishedAt: string | null;
+    legalManifestSha256: string | null;
+    operatorName: string | null;
+  };
 };
 export type Member = {
   id: string;

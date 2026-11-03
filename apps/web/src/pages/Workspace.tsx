@@ -894,6 +894,24 @@ export function AccountSettings({
       : "profile";
   };
   const [section, setSection] = useState(readSection);
+  const settingsNav = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const reveal = () => {
+      const nav = settingsNav.current;
+      const active = nav?.querySelector<HTMLElement>("[aria-current='page']");
+      if (!nav || !active || nav.scrollWidth <= nav.clientWidth) return;
+      const frame = nav.getBoundingClientRect(),
+        selected = active.getBoundingClientRect();
+      if (selected.left < frame.left)
+        nav.scrollLeft += selected.left - frame.left;
+      else if (selected.right > frame.right)
+        nav.scrollLeft += selected.right - frame.right;
+    };
+    reveal();
+    const observer = new ResizeObserver(reveal);
+    if (settingsNav.current) observer.observe(settingsNav.current);
+    return () => observer.disconnect();
+  }, [section]);
   useEffect(() => {
     const changed = () => setSection(readSection());
     addEventListener("popstate", changed);
@@ -941,7 +959,7 @@ export function AccountSettings({
       </div>
       <span className={`workspace-status ${enabled ? "success" : "neutral"}`}>
         {enabled ? <Check size={13} /> : <Clock3 size={13} />}{" "}
-        {status ?? (enabled ? "Настроено" : "Не настроено")}
+        {status ?? (enabled ? "Доступно в сервисе" : "Пока недоступно")}
       </span>
     </div>
   );
@@ -953,7 +971,11 @@ export function AccountSettings({
         text="Профиль, безопасность и параметры устройств."
       />
       <div className="workspace-settings">
-        <nav className="workspace-settings-nav" aria-label="Разделы настроек">
+        <nav
+          ref={settingsNav}
+          className="workspace-settings-nav"
+          aria-label="Разделы настроек"
+        >
           {settingsSections.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -1224,7 +1246,8 @@ export function AccountSettings({
               <Settings size={18} />
             </div>
             <p className="workspace-settings-description">
-              Текущее состояние сервисов для вашего пространства.
+              Возможности сервиса и защита вашего аккаунта. Ограничения
+              пространства указаны в разделе «Тариф».
             </p>
             {capability(
               "Видеосвязь",
@@ -1234,7 +1257,7 @@ export function AccountSettings({
             {capability(
               "Зал ожидания",
               true,
-              "Организатор разрешает вход во встречу",
+              "Организатор может включить предварительное разрешение на вход во встречу",
             )}
             {capability(
               "История чата",
@@ -1243,8 +1266,9 @@ export function AccountSettings({
             )}
             {capability(
               "Двухфакторная аутентификация",
-              true,
+              Boolean(user.twoFactorEnabled),
               "Коды из приложения и резервные коды для входа",
+              user.twoFactorEnabled ? "Включена у вас" : "Выключена у вас",
             )}
             {capability(
               "Записи встреч",
@@ -1272,7 +1296,11 @@ export function AccountSettings({
                 : undefined,
             )}
             <p className="form-note">
-              Подключение сервисов выполняет администратор сервера.
+              <Link to="/settings?section=security">
+                Проверить защиту аккаунта
+              </Link>
+              {" · "}
+              <Link to="/help">Помощь и поддержка</Link>
             </p>
           </section>
           <section

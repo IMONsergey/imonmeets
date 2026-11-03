@@ -316,7 +316,21 @@ export function Auth({
           )}
           {registrationClosed ? (
             <div className="registration-closed">
-              <p>Нужен доступ? Обратитесь к администратору пространства.</p>
+              <p>
+                Если вам прислали приглашение, уточните доступ у организатора
+                пространства.
+              </p>
+              {config.publicInformation?.supportEmail && (
+                <a
+                  href={`mailto:${config.publicInformation.supportEmail}`}
+                  className="button full"
+                >
+                  Написать в поддержку
+                </a>
+              )}
+              <Link to="/help" className="button full">
+                Помощь с доступом
+              </Link>
               <Link to="/login" className="button primary full">
                 Перейти ко входу <ArrowRight size={18} />
               </Link>

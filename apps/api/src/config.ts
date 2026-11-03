@@ -1,6 +1,8 @@
 import { parseEmbedAllowedOrigins } from "./embedding.js";
+import { loadPublicInformation } from "./public-information.js";
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
+  const publicInformation = loadPublicInformation(env);
   const dev =
     env.NODE_ENV !== "production" && env.DEV_ALLOW_UNVERIFIED_EMAIL === "true";
   const appUrl = new URL(env.APP_URL || "http://localhost:5173").origin;
@@ -169,6 +171,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
   if (billingConfigured && billing.amountKopecks < 100)
     throw new Error("Billing amount must be at least one ruble");
   return {
+    publicInformation,
     embedAllowedOrigins: parseEmbedAllowedOrigins(
       env.EMBED_ALLOWED_ORIGINS,
       env.NODE_ENV === "production",

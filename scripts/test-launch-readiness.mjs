@@ -18,6 +18,9 @@ function fixture() {
     APP_URL: "https://meet.example.test",
     RELEASE_COMMIT: "a".repeat(40),
     RELEASE_IMAGE_DIGEST: `sha256:${"b".repeat(64)}`,
+    PUBLIC_LEGAL_APPROVED: "true",
+    PUBLIC_LEGAL_MANIFEST_SHA256: "c".repeat(64),
+    SUPPORT_EMAIL: "support@example.test",
     REGISTRATION_ENABLED: "true",
     EMAIL_DELIVERY_MODE: "external",
     SMTP_HOST: "smtp.example.test",
@@ -55,6 +58,14 @@ function fixture() {
       configurationHash: configurationHash(env, "smtp"),
     },
     acceptance: {
+      legal: {
+        acceptedAt: timestamp,
+        configurationHash: configurationHash(env, "legal"),
+        publiclyReachable: true,
+        operatorVerified: true,
+        dataFlowsReviewed: true,
+        termsReviewed: true,
+      },
       media: {
         acceptedAt: timestamp,
         configurationHash: configurationHash(env, "media"),
@@ -608,4 +619,24 @@ test("CLI reads bounded evidence without modifying files and handles unreadable 
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
+});
+
+test("legal approval requires actual reviewed public documents and fresh exact evidence", () => {
+  const input = fixture();
+  delete input.env.PUBLIC_LEGAL_APPROVED;
+  let result = evaluateReadiness(input);
+  assert.equal(result.serviceHealthy, true);
+  assert.equal(result.publicLaunchReady, false);
+  assert.ok(
+    result.blockers.publicLaunch.includes(
+      "APPROVED_PUBLIC_DOCUMENTS_AND_SUPPORT_REQUIRED",
+    ),
+  );
+  const changed = fixture();
+  changed.env.PUBLIC_LEGAL_MANIFEST_SHA256 = "d".repeat(64);
+  result = evaluateReadiness(changed);
+  assert.equal(result.checks.publicDocuments.accepted, false);
+  const unreviewed = fixture();
+  unreviewed.acceptance.legal.dataFlowsReviewed = false;
+  assert.equal(evaluateReadiness(unreviewed).publicLaunchReady, false);
 });

@@ -13,6 +13,13 @@ const present = (value) => typeof value === "string" && value.trim().length > 0;
 const releaseFields = ["RELEASE_COMMIT", "RELEASE_IMAGE_DIGEST"];
 const emailProvider = (env) => env.EMAIL_PROVIDER || "smtp";
 const fields = {
+  legal: [
+    "APP_URL",
+    "PUBLIC_LEGAL_APPROVED",
+    "PUBLIC_LEGAL_MANIFEST_SHA256",
+    "SUPPORT_EMAIL",
+    "SUPPORT_HOURS",
+  ],
   media: [
     "APP_URL",
     "LIVEKIT_URL",
@@ -150,6 +157,30 @@ export function evaluateReadiness({
     publicBlockers.push("PRODUCTION_AUTH_CONFIGURATION_REQUIRED");
   checks.canonicalHttps = { configured: canonicalPort };
   if (!canonicalPort) publicBlockers.push("CANONICAL_HTTPS_PORT_REQUIRED");
+  const legalConfigured =
+    enabled(env.PUBLIC_LEGAL_APPROVED) &&
+    /^[a-f0-9]{64}$/.test(env.PUBLIC_LEGAL_MANIFEST_SHA256 || "") &&
+    present(env.SUPPORT_EMAIL);
+  const legalAccepted = accepted(
+    env,
+    acceptance,
+    "legal",
+    [
+      "publiclyReachable",
+      "operatorVerified",
+      "dataFlowsReviewed",
+      "termsReviewed",
+    ],
+    now,
+  );
+  checks.publicDocuments = {
+    configured: legalConfigured,
+    accepted: legalAccepted,
+  };
+  if (!legalConfigured)
+    publicBlockers.push("APPROVED_PUBLIC_DOCUMENTS_AND_SUPPORT_REQUIRED");
+  if (!legalAccepted)
+    publicBlockers.push("PUBLIC_DOCUMENTS_ACCEPTANCE_REQUIRED");
   let mediaEndpoint = false;
   let mediaPort = false;
   try {

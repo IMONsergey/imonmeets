@@ -1,3 +1,7 @@
+import {
+  publicInformationSummary,
+  isApplicationPage,
+} from "./public-information.js";
 import Fastify, { type FastifyRequest } from "fastify";
 import rateLimit from "@fastify/rate-limit";
 import staticPlugin from "@fastify/static";
@@ -607,7 +611,25 @@ export async function createApp(
       return reply.send(body);
     },
   });
+  app.get("/api/public-documents/:kind", async (req, reply) => {
+    const kind = (req.params as { kind: string }).kind;
+    const docs = c.publicInformation.documents;
+    if (!docs || (kind !== "privacy" && kind !== "terms"))
+      return reply
+        .code(404)
+        .send({
+          error: { code: "NOT_FOUND", message: "Документ еще не опубликован." },
+        });
+    reply.header("Cache-Control", "no-cache");
+    return {
+      version: docs.version,
+      publishedAt: docs.publishedAt,
+      operator: docs.operator,
+      document: docs[kind],
+    };
+  });
   app.get("/api/config", async () => ({
+    publicInformation: publicInformationSummary(c.publicInformation),
     appName: "IMON Meets",
     embedAllowedOrigins: c.embedAllowedOrigins,
     registrationEnabled: c.registrationEnabled,
@@ -1524,7 +1546,13 @@ export async function createApp(
       return r.rows[0];
     });
     const inviteUrl = `${c.appUrl}/invite#token=${token}`;
-    let emailDelivery: "not_configured" | "accepted" | "uncertain" | "rejected" | "rate_limited" | "ledger" = "not_configured";
+    let emailDelivery:
+      | "not_configured"
+      | "accepted"
+      | "uncertain"
+      | "rejected"
+      | "rate_limited"
+      | "ledger" = "not_configured";
     if (c.emailConfigured) {
       try {
         await sendMail(
@@ -1535,7 +1563,10 @@ export async function createApp(
         emailDelivery = "accepted";
       } catch (e) {
         emailDelivery = e instanceof MailDeliveryError ? e.kind : "uncertain";
-        req.log.error({ kind: emailDelivery }, "Invitation email delivery failed");
+        req.log.error(
+          { kind: emailDelivery },
+          "Invitation email delivery failed",
+        );
       }
     }
     return { invitation: invitationJson(result), inviteUrl, emailDelivery };
@@ -2123,7 +2154,8 @@ export async function createApp(
         return reply.code(404).send({
           error: { code: "NOT_FOUND", message: "Страница не найдена." },
         });
-      return reply.sendFile("index.html");
+      if (!isApplicationPage(req.url.split("?")[0]!)) reply.code(404);
+      return reply.sendFile("index.html", { cacheControl: false });
     });
   }
   let closing = false,

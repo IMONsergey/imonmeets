@@ -159,6 +159,22 @@ test("guest framing is served by the authenticated origin without exposing accou
       /^frame-ancestors https:\/\/example\.com;/,
     );
     assert.equal(embedded.headers["cache-control"], "no-store");
+    const unknownPage = await app.inject({
+      url: "/no-such-page",
+      headers: { accept: "text/html", "x-imon-proxy-secret": secret },
+    });
+    assert.equal(unknownPage.statusCode, 404);
+    assert.match(String(unknownPage.headers["content-type"]), /text\/html/);
+    const legalPage = await app.inject({
+      url: "/privacy",
+      headers: { accept: "text/html", "x-imon-proxy-secret": secret },
+    });
+    assert.equal(legalPage.statusCode, 200);
+    const unpublishedDocument = await app.inject({
+      url: "/api/public-documents/privacy",
+      headers: { "x-imon-proxy-secret": secret },
+    });
+    assert.equal(unpublishedDocument.statusCode, 404);
     const configuration = await app.inject({
       url: "/api/config",
       headers: { "x-imon-proxy-secret": secret, origin: "https://example.com" },

@@ -1,0 +1,16 @@
+# Optional, only with actual reviewed documents and PUBLIC_LEGAL_APPROVED=true.
+x-public-documents: &public-documents
+  - type: bind
+    source: ${PUBLIC_LEGAL_MANIFEST_FILE:?Set the reviewed public document file}
+    target: /run/imon-public/legal.json
+    read_only: true
+    bind: { create_host_path: false }
+services:
+  app:
+    environment:
+      PUBLIC_LEGAL_MANIFEST_PATH: /run/imon-public/legal.json
+    volumes: *public-documents
+  migrate:
+    environment:
+      PUBLIC_LEGAL_MANIFEST_PATH: /run/imon-public/legal.json
+    volumes: *public-documents
