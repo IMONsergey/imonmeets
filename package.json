@@ -24,7 +24,8 @@
     "test:web": "node --import tsx --test apps/web/src/api.test.ts apps/web/src/calendar.test.ts",
     "test:ui": "node --import tsx apps/web/src/app.browser.test.ts",
     "test:sdk": "node --test --test-isolation=none packages/sdk/*.test.js",
-    "test:external-media-policy": "node --test scripts/test-external-media-policy.mjs"
+    "test:external-media-policy": "node --test scripts/test-external-media-policy.mjs",
+    "test:google-oauth-policy": "node --test scripts/test-google-oauth-policy.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
