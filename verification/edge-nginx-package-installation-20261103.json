@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "status": "PASS_EDGE_NGINX_PACKAGE_PREREQUISITE",
+  "startedAt": "2026-11-03T17:46:37.753598+00:00",
+  "completedAt": "2026-11-03T17:46:48.835675+00:00",
+  "scope": "Official Ubuntu nginx package installation on edge only; no HTTP bootstrap activation",
+  "installerSha256": "6301de42fb52ebd6435d5bd7d2bb6245e2523cadadf1151f1feb9891c948300c",
+  "installedVersions": {
+    "nginx": "1.24.0-2ubuntu7.19",
+    "nginx-common": "1.24.0-2ubuntu7.19"
+  },
+  "freshPinnedSimulation": {
+    "newPackages": [
+      [
+        "nginx-common",
+        "1.24.0-2ubuntu7.19"
+      ],
+      [
+        "nginx",
+        "1.24.0-2ubuntu7.19"
+      ]
+    ],
+    "upgrades": 0,
+    "removals": 0,
+    "officialOrigins": [
+      "http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages",
+      "http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages",
+      "http://archive.ubuntu.com/ubuntu noble/main amd64 Packages"
+    ]
+  },
+  "apt": {
+    "exitCode": 0,
+    "definitelyExited": true,
+    "processGroupRemaining": false,
+    "timedOut": false,
+    "forcedKillUsed": false,
+    "needrestartMode": "l"
+  },
+  "stockNginxService": {
+    "loadState": "masked",
+    "activeState": "inactive",
+    "persistentMaskRetained": true
+  },
+  "dedicatedServices": {
+    "imonmeets-edge-http-bootstrap.service": {
+      "loadState": "not-found",
+      "activeState": "inactive",
+      "started": false
+    },
+    "imonmeets-edge-nginx.service": {
+      "loadState": "not-found",
+      "activeState": "inactive",
+      "started": false
+    }
+  },
+  "temporaryPolicy": {
+    "createdExclusively": true,
+    "exitCode": 101,
+    "ownedTypeUidModeDeviceInodeAndHashVerifiedBeforeRemoval": true,
+    "removedAfterAptAndChildrenExited": true,
+    "priorAbsentStateRestored": true
+  },
+  "verification": {
+    "nginxProcessAbsent": true,
+    "tcpAndUdpListenersUnchanged": true,
+    "listenerSnapshotSha256": "6972298b8c8e3bcb1bbbe3d97166fec4eae96d592091f2ec3a6b51b30ad1f16e",
+    "transportGuardUnchanged": true,
+    "transportGuardSha256": "315c716b2cddb13e244be522414eb6c5346c94116fa23ff530e14409c7a54cee",
+    "transportLinkActiveAndEnabled": true,
+    "transportGuardActive": true,
+    "noNewPrivilegesPreserved": true,
+    "sourceBoundPrivateRoutePreserved": true,
+    "handshakePeerCount": 1,
+    "handshakeAgeSeconds": 116
+  },
+  "evidence": {
+    "mainPrivateReceiptSha256": "6d4ca9a4b2af0892c1f2dedab1e727c16c587626996683c1450bba1b8290eb5c",
+    "edgePrivateReceiptSha256": "824ef48936b23134250216c4ced9cec9267c21da04472a95bb48e128e9e3a17c",
+    "completeInstallationLogSha256": "b8bb7ce7b1223f0f8570929972e95f6b25f34aff65bcac987797e552cdd272bc",
+    "mainVerifiedEdgeReceiptHash": true
+  },
+  "aptUpdateExecuted": false,
+  "nginxSyntaxCommandIssued": false,
+  "dedicatedServiceStartIssued": false,
+  "nodeOrCertbotRequested": false,
+  "httpBootstrapAccepted": false,
+  "public443Accepted": false,
+  "coldBootAccepted": false,
+  "credentialValuesAndPrivatePathsOmitted": true
+}

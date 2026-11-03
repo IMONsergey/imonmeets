@@ -1,0 +1,315 @@
+{
+  "schema": 1,
+  "status": "LOCAL_PLAN_ONLY_PREREQUISITE_QUERY_BLOCKED_NOT_STARTED",
+  "scope": "Owner-local certificate issuance only, after native HTTP acceptance; no TLS deployment or renewal activation",
+  "knownState": {
+    "mainCertbotVersion": "2.9.0 (provided by root; not queried in blocked batch)",
+    "mainExistingLineage": "/etc/letsencrypt/live/meets-imon-world",
+    "mainExistingRenewalConfiguration": "/etc/letsencrypt/renewal/meets-imon-world.conf",
+    "mainExistingSan": [
+      "meets.imon.world"
+    ],
+    "mainExistingExpiry": "2027-01-31 (verified by root)",
+    "edgeCertbot": "Absent before this phase; no install attempted",
+    "edgeNginxPrerequisite": {
+      "status": "PASS",
+      "completedAt": "2026-11-03T17:46:48.835675+00:00",
+      "packages": {
+        "nginx": "1.24.0-2ubuntu7.19",
+        "nginx-common": "1.24.0-2ubuntu7.19"
+      },
+      "stockServiceMaskedAndInactive": true,
+      "sanitizedReceiptSha256": "f1efe03f6514f51180ec01b52f9323ec0bd02870ea62cae79963afe487ee8a38"
+    },
+    "nativeHttpAcceptance": "Pending root-owned apply and proof; CI success is not runtime acceptance"
+  },
+  "accountDiscovery": {
+    "status": "NOT_EXECUTED",
+    "exactLineageConfiguration": "/etc/letsencrypt/renewal/meets-imon-world.conf",
+    "allowedRenewalFields": [
+      "renewalparams.account",
+      "renewalparams.server"
+    ],
+    "requiredServer": "https://acme-v02.api.letsencrypt.org/directory",
+    "validateSelectedAccountMetadataOnly": true,
+    "officialCommand": "certbot show_account with explicit selected local storage ID, existing /etc/letsencrypt namespace, exact production server, isolated inspection logs/work, explicit empty hooks",
+    "noRegisterFallback": true,
+    "privateOutputOnly": [
+      "selected local account storage ID",
+      "account URL",
+      "account public thumbprint",
+      "returned contact metadata"
+    ],
+    "publicOutputOnly": [
+      "existence",
+      "receipt/hash",
+      "contact count",
+      "exact public ACME server",
+      "fixed recognized hook option names"
+    ],
+    "warning": "show_account uses the existing account internally to query the CA. It can create normal local logs/locks. It does not create an account when none exists.",
+    "requestedEmailSource": "Only verified existing account/operator metadata; no invented email and no Google credentials",
+    "accountMetadataRetrieved": false
+  },
+  "accountPreparation": {
+    "performed": false,
+    "mainPreferred": "After reviewing the exact host-local seeding scope under the current task authorization, copy only the selected existing account's regr.json/meta.json/private_key.json within main to /etc/imonmeets/acme/main/accounts/acme-v02.api.letsencrypt.org/directory/<LOCAL_ID>. Use exclusive new root0700 directories/root-private files; never print key bytes. Copy no old live/archive/renewal/hooks and never share a writable symlink to the old account tree.",
+    "mainValidation": "Official show_account from the new main namespace must match the selected old account URL/thumbprint before certonly. The old meets-imon-world lineage and its renewal remain unchanged.",
+    "edge": "Create its own new account key locally only after separate account/contact/terms authorization. Never copy main account keys to edge.",
+    "consent": "No registration and no agreement flag are approved or executed by this plan. Existing-account consent is not a new-account registration decision.",
+    "missingContact": "show_account may return none. Do not fabricate ACME_EMAIL; choose a verified operator contact or explicitly reviewed no-email registration mode separately.",
+    "accountIdMeaning": "--account requires Certbot's local storage identifier, not the numeric ACME account URL identifier."
+  },
+  "edgePackagePrerequisites": {
+    "status": "SIMULATION_NOT_EXECUTED",
+    "officialUbuntuNobleReferenceVersions": {
+      "certbot": "2.9.0-1",
+      "python3-certbot": "2.9.0-1",
+      "python3-acme": "2.9.0-1"
+    },
+    "hostCandidatesAndDependencyDelta": "Unknown until tool usage is available and the bounded read-only batch completes after fresh review.",
+    "readOnlyCommands": [
+      [
+        "/usr/bin/apt-cache",
+        "policy",
+        "certbot",
+        "python3-certbot",
+        "python3-acme",
+        "python3-configargparse"
+      ],
+      [
+        "/usr/bin/apt-get",
+        "-s",
+        "--no-install-recommends",
+        "--no-upgrade",
+        "--no-remove",
+        "install",
+        "certbot"
+      ]
+    ],
+    "laterInstallGate": "Review exact complete dependency/version/size delta and official origins; require no upgrades/removals. Pin the accepted plan. Do not enable a new repository, run apt update, use snap/pip, or install webserver plugins automatically.",
+    "noExtraRuntimeRequired": [
+      "Node",
+      "python3-certbot-nginx",
+      "python3-certbot-apache"
+    ],
+    "laterAutostartPlan": "On EDGE only: inspect stock Certbot unit/timer/cron state; refuse unreviewed existing policy or unit overrides. Before apt, use an exclusively owned temporary policy-rc.d exit101 and persistent masks for stock certbot.service AND certbot.timer. Keep stock nginx.service masked. NEEDRESTART_MODE=l. No main timer/service/hook changes.",
+    "aptBound": "Use the reviewed finite apt deadline with no forced dpkg kill; retain temporary policy if apt/children lifetime is uncertain; remove only the exact owned policy after confirmed process exit.",
+    "laterPostchecks": [
+      "Exact approved packages and versions",
+      "No unexpected services or listeners",
+      "Existing native HTTP and WireGuard state preserved",
+      "Stock edge certbot units inactive/masked",
+      "Packaged cron's systemd skip condition inspected",
+      "No custom renewal units enabled"
+    ]
+  },
+  "isolationPreflight": {
+    "status": "NOT_EXECUTED",
+    "requirements": [
+      "Native HTTP proof passes for all five real names; correct challenge bytes from the correct owner-local webroot.",
+      "Fresh public DNS including any AAAA and CAA does not contradict the approved HTTP path.",
+      "Target /etc/imonmeets/acme/main and witness namespaces are new or explicitly reviewed; target certificate names have no conflicting lineage.",
+      "Inspect default /etc/letsencrypt/cli.ini and root XDG/default cli.ini keys without exposing values. Explicit --config does not exclude these defaults.",
+      "Refuse unreviewed inherited options. Keep explicit empty pre/post/deploy/renew hook arguments and --no-directory-hooks.",
+      "Both chosen namespace-local accounts exist and were independently validated; no implicit registration in certonly.",
+      "Resolve certificate names from reviewed TLS_CERT_NAME and EDGE_WITNESS_TLS_CERT_NAME; they must be distinct and satisfy the existing generator constraints."
+    ],
+    "directoryOwnership": "Config, account, work and log directories root-owned/private. Existing public challenge roots must remain readable by the approved HTTP worker. Certbot2.9 webroot deliberately creates challenge files mode0644 under its own temporary umask022."
+  },
+  "issueOnly": {
+    "performed": false,
+    "accountRequired": true,
+    "placeholderExecutionForbidden": true,
+    "main": [
+      "/usr/bin/certbot",
+      "certonly",
+      "--config",
+      "/dev/null",
+      "--config-dir",
+      "/etc/imonmeets/acme/main",
+      "--work-dir",
+      "/var/lib/imonmeets-certbot-main",
+      "--logs-dir",
+      "/var/log/imonmeets-certbot-main",
+      "--strict-permissions",
+      "--non-interactive",
+      "--no-directory-hooks",
+      "--no-eff-email",
+      "--server",
+      "https://acme-v02.api.letsencrypt.org/directory",
+      "--account",
+      "<MAIN_NAMESPACE_LOCAL_ACCOUNT_ID>",
+      "--cert-name",
+      "<REVIEWED_TLS_CERT_NAME>",
+      "--pre-hook",
+      "",
+      "--post-hook",
+      "",
+      "--deploy-hook",
+      "",
+      "--renew-hook",
+      "",
+      "--webroot",
+      "--webroot-path",
+      "/var/lib/imonmeets-acme",
+      "--preferred-challenges",
+      "http",
+      "--issuance-timeout",
+      "90",
+      "-d",
+      "meets.imon.world",
+      "-d",
+      "rtc.imon.world",
+      "-d",
+      "recordings.imon.world",
+      "-d",
+      "turn.imon.world"
+    ],
+    "witness": [
+      "/usr/bin/certbot",
+      "certonly",
+      "--config",
+      "/dev/null",
+      "--config-dir",
+      "/etc/imonmeets/acme/witness",
+      "--work-dir",
+      "/var/lib/imonmeets-certbot-witness",
+      "--logs-dir",
+      "/var/log/imonmeets-certbot-witness",
+      "--strict-permissions",
+      "--non-interactive",
+      "--no-directory-hooks",
+      "--no-eff-email",
+      "--server",
+      "https://acme-v02.api.letsencrypt.org/directory",
+      "--account",
+      "<WITNESS_NAMESPACE_LOCAL_ACCOUNT_ID>",
+      "--cert-name",
+      "<REVIEWED_EDGE_WITNESS_TLS_CERT_NAME>",
+      "--pre-hook",
+      "",
+      "--post-hook",
+      "",
+      "--deploy-hook",
+      "",
+      "--renew-hook",
+      "",
+      "--webroot",
+      "--webroot-path",
+      "/var/lib/imonmeets-witness-acme",
+      "--preferred-challenges",
+      "http",
+      "--issuance-timeout",
+      "90",
+      "-d",
+      "witness.imon.world"
+    ],
+    "bound": "--issuance-timeout90 limits issuance polling; additionally use a reviewed finite caller deadline with cleanup allowance. One attempt per role; inspect failure before any retry.",
+    "noOptions": [
+      "--agree-tos",
+      "--register-unsafely-without-email",
+      "--dry-run",
+      "--run-deploy-hooks",
+      "--nginx",
+      "--apache",
+      "--standalone",
+      "--force-renewal",
+      "--allow-subset-of-names"
+    ],
+    "note": "These commands use already prepared accounts. Certbot may write its own new lineage renewal metadata, but no timer or hook is activated."
+  },
+  "acceptanceAfterIssuance": {
+    "required": [
+      "Exact SAN set",
+      "Expected production issuer and validity",
+      "Owner-local certificate/key public-key match checked without key export",
+      "Safe lineage paths and permissions",
+      "Owned challenge cleanup",
+      "Existing main meets-imon-world lineage and global renewal settings unchanged",
+      "No nginx/TURN/application reload or restart",
+      "No new listener or full TLS context activation"
+    ],
+    "notAcceptedByIssuance": [
+      "Public443 routing",
+      "TURN protocol",
+      "PROXYv2 application behavior",
+      "Witness enrollment",
+      "Renewal hooks/timers",
+      "Application cutover"
+    ]
+  },
+  "generatorReview": {
+    "source": "http-bootstrap-candidate/scripts/prepare-edge-certificates.mjs",
+    "sha256": "cce73d605633988bb62c5792b0b125b333fd5e98af31ba0fbfc94ca84ee8e3ec",
+    "findings": [
+      "Its issue argv already uses certonly/webroot and separate config/work/log directories.",
+      "Its generated certbot.ini unconditionally contains agree-tos=true and it requires complete renewal runtime contexts.",
+      "Do not generate fictional runtime contexts merely to issue certificates. The direct owner-local issue argv above requires no Node runtime.",
+      "Do not run stageInitial, reconcile, renew, renewal timers, or install managed TLS contexts during issuance-only."
+    ],
+    "executedForLiveIssuance": false
+  },
+  "sourceVerifiedCaveats": [
+    "Certbot2.9 show_account checks for an existing local account before selecting/querying it; absence returns an error rather than register.",
+    "A local --account ID is resolved inside --config-dir; the same email or old ID alone does not transfer identity to an empty namespace.",
+    "Certbot2.9 and ConfigArgParse1.7 load default config files as well as an explicit --config file.",
+    "Certbot2.9 --dry-run switches to staging; when an accounts tree exists it may set terms acceptance and no-email registration flags automatically. It is not a read-only prerequisite.",
+    "Certbot2.9 regr.json stores body={} and cannot be relied upon as a saved email source."
+  ],
+  "references": [
+    {
+      "component": "Certbot v2.9.0 main",
+      "url": "https://github.com/certbot/certbot/blob/v2.9.0/certbot/certbot/_internal/main.py",
+      "gitBlobSha": "43eeaff16426ebf05965a12d1922919d45cbf262"
+    },
+    {
+      "component": "Certbot v2.9.0 account",
+      "url": "https://github.com/certbot/certbot/blob/v2.9.0/certbot/certbot/_internal/account.py",
+      "gitBlobSha": "9c8146b633ecf99ef9e08af5285c46eb0a53bfa2"
+    },
+    {
+      "component": "Certbot v2.9.0 cli",
+      "url": "https://github.com/certbot/certbot/blob/v2.9.0/certbot/certbot/_internal/cli/__init__.py",
+      "gitBlobSha": "0eccef8d8ba4ea4ccc05b617287be097b3814786"
+    },
+    {
+      "component": "Certbot v2.9.0 helpful",
+      "url": "https://github.com/certbot/certbot/blob/v2.9.0/certbot/certbot/_internal/cli/helpful.py",
+      "gitBlobSha": "10febf2ce48cdb4cee27511f1e107788feb066b5"
+    },
+    {
+      "component": "Certbot v2.9.0 cli_utils",
+      "url": "https://github.com/certbot/certbot/blob/v2.9.0/certbot/certbot/_internal/cli/cli_utils.py",
+      "gitBlobSha": "4f7f4bba6bf009a63cdfa4143897490a68887653"
+    },
+    {
+      "component": "ConfigArgParse1.7",
+      "url": "https://github.com/bw2/ConfigArgParse/blob/1.7/configargparse.py",
+      "gitBlobSha": "33a2ccf1c12b8c10201c70ecaba7323d94475e7b"
+    },
+    {
+      "component": "Ubuntu Certbot2.9 manual",
+      "url": "https://manpages.ubuntu.com/manpages/noble/man1/certbot.1.html"
+    },
+    {
+      "component": "Ubuntu Noble package",
+      "url": "https://packages.ubuntu.com/en/noble/certbot"
+    },
+    {
+      "component": "Ubuntu Python Certbot dependencies",
+      "url": "https://packages.ubuntu.com/en/noble/python3-certbot"
+    },
+    {
+      "component": "LE account discovery",
+      "url": "https://letsencrypt.org/docs/account-id/"
+    },
+    {
+      "component": "LE expiration-email change",
+      "url": "https://letsencrypt.org/2025/01/22/ending-expiration-emails"
+    }
+  ],
+  "credentialsIncluded": false,
+  "sourceReceiptSha256": "871abb308734da8b15bdf80f007fff956f8094e229c1e5ddf8703486560253b8",
+  "editorialClarification": "The full generator ran in synthetic tests; no production issuance was executed. Existing user authorization remains applicable; evaluate any future account/contact/terms action against that scope rather than requesting duplicate permission automatically."
+}

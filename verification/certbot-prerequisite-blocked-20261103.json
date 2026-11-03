@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "status": "BLOCKED_BEFORE_SERVER_EXECUTION",
+  "requestedAction": "One bounded main-selected-account metadata/show_account plus edge Certbot apt-simulation/default-namespace metadata batch",
+  "tool": "remote_desktop_commander.start_process",
+  "toolIsError": true,
+  "structuredErrorCode": "INVALID_ARGUMENT",
+  "exactSanitizedToolError": "You've reached this month's Desktop Commander usage, so tool calls are paused. Your device remains connected and paired — do not retry or reconnect. Visit https://mcp.desktopcommander.app/ to learn more about usage and resets.",
+  "pidReturned": false,
+  "callIdReturned": false,
+  "actionStarted": false,
+  "accountMetadataRetrieved": false,
+  "showAccountExecuted": false,
+  "edgeAptSimulationExecuted": false,
+  "certbotPackageInstallPerformed": false,
+  "accountKeyCopied": false,
+  "accountRegistered": false,
+  "certificateIssued": false,
+  "dryRunOrRenewExecuted": false,
+  "serviceChangesPerformed": false,
+  "retryPerformed": false,
+  "reconnectPerformed": false,
+  "alternateServerRouteUsed": false,
+  "rootInstruction": "No further DC calls, retries, reconnects or alternate routes for server actions.",
+  "originalNotStartedBatchSha256": "c4864e33c4f6240d23d3138f1a85bd1aa51876b87be6b8dd95880e091df63c0d",
+  "preparedLocalBatch": {
+    "path": "Private continuation archive: certificates/inspect-certbot-prerequisites.py.txt",
+    "sha256": "210bc4e40c808e220adb8f58a9530083f692ba8a7ee41d0d512376ac6b3a4e8c",
+    "executed": false,
+    "validation": "Outer and both embedded Python sources parsed with ast locally only.",
+    "localPostBlockChange": "Restricted unknown configuration option output to counts; no arbitrary option/value text is emitted.",
+    "reuseRequires": "Restore available tool usage, then review the exact bounded batch and fresh preflight under the existing task authorization. Do not retry while the quota pause applies."
+  },
+  "credentialValuesIncluded": false,
+  "lastCompletedOwnedServerMutation": {
+    "status": "PASS_EDGE_NGINX_PACKAGE_PREREQUISITE",
+    "completedAt": "2026-11-03T17:46:48.835675+00:00",
+    "mainReceiptSha256": "6d4ca9a4b2af0892c1f2dedab1e727c16c587626996683c1450bba1b8290eb5c",
+    "edgeReceiptSha256": "824ef48936b23134250216c4ced9cec9267c21da04472a95bb48e128e9e3a17c",
+    "logSha256": "b8bb7ce7b1223f0f8570929972e95f6b25f34aff65bcac987797e552cdd272bc"
+  },
+  "sourceReceiptSha256": "4574fbbe69e5ce5e285f70cc09410afce0637a311e8e15e3bb12726bc0dd6df6"
+}

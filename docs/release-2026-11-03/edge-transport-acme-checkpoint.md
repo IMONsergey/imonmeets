@@ -1,6 +1,6 @@
 # Edge transport and HTTPS commissioning: 3 November 2026
 
-Status: the dedicated private transport is active, tested and enabled on both hosts. The verified CI image is downloaded on main. Four new DNS names now resolve authoritatively to edge. Canonical HTTPS and application cutover remain pending.
+Status: the dedicated private transport is active, tested and enabled on both hosts. The verified application image is downloaded on main. Four new DNS names resolve authoritatively to edge. Native HTTP bootstrap code passed CI and edge nginx is installed, but the new HTTP units have not been installed or started. Further server commands are paused by the Remote Desktop Commander monthly usage limit. Canonical HTTPS and application cutover remain pending.
 
 This is an operations checkpoint based on immutable release source `05cc907784afe09c156026cc822d3f6bf08bd4c3`. The operations-only branch updates evidence and documentation. It does not change that release, its image, application code, installed transport helpers or the live application.
 
@@ -31,6 +31,9 @@ The application and existing VPN retain their previous deployment. No new IPv4 o
 | Native nginx state after fixture attempt | Existing nginx active; public 8443 health HTTP 200; temporary loopback ports absent |
 | Integrated CI for exact release source | Run 41680113351 completed successfully, including image publication |
 | CI image transfer on main | All nine assets, archive, manifest, image and source identities verified; queued job succeeded |
+| Separate native HTTP bootstrap source | 61 focused checks and CI 41687726142 passed; no application source changes |
+| Edge nginx prerequisite | Exact two Ubuntu packages installed; stock nginx masked/inactive; no listeners added |
+| Native HTTP service deployment | Pending; destination files and units were still absent at the last preflight |
 | Application deployment | Previous application still active; new image has not been imported or deployed |
 
 The first namespace attempt failed during bare administrative link recovery. The kernel had removed the active private route. The reviewed recovery repeats only the exact source-bound peer route, preserving the terminal unreachable route and guard. The second attempt passed; the first receipt is retained. Live recovery uses the dedicated unit's normal stop/start.
@@ -77,7 +80,33 @@ The first authoritative check at 17:29 UTC still returned NXDOMAIN for the four 
 
 The new Google secret is already privately staged; another client or secret download is unnecessary.
 
-Keep the meets A record on main during bootstrap. Verify the actual edge HTTP challenge paths, then issue the separate owner-local main and witness certificates and accept the protected TLS paths. The full design uses a main loopback challenge handler and a separate private bridge. An explicit standalone native HTTP-only bootstrap is being prepared to make certificate commissioning independent of the unresolved Docker import path and unfinished renewal contexts. It must own only the dedicated private ACME listener and keep shared nginx and the existing VPN independent of the tunnel. Its code and runtime acceptance are separate from the frozen application image.
+### Native HTTP source is ready; runtime is pending
+
+The separately published operations source is [`e201ea45f088e80877945fa58f28a45f4c22534f`](https://github.com/IMONsergey/imonmeets/commit/e201ea45f088e80877945fa58f28a45f4c22534f), on `feature/native-http-bootstrap-20261103`. Its [CI run 41687726142](https://github.com/IMONsergey/imonmeets/actions/runs/41687726142) completed successfully. The focused suite passed 61 checks, including byte-preservation of all 39 historical full-candidate output files and three complete plans. An independent reviewer recreated those baseline hashes from the original generator.
+
+The explicit HTTP-only generator does not require private secrets or final renewal contexts. It creates two standalone nginx configurations and two dedicated units, with six output files in total plus a nonsecret plan. Main owns only `10.203.77.2:18080` and accepts the actual edge TCP peer. Edge owns `94.249.188.77:80`, forwards only strict challenge paths for main names and serves the witness challenge locally. Both services run as www-data with their own runtime paths and transport dependencies. Shared main nginx and the existing VPN remain independent of the tunnel. There are no TLS includes, Certbot hooks, timers, Docker or application commands in this mode. See the [published native HTTP runbook](https://github.com/IMONsergey/imonmeets/blob/e201ea45f088e80877945fa58f28a45f4c22534f/docs/edge-http-native-bootstrap.md).
+
+The edge package prerequisite completed once at 17:46:37-48 UTC: nginx and nginx-common `1.24.0-2ubuntu7.19`, from official Ubuntu repositories, with no upgrades or removals. Package auto-start was suppressed. The stock nginx service remains masked/inactive; the temporary owned policy file was removed after apt exited. No nginx process or new listener was introduced. Transport guard, route, active/enabled state and handshake were preserved. See [package evidence](../../verification/edge-nginx-package-installation-20261103.json).
+
+The last bounded server preflight at 17:52:00-01 UTC confirmed main webroot traversal/read access for www-data without write access; root ownership, mode 0755 and no symlinks along the exact challenge path; a root-owned Node 24.21.0 runtime; free intended HTTP sockets; and absent new configuration directories, units and staging/worktree paths. Main public 8443 health returned HTTP 200. This preflight did not install or start the new units. The operations commit had not yet been fetched into the proposed main worktree.
+
+After remote command access returns, refresh only the time-sensitive preflight, create a separate exact-e201 operations worktree and regenerate the reviewed hashes. Install only the six corresponding root-owned files, start only the two dedicated HTTP units, then accept real main/edge/witness challenge paths, negative request boundaries, service lifecycle and cleanup. Enable their boot startup only after that acceptance. No shared main nginx reload or general host nginx configuration test is needed. The actual parser runs during the deliberately scoped service start; `nginx -t` must still be treated as a possible bind/listen operation.
+
+Keep the meets A record on main. After HTTP acceptance, separately issue owner-local main and witness certificates, accept protected TLS and prepare the full ingress ownership handoffs. The native main listener must be stopped before the future bridge takes private port 18080; the native edge HTTP listener must be stopped before the full edge nginx takes public port 80. Never run both owners concurrently. None of these runtime or certificate steps has been executed by this checkpoint.
+
+### Server-tool limit
+
+Remote Desktop Commander returned: "You've reached this month's Desktop Commander usage, so tool calls are paused. Your device remains connected and paired — do not retry or reconnect." It points to [usage and reset information](https://mcp.desktopcommander.app/). The rejected action was a bounded read-only ACME account/default-configuration and edge Certbot prerequisite inspection. It returned no PID or execution result; that command did not start.
+
+All server calls stopped at that error. No retry, reconnection or alternate remote-execution route was used. Existing account metadata remains uninspected, edge Certbot was not installed, no account was registered or copied, and no certificate was issued. Restoring the tool's available usage is the immediate continuation prerequisite. It is separate from the application's existing Docker queue restriction.
+
+### Saved continuation and exact boundary
+
+The [final status receipt](../../verification/commissioning-checkpoint-final-20261103.json), [issuance-only plan](certbot-issuance-plan-20261103.json) and [blocked prerequisite receipt](../../verification/certbot-prerequisite-blocked-20261103.json) preserve the execution boundary. The full certificate generator ran in synthetic tests, but it was not used for live issuance.
+
+Unpublished one-off application helpers and their last read-only preflight were retained privately in `IMONMeets_Continuation_Review_20261103.zip`, SHA-256 `ad52acd305939749e88403906e3aea103fe5e146a6eb8726e9d32d1d1bb7c485` (32,706 bytes). The archive contains no credential values or browser screenshots and does not duplicate the published repository source. The deployment helpers were not executed. Python syntax and eleven pure executor ownership/payload/ledger/lock checks passed; complete independent coordinator integration review remains **PENDING**. The published e201 manual runbook remains the reviewed source for the next application step. Do not treat a saved draft helper or a successful CI run as native HTTP, rollback, boot, TLS or application acceptance.
+
+### Application, monitor and data transition
 
 Before changing meets A, review the actual offsite backup/monitor destination. The supported HTTPS puller follows its configured baseUrl and has no resolve/connect-to pin option. If the installed configuration uses meets.imon.world:8443, preserving the old main listener alone will not preserve that path after DNS moves to an edge that serves only ports 80/443. A fresh allowlisted configuration check and explicit monitor transition are required; do not silently fall back to SSH or add an unsupported pin key. Account for the existing 86400-second DNS TTL.
 
