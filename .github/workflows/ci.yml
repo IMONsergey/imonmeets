@@ -16,7 +16,7 @@ jobs:
           POSTGRES_DB: imonmeets_test
         ports: ["5432:5432"]
         options: >-
-          --health-cmd "pg_isready -U imonmeets -d imonmeets_test"
+          --health-cmd "pg_isready -U imonmeets_test -d imonmeets_test"
           --health-interval 5s --health-timeout 3s --health-retries 20
     steps:
       - uses: actions/checkout@v4
@@ -48,6 +48,7 @@ jobs:
           apps/deletion-witness/test.mjs
           apps/deletion-witness/client.integration.test.mjs
           scripts/test-launch-readiness.mjs
+          scripts/test-legal-consent-readiness.mjs
           scripts/test-release-manifest.mjs
           scripts/test-ingress443-config.mjs
       - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-prepare-recording.py

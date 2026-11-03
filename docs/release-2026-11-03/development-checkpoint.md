@@ -81,3 +81,39 @@ TTS, listener audio behavior, quotas, cancellation and real meeting acceptance.
 
 The task backlog retains original acceptance criteria and adds implementation
 status without turning a local test pass into production readiness.
+
+## Resumed integration and observed evidence
+
+Desktop Commander access was restored on 2026-11-03. DATA and receiver/database
+binding are now integrated. At source140dcc4, TypeScript/build, API121/121,
+web19/19, SDK7/7, UI6/6 and56 receiver/release checks passed without skips,
+including the actual old-dump replay and verified-TLS client/receiver test.
+A disconnected tool stdout interrupted the first controller; continuation used
+regular logs and did not change source to conceal a failing test.
+
+The isolated HAProxy fixture was corrected for the non-root image under umask077;
+production-generated configurations retain0600. At4a160ea all18 real routing
+checks and36 backup/monitor/preparation tests passed. Production dependency audit
+reported zero advisories. CI now enables the actual dump/restore scenario and
+receiver/release tests instead of silently skipping the restore container path.
+
+Strict synthetic audio/video passed over ICE/TCP in Chromium and Linux WebKit27.2
+on the recorded core sources. Firefox155 did not establish media in that isolated
+proxy/bridge setup. Installed-engine and failure receipts are retained. WebKit
+is not a claim of Safari/macOS/iPhone acceptance; UDP/TURN remain unaccepted.
+
+The receiver image at2daa920 passed9 actual-container checks with no public ports:
+explicit initialization, immutable enrollment, non-root UID, exclusive writer
+lock, signed append, restart continuity, missing intent/anchor rejection and
+recovery of the retained fixture. Cleanup was verified. Its source and image
+receipt are separate from proof of independent host deployment.
+
+The account-agreement implementation frome819734 is integrated. It records exact
+published document hashes only on explicit authenticated action; export/delete
+and safe exit remain available. Public-commercial readiness now requires
+LEGAL_ACCEPTANCE_REQUIRED=true, while closed preview defaults tofalse. Real legal
+texts, guest/recording consent and deployment are still not accepted here.
+
+The final combined commit must pass its own full verifier before app image build.
+Keep final receipts outside this Git tree so recording results cannot silently
+change the tested source identity.
