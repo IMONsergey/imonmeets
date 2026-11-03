@@ -170,3 +170,39 @@ test("canonical lookup validates provider identifiers before making a request", 
   assert.equal(result.id, payment().id);
   assert.equal(called, true);
 });
+
+test("refund totals and canonical response ID are validated independently of notifications", async () => {
+  const succeeded = { status: "succeeded", paid: true };
+  const partial = normalizeProviderPayment(
+    payment({
+      ...succeeded,
+      refunded_amount: { value: "10.00", currency: "RUB" },
+    }),
+    config,
+  );
+  assert.equal(partial.refundedKopecks, 1000);
+  for (const raw of [
+    payment({
+      ...succeeded,
+      refunded_amount: { value: "990.01", currency: "RUB" },
+    }),
+    payment({
+      ...succeeded,
+      refunded_amount: { value: "10.00", currency: "USD" },
+    }),
+    payment({ refunded_amount: { value: "10.00", currency: "RUB" } }),
+    payment({ status: "succeeded", paid: false }),
+  ])
+    assert.throws(
+      () => normalizeProviderPayment(raw, config),
+      PaymentProviderError,
+    );
+  const client = createYookassaClient(config, (async () =>
+    Response.json(payment())) as typeof fetch);
+  await assert.rejects(
+    client.getPayment("12d6d597-000f-5000-9000-145f6df21d6f"),
+    (error: unknown) =>
+      error instanceof PaymentProviderError &&
+      error.code === "INVALID_RESPONSE",
+  );
+});

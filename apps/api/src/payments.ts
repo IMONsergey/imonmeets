@@ -123,6 +123,17 @@ export function normalizeProviderPayment(
   )
     throw new PaymentProviderError("INVALID_RESPONSE", false);
   const data = parsed.data;
+  const amount = toKopecks(data.amount.value);
+  const refunded = data.refunded_amount
+    ? toKopecks(data.refunded_amount.value)
+    : 0;
+  if (
+    amount <= 0 ||
+    refunded > amount ||
+    (data.status === "succeeded" && !data.paid) ||
+    (refunded > 0 && (data.status !== "succeeded" || !data.paid))
+  )
+    throw new PaymentProviderError("INVALID_RESPONSE", false);
   return {
     id: data.id,
     status: data.status,
@@ -290,7 +301,11 @@ export function createYookassaClient(
       });
     },
     async getPayment(id: string) {
-      return call(`payments/${providerId.parse(id)}`);
+      const requested = providerId.parse(id).toLowerCase();
+      const result = await call("payments/" + requested);
+      if (result.id.toLowerCase() !== requested)
+        throw new PaymentProviderError("INVALID_RESPONSE", false);
+      return result;
     },
   };
 }

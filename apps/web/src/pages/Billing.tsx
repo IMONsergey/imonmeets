@@ -26,6 +26,7 @@ type Payment = {
     | "succeeded"
     | "canceled"
     | "refunded";
+  refundedKopecks?: number;
   amountKopecks: number;
   currency: "RUB";
   test: boolean;
@@ -448,7 +449,11 @@ export function PlanSettings({ workspace }: { workspace: Workspace }) {
                   >
                     {payment.status === "succeeded" && !payment.appliedAt
                       ? "Подтверждаем доступ"
-                      : labels[payment.status]}
+                      : payment.status === "succeeded" &&
+                          (payment.refundedKopecks ?? 0) > 0
+                        ? "Частично возвращено: " +
+                          money(payment.refundedKopecks!)
+                        : labels[payment.status]}
                   </span>
                   {owner &&
                     (pendingStatuses.has(payment.status) ||

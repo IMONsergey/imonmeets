@@ -1,4 +1,12 @@
 import { randomUUID } from "node:crypto";
+import { processPaymentChecks } from "./payment-checks.js";
+import {
+  reviewIntent,
+  reviewVersion,
+  reviewAudit,
+  assertReview,
+  type ReviewIntent,
+} from "./operation-review.js";
 import type { FastifyInstance } from "fastify";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
 import { z } from "zod";
@@ -24,6 +32,8 @@ const paymentJson = (r: Row) => ({
   createdAt: r.created_at,
   confirmationUrl: r.confirmation_url,
   appliedAt: r.applied_at,
+  refundedKopecks: Number(r.refunded_kopecks ?? 0),
+  lastCheckedAt: r.last_checked_at,
 });
 export async function workspaceLimits(
   db: Pool | PoolClient,
@@ -78,7 +88,63 @@ export async function registerBilling(
     userId: r.user_id,
     amountKopecks: Number(r.amount_kopecks),
   });
-  async function applyProvider(payment: ProviderPayment, localId: string) {
+  function paymentState(row: Row, payment: ProviderPayment) {
+    return {
+      local: {
+        id: row.id,
+        status: row.status,
+        providerId: row.provider_id,
+        refundedKopecks: Number(row.refunded_kopecks ?? 0),
+        appliedAt: row.applied_at,
+        reversedAt: row.reversed_at,
+        entitlementStart: row.entitlement_start,
+        entitlementEnd: row.entitlement_end,
+      },
+      canonical: {
+        id: payment.id,
+        status: payment.status,
+        paid: payment.paid,
+        test: payment.test,
+        amountKopecks: payment.amountKopecks,
+        refundedKopecks: payment.refundedKopecks,
+        currency: payment.currency,
+      },
+    };
+  }
+  function assertCanonical(row: Row | undefined, payment: ProviderPayment) {
+    assert(
+      row &&
+        paymentMatchesOrder(payment, expected(row)) &&
+        payment.test === row.test &&
+        (!row.provider_id || row.provider_id === payment.id),
+      409,
+      "PAYMENT_MISMATCH",
+      "Данные платежа не совпадают с заказом.",
+    );
+  }
+  async function canonicalGet(id: string) {
+    assert(
+      provider,
+      503,
+      "BILLING_UNAVAILABLE",
+      "Прием платежей пока не подключен.",
+    );
+    await requireBudget(limiter, "payment-provider:global", 60, 60);
+    try {
+      return await provider.getPayment(id);
+    } catch {
+      throw new ApiError(
+        503,
+        "PAYMENT_CHECK_PENDING",
+        "Платежный оператор не подтвердил состояние. Заказ сохранен.",
+      );
+    }
+  }
+  async function applyProvider(
+    payment: ProviderPayment,
+    localId: string,
+    review?: ReviewIntent & { workspaceId: string; actorId: string },
+  ) {
     const found = (
       await pool.query("SELECT workspace_id FROM im_payments WHERE id=$1", [
         localId,
@@ -86,6 +152,20 @@ export async function registerBilling(
     ).rows[0];
     assert(found, 404, "PAYMENT_NOT_FOUND", "Платеж не найден.");
     return transaction(pool, async (db) => {
+      if (review) {
+        assert(
+          found.workspace_id === review.workspaceId,
+          404,
+          "PAYMENT_NOT_FOUND",
+          "Платеж не найден.",
+        );
+        const fresh = await lockWorkspace(
+          db,
+          review.workspaceId,
+          review.actorId,
+        );
+        assert(fresh.role === "owner", 403, "FORBIDDEN", "Недостаточно прав.");
+      }
       const workspaceExists = Boolean(
         (
           await db.query(
@@ -108,8 +188,23 @@ export async function registerBilling(
         "PAYMENT_MISMATCH",
         "Данные платежа не совпадают с заказом.",
       );
-      const fullyRefunded =
-          payment.refundedKopecks >= Number(row.amount_kopecks),
+      assertCanonical(row, payment);
+      const version = reviewVersion(paymentState(row, payment));
+      if (review)
+        await assertReview(
+          db,
+          review.workspaceId,
+          review.actorId,
+          "payment",
+          row.id,
+          review,
+          version,
+        );
+      const refundedKopecks = Math.max(
+        Number(row.refunded_kopecks ?? 0),
+        payment.refundedKopecks,
+      );
+      const fullyRefunded = refundedKopecks === Number(row.amount_kopecks),
         succeeded =
           payment.status === "succeeded" && payment.paid && !fullyRefunded;
       // Provider status is canonical, but a stale pending response must never undo a successful local grant.
@@ -125,8 +220,8 @@ export async function registerBilling(
               ? row.status
               : payment.status;
       await db.query(
-        "UPDATE im_payments SET provider_id=$2,status=$3,confirmation_url=$4,updated_at=now() WHERE id=$1",
-        [row.id, payment.id, status, payment.confirmationUrl],
+        "UPDATE im_payments SET provider_id=$2,status=$3,confirmation_url=$4,refunded_kopecks=$5,updated_at=now(),last_checked_at=now(),check_failures=0,last_check_error=NULL,check_lease_token=NULL,check_lease_until=NULL,next_check_at=CASE WHEN $3 IN ('canceled','refunded') THEN NULL WHEN $3='succeeded' THEN now()+interval '6 hours' ELSE now()+interval '2 minutes' END WHERE id=$1",
+        [row.id, payment.id, status, payment.confirmationUrl, refundedKopecks],
       );
       if (
         succeeded &&
@@ -158,6 +253,14 @@ export async function registerBilling(
           row.id,
         );
       }
+      if (refundedKopecks > Number(row.refunded_kopecks ?? 0) && !fullyRefunded)
+        await audit(
+          db,
+          workspaceExists ? row.workspace_id : null,
+          null,
+          "payment.partially_refunded",
+          row.id,
+        );
       if (fullyRefunded && row.applied_at && !row.reversed_at) {
         await db.query("UPDATE im_payments SET reversed_at=now() WHERE id=$1", [
           row.id,
@@ -188,8 +291,20 @@ export async function registerBilling(
           row.id,
         );
       }
-      return (await db.query("SELECT * FROM im_payments WHERE id=$1", [row.id]))
-        .rows[0];
+      const updated = (
+        await db.query("SELECT * FROM im_payments WHERE id=$1", [row.id])
+      ).rows[0];
+      if (review)
+        updated.reviewReceipt = await reviewAudit(
+          db,
+          review.workspaceId,
+          review.actorId,
+          "payment",
+          row.id,
+          "applied",
+          version,
+        );
+      return updated;
     });
   }
   async function refresh(row: Row) {
@@ -207,9 +322,15 @@ export async function registerBilling(
       "Исход создания платежа неизвестен. Нужна сверка с платежным оператором; новый заказ заблокирован.",
     );
     try {
-      const canonical = row.provider_id
-        ? await provider.getPayment(row.provider_id)
-        : await provider.createPayment({ ...expected(row), email: row.email });
+      let canonical: ProviderPayment;
+      if (row.provider_id) canonical = await canonicalGet(row.provider_id);
+      else {
+        await requireBudget(limiter, "payment-provider:global", 60, 60);
+        canonical = await provider.createPayment({
+          ...expected(row),
+          email: row.email,
+        });
+      }
       return await applyProvider(canonical, row.id);
     } catch (error) {
       if (error instanceof ApiError) throw error;
@@ -364,6 +485,84 @@ export async function registerBilling(
     },
   );
   app.post(
+    "/api/workspaces/:workspaceId/payments/:paymentId/reconcile",
+    async (req) => {
+      const u = (await user(req))!,
+        { workspaceId, paymentId } = params(req.params);
+      const b = reviewIntent
+        .extend({
+          providerPaymentId: z
+            .string()
+            .regex(/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i),
+        })
+        .strict()
+        .parse(req.body);
+      const m = await membership(workspaceId, u.id);
+      assert(
+        m.role === "owner",
+        403,
+        "FORBIDDEN",
+        "Сверка доступна владельцу рабочего пространства.",
+      );
+      const row = (
+        await pool.query(
+          "SELECT * FROM im_payments WHERE workspace_id=$1 AND id=$2",
+          [workspaceId, paymentId],
+        )
+      ).rows[0];
+      assert(row, 404, "PAYMENT_NOT_FOUND", "Платеж не найден.");
+      await requireBudget(limiter, "payment-review:user:" + u.id, 12, 3600);
+      await requireBudget(
+        limiter,
+        "payment-review:workspace:" + workspaceId,
+        24,
+        3600,
+      );
+      const canonical = await canonicalGet(b.providerPaymentId);
+      assertCanonical(row, canonical);
+      if (b.apply) {
+        const updated = await applyProvider(canonical, row.id, {
+          ...b,
+          workspaceId,
+          actorId: u.id,
+        });
+        return {
+          mode: "applied",
+          ...updated.reviewReceipt,
+          payment: {
+            id: updated.id,
+            status: updated.status,
+            refundedKopecks: Number(updated.refunded_kopecks),
+            appliedAt: updated.applied_at,
+          },
+        };
+      }
+      return transaction(pool, async (db) => {
+        const fresh = await lockWorkspace(db, workspaceId, u.id);
+        assert(fresh.role === "owner", 403, "FORBIDDEN", "Недостаточно прав.");
+        const current = (
+          await db.query(
+            "SELECT * FROM im_payments WHERE workspace_id=$1 AND id=$2 FOR UPDATE",
+            [workspaceId, paymentId],
+          )
+        ).rows[0];
+        assertCanonical(current, canonical);
+        const state = paymentState(current, canonical),
+          version = reviewVersion(state);
+        const receipt = await reviewAudit(
+          db,
+          workspaceId,
+          u.id,
+          "payment",
+          current.id,
+          "preview",
+          version,
+        );
+        return { mode: "preview", ...receipt, ...state };
+      });
+    },
+  );
+  app.post(
     "/api/billing/yookassa/webhook",
     { bodyLimit: 65536 },
     async (req) => {
@@ -410,15 +609,14 @@ export async function registerBilling(
       ).rows[0];
       if (!local) {
         // An early webhook can race storage of the create response. Fetch and verify metadata before linking it.
-        const canonical = await provider.getPayment(providerId),
+        const canonical = await canonicalGet(providerId),
           found = (
             await pool.query("SELECT id FROM im_payments WHERE id=$1", [
               canonical.metadata.paymentId,
             ])
           ).rows[0];
         if (found) await applyProvider(canonical, found.id);
-      } else
-        await applyProvider(await provider.getPayment(providerId), local.id);
+      } else await applyProvider(await canonicalGet(providerId), local.id);
       return { ok: true };
     },
   );
@@ -427,21 +625,7 @@ export async function registerBilling(
     if (!provider || running) return;
     running = true;
     try {
-      const rows = (
-        await pool.query(
-          "SELECT p.*,u.email FROM im_payments p LEFT JOIN \"user\" u ON u.id=p.user_id WHERE p.status IN ('creating','pending','waiting_for_capture') AND p.updated_at<now()-interval '2 minutes' ORDER BY p.updated_at LIMIT 4",
-        )
-      ).rows;
-      for (const row of rows) {
-        try {
-          await refresh(row);
-        } catch {
-          await pool.query(
-            "UPDATE im_payments SET updated_at=now() WHERE id=$1",
-            [row.id],
-          );
-        }
-      }
+      await processPaymentChecks(pool, refresh);
     } catch (e) {
       app.log.error({ err: e }, "Payment reconciliation failed");
     } finally {

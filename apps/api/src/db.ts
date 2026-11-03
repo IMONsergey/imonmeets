@@ -1,3 +1,4 @@
+import { operationReviewSchema } from "./operation-review-schema.js";
 import { Pool, type PoolClient } from "pg";
 import { moderationSchema } from "./moderation-schema.js";
 import { suiteSchema } from "./suite-schema.js";
@@ -51,6 +52,7 @@ CREATE TABLE IF NOT EXISTS im_webhook_events (id text PRIMARY KEY,created_at tim
 ${suiteSchema}
 ${moderationSchema}
 ${billingSchema}
+${operationReviewSchema}
 ${analysisSchema}
 `;
 export async function transaction<T>(

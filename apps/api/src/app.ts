@@ -38,6 +38,7 @@ import { clientIp, proxySecretMatches, rateLimitIp } from "./proxy.js";
 import { registerSuite, admissionForJoin, createChatSession } from "./suite.js";
 import { registerAnalysis } from "./analysis.js";
 import { registerBilling, workspaceLimits } from "./billing.js";
+import { registerOperationReview } from "./operation-review.js";
 import {
   assertRoomUnblocked,
   participantModeration,
@@ -2031,6 +2032,7 @@ export async function createApp(
   const moderation = await registerModeration(app, suiteDependencies);
   await registerSuite(app, suiteDependencies);
   await registerBilling(app, suiteDependencies);
+  await registerOperationReview(app, suiteDependencies);
   await registerAnalysis(app, suiteDependencies);
   // Scoped parser preserves the exact signed request bytes before any JSON parsing.
   await app.register(async (webhook) => {
