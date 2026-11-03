@@ -51,6 +51,21 @@ private environment already loaded, the bootstrap invocation is:
 flock -n "$WITNESS_DIRECTORY/writer.lock" node apps/deletion-witness/server.mjs --initialize
 ```
 
+With the standalone Compose deployment and its reviewed private environment,
+the image forwards the same explicit bootstrap argument through its kernel lock:
+
+```sh
+docker compose --env-file /path/to/private/witness.env -f compose.deletion-witness.yml run --rm witness --initialize
+```
+
+Use this only for the new enrolled empty volume, before starting the service.
+The image's ordinary startup does not initialize storage. The isolated
+`scripts/test-deletion-witness-image.py` acceptance builds an immutable receiver
+image from a clean Git archive and checks argument forwarding, non-root ownership,
+exclusive writer lock, signed append, restart continuity and missing-history
+failure using synthetic keys and no public ports. It does not establish that a
+host or storage volume is independent of the application.
+
 A restart verifies the anchor signature with the public key derived from the
 configured Ed25519 private key, plus the exact pinned journal/genesis. Every
 anchored ID and digest must still exist unchanged. Missing genesis, missing or
