@@ -1,0 +1,1827 @@
+{
+  "dataset": "google/fleurs",
+  "dataset_revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+  "dataset_license": "CC-BY-4.0",
+  "dataset_card": "https://huggingface.co/datasets/google/fleurs",
+  "split": "test",
+  "configs": [
+    "ru_ru",
+    "en_us",
+    "cmn_hans_cn",
+    "ar_eg"
+  ],
+  "parallel_key": "FLEURS TSV id field, not row number; exact intersection across all four language configs",
+  "selection_method": "Evenly spaced numeric IDs from common-ID intersection; one MALE recording per ID if available, else first recording",
+  "common_ids_available": 278,
+  "records_per_language": 40,
+  "total_audio_seconds": 1788.34,
+  "total_audio_minutes": 29.806,
+  "source_tsv_sha256": {
+    "ru_ru": "cd54f261220f49afbb4c128633a737eca4a22f6c0a8233d3cc891478d06676e6",
+    "en_us": "74c046239374deeb60fa63f258f907388093a32bcaa3140965f70ef05c79f7ca",
+    "cmn_hans_cn": "5734461648f816181d7dab5fc79204b18c4b9bc2cd5138225b25c72d18385d21",
+    "ar_eg": "af9b9aa3f99c39f90e7f8417f10f2f45a7f783441c6a27abfc2c1bededed4af1"
+  },
+  "sentences": [
+    {
+      "sentence_id": 1661,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1661,
+          "file": "6101634200286525339.wav",
+          "transcription": "Он не назвал цифру для сокращений бюджетов, сказав, что они будут сделаны исходя из производительности экономики Китая.",
+          "raw_transcription": "он не назвал цифру для сокращений бюджетов сказав что они будут сделаны исходя из производительности экономики китая",
+          "num_samples": 144960,
+          "duration_seconds": 9.06,
+          "gender": "MALE",
+          "source_line": 598
+        },
+        "en_us": {
+          "sentence_id": 1661,
+          "file": "6917907748364342404.wav",
+          "transcription": "He did not set a figure for the cuts, saying they will be made based on China's economic output.",
+          "raw_transcription": "he did not set a figure for the cuts saying they will be made based on china's economic output",
+          "num_samples": 101760,
+          "duration_seconds": 6.36,
+          "gender": "FEMALE",
+          "source_line": 39
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1661,
+          "file": "1868048601472473390.wav",
+          "transcription": "他没有设定削减数额，只是表示将根据中国的经济产出来决定数额。",
+          "raw_transcription": "他 没 有 设 定 削 减 数 额 只 是 表 示 将 根 据 中 国 的 经 济 产 出 来 决 定 数 额",
+          "num_samples": 207360,
+          "duration_seconds": 12.96,
+          "gender": "MALE",
+          "source_line": 26
+        },
+        "ar_eg": {
+          "sentence_id": 1661,
+          "file": "3728379913021155662.wav",
+          "transcription": "لم يحدد رقمًا للتخفيضات، قائلًا إنها ستعتمد على الناتج الاقتصادي للصين.",
+          "raw_transcription": "لم يحدد رقمًا للتخفيضات قائلًا إنها ستعتمد على الناتج الاقتصادي للصين",
+          "num_samples": 95040,
+          "duration_seconds": 5.94,
+          "gender": "FEMALE",
+          "source_line": 343
+        }
+      }
+    },
+    {
+      "sentence_id": 1669,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1669,
+          "file": "8661794818516617222.wav",
+          "transcription": "Начальник полиции Чандра Шехар Соланки заявил, что обвиняемые были представлены перед судьями с закрытыми лицами.",
+          "raw_transcription": "начальник полиции чандра шехар соланки заявил что обвиняемые были представлены перед судьями с закрытыми лицами",
+          "num_samples": 138240,
+          "duration_seconds": 8.64,
+          "gender": "MALE",
+          "source_line": 505
+        },
+        "en_us": {
+          "sentence_id": 1669,
+          "file": "8173060820032255320.wav",
+          "transcription": "Police superintendent Chandra Shekhar Solanki said the accused appeared in court with covered faces.",
+          "raw_transcription": "police superintendent chandra shekhar solanki said the accused appeared in court with covered faces",
+          "num_samples": 146240,
+          "duration_seconds": 9.14,
+          "gender": "MALE",
+          "source_line": 7
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1669,
+          "file": "16010467194508249966.wav",
+          "transcription": "警察局长钱德拉·谢卡尔·索兰基说，被告人出庭时都蒙住了脸。",
+          "raw_transcription": "警 察 局 长 钱 德 拉 谢 卡 尔 索 兰 基 说 被 告 人 出 庭 时 都 蒙 住 了 脸",
+          "num_samples": 92160,
+          "duration_seconds": 5.76,
+          "gender": "FEMALE",
+          "source_line": 576
+        },
+        "ar_eg": {
+          "sentence_id": 1669,
+          "file": "7686151320270397194.wav",
+          "transcription": "وقال مدير الشرطة شاندرا شيخار سولانكي إن المتهمين مثلوا أمام المحكمة بوجوه مغطاة.",
+          "raw_transcription": "وقال مدير الشرطة شاندرا شيخار سولانكي إن المتهمين مثلوا أمام المحكمة بوجوه مغطاة",
+          "num_samples": 121920,
+          "duration_seconds": 7.62,
+          "gender": "FEMALE",
+          "source_line": 221
+        }
+      }
+    },
+    {
+      "sentence_id": 1677,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1677,
+          "file": "12071322652261061530.wav",
+          "transcription": "Стрекозы и поденки являются единственными насекомыми, которые не могут складывать крылья назад.",
+          "raw_transcription": "стрекозы и поденки являются единственными насекомыми которые не могут складывать крылья назад",
+          "num_samples": 120960,
+          "duration_seconds": 7.56,
+          "gender": "MALE",
+          "source_line": 394
+        },
+        "en_us": {
+          "sentence_id": 1677,
+          "file": "8660282724455407027.wav",
+          "transcription": "Today, the only insects that cannot fold back their wings are dragon flies and mayflies.",
+          "raw_transcription": "today the only insects that cannot fold back their wings are dragon flies and mayflies",
+          "num_samples": 98880,
+          "duration_seconds": 6.18,
+          "gender": "FEMALE",
+          "source_line": 612
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1677,
+          "file": "16772375859841179841.wav",
+          "transcription": "如今，唯一不能向后折叠翅膀的昆虫是蜻蜓和蜉蝣。",
+          "raw_transcription": "如 今 唯 一 不 能 向 后 折 叠 翅 膀 的 昆 虫 是 蜻 蜓 和 蜉 蝣",
+          "num_samples": 127680,
+          "duration_seconds": 7.98,
+          "gender": "MALE",
+          "source_line": 665
+        },
+        "ar_eg": {
+          "sentence_id": 1677,
+          "file": "9190125542399019358.wav",
+          "transcription": "الحشرات الوحيدة التي لا يُمكنها طي أجنحتها اليوم هي اليعسوب وذبابة مايو.",
+          "raw_transcription": "الحشرات الوحيدة التي لا يُمكنها طي أجنحتها اليوم هي اليعسوب وذبابة مايو",
+          "num_samples": 167040,
+          "duration_seconds": 10.44,
+          "gender": "FEMALE",
+          "source_line": 78
+        }
+      }
+    },
+    {
+      "sentence_id": 1687,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1687,
+          "file": "1105476766992092088.wav",
+          "transcription": "Сегрегация и рекомбинация с каждым поколением тасуют вариации между двумя пулами.",
+          "raw_transcription": "сегрегация и рекомбинация с каждым поколением тасуют вариации между двумя пулами",
+          "num_samples": 128640,
+          "duration_seconds": 8.04,
+          "gender": "MALE",
+          "source_line": 115
+        },
+        "en_us": {
+          "sentence_id": 1687,
+          "file": "221216034074176262.wav",
+          "transcription": "Segregation and recombination shuffle variation back and forth between the two pools with each generation.",
+          "raw_transcription": "segregation and recombination shuffle variation back and forth between the two pools with each generation",
+          "num_samples": 179520,
+          "duration_seconds": 11.22,
+          "gender": "MALE",
+          "source_line": 94
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1687,
+          "file": "6567034835218108721.wav",
+          "transcription": "由于分离和重组，变异在每一代的两个库之间来回变动。",
+          "raw_transcription": "由 于 分 离 和 重 组 变 异 在 每 一 代 的 两 个 库 之 间 来 回 变 动",
+          "num_samples": 131520,
+          "duration_seconds": 8.22,
+          "gender": "MALE",
+          "source_line": 14
+        },
+        "ar_eg": {
+          "sentence_id": 1687,
+          "file": "13594542441234521344.wav",
+          "transcription": "تعمل عمليتا الفصل وإعادة التركيب على جعل التباين عشوائياً ذهاباً وإياباً بين المجموعتين مع كل جيل.",
+          "raw_transcription": "تعمل عمليتا الفصل وإعادة التركيب على جعل التباين عشوائياً ذهاباً وإياباً بين المجموعتين مع كل جيل",
+          "num_samples": 179520,
+          "duration_seconds": 11.22,
+          "gender": "FEMALE",
+          "source_line": 67
+        }
+      }
+    },
+    {
+      "sentence_id": 1697,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1697,
+          "file": "10669014641440041936.wav",
+          "transcription": "Он не смог принять препараты, необходимые для облегчения боли, так как они запрещены в Играх.",
+          "raw_transcription": "он не смог принять препараты необходимые для облегчения боли так как они запрещены в играх",
+          "num_samples": 120960,
+          "duration_seconds": 7.56,
+          "gender": "FEMALE",
+          "source_line": 4
+        },
+        "en_us": {
+          "sentence_id": 1697,
+          "file": "18202947038243735021.wav",
+          "transcription": "He has been unable to take the drugs needed to overcome his pain as they are banned from the Games.",
+          "raw_transcription": "he has been unable to take the drugs needed to overcome his pain as they are banned from the games",
+          "num_samples": 140160,
+          "duration_seconds": 8.76,
+          "gender": "MALE",
+          "source_line": 141
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1697,
+          "file": "16704409640833254127.wav",
+          "transcription": "他一直无法用药物来缓解疼痛，因为比赛禁止参赛者服用这些药物。",
+          "raw_transcription": "他 一 直 无 法 用 药 物 来 缓 解 疼 痛 因 为 比 赛 禁 止 参 赛 者 服 用 这 些 药 物",
+          "num_samples": 131520,
+          "duration_seconds": 8.22,
+          "gender": "MALE",
+          "source_line": 940
+        },
+        "ar_eg": {
+          "sentence_id": 1697,
+          "file": "14916017927682662761.wav",
+          "transcription": "لم يستطع تناول الأدوية اللازمة للتغلّب على الألم إذ أن استخدامها ممنوع في الألعاب.",
+          "raw_transcription": "لم يستطع تناول الأدوية اللازمة للتغلّب على الألم إذ أن استخدامها ممنوع في الألعاب",
+          "num_samples": 119680,
+          "duration_seconds": 7.48,
+          "gender": "FEMALE",
+          "source_line": 359
+        }
+      }
+    },
+    {
+      "sentence_id": 1709,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1709,
+          "file": "5938823000161429720.wav",
+          "transcription": "В докладе содержится резкая критика почти каждого аспекта нынешней политики исполнительной власти в отношении Ирака и настоятельный призыв к незамедлительной смене курса.",
+          "raw_transcription": "в докладе содержится резкая критика почти каждого аспекта нынешней политики исполнительной власти в отношении ирака и настоятельный призыв к незамедлительной смене курса",
+          "num_samples": 183360,
+          "duration_seconds": 11.46,
+          "gender": "MALE",
+          "source_line": 348
+        },
+        "en_us": {
+          "sentence_id": 1709,
+          "file": "9273458614645013056.wav",
+          "transcription": "The Report is highly critical of almost every aspect of the present policy of the Executive towards Iraq and it urges an immediate change of direction.",
+          "raw_transcription": "the report is highly critical of almost every aspect of the present policy of the executive towards iraq and it urges an immediate change of direction",
+          "num_samples": 138240,
+          "duration_seconds": 8.64,
+          "gender": "FEMALE",
+          "source_line": 152
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1709,
+          "file": "8386178783748510855.wav",
+          "transcription": "该报告对行政当局目前对伊拉克政策的几乎每一个方面都提出了严厉批评，并敦促立即改变方向。",
+          "raw_transcription": "该 报 告 对 行 政 当 局 目 前 对 伊 拉 克 政 策 的 几 乎 每 一 个 方 面 都 提 出 了 严 厉 批 评 并 敦 促 立 即 改 变 方 向",
+          "num_samples": 187200,
+          "duration_seconds": 11.7,
+          "gender": "MALE",
+          "source_line": 104
+        },
+        "ar_eg": {
+          "sentence_id": 1709,
+          "file": "1429914686631795314.wav",
+          "transcription": "ينتقد التقرير بشدة كل جوانب السياسة الحالية تقريباً للسلطة التنفيذية تجاه العراق، كما يحثّ على تغيير فوري في الاتجاه.",
+          "raw_transcription": "ينتقد التقرير بشدة كل جوانب السياسة الحالية تقريباً للسلطة التنفيذية تجاه العراق كما يحثّ على تغيير فوري في الاتجاه",
+          "num_samples": 190720,
+          "duration_seconds": 11.92,
+          "gender": "FEMALE",
+          "source_line": 261
+        }
+      }
+    },
+    {
+      "sentence_id": 1717,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1717,
+          "file": "3983302451159686461.wav",
+          "transcription": "Обратный поток сосредоточен в нескольких более глубоких участках, где может образовываться быстрое течение, уходящее на большую глубину, из-за подобной подводной топологии.",
+          "raw_transcription": "обратный поток сосредоточен в нескольких более глубоких участках где может образовываться быстрое течение уходящее на большую глубину из-за подобной подводной топологии",
+          "num_samples": 245760,
+          "duration_seconds": 15.36,
+          "gender": "FEMALE",
+          "source_line": 298
+        },
+        "en_us": {
+          "sentence_id": 1717,
+          "file": "10933070083389897676.wav",
+          "transcription": "Due to the underwater topology the return flow is concentrated at a few deeper sections, and a fast current to deep water may form there.",
+          "raw_transcription": "due to the underwater topology the return flow is concentrated at a few deeper sections and a fast current to deep water may form there",
+          "num_samples": 174720,
+          "duration_seconds": 10.92,
+          "gender": "FEMALE",
+          "source_line": 490
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1717,
+          "file": "6119869420349327544.wav",
+          "transcription": "水下的地形造成回流集中于几处较深的区域，那里可能会形成流向深水的急流。",
+          "raw_transcription": "水 下 的 地 形 造 成 回 流 集 中 于 几 处 较 深 的 区 域 那 里 可 能 会 形 成 流 向 深 水 的 急 流",
+          "num_samples": 216960,
+          "duration_seconds": 13.56,
+          "gender": "MALE",
+          "source_line": 73
+        },
+        "ar_eg": {
+          "sentence_id": 1717,
+          "file": "3644417349963489934.wav",
+          "transcription": "نظراً للتّضاريس تحت المياه، يتركّز التّدفق العائد في بضعة أقسام عميقةٍ، وقد يتشكّل تيارٌ سريعٌ إلى المياه العميقة هناك.",
+          "raw_transcription": "نظراً للتّضاريس تحت المياه يتركّز التّدفق العائد في بضعة أقسام عميقةٍ وقد يتشكّل تيارٌ سريعٌ إلى المياه العميقة هناك",
+          "num_samples": 196800,
+          "duration_seconds": 12.3,
+          "gender": "FEMALE",
+          "source_line": 289
+        }
+      }
+    },
+    {
+      "sentence_id": 1725,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1725,
+          "file": "6211901537471731152.wav",
+          "transcription": "Серия ASUS Eee PC, ранее представленная во всём мире с ориентацией на такие факторы, как экономия средств и функциональность, стала горячей темой во время месяца информационных технологий в Тайбэе в 2007 году.",
+          "raw_transcription": "серия asus eee pc ранее представленная во всём мире с ориентацией на такие факторы как экономия средств и функциональность стала горячей темой во время месяца информационных технологий в тайбэе в 2007 году",
+          "num_samples": 288960,
+          "duration_seconds": 18.06,
+          "gender": "MALE",
+          "source_line": 230
+        },
+        "en_us": {
+          "sentence_id": 1725,
+          "file": "394135166243682296.wav",
+          "transcription": "ASUS Eee PC, earlier launched world-wide for cost-saving and functionality factors, became a hot topic in 2007 Taipei IT Month.",
+          "raw_transcription": "asus eee pc earlier launched world-wide for cost-saving and functionality factors became a hot topic in 2007 taipei it month",
+          "num_samples": 171840,
+          "duration_seconds": 10.74,
+          "gender": "FEMALE",
+          "source_line": 402
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1725,
+          "file": "15324743446256875074.wav",
+          "transcription": "早先于全球发布的华硕 Eee PC 个人笔记本，因成本节约及功能性因素，成为 2007 年台北 IT 资讯月备受瞩目的话题。",
+          "raw_transcription": "早 先 于 全 球 发 布 的 华 硕 eee pc 个 人 笔 记 本 因 成 本 节 约 及 功 能 性 因 素 成 为 2007 年 台 北 it 资 讯 月 备 受 瞩 目 的 话 题",
+          "num_samples": 248640,
+          "duration_seconds": 15.54,
+          "gender": "MALE",
+          "source_line": 32
+        },
+        "ar_eg": {
+          "sentence_id": 1725,
+          "file": "9789333960643411627.wav",
+          "transcription": "أصبح Eee PC من ASUS الذي أُطلق في وقت سابق في جميع أنحاء العالم لعوامل توفير التكاليف والقدرة الوظيفية، موضوعاً مثيراً في شهر تكنولوجيا المعلومات في تايبيه لعام 2007.",
+          "raw_transcription": "أصبح eee pc من asus الذي أُطلق في وقت سابق في جميع أنحاء العالم لعوامل توفير التكاليف والقدرة الوظيفية موضوعاً مثيراً في شهر تكنولوجيا المعلومات في تايبيه لعام 2007",
+          "num_samples": 265280,
+          "duration_seconds": 16.58,
+          "gender": "FEMALE",
+          "source_line": 329
+        }
+      }
+    },
+    {
+      "sentence_id": 1733,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1733,
+          "file": "9414209807402215299.wav",
+          "transcription": "Первой среди 78 рекомендаций является то, что следует реализовать новую дипломатическую инициативу до конца этого года для укрепления иракских границ, чтобы не допустить враждебного вмешательства, а также для возобновления дипломатических отношений с соседями.",
+          "raw_transcription": "первой среди 78 рекомендаций является то что следует реализовать новую дипломатическую инициативу до конца этого года для укрепления иракских границ чтобы не допустить враждебного вмешательства а также для возобновления дипломатических отношений с соседями",
+          "num_samples": 262080,
+          "duration_seconds": 16.38,
+          "gender": "MALE",
+          "source_line": 702
+        },
+        "en_us": {
+          "sentence_id": 1733,
+          "file": "899317378039624755.wav",
+          "transcription": "First among its 78 recommendations is that a new diplomatic initiative should be taken before the end of this year to secure Iraq’s borders against hostile interventions and to re-establish diplomatic relations with its neighbors.",
+          "raw_transcription": "first among its 78 recommendations is that a new diplomatic initiative should be taken before the end of this year to secure iraq's borders against hostile interventions and to re-establish diplomatic relations with its neighbors",
+          "num_samples": 281280,
+          "duration_seconds": 17.58,
+          "gender": "MALE",
+          "source_line": 262
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1733,
+          "file": "18059580157250761435.wav",
+          "transcription": "在这份报告的 78 项建议中，第一条建议是在今年年底之前采取新的外交行动，目的在于保护伊拉克的边界免受敌对势力的侵害，并与邻国重建外交关系。",
+          "raw_transcription": "在 这 份 报 告 的 78 项 建 议 中 第 一 条 建 议 是 在 今 年 年 底 之 前 采 取 新 的 外 交 行 动 目 的 在 于 保 护 伊 拉 克 的 边 界 免 受 敌 对 势 力 的 侵 害 并 与 邻 国 重 建 外 交 关 系",
+          "num_samples": 344640,
+          "duration_seconds": 21.54,
+          "gender": "MALE",
+          "source_line": 485
+        },
+        "ar_eg": {
+          "sentence_id": 1733,
+          "file": "6042883460357902228.wav",
+          "transcription": "أول ما تم ذكره بين ال78 توصية الخاصة بها هو أنه يجب اتخاذ مبادرة دبلوماسية قبل نهاية هذا العام لتأمين حدود العراق ضد التدخلات العدوانية ولإعادة تأسيس العلاقات الدبلوماسية مع جيرانها.",
+          "raw_transcription": "أول ما تم ذكره بين ال78 توصية الخاصة بها هو أنه يجب اتخاذ مبادرة دبلوماسية قبل نهاية هذا العام لتأمين حدود العراق ضد التدخلات العدوانية ولإعادة تأسيس العلاقات الدبلوماسية مع جيرانها",
+          "num_samples": 235200,
+          "duration_seconds": 14.7,
+          "gender": "FEMALE",
+          "source_line": 160
+        }
+      }
+    },
+    {
+      "sentence_id": 1741,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1741,
+          "file": "7454419638261862376.wav",
+          "transcription": "Большие области далее к северу довольно редко заселены, а некоторые из них – практически незаселённая глушь.",
+          "raw_transcription": "большие области далее к северу довольно редко заселены а некоторые из них практически незаселённая глушь",
+          "num_samples": 130560,
+          "duration_seconds": 8.16,
+          "gender": "FEMALE",
+          "source_line": 539
+        },
+        "en_us": {
+          "sentence_id": 1741,
+          "file": "13297690853135603331.wav",
+          "transcription": "Large areas further north are quite sparsely populated and some is nearly uninhabited wilderness.",
+          "raw_transcription": "large areas further north are quite sparsely populated and some is nearly uninhabited wilderness",
+          "num_samples": 122880,
+          "duration_seconds": 7.68,
+          "gender": "FEMALE",
+          "source_line": 290
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1741,
+          "file": "13503204199376428824.wav",
+          "transcription": "再往北的广袤地区人烟稀少，有些地方是杳无人烟的荒野。",
+          "raw_transcription": "再 往 北 的 广 袤 地 区 人 烟 稀 少 有 些 地 方 是 杳 无 人 烟 的 荒 野",
+          "num_samples": 138240,
+          "duration_seconds": 8.64,
+          "gender": "MALE",
+          "source_line": 611
+        },
+        "ar_eg": {
+          "sentence_id": 1741,
+          "file": "747984393569561964.wav",
+          "transcription": "المناطق الكبيرة في الشمال هي مناطق قليلة السكان نوعا ما والبعض غير مأهول تقريبا.",
+          "raw_transcription": "المناطق الكبيرة في الشمال هي مناطق قليلة السكان نوعا ما والبعض غير مأهول تقريبا",
+          "num_samples": 104640,
+          "duration_seconds": 6.54,
+          "gender": "FEMALE",
+          "source_line": 136
+        }
+      }
+    },
+    {
+      "sentence_id": 1748,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1748,
+          "file": "13944068504425228273.wav",
+          "transcription": "В результате бригады пожарных потушили пожар к 23:35.",
+          "raw_transcription": "в результате бригады пожарных потушили пожар к 23:35",
+          "num_samples": 96960,
+          "duration_seconds": 6.06,
+          "gender": "FEMALE",
+          "source_line": 595
+        },
+        "en_us": {
+          "sentence_id": 1748,
+          "file": "8601075939905194476.wav",
+          "transcription": "Fire rescue crews eventually doused the fire by 11:35 pm.",
+          "raw_transcription": "fire rescue crews eventually doused the fire by 11:35 pm",
+          "num_samples": 113920,
+          "duration_seconds": 7.12,
+          "gender": "MALE",
+          "source_line": 588
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1748,
+          "file": "7890052019880694182.wav",
+          "transcription": "消防救援人员最终在晚上 11 点 35 分扑灭了大火。",
+          "raw_transcription": "消 防 救 援 人 员 最 终 在 晚 上 11 点 35 分 扑 灭 了 大 火",
+          "num_samples": 116160,
+          "duration_seconds": 7.26,
+          "gender": "MALE",
+          "source_line": 194
+        },
+        "ar_eg": {
+          "sentence_id": 1748,
+          "file": "1260918510710584407.wav",
+          "transcription": "وقد أخمدت فرق الإنقاذ النار في نهاية المطاف بحلول الساعة 11:35 مساء.",
+          "raw_transcription": "وقد أخمدت فرق الإنقاذ النار في نهاية المطاف بحلول الساعة 11:35 مساء",
+          "num_samples": 139520,
+          "duration_seconds": 8.72,
+          "gender": "FEMALE",
+          "source_line": 26
+        }
+      }
+    },
+    {
+      "sentence_id": 1757,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1757,
+          "file": "10132536326476504073.wav",
+          "transcription": "Только мутации в клетках зародышевой линии могут передаваться далее детям, в то время как мутации где-то ещё могут привести к гибели клеток или раку.",
+          "raw_transcription": "только мутации в клетках зародышевой линии могут передаваться далее детям в то время как мутации где-то ещё могут привести к гибели клеток или раку",
+          "num_samples": 180480,
+          "duration_seconds": 11.28,
+          "gender": "MALE",
+          "source_line": 605
+        },
+        "en_us": {
+          "sentence_id": 1757,
+          "file": "9089212191853214530.wav",
+          "transcription": "Only mutations in germ-line cells can be passed on to children, while mutations elsewhere can cause cell-death or cancer.",
+          "raw_transcription": "only mutations in germ-line cells can be passed on to children while mutations elsewhere can cause cell-death or cancer",
+          "num_samples": 167040,
+          "duration_seconds": 10.44,
+          "gender": "MALE",
+          "source_line": 556
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1757,
+          "file": "13496083615963162782.wav",
+          "transcription": "只有生殖细胞的突变才会遗传给孩子，而其他细胞的突变则会导致细胞死亡或癌症。",
+          "raw_transcription": "只 有 生 殖 细 胞 的 突 变 才 会 遗 传 给 孩 子 而 其 他 细 胞 的 突 变 则 会 导 致 细 胞 死 亡 或 癌 症",
+          "num_samples": 192960,
+          "duration_seconds": 12.06,
+          "gender": "MALE",
+          "source_line": 318
+        },
+        "ar_eg": {
+          "sentence_id": 1757,
+          "file": "11635121783716683505.wav",
+          "transcription": "يمكن فقط نقل الطفرات في خلايا الخط الجرثومي إلى الأطفال، بينما يمكن أن تسبب الطفرات في أماكن أخرى موت الخلايا أو السرطان.",
+          "raw_transcription": "يمكن فقط نقل الطفرات في خلايا الخط الجرثومي إلى الأطفال بينما يمكن أن تسبب الطفرات في أماكن أخرى موت الخلايا أو السرطان",
+          "num_samples": 199680,
+          "duration_seconds": 12.48,
+          "gender": "FEMALE",
+          "source_line": 65
+        }
+      }
+    },
+    {
+      "sentence_id": 1766,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1766,
+          "file": "15642088567407352238.wav",
+          "transcription": "Некоторые атомы имеют нестабильное ядро, что означает, что они склонны распадаться при малом воздействие или без него.",
+          "raw_transcription": "некоторые атомы имеют нестабильное ядро что означает что они склонны распадаться при малом воздействие или без него",
+          "num_samples": 151680,
+          "duration_seconds": 9.48,
+          "gender": "MALE",
+          "source_line": 563
+        },
+        "en_us": {
+          "sentence_id": 1766,
+          "file": "6620866315580544260.wav",
+          "transcription": "Some atoms have unstable nuclei which means that they tend to break apart with little or no nudging.",
+          "raw_transcription": "some atoms have unstable nuclei which means that they tend to break apart with little or no nudging",
+          "num_samples": 155520,
+          "duration_seconds": 9.72,
+          "gender": "MALE",
+          "source_line": 164
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1766,
+          "file": "6155642579709908820.wav",
+          "transcription": "有些原子含有不稳定的原子核，这意味着它们很可能会在很少或没有刺激的情况下发生分裂。",
+          "raw_transcription": "有 些 原 子 含 有 不 稳 定 的 原 子 核 这 意 味 着 它 们 很 可 能 会 在 很 少 或 没 有 刺 激 的 情 况 下 发 生 分 裂",
+          "num_samples": 167040,
+          "duration_seconds": 10.44,
+          "gender": "MALE",
+          "source_line": 130
+        },
+        "ar_eg": {
+          "sentence_id": 1766,
+          "file": "4405382283863263259.wav",
+          "transcription": "تضم بعض الذرّات نوى غير مستقرّةٍ مما يعني أنها تميل إلى التفكك مع حركة بسيطة أو بدونها.",
+          "raw_transcription": "تضم بعض الذرّات نوى غير مستقرّةٍ مما يعني أنها تميل إلى التفكك مع حركة بسيطة أو بدونها",
+          "num_samples": 167040,
+          "duration_seconds": 10.44,
+          "gender": "FEMALE",
+          "source_line": 248
+        }
+      }
+    },
+    {
+      "sentence_id": 1773,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1773,
+          "file": "17229944071021971646.wav",
+          "transcription": "Прерывание сна — это процесс целенаправленного пробуждения во время обычного сна и повторного засыпания через короткое время (10–60 минут).",
+          "raw_transcription": "прерывание сна — это процесс целенаправленного пробуждения во время обычного сна и повторного засыпания через короткое время 10–60 минут",
+          "num_samples": 170880,
+          "duration_seconds": 10.68,
+          "gender": "MALE",
+          "source_line": 453
+        },
+        "en_us": {
+          "sentence_id": 1773,
+          "file": "1729210846741769405.wav",
+          "transcription": "Sleep interruption is the process of purposefully awakening during your normal sleep period and falling asleep a short time later (10–60 minutes).",
+          "raw_transcription": "sleep interruption is the process of purposefully awakening during your normal sleep period and falling asleep a short time later 10–60 minutes",
+          "num_samples": 204480,
+          "duration_seconds": 12.78,
+          "gender": "MALE",
+          "source_line": 391
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1773,
+          "file": "14338203553003909059.wav",
+          "transcription": "睡眠中断是指这样的过程：在正常睡眠期间有意地醒来，并且在短时间之后（10-60分钟）睡着。",
+          "raw_transcription": "睡 眠 中 断 是 指 这 样 的 过 程 在 正 常 睡 眠 期 间 有 意 地 醒 来 并 且 在 短 时 间 之 后 10-60 分 钟 睡 着",
+          "num_samples": 270080,
+          "duration_seconds": 16.88,
+          "gender": "MALE",
+          "source_line": 500
+        },
+        "ar_eg": {
+          "sentence_id": 1773,
+          "file": "13811922940508003061.wav",
+          "transcription": "انقطاع النوم هو عملية الاستيقاظ عن عمد خلال فترة نومك الطبيعية والنوم بعد فترة قصيرة (من 10 إلى 60 دقيقة).",
+          "raw_transcription": "انقطاع النوم هو عملية الاستيقاظ عن عمد خلال فترة نومك الطبيعية والنوم بعد فترة قصيرة من 10 إلى 60 دقيقة",
+          "num_samples": 176000,
+          "duration_seconds": 11.0,
+          "gender": "FEMALE",
+          "source_line": 9
+        }
+      }
+    },
+    {
+      "sentence_id": 1782,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1782,
+          "file": "11598752391290873656.wav",
+          "transcription": "Кроме того между правлениями каждой династии царила раздробленность и нестабильность. Самой известной была эпоха Троецарствия, которая длилась 60 лет во время династий Хань и Цзинь.",
+          "raw_transcription": "кроме того между правлениями каждой династии царила раздробленность и нестабильность самой известной была эпоха троецарствия которая длилась 60 лет во время династий хань и цзинь",
+          "num_samples": 216960,
+          "duration_seconds": 13.56,
+          "gender": "FEMALE",
+          "source_line": 629
+        },
+        "en_us": {
+          "sentence_id": 1782,
+          "file": "1447510838326873839.wav",
+          "transcription": "Also between each dynasty was an unstable age of divided provinces. The best-known of these periods was the Three Kingdoms epoch taking place for 60 years between the Han and the Jin Dynasty.",
+          "raw_transcription": "also between each dynasty was an unstable age of divided provinces the best-known of these periods was the three kingdoms epoch taking place for 60 years between the han and the jin dynasty",
+          "num_samples": 189120,
+          "duration_seconds": 11.82,
+          "gender": "FEMALE",
+          "source_line": 351
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1782,
+          "file": "7507638493814869010.wav",
+          "transcription": "同样，历朝历代更迭期间都是一段小国分立的不稳定时代。其中最有名的便是长达 60 年的三国时期，该时期处于汉晋两代的更迭之间。",
+          "raw_transcription": "同 样 历 朝 历 代 更 迭 期 间 都 是 一 段 小 国 分 立 的 不 稳 定 时 代 其 中 最 有 名 的 便 是 长 达 60 年 的 三 国 时 期 该 时 期 处 于 汉 晋 两 代 的 更 迭 之 间",
+          "num_samples": 251520,
+          "duration_seconds": 15.72,
+          "gender": "MALE",
+          "source_line": 828
+        },
+        "ar_eg": {
+          "sentence_id": 1782,
+          "file": "4236836260678107987.wav",
+          "transcription": "بالإضافة إلى ذلك، كان هناك بين كل سلالة حاكمة عصرٌ غير مستقرٍ من المقاطعات المقسمة. أشهر هذه الفترات كانت حقبة الممالك الثلاث التي دامت 60 عاماً بين أسرة هان وسلالة جين.",
+          "raw_transcription": "بالإضافة إلى ذلك كان هناك بين كل سلالة حاكمة عصرٌ غير مستقرٍ من المقاطعات المقسمة أشهر هذه الفترات كانت حقبة الممالك الثلاث التي دامت 60 عاماً بين أسرة هان وسلالة جين",
+          "num_samples": 277120,
+          "duration_seconds": 17.32,
+          "gender": "FEMALE",
+          "source_line": 309
+        }
+      }
+    },
+    {
+      "sentence_id": 1793,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1793,
+          "file": "17100432178325832883.wav",
+          "transcription": "Если вы не привыкли ездить по сельским дорогам, будьте начеку: преобладают крутые склоны, узкие переулки и резкие повороты.",
+          "raw_transcription": "если вы не привыкли ездить по сельским дорогам будьте начеку преобладают крутые склоны узкие переулки и резкие повороты",
+          "num_samples": 171840,
+          "duration_seconds": 10.74,
+          "gender": "MALE",
+          "source_line": 157
+        },
+        "en_us": {
+          "sentence_id": 1793,
+          "file": "2258483735861631299.wav",
+          "transcription": "If you're not used to driving on country roads, keep your wits about you: steep grades, narrow lanes, and sharp curves predominate.",
+          "raw_transcription": "if you're not used to driving on country roads keep your wits about you steep grades narrow lanes and sharp curves predominate",
+          "num_samples": 177600,
+          "duration_seconds": 11.1,
+          "gender": "MALE",
+          "source_line": 129
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1793,
+          "file": "7307792880988283491.wav",
+          "transcription": "如果你不习惯在乡村道路上开车，那可要保持头脑清醒：这里到处都是陡坡、窄车道和急转弯。",
+          "raw_transcription": "如 果 你 不 习 惯 在 乡 村 道 路 上 开 车 那 可 要 保 持 头 脑 清 醒 这 里 到 处 都 是 陡 坡 窄 车 道 和 急 转 弯",
+          "num_samples": 283840,
+          "duration_seconds": 17.74,
+          "gender": "MALE",
+          "source_line": 161
+        },
+        "ar_eg": {
+          "sentence_id": 1793,
+          "file": "2923548768804766724.wav",
+          "transcription": "إذا لم تكن معتاداً على القيادة على الطرق الريفية، فكن حذراً: يوجد دائماً منحدرات حادة وممرات ضيقة ومنحنيات حادة.",
+          "raw_transcription": "إذا لم تكن معتاداً على القيادة على الطرق الريفية فكن حذراً يوجد دائماً منحدرات حادة وممرات ضيقة ومنحنيات حادة",
+          "num_samples": 175680,
+          "duration_seconds": 10.98,
+          "gender": "FEMALE",
+          "source_line": 295
+        }
+      }
+    },
+    {
+      "sentence_id": 1800,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1800,
+          "file": "10879804899862244734.wav",
+          "transcription": "Согласно плану мост полностью войдёт в эксплуатацию  в сентябре 2017 года, когда бразильские пункты таможенной проверки, как ожидается, будут завершены.",
+          "raw_transcription": "согласно плану мост полностью войдёт в эксплуатацию в сентябре 2017 года когда бразильские пункты таможенной проверки как ожидается будут завершены",
+          "num_samples": 178560,
+          "duration_seconds": 11.16,
+          "gender": "MALE",
+          "source_line": 289
+        },
+        "en_us": {
+          "sentence_id": 1800,
+          "file": "6614658234069371088.wav",
+          "transcription": "The bridge is scheduled to be fully operational in September 2017, when the Brazilian customs checkpoints are expected to be finished.",
+          "raw_transcription": "the bridge is scheduled to be fully operational in september 2017 when the brazilian customs checkpoints are expected to be finished",
+          "num_samples": 192000,
+          "duration_seconds": 12.0,
+          "gender": "MALE",
+          "source_line": 370
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1800,
+          "file": "7047901157411502722.wav",
+          "transcription": "大桥预计将于 2017 年 9 月全面投入使用，届时巴西海关检查站预计也将完工。",
+          "raw_transcription": "大 桥 预 计 将 于 2017 年 9 月 全 面 投 入 使 用 届 时 巴 西 海 关 检 查 站 预 计 也 将 完 工",
+          "num_samples": 176640,
+          "duration_seconds": 11.04,
+          "gender": "MALE",
+          "source_line": 126
+        },
+        "ar_eg": {
+          "sentence_id": 1800,
+          "file": "17247754661305436241.wav",
+          "transcription": "ومن المقرر أن يبدأ الجسر العمل بكامل طاقته في سبتمبر 2017، في نفس الوقت المتوقع عنده الانتهاء من نقاط التفتيش الجمركية البرازيلية.",
+          "raw_transcription": "ومن المقرر أن يبدأ الجسر العمل بكامل طاقته في سبتمبر 2017 في نفس الوقت المتوقع عنده الانتهاء من نقاط التفتيش الجمركية البرازيلية",
+          "num_samples": 209280,
+          "duration_seconds": 13.08,
+          "gender": "FEMALE",
+          "source_line": 334
+        }
+      }
+    },
+    {
+      "sentence_id": 1809,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1809,
+          "file": "15335951290467276452.wav",
+          "transcription": "Шпалы начали применяться довольно давно для того, чтобы удерживать рельсы на месте. Однако впоследствии стало ясно, что пути были более эффективны при полосе из железа сверху.",
+          "raw_transcription": "шпалы начали применяться довольно давно для того чтобы удерживать рельсы на месте однако впоследствии стало ясно что пути были более эффективны при полосе из железа сверху",
+          "num_samples": 209280,
+          "duration_seconds": 13.08,
+          "gender": "MALE",
+          "source_line": 363
+        },
+        "en_us": {
+          "sentence_id": 1809,
+          "file": "15738179776336088720.wav",
+          "transcription": "Crossties were introduced fairly early to hold the tracks in place. Gradually, however, it was realised that tracks would be more efficient if they had a stip of iron on the top.",
+          "raw_transcription": "crossties were introduced fairly early to hold the tracks in place gradually however it was realised that tracks would be more efficient if they had a stip of iron on the top",
+          "num_samples": 171840,
+          "duration_seconds": 10.74,
+          "gender": "FEMALE",
+          "source_line": 300
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1809,
+          "file": "17739918928868205471.wav",
+          "transcription": "很早的时候就引进了轨枕，用于固定铁轨。但是，人们逐渐意识到，如果在铁轨上放上铁片，铁轨会更稳固有效。",
+          "raw_transcription": "很 早 的 时 候 就 引 进 了 轨 枕 用 于 固 定 铁 轨 但 是 人 们 逐 渐 意 识 到 如 果 在 铁 轨 上 放 上 铁 片 铁 轨 会 更 稳 固 有 效",
+          "num_samples": 216000,
+          "duration_seconds": 13.5,
+          "gender": "MALE",
+          "source_line": 453
+        },
+        "ar_eg": {
+          "sentence_id": 1809,
+          "file": "2766696683022461328.wav",
+          "transcription": "تم اختراع قضبان القطارات في وقت مبكر نسبياً لتثبيت المسارات، ولكن اتضح بعد ذلك مع الوقت أن وضع شريط حديدي أعلى المسار يجعله أكثر فاعلية.",
+          "raw_transcription": "تم اختراع قضبان القطارات في وقت مبكر نسبياً لتثبيت المسارات ولكن اتضح بعد ذلك مع الوقت أن وضع شريط حديدي أعلى المسار يجعله أكثر فاعلية",
+          "num_samples": 178560,
+          "duration_seconds": 11.16,
+          "gender": "FEMALE",
+          "source_line": 218
+        }
+      }
+    },
+    {
+      "sentence_id": 1818,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1818,
+          "file": "15285599257595572773.wav",
+          "transcription": "Для людей может быть неожиданным, что терпение и понимание необходимо проявлять и к путешественникам, вернувшимся домой.",
+          "raw_transcription": "для людей может быть неожиданным что терпение и понимание необходимо проявлять и к путешественникам вернувшимся домой",
+          "num_samples": 162240,
+          "duration_seconds": 10.14,
+          "gender": "MALE",
+          "source_line": 82
+        },
+        "en_us": {
+          "sentence_id": 1818,
+          "file": "4727095276781970486.wav",
+          "transcription": "People may not anticipate that patience and understanding are also necessary for travellers returning home.",
+          "raw_transcription": "people may not anticipate that patience and understanding are also necessary for travellers returning home",
+          "num_samples": 132480,
+          "duration_seconds": 8.28,
+          "gender": "MALE",
+          "source_line": 136
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1818,
+          "file": "6121055890864018747.wav",
+          "transcription": "人们可能想不到，旅行者在回程中也需要耐心和理解。",
+          "raw_transcription": "人 们 可 能 想 不 到 旅 行 者 在 回 程 中 也 需 要 耐 心 和 理 解",
+          "num_samples": 173440,
+          "duration_seconds": 10.84,
+          "gender": "MALE",
+          "source_line": 296
+        },
+        "ar_eg": {
+          "sentence_id": 1818,
+          "file": "14804720736199866920.wav",
+          "transcription": "قد لا يتوقع الناس أن الصبر والتفاهم ضروريان أيضاً للمسافرين العائدين إلى ديارهم.",
+          "raw_transcription": "قد لا يتوقع الناس أن الصبر والتفاهم ضروريان أيضاً للمسافرين العائدين إلى ديارهم",
+          "num_samples": 138240,
+          "duration_seconds": 8.64,
+          "gender": "FEMALE",
+          "source_line": 422
+        }
+      }
+    },
+    {
+      "sentence_id": 1826,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1826,
+          "file": "15960588124712404375.wav",
+          "transcription": "После несчастного случая Гибсон был доставлен в больницу, но вскоре скончался.",
+          "raw_transcription": "после несчастного случая гибсон был доставлен в больницу но вскоре скончался",
+          "num_samples": 94080,
+          "duration_seconds": 5.88,
+          "gender": "MALE",
+          "source_line": 676
+        },
+        "en_us": {
+          "sentence_id": 1826,
+          "file": "5433314566767233828.wav",
+          "transcription": "After the accident occurred, Gibson was transported to a hospital but died shortly afterwards.",
+          "raw_transcription": "after the accident occurred gibson was transported to a hospital but died shortly afterwards",
+          "num_samples": 99840,
+          "duration_seconds": 6.24,
+          "gender": "FEMALE",
+          "source_line": 72
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1826,
+          "file": "5394813682536993655.wav",
+          "transcription": "事故发生后，吉布森被送往医院，但很快就一命呜呼。",
+          "raw_transcription": "事 故 发 生 后 吉 布 森 被 送 往 医 院 但 很 快 就 一 命 呜 呼",
+          "num_samples": 177920,
+          "duration_seconds": 11.12,
+          "gender": "MALE",
+          "source_line": 342
+        },
+        "ar_eg": {
+          "sentence_id": 1826,
+          "file": "9883897893877000250.wav",
+          "transcription": "بعد وقوع الحادث، نُقل \"جبسون\" إلى المستشفى، لكنه توفي بعدها بفترة قصيرة.",
+          "raw_transcription": "بعد وقوع الحادث نُقل جبسون إلى المستشفى لكنه توفي بعدها بفترة قصيرة",
+          "num_samples": 93120,
+          "duration_seconds": 5.82,
+          "gender": "FEMALE",
+          "source_line": 291
+        }
+      }
+    },
+    {
+      "sentence_id": 1835,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1835,
+          "file": "5812961093372884470.wav",
+          "transcription": "Предупреждений о цунами не было и, согласно сообщению от Джакартского геофизического агентства, не будет, так как магнитуда землетрясения не достигла 6,5 балла.",
+          "raw_transcription": "предупреждений о цунами не было и согласно сообщению от джакартского геофизического агентства не будет так как магнитуда землетрясения не достигла 6,5 балла",
+          "num_samples": 210240,
+          "duration_seconds": 13.14,
+          "gender": "MALE",
+          "source_line": 133
+        },
+        "en_us": {
+          "sentence_id": 1835,
+          "file": "7610837418342439800.wav",
+          "transcription": "No tsunami warning has been issued, and according to the Jakarta geophysics agency, no tsunami warning will be issued because the quake did not meet the magnitude 6.5 requirement.",
+          "raw_transcription": "no tsunami warning has been issued and according to the jakarta geophysics agency no tsunami warning will be issued because the quake did not meet the magnitude 6.5 requirement",
+          "num_samples": 257280,
+          "duration_seconds": 16.08,
+          "gender": "MALE",
+          "source_line": 115
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1835,
+          "file": "18270669392740472839.wav",
+          "transcription": "目前还没有发布海啸预警。根据雅加达地质局的说法，由于此次地震没有达到 6.5 级，因此不会发布海啸预警。",
+          "raw_transcription": "目 前 还 没 有 发 布 海 啸 预 警 根 据 雅 加 达 地 质 局 的 说 法 由 于 此 次 地 震 没 有 达 到 6.5 级 因 此 不 会 发 布 海 啸 预 警",
+          "num_samples": 262400,
+          "duration_seconds": 16.4,
+          "gender": "MALE",
+          "source_line": 174
+        },
+        "ar_eg": {
+          "sentence_id": 1835,
+          "file": "11293056949208622156.wav",
+          "transcription": "لم يصدر تحذير عن تسونامي، ووفقا لوكالة جاكرتا للجيوفيزياء، لن يصدر تحذير عن تسونامي لأن الزلزال لم يستوف متطلبات 6.5 درجة.",
+          "raw_transcription": "لم يصدر تحذير عن تسونامي ووفقا لوكالة جاكرتا للجيوفيزياء لن يصدر تحذير عن تسونامي لأن الزلزال لم يستوف متطلبات 6.5 درجة",
+          "num_samples": 228160,
+          "duration_seconds": 14.26,
+          "gender": "FEMALE",
+          "source_line": 328
+        }
+      }
+    },
+    {
+      "sentence_id": 1842,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1842,
+          "file": "12784200054841610765.wav",
+          "transcription": "Так как у перьев динозавров отсутствует хорошо развитый стержень, называемый рахисом, но все же имеются другие отличительные черты — бородки и бородочки — исследователи пришли к выводу, что рахис, скорее всего, появился позднее путем эволюционного развития других отличительных черт.",
+          "raw_transcription": "так как у перьев динозавров отсутствует хорошо развитый стержень называемый рахисом но все же имеются другие отличительные черты бородки и бородочки исследователи пришли к выводу что рахис скорее всего появился позднее путем эволюционного развития других отличительных черт",
+          "num_samples": 332160,
+          "duration_seconds": 20.76,
+          "gender": "MALE",
+          "source_line": 69
+        },
+        "en_us": {
+          "sentence_id": 1842,
+          "file": "3797667971540248320.wav",
+          "transcription": "Because the dinosaur feathers do not have a well-developed shaft, called a rachis, but do have other features of feathers — barbs and barbules — the researchers inferred the rachis was likely a later evolutionary development that these other features.",
+          "raw_transcription": "because the dinosaur feathers do not have a well-developed shaft called a rachis but do have other features of feathers barbs and barbules the researchers inferred the rachis was likely a later evolutionary development that these other features",
+          "num_samples": 280320,
+          "duration_seconds": 17.52,
+          "gender": "FEMALE",
+          "source_line": 522
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1842,
+          "file": "17461359558156586401.wav",
+          "transcription": "恐龙的羽毛并没有发育良好的主干——这称为“羽轴”，但还是有羽毛的其他特征，比如羽枝和羽小枝，研究人员推断羽轴的进化可能比这些其他特征晚。",
+          "raw_transcription": "恐 龙 的 羽 毛 并 没 有 发 育 良 好 的 主 干 这 称 为 羽 轴 但 还 是 有 羽 毛 的 其 他 特 征 比 如 羽 枝 和 羽 小 枝 研 究 人 员 推 断 羽 轴 的 进 化 可 能 比 这 些 其 他 特 征 晚",
+          "num_samples": 360000,
+          "duration_seconds": 22.5,
+          "gender": "MALE",
+          "source_line": 450
+        },
+        "ar_eg": {
+          "sentence_id": 1842,
+          "file": "16344578798136798501.wav",
+          "transcription": "لأن ريش الديناصورات لا يحتوي سلسلة عظمية مكتملة التطور، تدعى \"العمود الفقري\"، ولكنها تمتلك خصائص أخرى للريش - كالنتوءات والنتوءات الصغرى - خلص الباحثون أن العمود الفقري كان على الأرجح نشأة تطورية لاحقة لهذه الخصائص الأخرى.",
+          "raw_transcription": "لأن ريش الديناصورات لا يحتوي سلسلة عظمية مكتملة التطور تدعى العمود الفقري ولكنها تمتلك خصائص أخرى للريش كالنتوءات والنتوءات الصغرى خلص الباحثون أن العمود الفقري كان على الأرجح نشأة تطورية لاحقة لهذه الخصائص الأخرى",
+          "num_samples": 353600,
+          "duration_seconds": 22.1,
+          "gender": "FEMALE",
+          "source_line": 174
+        }
+      }
+    },
+    {
+      "sentence_id": 1853,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1853,
+          "file": "13259157996389501507.wav",
+          "transcription": "Джанкарло Физикелла потерял контроль над управлением своим автомобилем и завершил гонку вскоре после старта.",
+          "raw_transcription": "джанкарло физикелла потерял контроль над управлением своим автомобилем и завершил гонку вскоре после старта",
+          "num_samples": 132480,
+          "duration_seconds": 8.28,
+          "gender": "MALE",
+          "source_line": 149
+        },
+        "en_us": {
+          "sentence_id": 1853,
+          "file": "1531123292382678510.wav",
+          "transcription": "Giancarlo Fisichella lost control of his car and ended the race very soon after the start.",
+          "raw_transcription": "giancarlo fisichella lost control of his car and ended the race very soon after the start",
+          "num_samples": 92160,
+          "duration_seconds": 5.76,
+          "gender": "FEMALE",
+          "source_line": 488
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1853,
+          "file": "11297400535212590430.wav",
+          "transcription": "詹卡洛·费斯切拉因失去了对赛车的把控，在比赛开始后不久就退出了。",
+          "raw_transcription": "詹 卡 洛 费 斯 切 拉 因 失 去 了 对 赛 车 的 把 控 在 比 赛 开 始 后 不 久 就 退 出 了",
+          "num_samples": 255680,
+          "duration_seconds": 15.98,
+          "gender": "MALE",
+          "source_line": 64
+        },
+        "ar_eg": {
+          "sentence_id": 1853,
+          "file": "9543732608801974146.wav",
+          "transcription": "فقد جيانكارلو فيشيلا السيطرة على سيارته، وأنهى السباق بعد وقتٍ قصير من بدايته.",
+          "raw_transcription": "فقد جيانكارلو فيشيلا السيطرة على سيارته وأنهى السباق بعد وقتٍ قصير من بدايته",
+          "num_samples": 124800,
+          "duration_seconds": 7.8,
+          "gender": "FEMALE",
+          "source_line": 392
+        }
+      }
+    },
+    {
+      "sentence_id": 1863,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1863,
+          "file": "12668421414024232238.wav",
+          "transcription": "Сердцем тибетской медитации считается Йога Божеств. Посредством визуализации разнообразных божеств чистятся энергетические каналы, запускаются чакры и достигается просветлённость сознания.",
+          "raw_transcription": "сердцем тибетской медитации считается йога божеств посредством визуализации разнообразных божеств чистятся энергетические каналы запускаются чакры и достигается просветлённость сознания",
+          "num_samples": 224640,
+          "duration_seconds": 14.04,
+          "gender": "MALE",
+          "source_line": 27
+        },
+        "en_us": {
+          "sentence_id": 1863,
+          "file": "3195362600486929544.wav",
+          "transcription": "The center of Tibetan meditation is the Deity Yoga. Through the visualization of various deities the energy channels are cleaned, the chakras are activated and the enlightenment consciousness is created.",
+          "raw_transcription": "the center of tibetan meditation is the deity yoga through the visualization of various deities the energy channels are cleaned the chakras are activated and the enlightenment consciousness is created",
+          "num_samples": 270400,
+          "duration_seconds": 16.9,
+          "gender": "MALE",
+          "source_line": 309
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1863,
+          "file": "6272673678285320999.wav",
+          "transcription": "西藏冥想的核心活动是天瑜伽。通过把不同的神形象化，净化能量通道，激活轮穴，从而达到顿悟的境界。",
+          "raw_transcription": "西 藏 冥 想 的 核 心 活 动 是 天 瑜 伽 通 过 把 不 同 的 神 形 象 化 净 化 能 量 通 道 激 活 轮 穴 从 而 达 到 顿 悟 的 境 界",
+          "num_samples": 168960,
+          "duration_seconds": 10.56,
+          "gender": "FEMALE",
+          "source_line": 418
+        },
+        "ar_eg": {
+          "sentence_id": 1863,
+          "file": "6821418146956926958.wav",
+          "transcription": "مركز التأمل التبتي هو الإله يوجا. من خلال تصور الآلهة المختلفة، يتم تنظيف قنوات الطاقة، وتنشيط الشاكرا، وخلق وعي التنوير.",
+          "raw_transcription": "مركز التأمل التبتي هو الإله يوجا من خلال تصور الآلهة المختلفة يتم تنظيف قنوات الطاقة وتنشيط الشاكرا وخلق وعي التنوير",
+          "num_samples": 208640,
+          "duration_seconds": 13.04,
+          "gender": "FEMALE",
+          "source_line": 382
+        }
+      }
+    },
+    {
+      "sentence_id": 1872,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1872,
+          "file": "16455775273775291384.wav",
+          "transcription": "Во время борьбы за независимость, организованной движением Мау, мирное собрание в городе привело к убийству верховного вождя Тупуа Тамсесе Леалофи III.",
+          "raw_transcription": "во время борьбы за независимость организованной движением мау мирное собрание в городе привело к убийству верховного вождя тупуа тамсесе леалофи iii",
+          "num_samples": 199680,
+          "duration_seconds": 12.48,
+          "gender": "MALE",
+          "source_line": 669
+        },
+        "en_us": {
+          "sentence_id": 1872,
+          "file": "7489324500816890474.wav",
+          "transcription": "During the struggle for independence organised by the Mau movement, a peaceful gathering in the town resulted in the killing of the paramount chief Tupua Tamasese Lealofi III.",
+          "raw_transcription": "during the struggle for independence organised by the mau movement a peaceful gathering in the town resulted in the killing of the paramount chief tupua tamasese lealofi iii",
+          "num_samples": 200640,
+          "duration_seconds": 12.54,
+          "gender": "MALE",
+          "source_line": 90
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1872,
+          "file": "8538608467298888133.wav",
+          "transcription": "在由茅茅运动为争取独立而组织发起的斗争中，该镇的一场和平集会致使大酋长图普阿·塔马塞塞·利罗菲三世（Tupua Tamasese Lealofi III）遇害身亡。",
+          "raw_transcription": "在 由 茅 茅 运 动 为 争 取 独 立 而 组 织 发 起 的 斗 争 中 该 镇 的 一 场 和 平 集 会 致 使 大 酋 长 图 普 阿 塔 马 塞 塞 利 罗 菲 三 世 tupua tamasese lealofi iii 遇 害 身 亡",
+          "num_samples": 291840,
+          "duration_seconds": 18.24,
+          "gender": "MALE",
+          "source_line": 101
+        },
+        "ar_eg": {
+          "sentence_id": 1872,
+          "file": "590444080770398478.wav",
+          "transcription": "خلال الكفاح الذي نظمته حركة ماو من أجل الاستقلال، نتج عن تجمع مسالم في البلدة مقتل القائد الأعلى توبوا تماسيس ليلوفي الثالث.",
+          "raw_transcription": "خلال الكفاح الذي نظمته حركة ماو من أجل الاستقلال نتج عن تجمع مسالم في البلدة مقتل القائد الأعلى توبوا تماسيس ليلوفي الثالث",
+          "num_samples": 182400,
+          "duration_seconds": 11.4,
+          "gender": "FEMALE",
+          "source_line": 73
+        }
+      }
+    },
+    {
+      "sentence_id": 1883,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1883,
+          "file": "5764335204645607794.wav",
+          "transcription": "Высота подмостового габарита составляет 15 метров. Строительство было завершено в августе 2011 года, его не открывали для движения до марта 2017 года.",
+          "raw_transcription": "высота подмостового габарита составляет 15 метров строительство было завершено в августе 2011 года его не открывали для движения до марта 2017 года",
+          "num_samples": 224640,
+          "duration_seconds": 14.04,
+          "gender": "MALE",
+          "source_line": 455
+        },
+        "en_us": {
+          "sentence_id": 1883,
+          "file": "4690800207484418897.wav",
+          "transcription": "The vertical clearance under the bridge is 15 meters. Construction was completed in August 2011, it didn't open to traffic until March 2017.",
+          "raw_transcription": "the vertical clearance under the bridge is 15 meters construction was completed in august 2011 it didn't open to traffic until march 2017",
+          "num_samples": 157440,
+          "duration_seconds": 9.84,
+          "gender": "FEMALE",
+          "source_line": 345
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1883,
+          "file": "8387563482214137109.wav",
+          "transcription": "桥下垂直净空 15 米。该项目于 2011 年 8 月完工，但直到 2017 年 3 月才开始通车。",
+          "raw_transcription": "桥 下 垂 直 净 空 15 米 该 项 目 于 2011 年 8 月 完 工 但 直 到 2017 年 3 月 才 开 始 通 车",
+          "num_samples": 217280,
+          "duration_seconds": 13.58,
+          "gender": "MALE",
+          "source_line": 276
+        },
+        "ar_eg": {
+          "sentence_id": 1883,
+          "file": "12125450704467722663.wav",
+          "transcription": "المسافة الرأسية الخالية تحت الجسر ١٥ متراً. اكتمل البناء في آب ٢٠١١، ولم يُفْتَحْ أمام حركة المرور حتى آذار ٢٠١٧.",
+          "raw_transcription": "المسافة الرأسية الخالية تحت الجسر ١٥ متراً. اكتمل البناء في آب ٢٠١١، ولم يُفْتَحْ أمام حركة المرور حتى آذار ٢٠١٧",
+          "num_samples": 268800,
+          "duration_seconds": 16.8,
+          "gender": "FEMALE",
+          "source_line": 397
+        }
+      }
+    },
+    {
+      "sentence_id": 1894,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1894,
+          "file": "24804345015518101.wav",
+          "transcription": "Карри — это блюдо на основе трав и специй в сочетании с мясом или овощами.",
+          "raw_transcription": "карри это блюдо на основе трав и специй в сочетании с мясом или овощами",
+          "num_samples": 103680,
+          "duration_seconds": 6.48,
+          "gender": "FEMALE",
+          "source_line": 166
+        },
+        "en_us": {
+          "sentence_id": 1894,
+          "file": "2024594662850694945.wav",
+          "transcription": "A curry is a dish based on herbs and spices, together with either meat or vegetables.",
+          "raw_transcription": "a curry is a dish based on herbs and spices together with either meat or vegetables",
+          "num_samples": 144960,
+          "duration_seconds": 9.06,
+          "gender": "MALE",
+          "source_line": 374
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1894,
+          "file": "8702090716396029445.wav",
+          "transcription": "咖喱饭菜是一道以香草和香料为主的菜肴，并配以肉类或蔬菜。",
+          "raw_transcription": "咖 喱 饭 菜 是 一 道 以 香 草 和 香 料 为 主 的 菜 肴 并 配 以 肉 类 或 蔬 菜",
+          "num_samples": 192960,
+          "duration_seconds": 12.06,
+          "gender": "MALE",
+          "source_line": 35
+        },
+        "ar_eg": {
+          "sentence_id": 1894,
+          "file": "9403622039930009835.wav",
+          "transcription": "الكاري هو عبارة عن طبق من الأعشاب والبهار مع اللحوم أو الخضار.",
+          "raw_transcription": "الكاري هو عبارة عن طبق من الأعشاب والبهار مع اللحوم أو الخضار",
+          "num_samples": 101760,
+          "duration_seconds": 6.36,
+          "gender": "FEMALE",
+          "source_line": 208
+        }
+      }
+    },
+    {
+      "sentence_id": 1901,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1901,
+          "file": "8528085635791247834.wav",
+          "transcription": "Несмотря на то, что ИИ прочно ассоциируется с научной фантастикой, он формирует очень важное направление компьютерных наук, рассматривающее поведение и обучение машин и \"привитие\" им интеллекта.",
+          "raw_transcription": "несмотря на то что ии прочно ассоциируется с научной фантастикой он формирует очень важное направление компьютерных наук рассматривающее поведение и обучение машин и привитие им интеллекта",
+          "num_samples": 234240,
+          "duration_seconds": 14.64,
+          "gender": "MALE",
+          "source_line": 689
+        },
+        "en_us": {
+          "sentence_id": 1901,
+          "file": "6354316372780583820.wav",
+          "transcription": "Although AI has a strong connotation of science fiction, AI forms a very important branch of computer science, dealing with behavior, learning and intelligent adaptation in a machine.",
+          "raw_transcription": "although ai has a strong connotation of science fiction ai forms a very important branch of computer science dealing with behavior learning and intelligent adaptation in a machine",
+          "num_samples": 215680,
+          "duration_seconds": 13.48,
+          "gender": "MALE",
+          "source_line": 70
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1901,
+          "file": "14521504222934061665.wav",
+          "transcription": "人工智能有很强的科幻色彩，但它其实是计算机科学非常重要的一个分支，研究的是机器的行为、学习和智能适应。",
+          "raw_transcription": "人 工 智 能 有 很 强 的 科 幻 色 彩 但 它 其 实 是 计 算 机 科 学 非 常 重 要 的 一 个 分 支 研 究 的 是 机 器 的 行 为 学 习 和 智 能 适 应",
+          "num_samples": 178560,
+          "duration_seconds": 11.16,
+          "gender": "MALE",
+          "source_line": 400
+        },
+        "ar_eg": {
+          "sentence_id": 1901,
+          "file": "9380343316745500743.wav",
+          "transcription": "بالرغم من أن للذكاء الاصطناعي دلالة قوية للخيال العلمي، فإنه يشكل فرعاً هاماً للغاية من علوم الكمبيوتر، ويتعامل مع السلوك والتعلم والتكيف الذكي في الآلة.",
+          "raw_transcription": "بالرغم من أن للذكاء الاصطناعي دلالة قوية للخيال العلمي فإنه يشكل فرعاً هاماً للغاية من علوم الكمبيوتر ويتعامل مع السلوك والتعلم والتكيف الذكي في الآلة",
+          "num_samples": 262080,
+          "duration_seconds": 16.38,
+          "gender": "FEMALE",
+          "source_line": 226
+        }
+      }
+    },
+    {
+      "sentence_id": 1910,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1910,
+          "file": "456666790675504310.wav",
+          "transcription": "Парижане слывут эгоцентричными, грубыми и надменными.",
+          "raw_transcription": "парижане слывут эгоцентричными грубыми и надменными",
+          "num_samples": 74880,
+          "duration_seconds": 4.68,
+          "gender": "FEMALE",
+          "source_line": 761
+        },
+        "en_us": {
+          "sentence_id": 1910,
+          "file": "7205372698028731729.wav",
+          "transcription": "Parisians have a reputation for being egocentric, rude and arrogant.",
+          "raw_transcription": "parisians have a reputation for being egocentric rude and arrogant",
+          "num_samples": 116160,
+          "duration_seconds": 7.26,
+          "gender": "MALE",
+          "source_line": 464
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1910,
+          "file": "7891476436795192215.wav",
+          "transcription": "巴黎人是出了名的以自我中心、粗鲁和傲慢。",
+          "raw_transcription": "巴 黎 人 是 出 了 名 的 以 自 我 中 心 粗 鲁 和 傲 慢",
+          "num_samples": 106560,
+          "duration_seconds": 6.66,
+          "gender": "MALE",
+          "source_line": 367
+        },
+        "ar_eg": {
+          "sentence_id": 1910,
+          "file": "8437323268631740970.wav",
+          "transcription": "يشتهر أهل باريس بالأنانية والوقاحة والغطرسة.",
+          "raw_transcription": "يشتهر أهل باريس بالأنانية والوقاحة والغطرسة",
+          "num_samples": 90240,
+          "duration_seconds": 5.64,
+          "gender": "FEMALE",
+          "source_line": 318
+        }
+      }
+    },
+    {
+      "sentence_id": 1917,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1917,
+          "file": "13350441757119684407.wav",
+          "transcription": "В различных местах Рима были установлены большие телевизионные экраны, с помощью которых люди могли наблюдать за церемонией.",
+          "raw_transcription": "в различных местах рима были установлены большие телевизионные экраны с помощью которых люди могли наблюдать за церемонией",
+          "num_samples": 155520,
+          "duration_seconds": 9.72,
+          "gender": "MALE",
+          "source_line": 232
+        },
+        "en_us": {
+          "sentence_id": 1917,
+          "file": "13049690085129854387.wav",
+          "transcription": "Several large television screens were installed in various places in Rome to let the people watch the ceremony.",
+          "raw_transcription": "several large television screens were installed in various places in rome to let the people watch the ceremony",
+          "num_samples": 164160,
+          "duration_seconds": 10.26,
+          "gender": "MALE",
+          "source_line": 616
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1917,
+          "file": "13937505463896941487.wav",
+          "transcription": "罗马各地安装了数个大型电视屏幕，供人们观看仪式。",
+          "raw_transcription": "罗 马 各 地 安 装 了 数 个 大 型 电 视 屏 幕 供 人 们 观 看 仪 式",
+          "num_samples": 120000,
+          "duration_seconds": 7.5,
+          "gender": "MALE",
+          "source_line": 721
+        },
+        "ar_eg": {
+          "sentence_id": 1917,
+          "file": "3171812361828831637.wav",
+          "transcription": "رُكّبت عدة شاشات تلفزيونية كبيرة في أماكن مختلفة في روما للسماح للجمهور بمشاهدة مراسم الجنازة.",
+          "raw_transcription": "رُكّبت عدة شاشات تلفزيونية كبيرة في أماكن مختلفة في روما للسماح للجمهور بمشاهدة مراسم الجنازة",
+          "num_samples": 157760,
+          "duration_seconds": 9.86,
+          "gender": "FEMALE",
+          "source_line": 15
+        }
+      }
+    },
+    {
+      "sentence_id": 1928,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1928,
+          "file": "15168957797605772339.wav",
+          "transcription": "К 1976 году было восстановлено 30% Мачу-Пикчу. Работы по реставрации продолжаются и по сей день.",
+          "raw_transcription": "к 1976 году было восстановлено 30% мачу-пикчу работы по реставрации продолжаются и по сей день",
+          "num_samples": 174720,
+          "duration_seconds": 10.92,
+          "gender": "MALE",
+          "source_line": 287
+        },
+        "en_us": {
+          "sentence_id": 1928,
+          "file": "9177065516502908766.wav",
+          "transcription": "By 1976, thirty percent of Machu Picchu had been restored and restoration continues till today.",
+          "raw_transcription": "by 1976 thirty percent of machu picchu had been restored and restoration continues till today",
+          "num_samples": 131520,
+          "duration_seconds": 8.22,
+          "gender": "FEMALE",
+          "source_line": 375
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1928,
+          "file": "5654565011598137308.wav",
+          "transcription": "到 1976 年，马丘比丘的百分之三十得到修复，修复工作一直持续到今天。",
+          "raw_transcription": "到 1976 年 马 丘 比 丘 的 百 分 之 三 十 得 到 修 复 修 复 工 作 一 直 持 续 到 今 天",
+          "num_samples": 138240,
+          "duration_seconds": 8.64,
+          "gender": "MALE",
+          "source_line": 642
+        },
+        "ar_eg": {
+          "sentence_id": 1928,
+          "file": "1538597893327652599.wav",
+          "transcription": "وبحلول عام 1976، تمت استعادة ثلاثين في المائة من ماتشو بيتشو واستمرت أعمال الترميم حتى اليوم.",
+          "raw_transcription": "وبحلول عام 1976 تمت استعادة ثلاثين في المائة من ماتشو بيتشو واستمرت أعمال الترميم حتى اليوم",
+          "num_samples": 126720,
+          "duration_seconds": 7.92,
+          "gender": "FEMALE",
+          "source_line": 386
+        }
+      }
+    },
+    {
+      "sentence_id": 1939,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1939,
+          "file": "2076423672586424085.wav",
+          "transcription": "Также после Революции открылись возможности работы открылись всем мужчинам, что позволило самым амбициозным и талантливым добиться успеха.",
+          "raw_transcription": "также после революции открылись возможности работы открылись всем мужчинам что позволило самым амбициозным и талантливым добиться успеха",
+          "num_samples": 209280,
+          "duration_seconds": 13.08,
+          "gender": "FEMALE",
+          "source_line": 498
+        },
+        "en_us": {
+          "sentence_id": 1939,
+          "file": "13362021168025680919.wav",
+          "transcription": "Also after the Revolution occupations were open to all male applicants allowing the most ambitious and successful to succeed.",
+          "raw_transcription": "also after the revolution occupations were open to all male applicants allowing the most ambitious and successful to succeed",
+          "num_samples": 164480,
+          "duration_seconds": 10.28,
+          "gender": "MALE",
+          "source_line": 602
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1939,
+          "file": "12040319549933401783.wav",
+          "transcription": "此外，在革命之后，官职面向全体男性开放申请，这使得最有抱负、最成功之人有机会飞黄腾达。",
+          "raw_transcription": "此 外 在 革 命 之 后 官 职 面 向 全 体 男 性 开 放 申 请 这 使 得 最 有 抱 负 最 成 功 之 人 有 机 会 飞 黄 腾 达",
+          "num_samples": 251840,
+          "duration_seconds": 15.74,
+          "gender": "MALE",
+          "source_line": 690
+        },
+        "ar_eg": {
+          "sentence_id": 1939,
+          "file": "18022802087819036852.wav",
+          "transcription": "كما أنه من بعد الثورة، كانت المهن مفتوحةً لجميع المتقدّمين الذكور ممّا سمح للأكثر طموحاً ونجاحاً بالنجاح.",
+          "raw_transcription": "كما أنه من بعد الثورة كانت المهن مفتوحةً لجميع المتقدّمين الذكور ممّا سمح للأكثر طموحاً ونجاحاً بالنجاح",
+          "num_samples": 132480,
+          "duration_seconds": 8.28,
+          "gender": "FEMALE",
+          "source_line": 428
+        }
+      }
+    },
+    {
+      "sentence_id": 1947,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1947,
+          "file": "9149690385543505925.wav",
+          "transcription": "До прибытия войск государство Гаити не сталкивалось с проблемами, касающимися данного заболевания, с начала 19 века.",
+          "raw_transcription": "до прибытия войск государство гаити не сталкивалось с проблемами касающимися данного заболевания с начала 19 века",
+          "num_samples": 176640,
+          "duration_seconds": 11.04,
+          "gender": "MALE",
+          "source_line": 349
+        },
+        "en_us": {
+          "sentence_id": 1947,
+          "file": "5111153817746112904.wav",
+          "transcription": "Prior to the arrival of troops, Haiti had not encountered problems related to the disease since the 1800s.",
+          "raw_transcription": "prior to the arrival of troops haiti had not encountered problems related to the disease since the 1800s",
+          "num_samples": 143040,
+          "duration_seconds": 8.94,
+          "gender": "MALE",
+          "source_line": 526
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1947,
+          "file": "16603961392996818946.wav",
+          "transcription": "在军队到来之前，海地自 19 世纪初以来从未遇到过与该疾病有关的问题。",
+          "raw_transcription": "在 军 队 到 来 之 前 海 地 自 19 世 纪 初 以 来 从 未 遇 到 过 与 该 疾 病 有 关 的 问 题",
+          "num_samples": 207040,
+          "duration_seconds": 12.94,
+          "gender": "MALE",
+          "source_line": 837
+        },
+        "ar_eg": {
+          "sentence_id": 1947,
+          "file": "4934313547698074601.wav",
+          "transcription": "قبل وصول القوات، لم تواجه هايتي مشاكل متعلقة بالمرض منذ القرن التاسع عشر.",
+          "raw_transcription": "قبل وصول القوات لم تواجه هايتي مشاكل متعلقة بالمرض منذ القرن التاسع عشر",
+          "num_samples": 122880,
+          "duration_seconds": 7.68,
+          "gender": "FEMALE",
+          "source_line": 172
+        }
+      }
+    },
+    {
+      "sentence_id": 1956,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1956,
+          "file": "17725890600645662822.wav",
+          "transcription": "Использование кораблей для транспортировки товаров является, безусловно, самым эффективным способом перевозки большого количества людей и грузов через океаны.",
+          "raw_transcription": "использование кораблей для транспортировки товаров является безусловно самым эффективным способом перевозки большого количества людей и грузов через океаны",
+          "num_samples": 143040,
+          "duration_seconds": 8.94,
+          "gender": "MALE",
+          "source_line": 255
+        },
+        "en_us": {
+          "sentence_id": 1956,
+          "file": "14278251866048014426.wav",
+          "transcription": "Using ships to transport goods is by far the most efficient way to move large amounts of people and goods across oceans.",
+          "raw_transcription": "using ships to transport goods is by far the most efficient way to move large amounts of people and goods across oceans",
+          "num_samples": 121920,
+          "duration_seconds": 7.62,
+          "gender": "FEMALE",
+          "source_line": 217
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1956,
+          "file": "13864652053998339021.wav",
+          "transcription": "迄今为止，船运是跨洋运输大量人员和货物的最有效方式。",
+          "raw_transcription": "迄 今 为 止 船 运 是 跨 洋 运 输 大 量 人 员 和 货 物 的 最 有 效 方 式",
+          "num_samples": 222080,
+          "duration_seconds": 13.88,
+          "gender": "MALE",
+          "source_line": 409
+        },
+        "ar_eg": {
+          "sentence_id": 1956,
+          "file": "17897674534118742799.wav",
+          "transcription": "يُعدُّ استخدامَ السُفن لنقلِ البضائع الطريقة الأكثر فاعلية لنقل كمياتٍ كبيرةٍ من الأشخاصِ والبضائعِ عبر المحيطات.",
+          "raw_transcription": "يُعدُّ استخدامَ السُفن لنقلِ البضائع الطريقة الأكثر فاعلية لنقل كمياتٍ كبيرةٍ من الأشخاصِ والبضائعِ عبر المحيطات",
+          "num_samples": 134400,
+          "duration_seconds": 8.4,
+          "gender": "FEMALE",
+          "source_line": 322
+        }
+      }
+    },
+    {
+      "sentence_id": 1964,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1964,
+          "file": "10686921193911051678.wav",
+          "transcription": "25 листовок Данлэпа, известные на настоящее время, являются старейшими выжившими копиями документа. Оригинальная рукописная копия не дошла до нас.",
+          "raw_transcription": "25 листовок данлэпа известные на настоящее время являются старейшими выжившими копиями документа оригинальная рукописная копия не дошла до нас",
+          "num_samples": 216960,
+          "duration_seconds": 13.56,
+          "gender": "MALE",
+          "source_line": 160
+        },
+        "en_us": {
+          "sentence_id": 1964,
+          "file": "3745044899208519847.wav",
+          "transcription": "The 25 Dunlap broadsides still known to exist are the oldest surviving copies of the document. The original handwritten copy has not survived.",
+          "raw_transcription": "the 25 dunlap broadsides still known to exist are the oldest surviving copies of the document the original handwritten copy has not survived",
+          "num_samples": 190080,
+          "duration_seconds": 11.88,
+          "gender": "MALE",
+          "source_line": 302
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1964,
+          "file": "12412862873460570290.wav",
+          "transcription": "尚存的 25 份当列普单面印刷版（ Dunlap broadsides）是该文件现存最早的版本。手写原稿未能保留下来。",
+          "raw_transcription": "尚 存 的 25 份 当 列 普 单 面 印 刷 版 dunlap broadsides 是 该 文 件 现 存 最 早 的 版 本 手 写 原 稿 未 能 保 留 下 来",
+          "num_samples": 217920,
+          "duration_seconds": 13.62,
+          "gender": "MALE",
+          "source_line": 136
+        },
+        "ar_eg": {
+          "sentence_id": 1964,
+          "file": "1397812820135990404.wav",
+          "transcription": "تمثل مطويات دنلاب الخمس والعشرون أقدم النسخ الباقية من مستند إعلان الاستقلال الأمريكي، ولكن النسخة الأصلية المكتوبة بخط اليد لم يُكتب لها النجاة.",
+          "raw_transcription": "تمثل مطويات دنلاب الخمس والعشرون أقدم النسخ الباقية من مستند إعلان الاستقلال الأمريكي ولكن النسخة الأصلية المكتوبة بخط اليد لم يُكتب لها النجاة",
+          "num_samples": 212160,
+          "duration_seconds": 13.26,
+          "gender": "FEMALE",
+          "source_line": 191
+        }
+      }
+    },
+    {
+      "sentence_id": 1974,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1974,
+          "file": "7609311488684021172.wav",
+          "transcription": "Аналогично, мужчины должны носить брюки, которые бы закрывали колени.",
+          "raw_transcription": "аналогично мужчины должны носить брюки которые бы закрывали колени",
+          "num_samples": 105600,
+          "duration_seconds": 6.6,
+          "gender": "MALE",
+          "source_line": 48
+        },
+        "en_us": {
+          "sentence_id": 1974,
+          "file": "9781076737390802637.wav",
+          "transcription": "Along the same line, men are required to wear trousers covering the knees.",
+          "raw_transcription": "along the same line men are required to wear trousers covering the knees",
+          "num_samples": 100480,
+          "duration_seconds": 6.28,
+          "gender": "MALE",
+          "source_line": 285
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1974,
+          "file": "14125944580545897739.wav",
+          "transcription": "同理，男士也必须穿着长裤，遮住膝盖。",
+          "raw_transcription": "同 理 男 士 也 必 须 穿 着 长 裤 遮 住 膝 盖",
+          "num_samples": 133760,
+          "duration_seconds": 8.36,
+          "gender": "MALE",
+          "source_line": 858
+        },
+        "ar_eg": {
+          "sentence_id": 1974,
+          "file": "6103328527530107299.wav",
+          "transcription": "وعلى غرار ذلك، يُطلب من الرجال ارتداء سراويل تغطي الركبتين",
+          "raw_transcription": "وعلى غرار ذلك يُطلب من الرجال ارتداء سراويل تغطي الركبتين",
+          "num_samples": 111360,
+          "duration_seconds": 6.96,
+          "gender": "FEMALE",
+          "source_line": 188
+        }
+      }
+    },
+    {
+      "sentence_id": 1982,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1982,
+          "file": "2021009743268129790.wav",
+          "transcription": "Для женщин: всем туристкам рекомендуется говорить, что они замужем, независимо от их настоящего семейного положения.",
+          "raw_transcription": "для женщин всем туристкам рекомендуется говорить что они замужем независимо от их настоящего семейного положения",
+          "num_samples": 132480,
+          "duration_seconds": 8.28,
+          "gender": "FEMALE",
+          "source_line": 603
+        },
+        "en_us": {
+          "sentence_id": 1982,
+          "file": "10481451226514948764.wav",
+          "transcription": "Women: It is recommended that any women travellers say that they are married, regardless of actual marital status.",
+          "raw_transcription": "women it is recommended that any women travellers say that they are married regardless of actual marital status",
+          "num_samples": 162240,
+          "duration_seconds": 10.14,
+          "gender": "MALE",
+          "source_line": 634
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1982,
+          "file": "2002119703790174212.wav",
+          "transcription": "女性：建议无论实际婚姻状况如何，所有女性游客都应说自己已婚。",
+          "raw_transcription": "女 性 建 议 无 论 实 际 婚 姻 状 况 如 何 所 有 女 性 游 客 都 应 说 自 己 已 婚",
+          "num_samples": 209920,
+          "duration_seconds": 13.12,
+          "gender": "MALE",
+          "source_line": 794
+        },
+        "ar_eg": {
+          "sentence_id": 1982,
+          "file": "5430731972874430497.wav",
+          "transcription": "النساء: بغض النظر عن الحالة الاجتماعية الفعلية، ينبغي على النساء المسافرات أن تعلنن إنهن متزوجات.",
+          "raw_transcription": "النساء بغض النظر عن الحالة الاجتماعية الفعلية ينبغي على النساء المسافرات أن تعلنن إنهن متزوجات",
+          "num_samples": 169920,
+          "duration_seconds": 10.62,
+          "gender": "FEMALE",
+          "source_line": 33
+        }
+      }
+    },
+    {
+      "sentence_id": 1991,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 1991,
+          "file": "4816563344745963422.wav",
+          "transcription": "В течение этого периода европейской истории, католическая церковь, ставшая богатой и сильной, оказалась объектом пристального внимания.",
+          "raw_transcription": "в течение этого периода европейской истории католическая церковь ставшая богатой и сильной оказалась объектом пристального внимания",
+          "num_samples": 192000,
+          "duration_seconds": 12.0,
+          "gender": "MALE",
+          "source_line": 315
+        },
+        "en_us": {
+          "sentence_id": 1991,
+          "file": "15667010054869079797.wav",
+          "transcription": "During this period of European history, the Catholic Church, which had become rich and powerful, came under scrutiny.",
+          "raw_transcription": "during this period of european history the catholic church which had become rich and powerful came under scrutiny",
+          "num_samples": 155840,
+          "duration_seconds": 9.74,
+          "gender": "MALE",
+          "source_line": 84
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 1991,
+          "file": "2910705462929474039.wav",
+          "transcription": "在欧洲历史上的这段时期，已然富有而强大起来的天主教会受到了密切监督。",
+          "raw_transcription": "在 欧 洲 历 史 上 的 这 段 时 期 已 然 富 有 而 强 大 起 来 的 天 主 教 会 受 到 了 密 切 监 督",
+          "num_samples": 217920,
+          "duration_seconds": 13.62,
+          "gender": "MALE",
+          "source_line": 355
+        },
+        "ar_eg": {
+          "sentence_id": 1991,
+          "file": "12235805603738914467.wav",
+          "transcription": "خضعت الكنيسة الكاثوليكية، التي أصبحت غنية وقوية، للتدقيق خلال هذه الفترة من التاريخ الأوروبي.",
+          "raw_transcription": "خضعت الكنيسة الكاثوليكية التي أصبحت غنية وقوية للتدقيق خلال هذه الفترة من التاريخ الأوروبي",
+          "num_samples": 159360,
+          "duration_seconds": 9.96,
+          "gender": "FEMALE",
+          "source_line": 287
+        }
+      }
+    },
+    {
+      "sentence_id": 2001,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 2001,
+          "file": "5376423324495819912.wav",
+          "transcription": "Путешественникам настоятельно рекомендуется принимать во внимание любые риски, связанные с суровой погодой в их районе, поскольку они могут повлиять на любые планы поездки.",
+          "raw_transcription": "путешественникам настоятельно рекомендуется принимать во внимание любые риски связанные с суровой погодой в их районе поскольку они могут повлиять на любые планы поездки",
+          "num_samples": 193920,
+          "duration_seconds": 12.12,
+          "gender": "MALE",
+          "source_line": 654
+        },
+        "en_us": {
+          "sentence_id": 2001,
+          "file": "1116140877447157610.wav",
+          "transcription": "Travellers are strongly advised to be aware of any risk of severe weather affecting their area as they may affect any travel plans.",
+          "raw_transcription": "travellers are strongly advised to be aware of any risk of severe weather affecting their area as they may affect any travel plans",
+          "num_samples": 117120,
+          "duration_seconds": 7.32,
+          "gender": "FEMALE",
+          "source_line": 620
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 2001,
+          "file": "3701454187093730515.wav",
+          "transcription": "强烈建议旅客注意所在地的恶劣天气风险，它们可能会影响旅行计划。",
+          "raw_transcription": "强 烈 建 议 旅 客 注 意 所 在 地 的 恶 劣 天 气 风 险 它 们 可 能 会 影 响 旅 行 计 划",
+          "num_samples": 146880,
+          "duration_seconds": 9.18,
+          "gender": "MALE",
+          "source_line": 68
+        },
+        "ar_eg": {
+          "sentence_id": 2001,
+          "file": "5001412877557223989.wav",
+          "transcription": "يُنصح المسافرون بشدة أن يلّموا بأي مخاطر لوقوع أحداث طقس قاسية في الأماكن التي يزورونها لما لذلك من تأثير على خطط سفرهم.",
+          "raw_transcription": "يُنصح المسافرون بشدة أن يلّموا بأي مخاطر لوقوع أحداث طقس قاسية في الأماكن التي يزورونها لما لذلك من تأثير على خطط سفرهم",
+          "num_samples": 211200,
+          "duration_seconds": 13.2,
+          "gender": "FEMALE",
+          "source_line": 292
+        }
+      }
+    },
+    {
+      "sentence_id": 2009,
+      "languages": {
+        "ru_ru": {
+          "sentence_id": 2009,
+          "file": "8023939581992975590.wav",
+          "transcription": "Наиболее доступными растительными ресурсами были бы белки, находящиеся в листьях и бобовых, но они плохо усваиваются такими приматами, как мы, если их не готовить.",
+          "raw_transcription": "наиболее доступными растительными ресурсами были бы белки находящиеся в листьях и бобовых но они плохо усваиваются такими приматами как мы если их не готовить",
+          "num_samples": 219840,
+          "duration_seconds": 13.74,
+          "gender": "MALE",
+          "source_line": 294
+        },
+        "en_us": {
+          "sentence_id": 2009,
+          "file": "17120997777600226051.wav",
+          "transcription": "The most readily accessible plant resources would have been the proteins accessible in leaves and legumes, but these are hard for primates like us to digest unless they are cooked.",
+          "raw_transcription": "the most readily accessible plant resources would have been the proteins accessible in leaves and legumes but these are hard for primates like us to digest unless they are cooked",
+          "num_samples": 221760,
+          "duration_seconds": 13.86,
+          "gender": "MALE",
+          "source_line": 319
+        },
+        "cmn_hans_cn": {
+          "sentence_id": 2009,
+          "file": "7621495799107471411.wav",
+          "transcription": "最容易获得的植物性资源应该是叶子和豆科植物中的蛋白质，但像我们这样的灵长类动物很难消化这种蛋白质，除非是煮熟的。",
+          "raw_transcription": "最 容 易 获 得 的 植 物 性 资 源 应 该 是 叶 子 和 豆 科 植 物 中 的 蛋 白 质 但 像 我 们 这 样 的 灵 长 类 动 物 很 难 消 化 这 种 蛋 白 质 除 非 是 煮 熟 的",
+          "num_samples": 227520,
+          "duration_seconds": 14.22,
+          "gender": "MALE",
+          "source_line": 406
+        },
+        "ar_eg": {
+          "sentence_id": 2009,
+          "file": "4031204764858364773.wav",
+          "transcription": "وكانت الموارد النباتية التي يسهل الوصول إليها بكثرة هي البروتينات التي يمكن الحصول عليها من الأوراق والبقول، ولكن هذه البروتينات يصعب على الرئيسيات مثلنا هضمها ما لم يتم طهيها .",
+          "raw_transcription": "وكانت الموارد النباتية التي يسهل الوصول إليها بكثرة هي البروتينات التي يمكن الحصول عليها من الأوراق والبقول، ولكن هذه البروتينات يصعب على الرئيسيات مثلنا هضمها ما لم يتم طهيها ",
+          "num_samples": 224640,
+          "duration_seconds": 14.04,
+          "gender": "FEMALE",
+          "source_line": 132
+        }
+      }
+    }
+  ]
+}
