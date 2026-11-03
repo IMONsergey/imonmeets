@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+
+<head>
+ <meta http-equiv="Content-Type" content="text/html;charset=utf-8"> 
+ <!--- base href="http://www.cstr.inf.ed.ac.uk/" -->
+ <meta name="keywords" content="Research, speech recognition, speech recognition, speech processing, postgraduate degree, PhD, MSc, studentship, Festival,">
+ <meta name="generator" content="emacs">
+ <meta name="robots" content="index,follow">
+ <meta name="distribution" content="global">
+ <link rel="SHORTCUT ICON" href="/favicon.ico">
+ <link type="text/css" rel="stylesheet" href="/cstr.css">
+ <title>Lessac Technologies Inc. data for Blizzard 2013</title>
+</head>
+
+<body>
+<div id="titlebar">
+
+  <div id="cstr_logo">
+    <a href="/"><img src="/images/cstr3.png" height=80px alt="CSTR logo"></a>
+  </div>
+
+  <div id="cstr_title">
+   <img src="/images/cstr_title_grey.png" alt="The Centre for Speech Technology Research, The university of Edinburgh">
+  </div>
+
+  <div id="uoe_logo">
+    <a href="http://www.ed.ac.uk"><img src="/images/crest_grey.png" height=80px alt="University logo"></a>
+  </div>
+
+  <div id="menu_bar">
+    <div id="menu_item"><a href="/"><img src="/images/menu_home.png" alt="Home"></a></div>
+<div id="menu_item"><a href="/people/"><img src="/images/menu_people.png" alt="People"></a></div>
+    <div id="menu_item"><a href="/news/"><img src="/images/menu_news.png" alt="News"></a></div>
+    <div id="menu_item"><a href="/research/"><img src="/images/menu_research.png" alt="Research"></a></div>
+    <div id="menu_item"><a href="/publications/"><img src="/images/menu_publications.png" alt="Publications"></a></div>
+    <div id="menu_item"><a href="/opportunities/"><img src="/images/menu_opportunities.png" alt="Opportunities"></a></div>
+    <div id="menu_item"><a href="/downloads/"><img src="/images/menu_downloads.png" alt="Downloads"></a></div>
+    <div id="menu_item"><a href="/contact/"><img src="/images/menu_contact.png" alt="Contact"></a></div>
+   <div id="menu_item_end"><a href="/internal/"><img src="/images/menu_intranet.png" alt="[ intranet ]"></a></div>
+   <div id="menu_item_end"><a href="/projects/festival/"><img src="/images/menu_festival.png" alt="[ festival ]"></a></div>
+  </div>
+
+</div>
+
+
+
+<div id="content">
+
+
+
+<script LANGUAGE="JavaScript">
+<!--
+function checkform(thisform) {
+if(thisform.theLab.value==null||thisform.theLab.value==""){
+alert("Please provide the name of your research department or lab, or if an individual, write 'self'.");
+return false;
+}
+if(thisform.theStreet.value==null||thisform.theStreet.value==""){
+alert("Please provide the postal address of your organisation or company.");
+return false;
+}
+if(thisform.theCity.value==null||thisform.theCity.value==""){
+alert("Please provide the complete postal address of your organisation or company.");
+return false;
+}
+if(thisform.theName.value==null||thisform.theName.value==""){
+alert("Please provide the name of a person we can contact about this Licence agreement.");
+return false;
+}
+if(thisform.theEmail.value==null||thisform.theEmail.value==""){
+alert("Please provide an email address for the contact person.");
+return false;
+}
+return true
+}
+// END of script -->
+</SCRIPT>
+
+It is important that you enter correct contact details in the form
+below for two reasons:
+
+<ul>
+<li> a license is granted only to the person or organisation named: if
+you enter incorrect information, then you have not legally obtained a
+license;
+<li> if we do not know your correct email address, we cannot send you
+instructions for downloading the data
+</ul>
+
+Each license is manually verified before a download password is issued. Please allow time for this.
+
+<h1>License for Blizzard 2013 Materials (Voice Factory audio book recordings, and associated Lessac data)</h1>
+
+
+
+<font color="red">
+	IMPORTANT : READ CAREFULLY BEFORE USING THE AUDIO BOOK RECORDINGS (PROPERTY OF VOICE FACTORY), AND THE ASSOCIATED DATA AND RESEARCH SOFTWARE (PROPERTY OF LESSAC): YOU MAY OBTAIN THESE AUDIO BOOK RECORDINGS, ASSOCIATED DATA, AND RESEARCH SOFTWARE BY DOWNLOADING THEM REMOTELY FROM A SERVER. THE AUDIO RIGHTS, COPYRIGHT AND ANY OTHER INTELLECTUAL PROPERTY RIGHTS IN THE AUDIO BOOK RECORDINGS, ASSOCIATED DATA, AND RESEARCH SOFTWARE WHICH CONSTITUTE THE MATERIALS (AS DEFINED BELOW) ARE AND REMAIN THE PROPERTY OF VOICE FACTORY INTERNATIONAL INC. (“VOICE FACTORY”) AND LESSAC TECHNOLOGIES INC. ("LESSAC"). YOU (THE "USER") ARE LICENSED TO USE THE MATERIALS ONLY IF YOU ACCEPT ALL THE TERMS AND CONDITIONS SET OUT BELOW.
+<p>
+	LICENCE ACCEPTANCE PROCEDURE: BY CLICKING ON THE “ACCEPT” BUTTON WHICH FOLLOWS THIS LICENCE AND/OR BY DOWNLOADING AND/OR USING THE MATERIALS, THE USER INDICATES ACCEPTANCE OF THE RESEARCH LICENCE AGREEMENT. IF THE USER IS ACCEPTING THE RESEARCH LICENCE AGREEMENT ON BEHALF OF A CORPORATE LICENCEE, THE USER REPRESENTS THAT THE USER IS AUTHORISED TO DO SO. IF THE USER IS NOT SO AUTHORISED, NOR DEEMED IN LAW TO HAVE SUCH AUTHORITY, THE USER ASSUMES SOLE PERSONAL LIABILITY FOR THE OBLIGATIONS SET OUT IN THIS RESEARCH LICENCE AGREEMENT.
+<p>
+	LICENCE REJECTION PROCEDURE: YOU SHOULD THEREFORE READ THE RESEARCH LICENCE AGREEMENT CAREFULLY BEFORE CLICKING ON THE "ACCEPT" BUTTON. IF YOU DO NOT ACCEPT THESE TERMS AND CONDITIONS, YOU SHOULD CLICK ON THE "REJECT" BUTTON AND NOT DOWNLOAD OR USE THE MATERIALS. YOU SHOULD ALSO DESTROY ANY UNLICENCED COPIES OF THE MATERIALS  WHICH MIGHT BE IN YOUR POSSESSION.
+
+
+</font>
+
+
+
+<form NAME="mainForm" METHOD="POST" action="https://www.cstr.inf.ed.ac.uk/cgi-bin/cstr/blizzardGeneric_download.cgi" onSubmit="return checkform(this)">
+<input type="hidden" name="License" value="auto-filled">
+<input type="hidden" name="theLicensorEmail" value="">
+
+
+<h2>RESEARCH LICENCE AGREEMENT</h2>
+
+<p>
+between:
+
+<ol>
+<li><b>VOICE FACTORY INTERNATIONAL, INC.</b>,
+	 <!-- having its principal office at 1002 Quentin Road, Brooklyn, NY 11223 USA -->
+	Eric Wood,
+	President,
+	Voice Factory International,
+	711 Brightwater Ct.,
+	Unit 3-C,
+	Brooklyn, NY 11235
+	 (“Voice Factory”)   as licencor of the audio book recordings, 
+	
+	
+	<p>
+	and
+	<p>
+<li><b>LESSAC TECHNOLOGIES, INC</b> having its principal office at 256 Highland Street, West Newton, MA 02465 USA ("Lessac") +1 617 916 1174, www.lessactech.com   as licencor of the associated data and research software;
+
+<p>
+Voice Factory and Lessac, hereinafter referred to as “Licencors”	
+
+<p>
+and
+
+<li><b>YOU</b> (the "USER"):
+</ol>
+
+<!-- blizzard_address_form.html -->
+
+
+<table>
+<tr> <td>
+Name of institution (if for personal use only, write "Personal Use Only"):</td>
+<td>
+<input TYPE="TEXT" NAME="theLab" SIZE="50" MAXLENGTH="50"> </tr>
+<tr>
+<td>Street number and name:</td>
+<td>
+<input TYPE="TEXT" NAME="theStreet" SIZE="50" MAXLENGTH="50">
+</tr>
+
+<tr>
+<td>&nbsp</td>
+<td>
+<input TYPE="TEXT" NAME="theStreettwo" SIZE="50" MAXLENGTH="50">
+</tr>
+
+<tr>
+<td>City, postal code</td>
+<td>
+<input TYPE="TEXT" NAME="theCity" SIZE="50" MAXLENGTH="50">
+</td>
+</tr>
+
+<tr>
+<td>&nbsp</td>
+<td>
+<input TYPE="TEXT" NAME="theCitytwo" SIZE="50" MAXLENGTH="50">
+</td>
+</tr>
+
+<tr>
+<td>Country</td>
+<td>
+<select id="theCountry" name="theCountry">
+   <option value="Afganistan">Afghanistan</option>
+   <option value="Albania">Albania</option>
+   <option value="Algeria">Algeria</option>
+   <option value="American Samoa">American Samoa</option>
+   <option value="Andorra">Andorra</option>
+   <option value="Angola">Angola</option>
+   <option value="Anguilla">Anguilla</option>
+   <option value="Antigua & Barbuda">Antigua & Barbuda</option>
+   <option value="Argentina">Argentina</option>
+   <option value="Armenia">Armenia</option>
+   <option value="Aruba">Aruba</option>
+   <option value="Australia">Australia</option>
+   <option value="Austria">Austria</option>
+   <option value="Azerbaijan">Azerbaijan</option>
+   <option value="Bahamas">Bahamas</option>
+   <option value="Bahrain">Bahrain</option>
+   <option value="Bangladesh">Bangladesh</option>
+   <option value="Barbados">Barbados</option>
+   <option value="Belarus">Belarus</option>
+   <option value="Belgium">Belgium</option>
+   <option value="Belize">Belize</option>
+   <option value="Benin">Benin</option>
+   <option value="Bermuda">Bermuda</option>
+   <option value="Bhutan">Bhutan</option>
+   <option value="Bolivia">Bolivia</option>
+   <option value="Bonaire">Bonaire</option>
+   <option value="Bosnia & Herzegovina">Bosnia & Herzegovina</option>
+   <option value="Botswana">Botswana</option>
+   <option value="Brazil">Brazil</option>
+   <option value="British Indian Ocean Ter">British Indian Ocean Ter</option>
+   <option value="Brunei">Brunei</option>
+   <option value="Bulgaria">Bulgaria</option>
+   <option value="Burkina Faso">Burkina Faso</option>
+   <option value="Burundi">Burundi</option>
+   <option value="Cambodia">Cambodia</option>
+   <option value="Cameroon">Cameroon</option>
+   <option value="Canada">Canada</option>
+   <option value="Canary Islands">Canary Islands</option>
+   <option value="Cape Verde">Cape Verde</option>
+   <option value="Cayman Islands">Cayman Islands</option>
+   <option value="Central African Republic">Central African Republic</option>
+   <option value="Chad">Chad</option>
+   <option value="Channel Islands">Channel Islands</option>
+   <option value="Chile">Chile</option>
+   <option value="China">China</option>
+   <option value="Christmas Island">Christmas Island</option>
+   <option value="Cocos Island">Cocos Island</option>
+   <option value="Colombia">Colombia</option>
+   <option value="Comoros">Comoros</option>
+   <option value="Congo">Congo</option>
+   <option value="Cook Islands">Cook Islands</option>
+   <option value="Costa Rica">Costa Rica</option>
+   <option value="Cote DIvoire">Cote DIvoire</option>
+   <option value="Croatia">Croatia</option>
+   <option value="Cuba">Cuba</option>
+   <option value="Curaco">Curacao</option>
+   <option value="Cyprus">Cyprus</option>
+   <option value="Czech Republic">Czech Republic</option>
+   <option value="Denmark">Denmark</option>
+   <option value="Djibouti">Djibouti</option>
+   <option value="Dominica">Dominica</option>
+   <option value="Dominican Republic">Dominican Republic</option>
+   <option value="East Timor">East Timor</option>
+   <option value="Ecuador">Ecuador</option>
+   <option value="Egypt">Egypt</option>
+   <option value="El Salvador">El Salvador</option>
+   <option value="Equatorial Guinea">Equatorial Guinea</option>
+   <option value="Eritrea">Eritrea</option>
+   <option value="Estonia">Estonia</option>
+   <option value="Ethiopia">Ethiopia</option>
+   <option value="Falkland Islands">Falkland Islands</option>
+   <option value="Faroe Islands">Faroe Islands</option>
+   <option value="Fiji">Fiji</option>
+   <option value="Finland">Finland</option>
+   <option value="France">France</option>
+   <option value="French Guiana">French Guiana</option>
+   <option value="French Polynesia">French Polynesia</option>
+   <option value="French Southern Ter">French Southern Ter</option>
+   <option value="Gabon">Gabon</option>
+   <option value="Gambia">Gambia</option>
+   <option value="Georgia">Georgia</option>
+   <option value="Germany">Germany</option>
+   <option value="Ghana">Ghana</option>
+   <option value="Gibraltar">Gibraltar</option>
+   <option value="Great Britain">Great Britain</option>
+   <option value="Greece">Greece</option>
+   <option value="Greenland">Greenland</option>
+   <option value="Grenada">Grenada</option>
+   <option value="Guadeloupe">Guadeloupe</option>
+   <option value="Guam">Guam</option>
+   <option value="Guatemala">Guatemala</option>
+   <option value="Guinea">Guinea</option>
+   <option value="Guyana">Guyana</option>
+   <option value="Haiti">Haiti</option>
+   <option value="Hawaii">Hawaii</option>
+   <option value="Honduras">Honduras</option>
+   <option value="Hong Kong">Hong Kong</option>
+   <option value="Hungary">Hungary</option>
+   <option value="Iceland">Iceland</option>
+   <option value="Indonesia">Indonesia</option>
+   <option value="India">India</option>
+   <option value="Iran">Iran</option>
+   <option value="Iraq">Iraq</option>
+   <option value="Ireland">Ireland</option>
+   <option value="Isle of Man">Isle of Man</option>
+   <option value="Israel">Israel</option>
+   <option value="Italy">Italy</option>
+   <option value="Jamaica">Jamaica</option>
+   <option value="Japan">Japan</option>
+   <option value="Jordan">Jordan</option>
+   <option value="Kazakhstan">Kazakhstan</option>
+   <option value="Kenya">Kenya</option>
+   <option value="Kiribati">Kiribati</option>
+   <option value="Korea North">Korea North</option>
+   <option value="Korea South">Korea South</option>
+   <option value="Kuwait">Kuwait</option>
+   <option value="Kyrgyzstan">Kyrgyzstan</option>
+   <option value="Laos">Laos</option>
+   <option value="Latvia">Latvia</option>
+   <option value="Lebanon">Lebanon</option>
+   <option value="Lesotho">Lesotho</option>
+   <option value="Liberia">Liberia</option>
+   <option value="Libya">Libya</option>
+   <option value="Liechtenstein">Liechtenstein</option>
+   <option value="Lithuania">Lithuania</option>
+   <option value="Luxembourg">Luxembourg</option>
+   <option value="Macau">Macau</option>
+   <option value="Macedonia">Macedonia</option>
+   <option value="Madagascar">Madagascar</option>
+   <option value="Malaysia">Malaysia</option>
+   <option value="Malawi">Malawi</option>
+   <option value="Maldives">Maldives</option>
+   <option value="Mali">Mali</option>
+   <option value="Malta">Malta</option>
+   <option value="Marshall Islands">Marshall Islands</option>
+   <option value="Martinique">Martinique</option>
+   <option value="Mauritania">Mauritania</option>
+   <option value="Mauritius">Mauritius</option>
+   <option value="Mayotte">Mayotte</option>
+   <option value="Mexico">Mexico</option>
+   <option value="Midway Islands">Midway Islands</option>
+   <option value="Moldova">Moldova</option>
+   <option value="Monaco">Monaco</option>
+   <option value="Mongolia">Mongolia</option>
+   <option value="Montserrat">Montserrat</option>
+   <option value="Morocco">Morocco</option>
+   <option value="Mozambique">Mozambique</option>
+   <option value="Myanmar">Myanmar</option>
+   <option value="Nambia">Nambia</option>
+   <option value="Nauru">Nauru</option>
+   <option value="Nepal">Nepal</option>
+   <option value="Netherland Antilles">Netherland Antilles</option>
+   <option value="Netherlands">Netherlands (Holland, Europe)</option>
+   <option value="Nevis">Nevis</option>
+   <option value="New Caledonia">New Caledonia</option>
+   <option value="New Zealand">New Zealand</option>
+   <option value="Nicaragua">Nicaragua</option>
+   <option value="Niger">Niger</option>
+   <option value="Nigeria">Nigeria</option>
+   <option value="Niue">Niue</option>
+   <option value="Norfolk Island">Norfolk Island</option>
+   <option value="Norway">Norway</option>
+   <option value="Oman">Oman</option>
+   <option value="Pakistan">Pakistan</option>
+   <option value="Palau Island">Palau Island</option>
+   <option value="Palestine">Palestine</option>
+   <option value="Panama">Panama</option>
+   <option value="Papua New Guinea">Papua New Guinea</option>
+   <option value="Paraguay">Paraguay</option>
+   <option value="Peru">Peru</option>
+   <option value="Phillipines">Philippines</option>
+   <option value="Pitcairn Island">Pitcairn Island</option>
+   <option value="Poland">Poland</option>
+   <option value="Portugal">Portugal</option>
+   <option value="Puerto Rico">Puerto Rico</option>
+   <option value="Qatar">Qatar</option>
+   <option value="Republic of Montenegro">Republic of Montenegro</option>
+   <option value="Republic of Serbia">Republic of Serbia</option>
+   <option value="Reunion">Reunion</option>
+   <option value="Romania">Romania</option>
+   <option value="Russia">Russia</option>
+   <option value="Rwanda">Rwanda</option>
+   <option value="St Barthelemy">St Barthelemy</option>
+   <option value="St Eustatius">St Eustatius</option>
+   <option value="St Helena">St Helena</option>
+   <option value="St Kitts-Nevis">St Kitts-Nevis</option>
+   <option value="St Lucia">St Lucia</option>
+   <option value="St Maarten">St Maarten</option>
+   <option value="St Pierre & Miquelon">St Pierre & Miquelon</option>
+   <option value="St Vincent & Grenadines">St Vincent & Grenadines</option>
+   <option value="Saipan">Saipan</option>
+   <option value="Samoa">Samoa</option>
+   <option value="Samoa American">Samoa American</option>
+   <option value="San Marino">San Marino</option>
+   <option value="Sao Tome & Principe">Sao Tome & Principe</option>
+   <option value="Saudi Arabia">Saudi Arabia</option>
+   <option value="Senegal">Senegal</option>
+   <option value="Seychelles">Seychelles</option>
+   <option value="Sierra Leone">Sierra Leone</option>
+   <option value="Singapore">Singapore</option>
+   <option value="Slovakia">Slovakia</option>
+   <option value="Slovenia">Slovenia</option>
+   <option value="Solomon Islands">Solomon Islands</option>
+   <option value="Somalia">Somalia</option>
+   <option value="South Africa">South Africa</option>
+   <option value="Spain">Spain</option>
+   <option value="Sri Lanka">Sri Lanka</option>
+   <option value="Sudan">Sudan</option>
+   <option value="Suriname">Suriname</option>
+   <option value="Swaziland">Swaziland</option>
+   <option value="Sweden">Sweden</option>
+   <option value="Switzerland">Switzerland</option>
+   <option value="Syria">Syria</option>
+   <option value="Tahiti">Tahiti</option>
+   <option value="Taiwan">Taiwan</option>
+   <option value="Tajikistan">Tajikistan</option>
+   <option value="Tanzania">Tanzania</option>
+   <option value="Thailand">Thailand</option>
+   <option value="Togo">Togo</option>
+   <option value="Tokelau">Tokelau</option>
+   <option value="Tonga">Tonga</option>
+   <option value="Trinidad & Tobago">Trinidad & Tobago</option>
+   <option value="Tunisia">Tunisia</option>
+   <option value="Turkey">Turkey</option>
+   <option value="Turkmenistan">Turkmenistan</option>
+   <option value="Turks & Caicos Is">Turks & Caicos Is</option>
+   <option value="Tuvalu">Tuvalu</option>
+   <option value="Uganda">Uganda</option>
+   <option value="United Kingdom">United Kingdom</option>
+   <option value="Ukraine">Ukraine</option>
+   <option value="United Arab Erimates">United Arab Emirates</option>
+   <option value="United States of America">United States of America</option>
+   <option value="Uraguay">Uruguay</option>
+   <option value="Uzbekistan">Uzbekistan</option>
+   <option value="Vanuatu">Vanuatu</option>
+   <option value="Vatican City State">Vatican City State</option>
+   <option value="Venezuela">Venezuela</option>
+   <option value="Vietnam">Vietnam</option>
+   <option value="Virgin Islands (Brit)">Virgin Islands (Brit)</option>
+   <option value="Virgin Islands (USA)">Virgin Islands (USA)</option>
+   <option value="Wake Island">Wake Island</option>
+   <option value="Wallis & Futana Is">Wallis & Futana Is</option>
+   <option value="Yemen">Yemen</option>
+   <option value="Zaire">Zaire</option>
+   <option value="Zambia">Zambia</option>
+   <option value="Zimbabwe">Zimbabwe</option>
+</select>
+</td>
+</tr>
+
+<tr><td colspan=2>represented for the purpose of the signature of this agreement by</td></tr>
+<tr>
+<td>Full name:</td>
+<td>
+<input TYPE="TEXT" NAME="theName" SIZE="40" MAXLENGTH="40">
+</tr>
+<tr>
+<td>Email:</td>
+<td>
+<input TYPE="TEXT" NAME="theEmail" SIZE="40" MAXLENGTH="40">
+</tr>
+<tr>
+<td>Telephone: </td>
+<td>
+<input TYPE="TEXT" NAME="theTelephone" SIZE="25" MAXLENGTH="25">
+<td>
+</tr>
+<tr>
+<td>Fax:</td>
+<td>
+<input TYPE="TEXT" NAME="theFax" SIZE="25" MAXLENGTH="25">
+</tr>
+
+<tr></tr>
+</table>
+
+
+<p><b>Date</b> 03 November 2026
+
+<p>
+	WHEREAS 
+<br>	(a) Licencors are the owners and proprietors of the IPR (as defined below) in and to the Materials (as defined below). 
+<br>	(b) The User wishes to make use of the Materials for Research Purposes only. 
+<br>	(c) Licencors have agreed to grant a limited licence to the User on the following terms and conditions in relation to their interests in and to the Materials.
+<br>	NOW THEREFORE IT IS AGREED as follows:-
+<br>	1. 
+<br>	1.1 In this Agreement, unless the context requires otherwise, the following words and phrases shall have the meanings set opposite them:- 
+<br>	"Agreement" means this Research Licence Agreement as varied or amended in accordance with its terms; 
+<br>	"Commencement Date" the last day of acceptance of this licence; 
+<br>	"IPR" means patents, trade marks, registered designs (and applications for any of them) copyright, audio rights, unregistered design rights, database rights or other rights in databases, semiconductor topography rights, trade names, trade secrets or confidential information of any sort, and any similar or analogous rights as may apply anywhere in the world including the benefit of all registrations and applications to register any of the aforesaid and all rights in the nature of any of the aforesaid; 
+<br>	"Materials" means the computer software comprising: 
+<br>	(i) the “Audio Book Recordings”, being commercially produced audio books, with each audio file usually being chapter length
+<br>	(ii) the “Text”, being text files, usually chapter length, that correspond to the Audio Book Recordings.
+<br>	(ii) the 'Speech', being shorter phrase, sentence or paragraph length audio files containing short discrete portions of the Audio Book Recordings; 
+<br>	(iii) the 'Prompts', being text files containing transcripts corresponding to the Speech; 
+<br>	(iv) the 'Notes', being any other files comprising additional relevant information; 
+<br>	(v) the 'Labels', being ASCII text format files comprising other information related to the recordings, which may include but is not limited to time-aligned labels.
+<p>
+	which at the Commencement Date make up the software package available for download to the User via the internet; and 
+<p>
+<br>	"Research Purposes" means only those purposes associated with research and exploration (including for the purpose of the 2013 Blizzard Challenge) using, incorporating or based upon the Materials (in whole or in part) or any copies of the Materials, and for the avoidance of doubt excludes loading, executing, storing, transmitting, displaying, copying, reverse engineering, developing, adapting, amending or otherwise using the Materials for any commercial purpose, including the development, marketing, commercialisation, sale or licencing of voice synthesis or speech recognition products or services including, without limitation, voice synthesis products or services, speech recognition products and services, and other speech technology products and services. In addition, for the avoidance of doubt, the Audio Book Recordings are not licenced under this Agreement for use as audio books; the Audio Book Recordings are licenced under this Agreement exclusively for those purposes associated with research and exploration of speech technologies such as voice synthesis and speech recognition; the Audio Book Recordings are not licenced for stand-alone use. 
+<p>
+<br>	1.2 In this Agreement:- 
+<br>	1.2.1 the singular includes the plural and vice versa; 
+<br>	1.2.2 unless otherwise stated, references to Clauses are to Clauses in this Agreement; and 
+<br>	1.2.3 "Party" means each of the Licencors and the User and the term "Parties" shall be construed accordingly.
+<br>	2. Subject to the terms of this Agreement, this Agreement shall commence on the Commencement Date and shall continue thereafter unless earlier terminated, in accordance with clause 10.
+<br>	3. In consideration of the continued observance by the User of all the terms and conditions contained in this Agreement: 
+<br>	3.1 Licencors shall make available to the User one copy of the Materials; and 
+<br>	3.2 Licensors hereby grant to the User a non-exclusive and non-transferable licence, without the right to sub-licence, to use the Materials exclusively for Research Purposes only throughout the world. No other rights or licences are granted by Licencors, other than as set out in this Clause 3.
+<br>	4. 
+<br>	4.1 No limitation on liability shall apply in respect of liability for personal injury or death directly attributable to the negligence of Licencors in the supply of the Materials under this Agreement. 
+<br>	4.2 Subject to Clause 4.1, Licencors make no representations about the suitability of the Materials for any purpose and the Materials are provided "as is" without express or implied warranty; declaring that in no event shall Licencors be liable for any damages whatsoever arising out of or in connection with the use or performance of the Materials (or any part thereof); further declaring that without prejudice to the foregoing generality Licencors shall not be liable to the User in contract, delict, negligence, breach of statutory duty or otherwise for any loss, damage, cost or expense of an indirect or consequential nature (including any economic loss or other loss of turnover, profits, business or goodwill) arising directly out of or in connection with this Agreement or the subject matter of this Agreement.
+<br>	5. The User undertakes to adopt all reasonable security measures needed to protect the IPR of Licencors in and to the Materials and undertakes to take all reasonable steps to ensure that no unauthorised use is made of the Materials. 
+
+<br>	6. The User shall be entitled to make a reasonable number of copies of the whole or any part of the Materials for back-up purposes. 
+
+<br>	7. The User agrees not to lend, hire, sell, distribute or otherwise part with the Materials in any manner not consistent with this Agreement without the express prior consent in writing of Licencors and subject to any conditions imposed by Licencors. 
+
+<br>	8. The licence granted hereunder is for the use by the User and the User is not permitted to allow the Materials to be used by any third party excepting always any associated company of the User or any third party which is providing facilities management, computer bureau and/or disaster recovery services (or similar services and howsoever so called) to the User. User acknowledges and agrees that its breach of this Agreement would cause serious and irreparable harm to Licencors which could not be adequately compensated for by money damages and, in the event of such breach, User hereby consents to an injunction being issued against or restraining it from any further such breach, but such injunctive relief shall not limit any other remedy which Licencors may have in the event of such breach.  
+
+<br>	9. In the event of the User or its employees or affiliates being approached by any other person or organisation, whether commercial or academic, which wants to open negotiations for the use of the Materials, the User shall refer the organisation or person directly to Licencors.
+<br>	10. 
+<br>	10.1 In addition to, but without prejudice to the whole other rights and remedies of the parties under and in terms of this Agreement, either Party can terminate this Agreement at any time by serving written notice on the other Party. 
+<br>	10.2 On termination of this Agreement the User shall immediately destroy or procure the destruction of all copies of the Materials then in the User's possession or control and forthwith certify the same to Licencors. 
+<br>	10.3 Notwithstanding the provisions of Clause 10.1, the provisions of Clauses 4, 10.2, 13, 14 and 15 shall survive termination of this Agreement for any cause.
+<br>	11. Failure by Licencors to exercise or enforce any rights in this Agreement shall not be deemed to be a waiver of any such right nor operate so as to bar the exercise or enforcement thereof at any time or times thereafter. 
+
+<br>	12. If any provision of this Agreement is declared to be void or unenforceable by any judicial or administrative authority in any jurisdiction in which this Agreement is effective, such provision will be deemed to be severable and the parties shall each use their reasonable endeavours in good faith to modify this Agreement so that the intent of this Agreement can be legally carried out. 
+
+<br>	13. The interpretation and enforcement of this Agreement shall be governed by the internal laws of the Commonwealth of Massachusetts (without reference to principles of conflicts or choice of law). This Agreement shall inure to the benefit of the Licencors, their successors and assigns. The state and federal courts having jurisdiction over Boston, Massachusetts, United States of America, provide the exclusive forum for any court action between the parties relating to this Agreement. User submits to the jurisdiction of such courts, and waives any claim that such a court lacks jurisdiction over User or constitutes an inconvenient or improper forum.
+
+<br>	14. User agrees to notify Licencors promptly in writing of any claim that the use of the Materials infringes any patent, audio rights, copyright, trade secret or other intellectual property right of a third party, to permit Licencors to defend, compromise, or settle the claim, and to provide all available information and assistance regarding such claim. Licencors shall not be liable for any costs, damages, or fees incurred by User on such action or claim unless authorized in writing by Licencors.
+
+<br>	15. User will promptly notify Licencors if it obtains information about unauthorized possession, use or disclosure of the Materials and will cooperate with Licencors in any action deemed necessary by Licencors to protect their IPR at Licencors’ sole expense.
+
+
+
+<p>
+	
+ <center>
+ All license requests are manually checked. Please be patient. Do not submit the form multiple times!<br>
+ <input name="acceptbutton" TYPE="SUBMIT" VALUE="Accept the licence agreement.">
+ </center>
+
+<script type="text/javascript" language="JavaScript"><!--
+document.mainForm.License.value = document.URL;
+//--></script>
+
+</form>
+
+<form METHOD="POST" action="https://www.cstr.inf.ed.ac.uk/cgi-bin/cstr/blizzardGeneric_download.cgi">
+<center>
+<input  name="rejectbutton" TYPE="SUBMIT" VALUE="Reject the licence agreement.">
+</center>
+</form>
+
+</div>
+
+<div id="footer">
+  <hr>
+  <center>
+    <a href="http://www.cstr.ed.ac.uk/">CSTR</A>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="http://www.ilcc.inf.ed.ac.uk/">ILCC</A>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="http://www.inf.ed.ac.uk/">Informatics</A>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="http://www.lel.ed.ac.uk/">LEL</A>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="http://www.ppls.ed.ac.uk/">PPLS</A>&nbsp;&nbsp;|&nbsp;&nbsp;
+<!--    <a href="http://www.hcrc.ed.ac.uk/language_at_edinburgh/">Language at Edinburgh</A>&nbsp;&nbsp;|&nbsp;&nbsp;-->
+    <a href="http://www.ed.ac.uk/">University of Edinburgh</A>
+<p>
+The Centre for Speech Technology Research,
+Informatics Forum, 10 Crichton Street, Edinburgh, EH8 9AB<br>
+Tel: +44 131 650 4434, Fax: +44 131 650 6626, email:
+  <script language=javascript>
+      <!--
+      var a = "admin"
+      var b = "cstr"
+      var c = "ed.ac.uk"
+      document.write("<a href=/contact/>"+a+"&#64;"+b+"&#46;"+c+"</a>")
+      //-->
+  </script>
+<br>
+Unless explicitly stated otherwise, all material is copyright &copy; The University of Edinburgh
+  </center>
+</div>
+
+</body>
+</html>
+
+ 

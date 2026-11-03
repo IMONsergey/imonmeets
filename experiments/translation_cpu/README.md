@@ -2,13 +2,21 @@
 
 Isolated prototype for I’MON Meets, 2 November 2026. No production changes.
 
-## Engines
+## Current evidence (3 November 2026)
+
+The saved 40 common FLEURS sentence IDs and source TSVs are unchanged and committed. Six direct MT directions have actual model outputs in `data/mt40/opus-original-20261103/`; success means inference completed, not acceptable translation quality. Explicit sentence segmentation is evaluated separately on the same weights, including six frozen new holdout scenarios per direction. No amount, currency or negation is repaired after translation.
+
+Actual selected audio is streamed from the official pinned test archives. The complete archive SHA-256 is verified against the pinned HF LFS object, but only the manifest-selected 40 WAVs per language are persisted. No Dataset Viewer/current-revision proxy is substituted. Audio hashes and exact frames/sample-rate are in `data/fleurs_subset/audio-*.json`.
+
+See [measured results](RESULTS_2026-11-03.md), [continuation scope](CONTINUATION.md), and [artifact rights](LICENSE_MANIFEST.md). The real process workers in `real_engines.py` and `tools/model_worker.py` support local ASR and MT only. They do not supply TTS, a LiveKit integration, commercial acceptance or first-audio latency evidence.
+
+## Historical engines (2 November)
 
 - faster-whisper base multilingual, CPU INT8
 - Argos Translate, with English pivot for Chinese/Arabic to Russian
 - Piper voices: en_US-lessac-medium, ru_RU-ruslan-medium, zh_CN-huayan-medium, ar_JO-kareem-medium
 
-Install in a Python 3.12 venv using `requirements.txt`, then run `python run.py prepare` followed by `python run.py bench` under the shared `imon-job` queue (1 CPU, 2 GiB RAM budget).
+These describe the historical synthetic benchmark. Do not rerun the legacy Piper preparation/benchmark as a commercially approved pipeline: its voice rights remain unresolved. The 3 November continuation uses verified original OPUS NPZ weights, real preserved FLEURS audio, and `tools/run_bounded.sh` under the shared verification lock (CPU1, RAM2GiB).
 
 Results and generated WAVs: `data/` (ignored by Git).
 

@@ -1,0 +1,24 @@
+{
+  "unit": "imonmeets-mt-process-stage-contract-20261103T055601Z-4096714",
+  "started_at": "2026-11-03T05:56:01Z",
+  "finished_at": "2026-11-03T05:58:55.377373+00:00",
+  "runtime_max_seconds": 60,
+  "exit_code": 0,
+  "command": [
+    "/usr/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_process_stage.py",
+    "-v"
+  ],
+  "log": "imonmeets-mt-process-stage-contract-20261103T055601Z-4096714.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}

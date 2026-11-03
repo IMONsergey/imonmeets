@@ -1,0 +1,57 @@
+{
+  "reviewer": "Assistant linguistic review; not a native-speaker commercial acceptance",
+  "quality_release_gate": "blocked",
+  "baseline_findings": [
+    {
+      "direction": "en-ru",
+      "case_id": "contrast-self-correction",
+      "finding": "Final ten-euro command omitted; sentence wrapper restores it in the measured core case."
+    },
+    {
+      "direction": "en-ru",
+      "case_id": "original-en-ru-decimal-010",
+      "finding": "1050.05 euros corrupted into 1000,50 points,0,5 euros; sentence wrapper does not fix this."
+    },
+    {
+      "direction": "en-zh",
+      "case_id": "contrast-usd-12000",
+      "finding": "USD currency omitted."
+    },
+    {
+      "direction": "en-zh",
+      "case_id": "contrast-cny-contrast",
+      "finding": "Contrast12 yuan changed into120000."
+    },
+    {
+      "direction": "en-zh",
+      "case_id": "contrast-decimal-eur",
+      "finding": "1050.05 EUR changed into1500 EUR plus5cents."
+    },
+    {
+      "direction": "zh-en",
+      "case_id": "contrast-cny-contrast",
+      "finding": "Yuan converted to dollars without authorization."
+    },
+    {
+      "direction": "zh-en",
+      "case_id": "contrast-decimal-eur",
+      "finding": "5eurocents changed into50euros."
+    },
+    {
+      "direction": "en-ar",
+      "case_id": "contrast-time-1515",
+      "finding": "Quarter past3 rendered as3pm; minutes omitted."
+    },
+    {
+      "direction": "ar-en",
+      "case_id": "contrast-sergey-meeting-price",
+      "finding": "Complete12000USD price sentence omitted."
+    },
+    {
+      "direction": "ar-en",
+      "case_id": "contrast-self-correction",
+      "finding": "Final ten-euro command omitted."
+    }
+  ],
+  "policy": "Keep original outputs immutable. Wrapper ablation uses the same hashes and does not count as an independent model. Never repair numbers/currencies after translation to turn a failure into a pass. Holdout/native-speaker verification remains separate."
+}

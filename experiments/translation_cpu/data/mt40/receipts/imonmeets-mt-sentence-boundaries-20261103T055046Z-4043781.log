@@ -1,0 +1,12 @@
+test_arabic_and_chinese_endings (test_sentence_segments.SentenceSegmentsTests.test_arabic_and_chinese_endings) ... ok
+test_decimal_points_and_initialisms_are_not_sentences (test_sentence_segments.SentenceSegmentsTests.test_decimal_points_and_initialisms_are_not_sentences) ... ok
+test_does_not_rewrite_numbers_negation_or_punctuation (test_sentence_segments.SentenceSegmentsTests.test_does_not_rewrite_numbers_negation_or_punctuation) ... ok
+test_independent_final_command_survives_segmentation (test_sentence_segments.SentenceSegmentsTests.test_independent_final_command_survives_segmentation) ... ok
+test_limits_reject_instead_of_silently_dropping_content (test_sentence_segments.SentenceSegmentsTests.test_limits_reject_instead_of_silently_dropping_content) ... ok
+test_titles_and_clock_abbreviations (test_sentence_segments.SentenceSegmentsTests.test_titles_and_clock_abbreviations) ... ok
+test_whitespace_only_has_no_model_input (test_sentence_segments.SentenceSegmentsTests.test_whitespace_only_has_no_model_input) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK

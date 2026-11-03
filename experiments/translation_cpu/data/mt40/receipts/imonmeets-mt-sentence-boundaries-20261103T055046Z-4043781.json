@@ -1,0 +1,24 @@
+{
+  "unit": "imonmeets-mt-sentence-boundaries-20261103T055046Z-4043781",
+  "started_at": "2026-11-03T05:50:46Z",
+  "finished_at": "2026-11-03T05:54:55.823760+00:00",
+  "runtime_max_seconds": 60,
+  "exit_code": 0,
+  "command": [
+    "/usr/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_sentence_segments.py",
+    "-v"
+  ],
+  "log": "imonmeets-mt-sentence-boundaries-20261103T055046Z-4043781.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}
