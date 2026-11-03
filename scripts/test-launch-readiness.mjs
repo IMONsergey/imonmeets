@@ -19,6 +19,7 @@ function fixture() {
     RELEASE_COMMIT: "a".repeat(40),
     RELEASE_IMAGE_DIGEST: `sha256:${"b".repeat(64)}`,
     PUBLIC_LEGAL_APPROVED: "true",
+    LEGAL_ACCEPTANCE_REQUIRED: "true",
     PUBLIC_LEGAL_MANIFEST_SHA256: "c".repeat(64),
     SUPPORT_EMAIL: "support@example.test",
     DELETION_JOURNAL_DIR: "/private/synthetic-journal",
@@ -745,4 +746,26 @@ test("missing, stale or mismatched deletion checkpoints and configuration keep l
   assert.equal(serialized.includes("synthetic-journal-secret"), false);
   assert.equal(serialized.includes("synthetic-receiver-secret"), false);
   assert.equal(serialized.includes("receiver.example.test"), false);
+});
+
+test("disabled account legal enforcement cannot pass public launch even with freshly matching evidence", () => {
+  for (const mode of [undefined, "false", "TRUE"]) {
+    const input = fixture();
+    if (mode === undefined) delete input.env.LEGAL_ACCEPTANCE_REQUIRED;
+    else input.env.LEGAL_ACCEPTANCE_REQUIRED = mode;
+    input.acceptance.legal.configurationHash = configurationHash(
+      input.env,
+      "legal",
+    );
+    const result = evaluateReadiness(input);
+    assert.equal(result.checks.publicDocuments.accepted, true);
+    assert.equal(result.checks.accountLegalAcceptance.required, false);
+    assert.equal(result.publicLaunchReady, false);
+    assert.equal(result.commercialLaunchReady, false);
+    assert.ok(
+      result.blockers.publicLaunch.includes(
+        "ACCOUNT_LEGAL_ACCEPTANCE_ENFORCEMENT_REQUIRED",
+      ),
+    );
+  }
 });

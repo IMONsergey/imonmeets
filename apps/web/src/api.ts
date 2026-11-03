@@ -11,6 +11,39 @@ export type User = {
   emailVerified: boolean;
   twoFactorEnabled?: boolean;
 };
+export type LegalEdition = {
+  version: string;
+  publishedAt: string;
+  manifestSha256: string;
+  termsSha256: string;
+  privacySha256: string;
+};
+export type LegalConsentStatus = {
+  required: boolean;
+  current: LegalEdition | null;
+  accepted: boolean;
+  receipt:
+    | (LegalEdition & {
+        id: string;
+        acceptedAt: string;
+        evidenceSchema: "explicit-account-v1";
+        termsAccepted: true;
+        privacyAcknowledged: true;
+      })
+    | null;
+};
+export type LegalDocument = {
+  title: string;
+  sections: Array<{ heading: string; paragraphs: string[] }>;
+};
+export type LegalDocuments = {
+  schema: 1;
+  version: string;
+  publishedAt: string;
+  operator: { name: string; registration: string; address: string };
+  terms: LegalDocument;
+  privacy: LegalDocument;
+};
 export type Room = {
   id: string;
   workspaceId: string;
@@ -61,6 +94,7 @@ export type Config = {
     legalVersion: string | null;
     legalPublishedAt: string | null;
     legalManifestSha256: string | null;
+    legalAcceptanceRequired?: boolean;
     operatorName: string | null;
   };
 };
@@ -165,9 +199,15 @@ export function safeReturnTo(value: unknown, base = origin()): string {
     const url = new URL(value, base);
     if (url.origin !== new URL(base).origin) return "/";
     if (
-      !["/", "/rooms", "/recordings", "/team", "/settings", "/invite"].includes(
-        url.pathname,
-      ) &&
+      ![
+        "/",
+        "/rooms",
+        "/recordings",
+        "/team",
+        "/settings",
+        "/consent",
+        "/invite",
+      ].includes(url.pathname) &&
       !/^\/join\/[^/]+$/.test(url.pathname)
     )
       return "/";
@@ -348,7 +388,9 @@ export async function api<T>(
         options.sessionErrors !== false &&
         !path.startsWith("/auth/") &&
         path !== "/me" &&
-        ["NOT_MEMBER", "FORBIDDEN"].includes(data.error?.code)
+        ["NOT_MEMBER", "FORBIDDEN", "LEGAL_ACCEPTANCE_REQUIRED"].includes(
+          data.error?.code,
+        )
       )
         notifyAuthChange("refresh");
       throw new ApiError(

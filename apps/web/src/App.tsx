@@ -34,11 +34,13 @@ import {
   writeLocalPreference,
   rememberReturnTo,
   markAuthStateChanged,
+  safeReturnTo,
 } from "./api";
 import type { Config } from "./api";
 import { Brand, Button, ErrorBox, Link, Spinner, go } from "./ui";
 import type { Session } from "./ui";
 import { Auth, Onboarding } from "./pages/Auth";
+import { LegalConsent, PersonalDataPage } from "./pages/LegalConsent";
 import { Dashboard, Rooms } from "./pages/Meetings";
 import { AccountSettings, Invite, Recordings, Team } from "./pages/Workspace";
 import {
@@ -267,24 +269,33 @@ export default function App() {
     nav.some((item) => item.path === path) ||
     authPath ||
     path.startsWith("/join/") ||
-    path === "/invite";
+    path === "/invite" ||
+    path === "/consent";
+  const needsConsent = Boolean(
+    session &&
+    (session.legalConsent?.required ??
+      config?.publicInformation?.legalAcceptanceRequired) &&
+    !session.legalConsent?.accepted,
+  );
   useEffect(() => {
     const label =
       publicTitles[path] ??
       nav.find((item) => item.path === path)?.label ??
       (path.startsWith("/join/")
         ? "Встреча"
-        : path === "/login"
-          ? "Вход"
-          : path === "/register"
-            ? "Регистрация"
-            : path === "/verify-email"
-              ? "Подтверждение почты"
-              : path === "/invite"
-                ? "Приглашение"
-                : knownPath
-                  ? "Доступ к аккаунту"
-                  : "Страница не найдена");
+        : path === "/consent"
+          ? "Документы и ваш выбор"
+          : path === "/login"
+            ? "Вход"
+            : path === "/register"
+              ? "Регистрация"
+              : path === "/verify-email"
+                ? "Подтверждение почты"
+                : path === "/invite"
+                  ? "Приглашение"
+                  : knownPath
+                    ? "Доступ к аккаунту"
+                    : "Страница не найдена");
     document.title = `${label} | IMON Meets`;
     if (booting) return;
     const heading = document.querySelector<HTMLElement>("main h1");
@@ -347,6 +358,31 @@ export default function App() {
       ) : (
         <PublicHome config={config} signedIn={Boolean(session)} />
       );
+  else if (
+    session &&
+    !authPath &&
+    (path === "/consent" ||
+      (needsConsent && path !== "/settings" && path !== "/recordings"))
+  )
+    content = (
+      <LegalConsent
+        key={session.user.id}
+        logout={logout}
+        hasWorkspace={Boolean(workspace)}
+        onAccepted={async () => {
+          await refresh();
+          if (path === "/consent")
+            go(
+              safeReturnTo(
+                new URLSearchParams(location.search).get("returnTo") ??
+                  "/settings",
+              ),
+            );
+        }}
+      />
+    );
+  else if (session && !workspace && path === "/settings")
+    content = <PersonalDataPage user={session.user} notify={notify} />;
   else if (path.startsWith("/join/") && !parseJoinSlug(path))
     content = (
       <div className="full-loader">
@@ -494,6 +530,14 @@ export default function App() {
                   <Settings size={16} />
                   Настройки аккаунта
                 </Link>
+                <Link
+                  to="/consent"
+                  onClick={() => {
+                    if (accountMenu.current) accountMenu.current.open = false;
+                  }}
+                >
+                  Документы и ваш выбор
+                </Link>
                 <button onClick={logout}>
                   <LogOut size={16} />
                   Выйти из аккаунта
@@ -536,6 +580,15 @@ export default function App() {
                     Подтвердить <ArrowRight size={14} />
                   </Link>
                 )}
+              </div>
+            )}
+            {needsConsent && (
+              <div className="notice">
+                <span>
+                  Для новых действий в сервисе подтвердите выбор для
+                  опубликованных документов. Управление данными доступно.
+                </span>{" "}
+                <Link to="/consent">Открыть документы</Link>
               </div>
             )}
             {path === "/rooms" ? (

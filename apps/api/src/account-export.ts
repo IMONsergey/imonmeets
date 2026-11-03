@@ -4,6 +4,12 @@ import type { Pool, QueryResultRow } from "pg";
 const pageSize = 500;
 const sections = [
   {
+    name: "legalAcceptances",
+    pageSize: 20,
+    query:
+      "SELECT a.id,a.accepted_at,a.evidence_schema,a.terms_accepted,a.privacy_acknowledged,v.manifest_sha256,v.version,v.published_at,v.terms_sha256,v.privacy_sha256,v.documents FROM im_legal_acceptances a JOIN im_legal_versions v USING(manifest_sha256) WHERE a.user_id=$1 AND ($2::uuid IS NULL OR a.id>$2::uuid) ORDER BY a.id LIMIT 20",
+  },
+  {
     name: "memberships",
     query:
       "SELECT w.id,w.name,m.role,w.created_at FROM im_workspaces w JOIN im_members m ON m.workspace_id=w.id WHERE m.user_id=$1 AND ($2::text IS NULL OR w.id>$2) ORDER BY w.id LIMIT 500",
@@ -94,7 +100,7 @@ export function accountExportStream(
           yield `${first ? "" : ","}${JSON.stringify(value)}`;
           first = false;
         }
-        if (rows.length < pageSize) break;
+        if (rows.length < (section.pageSize ?? pageSize)) break;
       }
       if (signal.aborted) return;
       yield "]";

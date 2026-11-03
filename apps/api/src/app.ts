@@ -1,5 +1,6 @@
 import {
   publicInformationSummary,
+  publishedDocument,
   isApplicationPage,
 } from "./public-information.js";
 import { openDeletionJournal } from "./deletion-journal.js";
@@ -21,6 +22,11 @@ import {
   drainAuthTasks,
 } from "./auth.js";
 import { registerIdentityRoutes } from "./identity.js";
+import {
+  legalConsentStatus,
+  requireLegalAcceptance,
+  registerLegalConsent,
+} from "./legal-consent.js";
 import type { Config } from "./config.js";
 import { createPool, transaction } from "./db.js";
 import {
@@ -316,6 +322,7 @@ export async function createApp(
       await requireBudget(limiter, `api-user:${session.user.id}`, 300, 60);
       budgetedUsers.add(req);
     }
+    await requireLegalAcceptance(pool, c, session.user.id, req);
     return session.user;
   }
   async function membership(
@@ -633,14 +640,10 @@ export async function createApp(
         error: { code: "NOT_FOUND", message: "Документ еще не опубликован." },
       });
     reply.header("Cache-Control", "no-cache");
-    return {
-      version: docs.version,
-      publishedAt: docs.publishedAt,
-      operator: docs.operator,
-      document: docs[kind],
-    };
+    return publishedDocument(c.publicInformation, kind);
   });
   registerIdentityRoutes(app, { c, pool, auth, limiter, sendMail });
+  registerLegalConsent(app, { c, pool, auth, limiter });
   app.get("/api/config", async () => ({
     publicInformation: publicInformationSummary(c.publicInformation),
     appName: "IMON Meets",
@@ -706,6 +709,7 @@ export async function createApp(
         twoFactorEnabled: Boolean(u.twoFactorEnabled),
       },
       workspaces: r.rows.map(workspaceJson),
+      legalConsent: await legalConsentStatus(pool, c, u.id),
     };
   });
   app.get("/api/security-events", async (req) => {

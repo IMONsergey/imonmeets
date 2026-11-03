@@ -1,0 +1,154 @@
+{
+  "schema": 1,
+  "feature": "LEG-02 explicit account terms acceptance and privacy acknowledgement",
+  "verifiedAt": "2026-11-03T08:57:48.634826+00:00",
+  "sourceBaseCommit": "140dcc4e44569f4d0c896a589e18d193eb639492",
+  "productionChanges": false,
+  "publicDocumentsPublished": false,
+  "realAccountsOrMailUsed": false,
+  "syntheticFixturesOnly": true,
+  "isolatedPostgres": {
+    "container": "imonmeets-commercial-tests-20261103",
+    "schemaPerSuite": true,
+    "actualDumpRestorePassed": true
+  },
+  "limits": {
+    "CPUQuota": "100%",
+    "MemoryMax": "2G",
+    "TasksMax": 256,
+    "RuntimeMaxSec": 900,
+    "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+  },
+  "verification": {
+    "full": {
+      "baseCommit": "140dcc4e44569f4d0c896a589e18d193eb639492",
+      "productionChanges": false,
+      "steps": [
+        {
+          "name": "format",
+          "startedAt": "2026-11-03T08:46:33.313086+00:00",
+          "checkedAt": "2026-11-03T08:46:38.610406+00:00",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck",
+          "startedAt": "2026-11-03T08:46:38.611410+00:00",
+          "checkedAt": "2026-11-03T08:47:44.173743+00:00",
+          "exitCode": 0
+        },
+        {
+          "name": "build",
+          "startedAt": "2026-11-03T08:47:44.174995+00:00",
+          "checkedAt": "2026-11-03T08:48:26.769041+00:00",
+          "exitCode": 0
+        },
+        {
+          "name": "regression",
+          "startedAt": "2026-11-03T08:48:26.769687+00:00",
+          "checkedAt": "2026-11-03T08:49:44.609475+00:00",
+          "exitCode": 0
+        },
+        {
+          "name": "legal-readiness",
+          "startedAt": "2026-11-03T08:49:44.611492+00:00",
+          "checkedAt": "2026-11-03T08:49:45.116253+00:00",
+          "exitCode": 0
+        },
+        {
+          "name": "browser",
+          "startedAt": "2026-11-03T08:49:45.117447+00:00",
+          "checkedAt": "2026-11-03T08:51:21.154580+00:00",
+          "exitCode": 0
+        }
+      ],
+      "complete": true
+    },
+    "counts": {
+      "api": 128,
+      "web": 19,
+      "sdk": 7,
+      "readiness": 24,
+      "browser": 7,
+      "skipped": 0
+    },
+    "finalUiSafeExit": {
+      "productionChanges": false,
+      "steps": [
+        {
+          "name": "format-safe-exit",
+          "startedAt": "2026-11-03T08:54:38.750831+00:00",
+          "checkedAt": "2026-11-03T08:54:40.330958+00:00",
+          "exitCode": 0
+        },
+        {
+          "name": "web-typecheck",
+          "startedAt": "2026-11-03T08:54:40.331848+00:00",
+          "checkedAt": "2026-11-03T08:54:55.037999+00:00",
+          "exitCode": 0
+        },
+        {
+          "name": "browser-types",
+          "startedAt": "2026-11-03T08:54:55.039647+00:00",
+          "checkedAt": "2026-11-03T08:55:02.645061+00:00",
+          "exitCode": 0
+        },
+        {
+          "name": "web-build",
+          "startedAt": "2026-11-03T08:55:02.646626+00:00",
+          "checkedAt": "2026-11-03T08:55:23.180053+00:00",
+          "exitCode": 0
+        },
+        {
+          "name": "consent-browser",
+          "startedAt": "2026-11-03T08:55:23.181143+00:00",
+          "checkedAt": "2026-11-03T08:55:35.678648+00:00",
+          "exitCode": 0
+        }
+      ],
+      "images": {
+        "/home/sergey/.local/state/imonmeets-commercial-20261103/consent/consent-320.png": "c87ac9aed686dd281556fbf49e9cde7afab502550f737eb8a012c7c2c8b31297",
+        "/home/sergey/.local/state/imonmeets-commercial-20261103/consent/consent-desktop.png": "322f996dd6d6d586d54229cffd5ef77056901f9a253be30d9c1eaa8a7f4dbc9e"
+      },
+      "complete": true
+    },
+    "finalUiSafeExitBrowserCount": 1,
+    "firstAttempt": {
+      "status": "prerequisite fixed",
+      "detail": "The isolated worktree had no web dist before the first API run; embedding static-asset test failed. Subsequent explicit build and full API regression passed."
+    }
+  },
+  "verifiedFiles": {
+    ".env.example": "bc8c69122604d59f1c4ba53a0d21f7e0348872310bced66b303755f58a2e4eb5",
+    "apps/api/src/account-export.ts": "fc41a50ab324af0ec22325b6aa2d94b707f1598ff739291797109aa7a22f21a8",
+    "apps/api/src/app.ts": "5d9073d50736c86dcbd6275115f56a0b2928d5863ac1a3209f953860cb369a8e",
+    "apps/api/src/db.ts": "4927fb9f4494280b6d43d093b8b079c46430298b4050ae4c0d9ebf8dc6396bde",
+    "apps/api/src/legal-consent-schema.ts": "fb93ede2105d8349f18951dbe74e4fb2bcd22e05bc5ba7d7defd91e463d849b2",
+    "apps/api/src/legal-consent.ts": "3407226edeed924b1a8409631339b145d591005f5ca1ca024b9cd87855380e51",
+    "apps/api/src/public-information.ts": "2a04d9099edaae63e1026444a5c3b4292c1baccfc11b186f09fd7dc2a4b54749",
+    "apps/api/test/legal-consent.integration.test.ts": "5c623fc0f7348cd234d94e81766d4b0a63701bdbb99b52231e79948ef5077823",
+    "apps/web/src/App.tsx": "75a2aa4838b2244ff0c3d68b962246deeebd38d9b07bbb63e532b668b730029c",
+    "apps/web/src/api.ts": "c125d696a1816c401bfb7211006846ff37038ea32ec71a2ea381ddc42fdc55b8",
+    "apps/web/src/app.browser.test.ts": "8552bba4b1265c907f7667537cd10a49b0f989ee00f460642db2e6b666eadf21",
+    "apps/web/src/legal-consent.browser.test.ts": "0310934cd0ba7ddf83b7bace3632d31ce33f2e1a7993681f9202b4ff707f56ff",
+    "apps/web/src/main.tsx": "94b89eb4c83656fb3084ab6a491a96e97ae4da918a6003e518ad37233421ff01",
+    "apps/web/src/pages/LegalConsent.tsx": "bba1bb61e7150b9b0ff9d712b350b08e3551592a41391fcf234c26eb4d90be6d",
+    "apps/web/src/pages/Public.tsx": "833fd7ffe4b5d884ac2b37966d1266de4869e7565bd6f4bff0c51e4a6aba7bb0",
+    "apps/web/src/styles/legal-consent.css": "80e3590ba6a6c1b156dfde9306da3fdd8082e9637dc4615ad14adc904833915f",
+    "apps/web/src/ui.tsx": "f7665eb84d11e3219a3318dddbd40f604514ddd24853ae82bb2c2d46c07686a4",
+    "compose.yml": "680e46b82f449984d5aa6a3a85ca8834af659e6c4d7b57aab32b2934ad38f867",
+    "docs/legal-consent.md": "54ea963396058b25a36155a9c4c7cb81ba857a10440c57e9d42260bb65c87c6a",
+    "docs/public-information.md": "1d844c9e0c826cc0c375f09daf6b4317494a80a5754dc91d8f3b4900fee62957",
+    "scripts/check-launch-readiness.mjs": "c9be51b39aa762173e6e0b69f594f0b6cc7e45a7a9a4778a0f849c10065125a0",
+    "scripts/test-launch-readiness.mjs": "d4bbd09d653e644f69a896c9265a20c52d1aadcc87226cf5d4cb4fc66367a1dc",
+    "scripts/test-legal-consent-readiness.mjs": "23635e331966062cb7221e26b700838276ee0223fa03db8fca1ba3e55c231ac1"
+  },
+  "logSha256": {
+    "verify2.log": "abe3ae8f68c01e1a65ee48c1755cd5d52cc90991195576cb774fb429f3256909",
+    "verify3.log": "a86d765d2e5989ad27711602b4708bf6dbdcc3fa0b95d9236dd55808ea7ac584"
+  },
+  "remainingAcceptance": [
+    "owner-reviewed actual public documents and operator identity",
+    "approved production enforcement configuration and external release acceptance",
+    "separate guest/recording/per-purpose data consent requirements"
+  ]
+}

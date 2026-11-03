@@ -7,6 +7,7 @@ import "./styles/auth.css";
 import "./styles/call.css";
 import "./styles/workspace.css";
 import "./styles/public.css";
+import "./styles/legal-consent.css";
 const Application = location.pathname.startsWith("/embed/")
   ? lazy(() => import("./pages/Embed"))
   : lazy(() => import("./App"));

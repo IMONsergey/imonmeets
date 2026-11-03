@@ -11,7 +11,11 @@ import { createPortal } from "react-dom";
 import type { ReactNode } from "react";
 import { LoaderCircle, Video, X } from "lucide-react";
 import type { Config, User, Workspace } from "./api";
-export type Session = { user: User; workspaces: Workspace[] };
+export type Session = {
+  user: User;
+  workspaces: Workspace[];
+  legalConsent?: import("./api").LegalConsentStatus;
+};
 export type PageProps = {
   workspace: Workspace;
   config: Config;

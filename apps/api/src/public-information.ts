@@ -5,7 +5,7 @@ export type PublicDocument = {
   title: string;
   sections: Array<{ heading: string; paragraphs: string[] }>;
 };
-type Documents = {
+export type Documents = {
   schema: 1;
   version: string;
   publishedAt: string;
@@ -55,6 +55,12 @@ function document(value: unknown): value is PublicDocument {
 }
 
 export function loadPublicInformation(env: NodeJS.ProcessEnv) {
+  if (
+    env.LEGAL_ACCEPTANCE_REQUIRED &&
+    !["true", "false"].includes(env.LEGAL_ACCEPTANCE_REQUIRED)
+  )
+    throw new Error("LEGAL_ACCEPTANCE_REQUIRED must be true or false");
+  const acceptanceRequired = env.LEGAL_ACCEPTANCE_REQUIRED === "true";
   const supportEmail = email(env.SUPPORT_EMAIL?.trim());
   const supportHours = env.SUPPORT_HOURS?.trim() || "";
   if (supportHours && !text(supportHours, 200))
@@ -124,7 +130,78 @@ export function loadPublicInformation(env: NodeJS.ProcessEnv) {
       );
     }
   }
-  return { supportEmail, supportHours, documents, manifestSha256 };
+  if (acceptanceRequired && !documents)
+    throw new Error(
+      "Required legal acceptance needs approved published documents",
+    );
+  return {
+    supportEmail,
+    supportHours,
+    documents,
+    manifestSha256,
+    acceptanceRequired,
+  };
+}
+
+/** Canonical UTF-8 JSON of the exact plain-text content returned for publication. */
+export function canonicalPublicJson(value: unknown): string {
+  if (value === null) return "null";
+  if (["string", "boolean"].includes(typeof value))
+    return JSON.stringify(value);
+  if (typeof value === "number" && Number.isFinite(value))
+    return JSON.stringify(value);
+  if (typeof value !== "object")
+    throw new Error("Invalid public document value");
+  if (Array.isArray(value))
+    return "[" + value.map(canonicalPublicJson).join(",") + "]";
+  return (
+    "{" +
+    Object.keys(value)
+      .sort()
+      .map(
+        (key) =>
+          JSON.stringify(key) +
+          ":" +
+          canonicalPublicJson((value as Record<string, unknown>)[key]),
+      )
+      .join(",") +
+    "}"
+  );
+}
+
+export function publishedDocument(
+  value: ReturnType<typeof loadPublicInformation>,
+  kind: "terms" | "privacy",
+) {
+  const documents = value.documents;
+  if (!documents || !value.manifestSha256) return null;
+  const content = {
+    kind,
+    version: documents.version,
+    publishedAt: documents.publishedAt,
+    operator: documents.operator,
+    document: documents[kind],
+  };
+  return {
+    ...content,
+    manifestSha256: value.manifestSha256,
+    documentSha256: createHash("sha256")
+      .update(canonicalPublicJson(content), "utf8")
+      .digest("hex"),
+  };
+}
+
+export function legalEdition(value: ReturnType<typeof loadPublicInformation>) {
+  const terms = publishedDocument(value, "terms"),
+    privacy = publishedDocument(value, "privacy");
+  if (!terms || !privacy) return null;
+  return {
+    version: terms.version,
+    publishedAt: terms.publishedAt,
+    manifestSha256: terms.manifestSha256,
+    termsSha256: terms.documentSha256,
+    privacySha256: privacy.documentSha256,
+  };
 }
 
 export function publicInformationSummary(
@@ -136,6 +213,7 @@ export function publicInformationSummary(
     legalVersion: value.documents?.version || null,
     legalPublishedAt: value.documents?.publishedAt || null,
     legalManifestSha256: value.manifestSha256,
+    legalAcceptanceRequired: value.acceptanceRequired,
     operatorName: value.documents?.operator.name || null,
   };
 }
@@ -152,6 +230,7 @@ export function isApplicationPage(pathname: string): boolean {
       "/recordings",
       "/team",
       "/settings",
+      "/consent",
       "/login",
       "/register",
       "/forgot-password",

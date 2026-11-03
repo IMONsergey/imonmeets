@@ -72,6 +72,7 @@ export function PublicFrame({
         <nav aria-label="Документы и помощь">
           <Link to="/privacy">Конфиденциальность</Link>
           <Link to="/terms">Условия использования</Link>
+          {signedIn && <Link to="/consent">Документы и ваш выбор</Link>}
           <Link to="/help">Помощь</Link>
         </nav>
       </footer>

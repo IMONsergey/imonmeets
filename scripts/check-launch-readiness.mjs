@@ -23,6 +23,7 @@ const fields = {
   legal: [
     "APP_URL",
     "PUBLIC_LEGAL_APPROVED",
+    "LEGAL_ACCEPTANCE_REQUIRED",
     "PUBLIC_LEGAL_MANIFEST_SHA256",
     "SUPPORT_EMAIL",
     "SUPPORT_HOURS",
@@ -165,6 +166,10 @@ export function evaluateReadiness({
     publicBlockers.push("PRODUCTION_AUTH_CONFIGURATION_REQUIRED");
   checks.canonicalHttps = { configured: canonicalPort };
   if (!canonicalPort) publicBlockers.push("CANONICAL_HTTPS_PORT_REQUIRED");
+  const accountLegalAcceptance = enabled(env.LEGAL_ACCEPTANCE_REQUIRED);
+  checks.accountLegalAcceptance = { required: accountLegalAcceptance };
+  if (!accountLegalAcceptance)
+    publicBlockers.push("ACCOUNT_LEGAL_ACCEPTANCE_ENFORCEMENT_REQUIRED");
   const legalConfigured =
     enabled(env.PUBLIC_LEGAL_APPROVED) &&
     /^[a-f0-9]{64}$/.test(env.PUBLIC_LEGAL_MANIFEST_SHA256 || "") &&

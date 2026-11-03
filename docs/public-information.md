@@ -43,4 +43,4 @@ Content is rendered as plain React text; the manifest cannot inject HTML. `/api/
 
 The launch checker requires document approval, exact checksum and support contact, plus fresh acceptance tied to the exact release and configuration. The `legal` receipt records `publiclyReachable`, `operatorVerified`, `dataFlowsReviewed` and `termsReviewed`; simply setting an approval flag is insufficient. Changes to the manifest or contact invalidate that evidence. Existing payment approval is a separate gate.
 
-Publication does not yet record per-user agreement acceptance. If the approved commercial model requires acceptance at signup/checkout, bind the actual document version and hash to that event before enabling sales; do not backfill historical agreement from publication alone.
+Publication alone never records per-user agreement. The explicit account flow and optional server enforcement are documented in [legal-consent.md](legal-consent.md). Set `LEGAL_ACCEPTANCE_REQUIRED=true` only with approved documents and an approved deployment policy. Historical acceptance is never backfilled.

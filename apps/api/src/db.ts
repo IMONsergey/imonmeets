@@ -1,5 +1,6 @@
 import { deletionBindingSchema } from "./deletion-binding-schema.js";
 import { operationReviewSchema } from "./operation-review-schema.js";
+import { legalConsentSchema } from "./legal-consent-schema.js";
 import { Pool, type PoolClient } from "pg";
 import { moderationSchema } from "./moderation-schema.js";
 import { suiteSchema } from "./suite-schema.js";
@@ -24,6 +25,7 @@ CREATE TABLE IF NOT EXISTS im_email_deliveries (
 CREATE INDEX IF NOT EXISTS im_email_deliveries_state_updated ON im_email_deliveries(state,updated_at);
 ${mailSchema}
 ${identitySchema}
+${legalConsentSchema}
 CREATE TABLE IF NOT EXISTS im_workspaces (id text PRIMARY KEY,name text NOT NULL,created_at timestamptz NOT NULL DEFAULT now());
 CREATE TABLE IF NOT EXISTS im_members (id text PRIMARY KEY,workspace_id text NOT NULL REFERENCES im_workspaces(id) ON DELETE CASCADE,user_id text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,role text NOT NULL CHECK(role IN ('owner','admin','member')),UNIQUE(workspace_id,user_id));
 CREATE UNIQUE INDEX IF NOT EXISTS im_one_owner ON im_members(workspace_id) WHERE role='owner';

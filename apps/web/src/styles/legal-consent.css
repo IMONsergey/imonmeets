@@ -1,0 +1,49 @@
+.legal-consent {
+  padding-bottom: 40px;
+}
+.consent-document {
+  margin: 24px 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  overflow-wrap: anywhere;
+}
+.consent-document summary {
+  font-size: 19px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.consent-document h3 {
+  margin-top: 24px;
+}
+.consent-form {
+  display: grid;
+  gap: 20px;
+  margin: 28px 0;
+}
+.consent-form label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.6;
+}
+.consent-form input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  margin-top: 3px;
+}
+.consent-form .button,
+.consent-receipt .button {
+  justify-self: start;
+  min-height: 44px;
+}
+.consent-alternatives {
+  margin-top: 32px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+.consent-alternatives .button {
+  margin: 12px 12px 0 0;
+  white-space: normal;
+}
