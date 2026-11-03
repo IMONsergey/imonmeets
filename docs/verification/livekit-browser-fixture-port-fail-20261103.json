@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "runId": "mediafirefox20261103f1",
+  "result": "FAIL",
+  "startedAt": "2026-11-03T08:35:51.911Z",
+  "checks": [
+    "exact local LiveKit 1.13.11 image; no pull"
+  ],
+  "limits": {
+    "verifierCpu": 1,
+    "verifierMemoryMiB": 2048,
+    "verifierTasks": 256,
+    "livekitCpu": 0.5,
+    "livekitMemoryMiB": 256,
+    "haproxyCpu": 0.1,
+    "haproxyMemoryMiB": 64
+  },
+  "scope": "isolated loopback; synthetic canvas video and oscillator audio only; no real devices, mail, payments, TURN or production traffic",
+  "nodeVersion": "v24.21.0",
+  "coreCommit": "a111d6f04a25888ab4dd48a32520d3f3b0e252a3",
+  "generatorSha256": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+  "haproxyImage": "haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3",
+  "livekitImage": "sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20",
+  "livekitVersion": "livekit-server version 1.13.11",
+  "serverBindings": [
+    {
+      "containerPort": "44447/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "44447"
+    },
+    {
+      "containerPort": "56154/udp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "56154"
+    },
+    {
+      "containerPort": "7880/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "35719"
+    }
+  ],
+  "error": "Error: Client network socket disconnected before secure TLS connection was established\n    at TLSSocket.onConnectEnd (node:internal/tls/wrap:1827:19)\n    at TLSSocket.emit (node:events:526:24)\n    at endReadableNT (node:internal/streams/readable:1764:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)",
+  "livekitDiagnostics": "2026-11-03T08:36:09.032Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:49982: short buffer\n2026-11-03T08:36:09.186Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:49984 to 172.17.0.4:44447\n2026-11-03T08:36:09.186Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:49984: short buffer\n2026-11-03T08:36:09.341Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:49994 to 172.17.0.4:44447\n2026-11-03T08:36:09.341Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:49994: short buffer\n2026-11-03T08:36:09.496Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:49996 to 172.17.0.4:44447\n2026-11-03T08:36:09.497Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:49996: short buffer\n2026-11-03T08:36:09.654Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:50006 to 172.17.0.4:44447\n2026-11-03T08:36:09.654Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:50006: short buffer\n2026-11-03T08:36:09.809Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:50018 to 172.17.0.4:44447\n2026-11-03T08:36:09.809Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:50018: short buffer\n2026-11-03T08:36:09.963Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:50028 to 172.17.0.4:44447\n2026-11-03T08:36:09.964Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:50028: short buffer\n2026-11-03T08:36:10.124Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:42148 to 172.17.0.4:44447\n2026-11-03T08:36:10.125Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:42148: short buffer\n2026-11-03T08:36:10.284Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:42162 to 172.17.0.4:44447\n2026-11-03T08:36:10.287Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:42162: short buffer\n2026-11-03T08:36:10.449Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:42176 to 172.17.0.4:44447\n2026-11-03T08:36:10.449Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:42176: short buffer\n2026-11-03T08:36:10.606Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:42178 to 172.17.0.4:44447\n2026-11-03T08:36:10.608Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:42178: short buffer\n2026-11-03T08:36:10.761Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:42188 to 172.17.0.4:44447\n2026-11-03T08:36:10.762Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:42188: short buffer\n2026-11-03T08:36:10.919Z\tDEBUG\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:108\tAccepted connection from: 172.17.0.1:42202 to 172.17.0.4:44447\n2026-11-03T08:36:10.919Z\tWARN\tlivekit.pion.tcp_mux\tv4@v4.4.0-warp.3/tcp_mux.go:219\tBuffer too small for first packet from 172.17.0.1:42202: short buffer\n",
+  "haproxyDiagnostics": "[NOTICE]   (1) : haproxy version is 3.0.30-47d806b\n[ALERT]    (1) : Binding [/usr/local/etc/haproxy/haproxy.cfg:14] for frontend imonmeets_tls: protocol tcpv4: cannot bind socket (Address in use) for [127.0.0.1:44447].\n[ALERT]    (1) : [haproxy.main()] Some protocols failed to start their listeners! Exiting.\n",
+  "cleanupVerified": true,
+  "completedAt": "2026-11-03T08:36:13.427Z",
+  "outerCleanupVerified": true
+}

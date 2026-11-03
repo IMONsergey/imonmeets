@@ -1,0 +1,1211 @@
+{
+  "schema": 1,
+  "runId": "mediawebkit20261103w1",
+  "result": "PASS_MEDIA_AND_SIGNALING",
+  "startedAt": "2026-11-03T08:39:16.832Z",
+  "checks": [
+    "exact local LiveKit 1.13.11 image; no pull",
+    "real API, nginx auth_request and pinned HAProxy SNI path; owned loopback ports only",
+    "real protected LiveKit validation accepts the persisted API grant",
+    "two real /rtc/v1 WebRTC peers exchange decoded synthetic VP8 frames and the expected remote Opus audio tones",
+    "real /rtc/v1 WebSocket receives LiveKit server signaling frames",
+    "real LiveKit accepts /rtc/validate",
+    "real LiveKit accepts /rtc/v1/validate",
+    "real legacy /rtc WebSocket upgrade and server join response",
+    "public internal authorization and management paths remain blocked",
+    "targeted kick disconnects only the selected real participant",
+    "kicked original JWT: all four signal paths reject, actual SDK reconnect rejects",
+    "freshly signed JWT for kicked identity: all four signal paths reject, actual SDK reconnect rejects",
+    "kick permits a new authorized API grant with a new identity",
+    "banned original JWT: all four signal paths reject, actual SDK reconnect rejects",
+    "ban blocks known browser grant; fresh anonymous browser requires admission; innocent peer stays connected",
+    "original JWT after room generation rotation: all four signal paths reject, actual SDK reconnect rejects",
+    "freshly signed JWT with old identity for new generation: all four signal paths reject, actual SDK reconnect rejects",
+    "fresh API grant joins the new room generation after rotation",
+    "admission API outage fails closed on all four real ingress paths"
+  ],
+  "limits": {
+    "verifierCpu": 1,
+    "verifierMemoryMiB": 2048,
+    "verifierTasks": 256,
+    "livekitCpu": 0.5,
+    "livekitMemoryMiB": 256,
+    "haproxyCpu": 0.1,
+    "haproxyMemoryMiB": 64
+  },
+  "scope": "isolated loopback; synthetic canvas video and oscillator audio only; no real devices, mail, payments, TURN or production traffic",
+  "nodeVersion": "v24.21.0",
+  "coreCommit": "a111d6f04a25888ab4dd48a32520d3f3b0e252a3",
+  "generatorSha256": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+  "haproxyImage": "haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3",
+  "livekitImage": "sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20",
+  "livekitVersion": "livekit-server version 1.13.11",
+  "fixturePorts": {
+    "publicPort": 39085,
+    "plainPort": 34261,
+    "nginxPort": 37043,
+    "apiPort": 45181,
+    "rtcPort": 33727,
+    "turnPort": 45959,
+    "mediaTcpPort": 39589,
+    "browserProxyPort": 41655,
+    "mediaUdpPort": 41942
+  },
+  "serverBindings": [
+    {
+      "containerPort": "39589/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "39589"
+    },
+    {
+      "containerPort": "41942/udp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "41942"
+    },
+    {
+      "containerPort": "7880/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "33727"
+    }
+  ],
+  "legacyValidationPreflight": {
+    "status": 200,
+    "body": "success"
+  },
+  "browserEngine": "webkit",
+  "browserExecutable": "/home/sergey/.cache/ms-playwright/webkit-2359/pw_run.sh",
+  "chromiumFlagsUsed": false,
+  "browserProxy": {
+    "bind": "127.0.0.1",
+    "port": 41655,
+    "externalTargetsAllowed": false
+  },
+  "browserVersion": "27.2",
+  "browserTransport": [
+    {
+      "type": "failed",
+      "host": "app.imon-runtime.test",
+      "path": "/assets/api-Ddizlb_5.js",
+      "reason": "Load request cancelled"
+    },
+    {
+      "type": "websocket-error",
+      "message": "Forbidden: 403"
+    },
+    {
+      "type": "websocket-error",
+      "message": "The server did not accept the WebSocket handshake."
+    },
+    {
+      "type": "failed",
+      "host": "rtc.imon-runtime.test",
+      "path": "/rtc/v1/validate",
+      "reason": "Origin https://app.imon-runtime.test:39085 is not allowed by Access-Control-Allow-Origin. Status code: 403"
+    },
+    {
+      "type": "websocket-error",
+      "message": "Forbidden: 403"
+    },
+    {
+      "type": "websocket-error",
+      "message": "The server did not accept the WebSocket handshake."
+    },
+    {
+      "type": "failed",
+      "host": "rtc.imon-runtime.test",
+      "path": "/rtc/v1/validate",
+      "reason": "Origin https://app.imon-runtime.test:39085 is not allowed by Access-Control-Allow-Origin. Status code: 403"
+    },
+    {
+      "type": "websocket-error",
+      "message": "Forbidden: 403"
+    },
+    {
+      "type": "websocket-error",
+      "message": "The server did not accept the WebSocket handshake."
+    },
+    {
+      "type": "failed",
+      "host": "rtc.imon-runtime.test",
+      "path": "/rtc/v1/validate",
+      "reason": "Origin https://app.imon-runtime.test:39085 is not allowed by Access-Control-Allow-Origin. Status code: 403"
+    },
+    {
+      "type": "websocket-error",
+      "message": "Forbidden: 403"
+    },
+    {
+      "type": "websocket-error",
+      "message": "The server did not accept the WebSocket handshake."
+    },
+    {
+      "type": "failed",
+      "host": "rtc.imon-runtime.test",
+      "path": "/rtc/v1/validate",
+      "reason": "Origin https://app.imon-runtime.test:39085 is not allowed by Access-Control-Allow-Origin. Status code: 403"
+    },
+    {
+      "type": "websocket-error",
+      "message": "Forbidden: 403"
+    },
+    {
+      "type": "websocket-error",
+      "message": "The server did not accept the WebSocket handshake."
+    },
+    {
+      "type": "failed",
+      "host": "rtc.imon-runtime.test",
+      "path": "/rtc/v1/validate",
+      "reason": "Origin https://app.imon-runtime.test:39085 is not allowed by Access-Control-Allow-Origin. Status code: 403"
+    }
+  ],
+  "signalFrames": {
+    "/rtc/v1": 96,
+    "/rtc": 1
+  },
+  "media": [
+    {
+      "receiver": "b",
+      "width": 160,
+      "height": 90,
+      "decodedFrames": 5,
+      "rgb": [
+        31,
+        155,
+        73
+      ],
+      "pixelSignature": [
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          255,
+          255,
+          254
+        ]
+      ],
+      "expectedSignature": [
+        0,
+        1
+      ],
+      "expectedRgb": [
+        21,
+        138,
+        73
+      ]
+    },
+    {
+      "receiver": "a",
+      "width": 160,
+      "height": 90,
+      "decodedFrames": 2,
+      "rgb": [
+        54,
+        82,
+        172
+      ],
+      "pixelSignature": [
+        [
+          255,
+          255,
+          254
+        ],
+        [
+          1,
+          0,
+          1
+        ]
+      ],
+      "expectedSignature": [
+        1,
+        0
+      ],
+      "expectedRgb": [
+        50,
+        85,
+        178
+      ]
+    }
+  ],
+  "videoAccepted": true,
+  "audio": [
+    {
+      "receiver": "b",
+      "expectedHz": 440,
+      "dominantHz": 421.875,
+      "rms": 0.1057981634671613,
+      "sampleRate": 48000,
+      "contextState": "running",
+      "trackState": "live"
+    },
+    {
+      "receiver": "a",
+      "expectedHz": 660,
+      "dominantHz": 703.125,
+      "rms": 0.10536333061347526,
+      "sampleRate": 48000,
+      "contextState": "running",
+      "trackState": "live"
+    }
+  ],
+  "audioAccepted": true,
+  "mediaAccepted": true,
+  "iceDiagnostics": [
+    {
+      "index": 0,
+      "states": [
+        {
+          "event": "icegatheringstatechange",
+          "ice": "new",
+          "connection": "new",
+          "gathering": "gathering"
+        },
+        {
+          "event": "iceconnectionstatechange",
+          "ice": "checking",
+          "connection": "connecting",
+          "gathering": "gathering"
+        },
+        {
+          "event": "connectionstatechange",
+          "ice": "checking",
+          "connection": "connecting",
+          "gathering": "gathering"
+        },
+        {
+          "event": "iceconnectionstatechange",
+          "ice": "connected",
+          "connection": "connecting",
+          "gathering": "gathering"
+        },
+        {
+          "event": "icegatheringstatechange",
+          "ice": "connected",
+          "connection": "connecting",
+          "gathering": "complete"
+        },
+        {
+          "event": "connectionstatechange",
+          "ice": "connected",
+          "connection": "connected",
+          "gathering": "complete"
+        }
+      ],
+      "candidates": [
+        "candidate:2279016251 1 udp 2113937151 1394260f-d970-4a32-aa29-3317533198f5.local 47217 typ host generation 0 network-cost 999",
+        "candidate:1303023367 1 udp 2113939711 d55d7d08-a018-4a40-9720-2d1caac7da23.local 55065 typ host generation 0 network-cost 999"
+      ],
+      "errors": [],
+      "stats": [
+        {
+          "id": "CIT01_111_minptime=10;stereo=1;useinbandfec=1",
+          "type": "codec",
+          "mimeType": "audio/opus"
+        },
+        {
+          "id": "CIT01_96",
+          "type": "codec",
+          "mimeType": "video/VP8"
+        },
+        {
+          "id": "COT01_111_minptime=10;useinbandfec=1",
+          "type": "codec",
+          "mimeType": "audio/opus"
+        },
+        {
+          "id": "COT01_96",
+          "type": "codec",
+          "mimeType": "video/VP8"
+        },
+        {
+          "id": "CPmqwOTPg5_RzjMzfda",
+          "type": "candidate-pair",
+          "state": "succeeded",
+          "nominated": true,
+          "localCandidateId": "ImqwOTPg5",
+          "remoteCandidateId": "IRzjMzfda",
+          "bytesSent": 61331,
+          "bytesReceived": 40763,
+          "packetsSent": 504,
+          "packetsReceived": 377,
+          "requestsSent": 7,
+          "requestsReceived": 7,
+          "responsesSent": 7,
+          "responsesReceived": 7,
+          "currentRoundTripTime": 0.001
+        },
+        {
+          "id": "CPx2KBwnIs_AqEL4sp1",
+          "type": "candidate-pair",
+          "state": "in-progress",
+          "nominated": false,
+          "localCandidateId": "Ix2KBwnIs",
+          "remoteCandidateId": "IAqEL4sp1",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 15,
+          "requestsReceived": 0,
+          "responsesSent": 0,
+          "responsesReceived": 0
+        },
+        {
+          "id": "I/xQC7sx+",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 55065
+        },
+        {
+          "id": "I7z3Beccm",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "IAqEL4sp1",
+          "type": "remote-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 41942
+        },
+        {
+          "id": "IRzjMzfda",
+          "type": "remote-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "passive",
+          "address": null,
+          "port": 39589
+        },
+        {
+          "id": "IT01A2046590130",
+          "type": "inbound-rtp",
+          "kind": "audio",
+          "bytesReceived": 26325,
+          "packetsReceived": 325,
+          "codecId": "CIT01_111_minptime=10;stereo=1;useinbandfec=1",
+          "totalAudioEnergy": 1.8863443219895748,
+          "totalSamplesReceived": 206400,
+          "concealedSamples": 0
+        },
+        {
+          "id": "IT01V2937200928",
+          "type": "inbound-rtp",
+          "kind": "video",
+          "bytesReceived": 3780,
+          "packetsReceived": 9,
+          "framesDecoded": 9,
+          "framesReceived": 9,
+          "codecId": "CIT01_96"
+        },
+        {
+          "id": "ImqwOTPg5",
+          "type": "local-candidate",
+          "candidateType": "prflx",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 54656
+        },
+        {
+          "id": "IrmBlHlRN",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "Ix2KBwnIs",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 47217
+        },
+        {
+          "id": "OT01A2388435988",
+          "type": "outbound-rtp",
+          "kind": "audio",
+          "bytesSent": 37368,
+          "packetsSent": 460,
+          "codecId": "COT01_111_minptime=10;useinbandfec=1"
+        },
+        {
+          "id": "OT01V3435222709",
+          "type": "outbound-rtp",
+          "kind": "video",
+          "bytesSent": 6329,
+          "packetsSent": 17,
+          "framesEncoded": 15,
+          "codecId": "COT01_96"
+        },
+        {
+          "id": "T01",
+          "type": "transport",
+          "selectedCandidatePairId": "CPmqwOTPg5_RzjMzfda",
+          "bytesSent": 61331,
+          "bytesReceived": 40763,
+          "packetsSent": 504,
+          "packetsReceived": 377,
+          "dtlsState": "connected",
+          "iceState": "connected"
+        }
+      ],
+      "localCandidates": [
+        "a=candidate:2279016251 1 udp 2113937151 1394260f-d970-4a32-aa29-3317533198f5.local 47217 typ host generation 0 network-cost 999",
+        "a=candidate:1303023367 1 udp 2113939711 d55d7d08-a018-4a40-9720-2d1caac7da23.local 55065 typ host generation 0 network-cost 999"
+      ],
+      "remoteCandidates": [
+        "a=candidate:2878742611 1 udp 2130706431 127.0.0.1 41942 typ host generation 0",
+        "a=candidate:2878742611 2 udp 2130706431 127.0.0.1 41942 typ host generation 0",
+        "a=candidate:375738803 1 tcp 1671430143 127.0.0.1 39589 typ host tcptype passive generation 0",
+        "a=candidate:375738803 2 tcp 1671430143 127.0.0.1 39589 typ host tcptype passive generation 0"
+      ]
+    },
+    {
+      "index": 1,
+      "states": [
+        {
+          "event": "icegatheringstatechange",
+          "ice": "new",
+          "connection": "new",
+          "gathering": "gathering"
+        },
+        {
+          "event": "iceconnectionstatechange",
+          "ice": "checking",
+          "connection": "connecting",
+          "gathering": "gathering"
+        },
+        {
+          "event": "connectionstatechange",
+          "ice": "checking",
+          "connection": "connecting",
+          "gathering": "gathering"
+        },
+        {
+          "event": "iceconnectionstatechange",
+          "ice": "connected",
+          "connection": "connecting",
+          "gathering": "gathering"
+        },
+        {
+          "event": "icegatheringstatechange",
+          "ice": "connected",
+          "connection": "connecting",
+          "gathering": "complete"
+        },
+        {
+          "event": "connectionstatechange",
+          "ice": "connected",
+          "connection": "connected",
+          "gathering": "complete"
+        }
+      ],
+      "candidates": [
+        "candidate:3738475907 1 udp 2113937151 269470d7-230f-4260-a1f6-27a936c78ea9.local 60024 typ host generation 0 network-cost 999",
+        "candidate:346625471 1 udp 2113939711 34b9b0b2-a903-40c2-ae88-02c0f5653150.local 53406 typ host generation 0 network-cost 999",
+        "candidate:3738475907 1 udp 2113937151 5f6f022b-4c7e-4bd3-92be-e4f5171d8909.local 41573 typ host generation 0 network-cost 999",
+        "candidate:346625471 1 udp 2113939711 d81f3f3f-c7d7-4363-84af-000297b70eeb.local 58764 typ host generation 0 network-cost 999",
+        "candidate:3738475907 1 udp 2113937151 036c1147-c8a3-479c-87cb-3dd359ab52e8.local 35730 typ host generation 0 network-cost 999",
+        "candidate:346625471 1 udp 2113939711 724969f3-fd11-4801-8f97-ea6c35722f1f.local 59973 typ host generation 0 network-cost 999",
+        "candidate:3738475907 1 udp 2113937151 cde1cf86-a685-4049-942b-aa89e9a4e9e8.local 46419 typ host generation 0 network-cost 999",
+        "candidate:346625471 1 udp 2113939711 b4953888-88aa-4f68-8958-ca071c265540.local 52284 typ host generation 0 network-cost 999",
+        "candidate:3738475907 1 udp 2113937151 eaf95bcd-9092-4b0d-983e-6c24f43024c9.local 60350 typ host generation 0 network-cost 999",
+        "candidate:346625471 1 udp 2113939711 90f8c4f6-fe8d-40dc-9d8b-29b35570049c.local 35778 typ host generation 0 network-cost 999",
+        "candidate:3738475907 1 udp 2113937151 34d80862-b255-488d-ad2e-d094fb1bb22a.local 38215 typ host generation 0 network-cost 999",
+        "candidate:346625471 1 udp 2113939711 cfea67f1-a617-44c3-a493-a8bc8bf4f87a.local 38718 typ host generation 0 network-cost 999",
+        "candidate:3738475907 1 udp 2113937151 6dbb914e-f8d7-42a1-8777-f2f689d181ea.local 42345 typ host generation 0 network-cost 999",
+        "candidate:346625471 1 udp 2113939711 eeaf0d68-2aae-45ba-a74b-01a613c8eb72.local 44888 typ host generation 0 network-cost 999"
+      ],
+      "errors": [],
+      "stats": [
+        {
+          "id": "CIT01_111_minptime=10;stereo=1;useinbandfec=1",
+          "type": "codec",
+          "mimeType": "audio/opus"
+        },
+        {
+          "id": "CIT01_96",
+          "type": "codec",
+          "mimeType": "video/VP8"
+        },
+        {
+          "id": "COT01_111_minptime=10;useinbandfec=1",
+          "type": "codec",
+          "mimeType": "audio/opus"
+        },
+        {
+          "id": "COT01_96",
+          "type": "codec",
+          "mimeType": "video/VP8"
+        },
+        {
+          "id": "CP8dT1U4hw_zylTFq/t",
+          "type": "candidate-pair",
+          "state": "in-progress",
+          "nominated": false,
+          "localCandidateId": "I8dT1U4hw",
+          "remoteCandidateId": "IzylTFq/t",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 4,
+          "requestsReceived": 0,
+          "responsesSent": 0,
+          "responsesReceived": 0
+        },
+        {
+          "id": "CPBIzPtQea_nIsqrHA7",
+          "type": "candidate-pair",
+          "state": "succeeded",
+          "nominated": true,
+          "localCandidateId": "IBIzPtQea",
+          "remoteCandidateId": "InIsqrHA7",
+          "bytesSent": 0,
+          "bytesReceived": 309,
+          "packetsSent": 0,
+          "packetsReceived": 3,
+          "requestsSent": 1,
+          "requestsReceived": 1,
+          "responsesSent": 1,
+          "responsesReceived": 1,
+          "currentRoundTripTime": 0.008
+        },
+        {
+          "id": "CPHOYUVK/A_nIsqrHA7",
+          "type": "candidate-pair",
+          "state": "succeeded",
+          "nominated": true,
+          "localCandidateId": "IHOYUVK/A",
+          "remoteCandidateId": "InIsqrHA7",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 1,
+          "requestsReceived": 1,
+          "responsesSent": 1,
+          "responsesReceived": 1,
+          "currentRoundTripTime": 0.057
+        },
+        {
+          "id": "CPJTJOHuJU_zylTFq/t",
+          "type": "candidate-pair",
+          "state": "in-progress",
+          "nominated": false,
+          "localCandidateId": "IJTJOHuJU",
+          "remoteCandidateId": "IzylTFq/t",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 4,
+          "requestsReceived": 0,
+          "responsesSent": 0,
+          "responsesReceived": 0
+        },
+        {
+          "id": "CPJhNn1kVJ_zylTFq/t",
+          "type": "candidate-pair",
+          "state": "in-progress",
+          "nominated": false,
+          "localCandidateId": "IJhNn1kVJ",
+          "remoteCandidateId": "IzylTFq/t",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 5,
+          "requestsReceived": 0,
+          "responsesSent": 0,
+          "responsesReceived": 0
+        },
+        {
+          "id": "CPQWwrUKPV_zylTFq/t",
+          "type": "candidate-pair",
+          "state": "in-progress",
+          "nominated": false,
+          "localCandidateId": "IQWwrUKPV",
+          "remoteCandidateId": "IzylTFq/t",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 4,
+          "requestsReceived": 0,
+          "responsesSent": 0,
+          "responsesReceived": 0
+        },
+        {
+          "id": "CPRUSGaFuY_nIsqrHA7",
+          "type": "candidate-pair",
+          "state": "succeeded",
+          "nominated": true,
+          "localCandidateId": "IRUSGaFuY",
+          "remoteCandidateId": "InIsqrHA7",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 1,
+          "requestsReceived": 1,
+          "responsesSent": 1,
+          "responsesReceived": 1,
+          "currentRoundTripTime": 0.004
+        },
+        {
+          "id": "CPXZViTgXW_zylTFq/t",
+          "type": "candidate-pair",
+          "state": "in-progress",
+          "nominated": false,
+          "localCandidateId": "IXZViTgXW",
+          "remoteCandidateId": "IzylTFq/t",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 4,
+          "requestsReceived": 0,
+          "responsesSent": 0,
+          "responsesReceived": 0
+        },
+        {
+          "id": "CPc853tYIW_nIsqrHA7",
+          "type": "candidate-pair",
+          "state": "succeeded",
+          "nominated": true,
+          "localCandidateId": "Ic853tYIW",
+          "remoteCandidateId": "InIsqrHA7",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 1,
+          "requestsReceived": 1,
+          "responsesSent": 1,
+          "responsesReceived": 1,
+          "currentRoundTripTime": 0.053
+        },
+        {
+          "id": "CPpw+L4Mf7_nIsqrHA7",
+          "type": "candidate-pair",
+          "state": "succeeded",
+          "nominated": true,
+          "localCandidateId": "Ipw+L4Mf7",
+          "remoteCandidateId": "InIsqrHA7",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 1,
+          "requestsReceived": 1,
+          "responsesSent": 1,
+          "responsesReceived": 1,
+          "currentRoundTripTime": 0.006
+        },
+        {
+          "id": "CPuI2/PykK_nIsqrHA7",
+          "type": "candidate-pair",
+          "state": "succeeded",
+          "nominated": true,
+          "localCandidateId": "IuI2/PykK",
+          "remoteCandidateId": "InIsqrHA7",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 1,
+          "requestsReceived": 1,
+          "responsesSent": 1,
+          "responsesReceived": 1,
+          "currentRoundTripTime": 0.005
+        },
+        {
+          "id": "CPv3E7TXjx_zylTFq/t",
+          "type": "candidate-pair",
+          "state": "in-progress",
+          "nominated": false,
+          "localCandidateId": "Iv3E7TXjx",
+          "remoteCandidateId": "IzylTFq/t",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 4,
+          "requestsReceived": 0,
+          "responsesSent": 0,
+          "responsesReceived": 0
+        },
+        {
+          "id": "CPvRLJNu4H_zylTFq/t",
+          "type": "candidate-pair",
+          "state": "in-progress",
+          "nominated": false,
+          "localCandidateId": "IvRLJNu4H",
+          "remoteCandidateId": "IzylTFq/t",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 4,
+          "requestsReceived": 0,
+          "responsesSent": 0,
+          "responsesReceived": 0
+        },
+        {
+          "id": "CPvRiKTgBr_nIsqrHA7",
+          "type": "candidate-pair",
+          "state": "succeeded",
+          "nominated": true,
+          "localCandidateId": "IvRiKTgBr",
+          "remoteCandidateId": "InIsqrHA7",
+          "bytesSent": 50182,
+          "bytesReceived": 46733,
+          "packetsSent": 400,
+          "packetsReceived": 427,
+          "requestsSent": 6,
+          "requestsReceived": 11,
+          "responsesSent": 11,
+          "responsesReceived": 6,
+          "currentRoundTripTime": 0.002
+        },
+        {
+          "id": "I6lfUNRIF",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 44888
+        },
+        {
+          "id": "I8dT1U4hw",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 41573
+        },
+        {
+          "id": "I9O4693Qe",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "IBIzPtQea",
+          "type": "local-candidate",
+          "candidateType": "prflx",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 54736
+        },
+        {
+          "id": "IHG4RWM5q",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "IHOYUVK/A",
+          "type": "local-candidate",
+          "candidateType": "prflx",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 54690
+        },
+        {
+          "id": "IHyJdkB3v",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "IJTJOHuJU",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 38215
+        },
+        {
+          "id": "IJhNn1kVJ",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 42345
+        },
+        {
+          "id": "IK7TOSS93",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 58764
+        },
+        {
+          "id": "IN0LtoFp3",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "INsr/LbYJ",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 53406
+        },
+        {
+          "id": "IQWwrUKPV",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 35730
+        },
+        {
+          "id": "IRUSGaFuY",
+          "type": "local-candidate",
+          "candidateType": "prflx",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 54722
+        },
+        {
+          "id": "IT01A1028045117",
+          "type": "inbound-rtp",
+          "kind": "audio",
+          "bytesReceived": 31266,
+          "packetsReceived": 386,
+          "codecId": "CIT01_111_minptime=10;stereo=1;useinbandfec=1",
+          "totalAudioEnergy": 1.8488939809678728,
+          "totalSamplesReceived": 249120,
+          "concealedSamples": 1916
+        },
+        {
+          "id": "IT01V1333995695",
+          "type": "inbound-rtp",
+          "kind": "video",
+          "bytesReceived": 4450,
+          "packetsReceived": 12,
+          "framesDecoded": 12,
+          "framesReceived": 12,
+          "codecId": "CIT01_96"
+        },
+        {
+          "id": "IXZViTgXW",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 60024
+        },
+        {
+          "id": "IYZsTDz6w",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "Ic853tYIW",
+          "type": "local-candidate",
+          "candidateType": "prflx",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 54684
+        },
+        {
+          "id": "IcINmhtdS",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "IevniQ4Uh",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "IfgFJYdua",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "IgWHQF23z",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "Iki8yRZPw",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 52284
+        },
+        {
+          "id": "InIsqrHA7",
+          "type": "remote-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "passive",
+          "address": null,
+          "port": 39589
+        },
+        {
+          "id": "IngAwE5YE",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "IompDEMWV",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "Ipw+L4Mf7",
+          "type": "local-candidate",
+          "candidateType": "prflx",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 54714
+        },
+        {
+          "id": "IrfS3r/sa",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "IsE0GOATo",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 35778
+        },
+        {
+          "id": "IsfBLgkiL",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "ItDM+uKVo",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 38718
+        },
+        {
+          "id": "IuI2/PykK",
+          "type": "local-candidate",
+          "candidateType": "prflx",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 54704
+        },
+        {
+          "id": "IucK3Iest",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 59973
+        },
+        {
+          "id": "Iv3E7TXjx",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 60350
+        },
+        {
+          "id": "IvRLJNu4H",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 46419
+        },
+        {
+          "id": "IvRiKTgBr",
+          "type": "local-candidate",
+          "candidateType": "prflx",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 54672
+        },
+        {
+          "id": "IzwdXUwaE",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": null,
+          "port": 9
+        },
+        {
+          "id": "IzylTFq/t",
+          "type": "remote-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": null,
+          "port": 41942
+        },
+        {
+          "id": "OT01A1981350131",
+          "type": "outbound-rtp",
+          "kind": "audio",
+          "bytesSent": 29369,
+          "packetsSent": 360,
+          "codecId": "COT01_111_minptime=10;useinbandfec=1"
+        },
+        {
+          "id": "OT01V1139875744",
+          "type": "outbound-rtp",
+          "kind": "video",
+          "bytesSent": 6367,
+          "packetsSent": 14,
+          "framesEncoded": 10,
+          "codecId": "COT01_96"
+        },
+        {
+          "id": "T01",
+          "type": "transport",
+          "selectedCandidatePairId": "CPvRiKTgBr_nIsqrHA7",
+          "bytesSent": 50182,
+          "bytesReceived": 47042,
+          "packetsSent": 400,
+          "packetsReceived": 430,
+          "dtlsState": "connected",
+          "iceState": "connected"
+        }
+      ],
+      "localCandidates": [
+        "a=candidate:3738475907 1 udp 2113937151 269470d7-230f-4260-a1f6-27a936c78ea9.local 60024 typ host generation 0 network-cost 999",
+        "a=candidate:346625471 1 udp 2113939711 34b9b0b2-a903-40c2-ae88-02c0f5653150.local 53406 typ host generation 0 network-cost 999",
+        "a=candidate:3738475907 1 udp 2113937151 5f6f022b-4c7e-4bd3-92be-e4f5171d8909.local 41573 typ host generation 0 network-cost 999",
+        "a=candidate:346625471 1 udp 2113939711 d81f3f3f-c7d7-4363-84af-000297b70eeb.local 58764 typ host generation 0 network-cost 999",
+        "a=candidate:3738475907 1 udp 2113937151 036c1147-c8a3-479c-87cb-3dd359ab52e8.local 35730 typ host generation 0 network-cost 999",
+        "a=candidate:346625471 1 udp 2113939711 724969f3-fd11-4801-8f97-ea6c35722f1f.local 59973 typ host generation 0 network-cost 999",
+        "a=candidate:3738475907 1 udp 2113937151 cde1cf86-a685-4049-942b-aa89e9a4e9e8.local 46419 typ host generation 0 network-cost 999",
+        "a=candidate:346625471 1 udp 2113939711 b4953888-88aa-4f68-8958-ca071c265540.local 52284 typ host generation 0 network-cost 999",
+        "a=candidate:3738475907 1 udp 2113937151 eaf95bcd-9092-4b0d-983e-6c24f43024c9.local 60350 typ host generation 0 network-cost 999",
+        "a=candidate:346625471 1 udp 2113939711 90f8c4f6-fe8d-40dc-9d8b-29b35570049c.local 35778 typ host generation 0 network-cost 999",
+        "a=candidate:3738475907 1 udp 2113937151 34d80862-b255-488d-ad2e-d094fb1bb22a.local 38215 typ host generation 0 network-cost 999",
+        "a=candidate:346625471 1 udp 2113939711 cfea67f1-a617-44c3-a493-a8bc8bf4f87a.local 38718 typ host generation 0 network-cost 999",
+        "a=candidate:3738475907 1 udp 2113937151 6dbb914e-f8d7-42a1-8777-f2f689d181ea.local 42345 typ host generation 0 network-cost 999",
+        "a=candidate:346625471 1 udp 2113939711 eeaf0d68-2aae-45ba-a74b-01a613c8eb72.local 44888 typ host generation 0 network-cost 999"
+      ],
+      "remoteCandidates": [
+        "a=candidate:375738803 1 tcp 1671430143 127.0.0.1 39589 typ host tcptype passive generation 0",
+        "a=candidate:375738803 2 tcp 1671430143 127.0.0.1 39589 typ host tcptype passive generation 0",
+        "a=candidate:2878742611 1 udp 2130706431 127.0.0.1 41942 typ host generation 0",
+        "a=candidate:2878742611 2 udp 2130706431 127.0.0.1 41942 typ host generation 0"
+      ]
+    }
+  ],
+  "mediaTransports": [
+    {
+      "peer": 0,
+      "protocol": "tcp",
+      "remoteAddress": null,
+      "dtlsState": "connected",
+      "bytesSent": 61331,
+      "bytesReceived": 40763,
+      "audioSamples": 206400,
+      "audioBytes": 26325,
+      "videoFrames": 9,
+      "videoBytes": 3780
+    },
+    {
+      "peer": 1,
+      "protocol": "tcp",
+      "remoteAddress": null,
+      "dtlsState": "connected",
+      "bytesSent": 50182,
+      "bytesReceived": 46733,
+      "audioSamples": 249120,
+      "audioBytes": 31266,
+      "videoFrames": 12,
+      "videoBytes": 4450
+    }
+  ],
+  "transportProtocols": [
+    "tcp"
+  ],
+  "udpAccepted": false,
+  "tcpAccepted": true,
+  "cleanupVerified": true,
+  "completedAt": "2026-11-03T08:39:42.281Z",
+  "outerCleanupVerified": true
+}

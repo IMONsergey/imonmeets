@@ -1,0 +1,33 @@
+{
+  "node": "v24.21.0",
+  "results": [
+    {
+      "engine": "firefox",
+      "executablePath": "/home/sergey/.cache/ms-playwright/firefox-1543/firefox/firefox",
+      "startedAt": "2026-11-03T08:32:44.095Z",
+      "version": "155.0",
+      "capabilities": {
+        "peerConnection": "function",
+        "audioContext": "function",
+        "canvasCaptureStream": "function",
+        "videoQuality": "function",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:155.0) Gecko/20100101 Firefox/155.0"
+      },
+      "launched": true
+    },
+    {
+      "engine": "webkit",
+      "executablePath": "/home/sergey/.cache/ms-playwright/webkit-2359/pw_run.sh",
+      "startedAt": "2026-11-03T08:32:49.267Z",
+      "version": "27.2",
+      "capabilities": {
+        "peerConnection": "function",
+        "audioContext": "function",
+        "canvasCaptureStream": "function",
+        "videoQuality": "function",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15"
+      },
+      "launched": true
+    }
+  ]
+}

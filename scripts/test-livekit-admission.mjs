@@ -16,11 +16,12 @@ import {
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { execFileSync, spawn } from "node:child_process";
-import { createServer } from "node:net";
+import { createServer, connect as connectTcp } from "node:net";
+import { createServer as createHttpServer } from "node:http";
 import { createSocket } from "node:dgram";
 import https from "node:https";
 import { Pool } from "pg";
-import { chromium } from "@playwright/test";
+import { chromium, firefox, webkit } from "@playwright/test";
 import { AccessToken } from "livekit-server-sdk";
 import { harness, password } from "../apps/api/test/suite-harness.ts";
 import { createMedia } from "../apps/api/src/media.ts";
@@ -290,11 +291,17 @@ function passed(name) {
   receipt.checks.push(name);
   console.log("PASS " + name);
 }
-let h, browser, nginx, page;
+let h, browser, nginx, page, browserProxy;
+const browserProxySockets = new Set();
 try {
   mkdirSync(folder, { mode: 0o700 });
   receipt.nodeVersion = process.version;
   receipt.coreCommit = run("git", ["-C", root, "rev-parse", "HEAD"]);
+  receipt.runnerSha256 = createHash("sha256")
+    .update(readFileSync(new URL(import.meta.url)))
+    .digest("hex");
+  receipt.requestedBrowserEngine =
+    process.env.IMON_BROWSER_ENGINE || "chromium";
   const generator = path.resolve(
     process.env.IMON_INGRESS_GENERATOR ??
       path.join(root, "scripts/prepare-ingress443.mjs"),
@@ -340,11 +347,33 @@ try {
   assert.match(version, /\b1\.13\.11\b/);
   receipt.livekitVersion = version;
   passed("exact local LiveKit 1.13.11 image; no pull");
-  const ports = await tcpPorts(6);
+  // Allocate every TCP endpoint while all reservation sockets remain open.
+  // Separate port-0 batches may otherwise return an earlier endpoint's number.
+  const ports = await tcpPorts(8);
+  assert.equal(new Set(ports).size, ports.length);
   [publicPort] = ports;
-  const [, plainPort, nginxPort, apiPort, rtcPort, turnPort] = ports,
-    mediaPort = await udpPort(),
-    mediaTcpPort = (await tcpPorts(1))[0];
+  const [
+    ,
+    plainPort,
+    nginxPort,
+    apiPort,
+    rtcPort,
+    turnPort,
+    mediaTcpPort,
+    browserProxyPort,
+  ] = ports;
+  const mediaPort = await udpPort();
+  receipt.fixturePorts = {
+    publicPort,
+    plainPort,
+    nginxPort,
+    apiPort,
+    rtcPort,
+    turnPort,
+    mediaTcpPort,
+    browserProxyPort,
+    mediaUdpPort: mediaPort,
+  };
   const key = "runtime" + randomBytes(12).toString("hex"),
     secret = randomBytes(48).toString("base64url");
   const proxySecret = randomBytes(32).toString("base64url"),
@@ -637,11 +666,28 @@ try {
   );
   passed("real protected LiveKit validation accepts the persisted API grant");
   const wsSeen = [];
-  browser = await chromium.launch({
-    executablePath:
-      process.env.IMON_BROWSER_EXECUTABLE || "/usr/bin/google-chrome",
-    headless: true,
-    args: [
+  const engineName = process.env.IMON_BROWSER_ENGINE || "chromium";
+  assert.ok(["chromium", "firefox", "webkit"].includes(engineName));
+  const engine = { chromium, firefox, webkit }[engineName];
+  const executablePath =
+    process.env.IMON_BROWSER_EXECUTABLE ||
+    (engineName === "chromium"
+      ? "/usr/bin/google-chrome"
+      : engine.executablePath());
+  const launchOptions = { executablePath, headless: true, timeout: 15000 };
+  receipt.browserEngine = engineName;
+  receipt.browserExecutable = executablePath;
+  receipt.chromiumFlagsUsed = engineName === "chromium";
+  if (engineName === "firefox") {
+    // Firefox deliberately excludes loopback ICE/STUN by default. This preference
+    // is set only in the disposable loopback test profile, never a user's browser.
+    launchOptions.firefoxUserPrefs = {
+      "media.peerconnection.ice.loopback": true,
+    };
+    receipt.firefoxUserPrefs = { ...launchOptions.firefoxUserPrefs };
+  }
+  if (engineName === "chromium") {
+    launchOptions.args = [
       "--no-sandbox",
       "--disable-dev-shm-usage",
       "--renderer-process-limit=2",
@@ -654,8 +700,66 @@ try {
         " 127.0.0.1, MAP " +
         rtcHost +
         " 127.0.0.1",
-    ],
-  });
+    ];
+  } else {
+    // Other engines have no Chromium DNS flags. This loopback-only CONNECT proxy
+    // maps only this fixture's HTTPS/WSS hosts and exact owned ICE/TCP port.
+    // Every other target is refused without making an outbound connection.
+    const proxyPort = browserProxyPort;
+    browserProxy = createHttpServer((_request, response) => {
+      response.writeHead(403);
+      response.end();
+    });
+    browserProxy.on("connect", (request, socket, head) => {
+      let target;
+      try {
+        target = new URL("http://" + request.url);
+      } catch {
+        socket.destroy();
+        return;
+      }
+      const port = Number(target.port);
+      const application =
+        [appHost, rtcHost].includes(target.hostname) && port === publicPort;
+      const media = target.hostname === "127.0.0.1" && port === mediaTcpPort;
+      if (
+        (!application && !media) ||
+        target.username ||
+        target.password ||
+        target.pathname !== "/"
+      ) {
+        socket.end("HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n");
+        return;
+      }
+      const upstream = connectTcp({ host: "127.0.0.1", port });
+      for (const stream of [socket, upstream]) {
+        browserProxySockets.add(stream);
+        stream.once("close", () => browserProxySockets.delete(stream));
+      }
+      socket.once("error", () => upstream.destroy());
+      upstream.once("error", () => socket.destroy());
+      upstream.once("connect", () => {
+        socket.write("HTTP/1.1 200 Connection Established\r\n\r\n");
+        if (head.length) upstream.write(head);
+        socket.pipe(upstream);
+        upstream.pipe(socket);
+      });
+      socket.once("close", () => upstream.destroy());
+      upstream.once("close", () => socket.destroy());
+    });
+    await new Promise((resolve, reject) => {
+      browserProxy.once("error", reject);
+      browserProxy.listen(proxyPort, "127.0.0.1", resolve);
+    });
+    launchOptions.proxy = { server: "http://127.0.0.1:" + proxyPort };
+    receipt.browserProxy = {
+      bind: "127.0.0.1",
+      port: proxyPort,
+      externalTargetsAllowed: false,
+    };
+  }
+  browser = await engine.launch(launchOptions);
+  receipt.browserVersion = browser.version();
   const context = await browser.newContext({
     ignoreHTTPSErrors: true,
     bypassCSP: true,
@@ -707,7 +811,7 @@ try {
   });
   await page.goto("https://" + appHost + ":" + publicPort + "/");
   await page.setContent(
-    "<!doctype html><title>Synthetic media acceptance</title><body></body>",
+    '<!doctype html><title>Synthetic media acceptance</title><body><button id="runtime-start">Start synthetic media</button></body>',
   );
   await page.evaluate(() => {
     const NativePeerConnection = window.RTCPeerConnection;
@@ -1017,6 +1121,13 @@ try {
     },
     { serverUrl: h.c.livekit.url, localStun: "stun:127.0.0.1:" + mediaPort },
   );
+  // Unlock audio through a real trusted input event on each engine, without
+  // capturing any hardware or relying on Chromium autoplay switches elsewhere.
+  await page.evaluate(() => {
+    document.getElementById("runtime-start").onclick = () =>
+      window.runtimeAudioContext.resume();
+  });
+  await page.getByRole("button", { name: "Start synthetic media" }).click();
   try {
     await page.evaluate(
       async ({ a, b }) => {
@@ -1103,40 +1214,61 @@ try {
       const transport = trace.stats.find(
         (stat) => stat.type === "transport" && stat.selectedCandidatePairId,
       );
-      assert.ok(transport, "Each peer needs a selected transport");
-      assert.equal(transport.dtlsState, "connected");
-      const pair = trace.stats.find(
-        (stat) => stat.id === transport.selectedCandidatePairId,
-      );
+      const pair = transport
+        ? trace.stats.find(
+            (stat) => stat.id === transport.selectedCandidatePairId,
+          )
+        : trace.stats.find(
+            (stat) =>
+              stat.type === "candidate-pair" &&
+              stat.state === "succeeded" &&
+              (stat.selected === true || stat.nominated === true),
+          );
       assert.equal(pair?.state, "succeeded");
-      assert.equal(pair?.nominated, true);
+      assert.ok(
+        pair?.nominated === true || pair?.selected === true,
+        "Native ICE stats must identify the selected/nominated pair",
+      );
+      if (transport?.dtlsState !== undefined)
+        assert.equal(transport.dtlsState, "connected");
       const candidate = trace.stats.find(
         (stat) => stat.id === pair.remoteCandidateId,
       );
+      assert.ok(candidate, "Selected ICE pair must have a remote candidate");
       const audio = trace.stats.find(
-        (stat) => stat.type === "inbound-rtp" && stat.kind === "audio",
+        (stat) =>
+          stat.type === "inbound-rtp" &&
+          (stat.kind ?? stat.mediaType) === "audio",
       );
       const video = trace.stats.find(
-        (stat) => stat.type === "inbound-rtp" && stat.kind === "video",
+        (stat) =>
+          stat.type === "inbound-rtp" &&
+          (stat.kind ?? stat.mediaType) === "video",
       );
       assert.ok(
-        audio?.totalSamplesReceived > 0 && audio?.bytesReceived > 0,
-        "Audio must be received and decoded over RTP",
+        audio?.bytesReceived > 0,
+        "Audio RTP must arrive; decoded samples are independently proven by the remote waveform",
       );
       assert.ok(
-        video?.framesDecoded >= 2 && video?.bytesReceived > 0,
-        "Video must be received and decoded over RTP",
+        video?.bytesReceived > 0,
+        "Video RTP must arrive; decoded frames are independently proven by playback quality and pixel signatures",
       );
+      // Stats dictionaries differ between engines. A reported decode counter must
+      // be positive; a missing optional counter stays unreported, never fabricated.
+      if (audio.totalSamplesReceived !== undefined)
+        assert.ok(audio.totalSamplesReceived > 0);
+      if (video.framesDecoded !== undefined)
+        assert.ok(video.framesDecoded >= 2);
       return {
         peer: trace.index,
         protocol: candidate.protocol,
-        remoteAddress: candidate.address,
-        dtlsState: transport.dtlsState,
+        remoteAddress: candidate.address ?? candidate.ip ?? null,
+        dtlsState: transport?.dtlsState ?? null,
         bytesSent: pair.bytesSent,
         bytesReceived: pair.bytesReceived,
-        audioSamples: audio.totalSamplesReceived,
+        audioSamples: audio.totalSamplesReceived ?? null,
         audioBytes: audio.bytesReceived,
-        videoFrames: video.framesDecoded,
+        videoFrames: video.framesDecoded ?? null,
         videoBytes: video.bytesReceived,
       };
     });
@@ -1412,6 +1544,8 @@ try {
   } catch {
     /* Unit teardown also owns browser descendants. */
   }
+  for (const socket of browserProxySockets) socket.destroy();
+  if (browserProxy) await new Promise((resolve) => browserProxy.close(resolve));
   try {
     nginx?.kill("SIGTERM");
   } catch {

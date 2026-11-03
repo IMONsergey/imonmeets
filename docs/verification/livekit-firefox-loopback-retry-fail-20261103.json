@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "runId": "mediafirefox20261103f3",
+  "result": "FAIL",
+  "startedAt": "2026-11-03T08:42:39.848Z",
+  "checks": [
+    "exact local LiveKit 1.13.11 image; no pull",
+    "real API, nginx auth_request and pinned HAProxy SNI path; owned loopback ports only",
+    "real protected LiveKit validation accepts the persisted API grant"
+  ],
+  "limits": {
+    "verifierCpu": 1,
+    "verifierMemoryMiB": 2048,
+    "verifierTasks": 256,
+    "livekitCpu": 0.5,
+    "livekitMemoryMiB": 256,
+    "haproxyCpu": 0.1,
+    "haproxyMemoryMiB": 64
+  },
+  "scope": "isolated loopback; synthetic audio/video media acceptance FAILED; no real devices, mail, payments, TURN or production traffic",
+  "nodeVersion": "v24.21.0",
+  "coreCommit": "a111d6f04a25888ab4dd48a32520d3f3b0e252a3",
+  "runnerSha256": "54c09ff4dfaf4b0b0afda9d36dfecc65648a0bcffbe87eb2fd24da71870967f7",
+  "requestedBrowserEngine": "firefox",
+  "generatorSha256": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+  "haproxyImage": "haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3",
+  "livekitImage": "sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20",
+  "livekitVersion": "livekit-server version 1.13.11",
+  "fixturePorts": {
+    "publicPort": 38835,
+    "plainPort": 40195,
+    "nginxPort": 36851,
+    "apiPort": 43773,
+    "rtcPort": 44169,
+    "turnPort": 36253,
+    "mediaTcpPort": 44713,
+    "browserProxyPort": 42671,
+    "mediaUdpPort": 33288
+  },
+  "serverBindings": [
+    {
+      "containerPort": "33288/udp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "33288"
+    },
+    {
+      "containerPort": "44713/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "44713"
+    },
+    {
+      "containerPort": "7880/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "44169"
+    }
+  ],
+  "legacyValidationPreflight": {
+    "status": 200,
+    "body": "success"
+  },
+  "browserEngine": "firefox",
+  "browserExecutable": "/home/sergey/.cache/ms-playwright/firefox-1543/firefox/firefox",
+  "chromiumFlagsUsed": false,
+  "firefoxUserPrefs": {
+    "media.peerconnection.ice.loopback": true
+  },
+  "browserProxy": {
+    "bind": "127.0.0.1",
+    "port": 42671,
+    "externalTargetsAllowed": false
+  },
+  "browserVersion": "155.0",
+  "browserTransport": [],
+  "signalFrames": {
+    "/rtc/v1": 13
+  },
+  "mediaAccepted": false,
+  "mediaFailure": "page.evaluate: could not establish pc connection\nWo@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:152611\nHo@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:152754\nZo@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:153216\ninternal@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:153605\nensureTransportConnected/</</</o<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:295218\nsetTimeout handler*ls.setTimeout@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:159835\nensureTransportConnected/</</<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:295147\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93456\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nensureTransportConnected/</<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:294890\nensureTransportConnected/</<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:294868\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93456\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nensureTransportConnected@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:294663\nensurePCTransportConnection/</<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:293022\nensurePCTransportConnection/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:293009\na@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93258\npromise callback*d@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93423\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93434\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nensurePCTransportConnection@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:292591\nwaitForPCInitialConnection/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:372952\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93456\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nwaitForPCInitialConnection@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:372840\nMh/this.attemptConnection/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:524241\na@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93258\npromise callback*d@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93423\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93434\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nMh/this.attemptConnection@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:522704\nMh/this.connect/</s/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:520210\na@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93258\npromise callback*d@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93423\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93434\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\ns@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:519926\nMh/this.connect/</this.connectFuture<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:521454\nLa/this.promise</this.promise<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:184752\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93456\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nLa/this.promise<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:184680\nLa@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:184658\nMh/this.connect/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:521437\na@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93258\npromise callback*d@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93423\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93434\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nMh/this.connect@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:518855\nwindow.runtimeConnect@debugger eval code line 370 > eval:75:20\nasync*@debugger eval code line 370 > eval:2:22\nevaluate@debugger eval code:372:16\n@debugger eval code:1:44\n@debugger eval code:1:62\n",
+  "audio": [],
+  "audioPlaybackErrors": [],
+  "iceDiagnostics": [
+    {
+      "index": 0,
+      "states": [
+        {
+          "event": "icegatheringstatechange",
+          "ice": "new",
+          "connection": "new",
+          "gathering": "gathering"
+        },
+        {
+          "event": "iceconnectionstatechange",
+          "ice": "failed",
+          "connection": "failed",
+          "gathering": "gathering"
+        },
+        {
+          "event": "connectionstatechange",
+          "ice": "failed",
+          "connection": "failed",
+          "gathering": "gathering"
+        },
+        {
+          "event": "icegatheringstatechange",
+          "ice": "failed",
+          "connection": "failed",
+          "gathering": "complete"
+        }
+      ],
+      "candidates": [
+        "candidate:0 1 UDP 2122187007 973ef102-01ad-4168-b1be-71a9cc40b98f.local 48549 typ host",
+        "candidate:2 1 UDP 2122252543 db597685-58e9-4d35-b583-4fdccdb5af72.local 41880 typ host",
+        "candidate:3 1 TCP 2105458943 973ef102-01ad-4168-b1be-71a9cc40b98f.local 9 typ host tcptype active",
+        "candidate:4 1 TCP 2105524479 db597685-58e9-4d35-b583-4fdccdb5af72.local 9 typ host tcptype active",
+        "candidate:0 1 UDP 2122187007 973ef102-01ad-4168-b1be-71a9cc40b98f.local 34664 typ host",
+        "candidate:2 1 UDP 2122252543 db597685-58e9-4d35-b583-4fdccdb5af72.local 39982 typ host",
+        "candidate:3 1 TCP 2105458943 973ef102-01ad-4168-b1be-71a9cc40b98f.local 9 typ host tcptype active",
+        "candidate:4 1 TCP 2105524479 db597685-58e9-4d35-b583-4fdccdb5af72.local 9 typ host tcptype active",
+        "candidate:0 2 UDP 2122187006 973ef102-01ad-4168-b1be-71a9cc40b98f.local 33488 typ host",
+        "candidate:2 2 UDP 2122252542 db597685-58e9-4d35-b583-4fdccdb5af72.local 49552 typ host",
+        "candidate:3 2 TCP 2105458942 973ef102-01ad-4168-b1be-71a9cc40b98f.local 9 typ host tcptype active",
+        "candidate:4 2 TCP 2105524478 db597685-58e9-4d35-b583-4fdccdb5af72.local 9 typ host tcptype active",
+        "candidate:0 1 UDP 2122187007 973ef102-01ad-4168-b1be-71a9cc40b98f.local 50189 typ host",
+        "candidate:2 1 UDP 2122252543 db597685-58e9-4d35-b583-4fdccdb5af72.local 49221 typ host",
+        "candidate:3 1 TCP 2105458943 973ef102-01ad-4168-b1be-71a9cc40b98f.local 9 typ host tcptype active",
+        "candidate:4 1 TCP 2105524479 db597685-58e9-4d35-b583-4fdccdb5af72.local 9 typ host tcptype active",
+        "candidate:0 2 UDP 2122187006 973ef102-01ad-4168-b1be-71a9cc40b98f.local 52338 typ host",
+        "candidate:2 2 UDP 2122252542 db597685-58e9-4d35-b583-4fdccdb5af72.local 56316 typ host",
+        "candidate:3 2 TCP 2105458942 973ef102-01ad-4168-b1be-71a9cc40b98f.local 9 typ host tcptype active",
+        "candidate:4 2 TCP 2105524478 db597685-58e9-4d35-b583-4fdccdb5af72.local 9 typ host tcptype active",
+        ""
+      ],
+      "errors": [
+        {
+          "url": "stun:127.0.0.1:33288",
+          "errorCode": 701,
+          "errorText": ""
+        },
+        {
+          "url": "stun:127.0.0.1:33288",
+          "errorCode": 701,
+          "errorText": ""
+        }
+      ],
+      "stats": [
+        {
+          "id": "f192cfa1",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": "973ef102-01ad-4168-b1be-71a9cc40b98f.local",
+          "port": 34664
+        },
+        {
+          "id": "5a043f65",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": "db597685-58e9-4d35-b583-4fdccdb5af72.local",
+          "port": 39982
+        },
+        {
+          "id": "4d558b68",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": "973ef102-01ad-4168-b1be-71a9cc40b98f.local",
+          "port": 52214
+        },
+        {
+          "id": "4d13c39c",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": "db597685-58e9-4d35-b583-4fdccdb5af72.local",
+          "port": 64395
+        },
+        {
+          "id": "a0491278",
+          "type": "remote-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": "127.0.0.1",
+          "port": 33288
+        },
+        {
+          "id": "98e9a955",
+          "type": "remote-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "passive",
+          "address": "127.0.0.1",
+          "port": 44713
+        },
+        {
+          "id": "f687ee11",
+          "type": "transport",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "dtlsState": "failed",
+          "iceState": "failed"
+        }
+      ],
+      "localCandidates": [
+        "a=candidate:0 1 UDP 2122187007 973ef102-01ad-4168-b1be-71a9cc40b98f.local 34664 typ host",
+        "a=candidate:2 1 UDP 2122252543 db597685-58e9-4d35-b583-4fdccdb5af72.local 39982 typ host",
+        "a=candidate:3 1 TCP 2105458943 973ef102-01ad-4168-b1be-71a9cc40b98f.local 9 typ host tcptype active",
+        "a=candidate:4 1 TCP 2105524479 db597685-58e9-4d35-b583-4fdccdb5af72.local 9 typ host tcptype active",
+        "a=candidate:0 2 UDP 2122187006 973ef102-01ad-4168-b1be-71a9cc40b98f.local 33488 typ host",
+        "a=candidate:2 2 UDP 2122252542 db597685-58e9-4d35-b583-4fdccdb5af72.local 49552 typ host",
+        "a=candidate:3 2 TCP 2105458942 973ef102-01ad-4168-b1be-71a9cc40b98f.local 9 typ host tcptype active",
+        "a=candidate:4 2 TCP 2105524478 db597685-58e9-4d35-b583-4fdccdb5af72.local 9 typ host tcptype active",
+        "a=candidate:0 1 UDP 2122187007 973ef102-01ad-4168-b1be-71a9cc40b98f.local 50189 typ host",
+        "a=candidate:2 1 UDP 2122252543 db597685-58e9-4d35-b583-4fdccdb5af72.local 49221 typ host",
+        "a=candidate:3 1 TCP 2105458943 973ef102-01ad-4168-b1be-71a9cc40b98f.local 9 typ host tcptype active",
+        "a=candidate:4 1 TCP 2105524479 db597685-58e9-4d35-b583-4fdccdb5af72.local 9 typ host tcptype active",
+        "a=candidate:0 2 UDP 2122187006 973ef102-01ad-4168-b1be-71a9cc40b98f.local 52338 typ host",
+        "a=candidate:2 2 UDP 2122252542 db597685-58e9-4d35-b583-4fdccdb5af72.local 56316 typ host",
+        "a=candidate:3 2 TCP 2105458942 973ef102-01ad-4168-b1be-71a9cc40b98f.local 9 typ host tcptype active",
+        "a=candidate:4 2 TCP 2105524478 db597685-58e9-4d35-b583-4fdccdb5af72.local 9 typ host tcptype active",
+        "a=candidate:0 1 UDP 2122187007 973ef102-01ad-4168-b1be-71a9cc40b98f.local 48549 typ host",
+        "a=candidate:2 1 UDP 2122252543 db597685-58e9-4d35-b583-4fdccdb5af72.local 41880 typ host",
+        "a=candidate:3 1 TCP 2105458943 973ef102-01ad-4168-b1be-71a9cc40b98f.local 9 typ host tcptype active",
+        "a=candidate:4 1 TCP 2105524479 db597685-58e9-4d35-b583-4fdccdb5af72.local 9 typ host tcptype active"
+      ],
+      "remoteCandidates": [
+        "a=candidate:2878742611 1 udp 2130706431 127.0.0.1 33288 typ host",
+        "a=candidate:375738803 1 tcp 1671430143 127.0.0.1 44713 typ host tcptype passive"
+      ]
+    }
+  ],
+  "livekitMediaDiagnostics": "2026-11-03T08:42:58.292Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:58.292Z\tWARN\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:837\tFailed to ping without candidate pairs. Connection is not possible yet.\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:58.368Z\tWARN\tlivekit.pion.udp_mux\tv4@v4.4.0-warp.3/udp_mux.go:587\tNo Username attribute in STUN message from 172.17.0.1:54519\n2026-11-03T08:42:58.421Z\tWARN\tlivekit.pion.udp_mux\tv4@v4.4.0-warp.3/udp_mux.go:587\tNo Username attribute in STUN message from 172.17.0.1:57197\n2026-11-03T08:42:58.493Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:58.493Z\tWARN\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:837\tFailed to ping without candidate pairs. Connection is not possible yet.\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:58.694Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:58.694Z\tWARN\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:837\tFailed to ping without candidate pairs. Connection is not possible yet.\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:58.895Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:58.895Z\tWARN\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:837\tFailed to ping without candidate pairs. Connection is not possible yet.\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:59.096Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:59.096Z\tWARN\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:837\tFailed to ping without candidate pairs. Connection is not possible yet.\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:59.297Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:59.297Z\tWARN\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:837\tFailed to ping without candidate pairs. Connection is not possible yet.\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:59.499Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:59.499Z\tWARN\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:837\tFailed to ping without candidate pairs. Connection is not possible yet.\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:42:59.700Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remot",
+  "error": "page.evaluate: could not establish pc connection\nWo@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:152611\nHo@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:152754\nZo@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:153216\ninternal@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:153605\nensureTransportConnected/</</</o<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:295218\nsetTimeout handler*ls.setTimeout@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:159835\nensureTransportConnected/</</<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:295147\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93456\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nensureTransportConnected/</<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:294890\nensureTransportConnected/</<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:294868\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93456\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nensureTransportConnected@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:294663\nensurePCTransportConnection/</<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:293022\nensurePCTransportConnection/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:293009\na@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93258\npromise callback*d@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93423\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93434\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nensurePCTransportConnection@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:292591\nwaitForPCInitialConnection/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:372952\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93456\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nwaitForPCInitialConnection@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:372840\nMh/this.attemptConnection/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:524241\na@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93258\npromise callback*d@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93423\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93434\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nMh/this.attemptConnection@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:522704\nMh/this.connect/</s/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:520210\na@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93258\npromise callback*d@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93423\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93434\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\ns@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:519926\nMh/this.connect/</this.connectFuture<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:521454\nLa/this.promise</this.promise<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:184752\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93456\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nLa/this.promise<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:184680\nLa@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:184658\nMh/this.connect/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:521437\na@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93258\npromise callback*d@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93423\nkr/<@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93434\nkr@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:93201\nMh/this.connect@https://app.imon-runtime.test:38835/ line 7 > injectedScript:1:518855\nwindow.runtimeConnect@debugger eval code line 370 > eval:75:20\nasync*@debugger eval code line 370 > eval:2:22\nevaluate@debugger eval code:372:16\n@debugger eval code:1:44\n@debugger eval code:1:62\n\n    at <anonymous> (/home/sergey/imonmeets-core-20261103/scripts/test-livekit-admission.mjs:1132:16)",
+  "livekitDiagnostics": "2026-11-03T08:43:10.170Z\tDEBUG\tlivekit\tsignalling/signalhandler.go:55\thandling signal request\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"request\": {\"ping\": 1793695390162}}\n2026-11-03T08:43:10.170Z\tDEBUG\tlivekit\tsignalling/signalhandler.go:55\thandling signal request\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"request\": {\"pingReq\": {\"timestamp\": 1793695390162, \"rtt\": 23}}}\n2026-11-03T08:43:10.182Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:43:10.182Z\tWARN\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:837\tFailed to ping without candidate pairs. Connection is not possible yet.\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:43:10.186Z\tDEBUG\tlivekit\tservice/rtcservice.go:452\tfinishing WS connection\t{\"connID\": \"CO_5sejS8bLgT94\", \"closedByClient\": true, \"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"joinDuration\": \"0s\"}\n2026-11-03T08:43:10.186Z\tDEBUG\tlivekit\trouting/signal.go:139\tsignal stream closed\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"reqNodeID\": \"ND_2R3gbyPySCUi\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"connID\": \"CO_5sejS8bLgT94\", \"participantInit\": {\"Identity\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"Reconnect\": false, \"ReconnectReason\": \"RR_UNKNOWN\", \"AutoSubscribe\": true, \"AutoSubscribeDataTrack\": false, \"Client\": {\"sdk\": \"JS\", \"version\": \"2.23.0\", \"protocol\": 17, \"os\": \"Linux\", \"deviceModel\": \"Other\", \"browser\": \"Firefox\", \"browserVersion\": \"155.0\", \"clientProtocol\": 2, \"capabilities\": [\"CAP_COMPRESSION_DEFLATE_RAW\"]}, \"Grants\": {\"Identity\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"Kind\": \"\", \"KindDetails\": [], \"Video\": {\"RoomCreate\": false, \"RoomList\": false, \"RoomRecord\": false, \"RoomAdmin\": false, \"RoomJoin\": true, \"Room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"CanPublish\": true, \"CanSubscribe\": true, \"CanPublishData\": true, \"CanPublishSources\": [], \"CanUpdateOwnMetadata\": false, \"IngressAdmin\": false, \"Hidden\": false, \"Recorder\": false, \"Agent\": false, \"CanSubscribeMetrics\": \"not-set\", \"CanManageAgentSession\": \"not-set\", \"DestinationRoom\": \"\"}, \"SIP\": {}, \"Agent\": {}, \"Inference\": {}, \"Observability\": {}, \"AgentEndpoint\": {}, \"AgentThread\": {}, \"RoomConfig\": {}, \"RoomPreset\": \"\"}, \"TokenExpiresAt\": \"2026-11-03T08:47:45.000Z\", \"Region\": \"\", \"AdaptiveStream\": false, \"ID\": \"\", \"SubscriberAllowPause\": \"not-set\", \"DisableICELite\": false, \"CreateRoom\": {\"name\": \"ade840db-db46-42e0-ba99-bacc79457174\"}, \"AddTrackRequests\": [], \"PublisherOffer\": {}, \"SyncState\": {}, \"UseSinglePeerConnection\": true}, \"startSession\": {\"roomName\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"identity\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"connectionID\": \"CO_5sejS8bLgT94\", \"autoSubscribe\": true, \"client\": {\"sdk\": \"JS\", \"version\": \"2.23.0\", \"protocol\": 17, \"os\": \"Linux\", \"deviceModel\": \"Other\", \"browser\": \"Firefox\", \"browserVersion\": \"155.0\", \"address\": \"127.0.0.1\", \"clientProtocol\": 2, \"capabilities\": [\"CAP_COMPRESSION_DEFLATE_RAW\"]}, \"name\": \"Synthetic owner\", \"grantsJson\": \"{\\\"identity\\\":\\\"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\\\",\\\"name\\\":\\\"Synthetic owner\\\",\\\"video\\\":{\\\"roomJoin\\\":true,\\\"room\\\":\\\"ade840db-db46-42e0-ba99-bacc79457174\\\",\\\"canPublish\\\":true,\\\"canSubscribe\\\":true,\\\"canPublishData\\\":true,\\\"canUpdateOwnMetadata\\\":false}}\", \"reconnectReason\": \"RR_UNKNOWN\", \"createRoom\": {\"name\": \"ade840db-db46-42e0-ba99-bacc79457174\"}, \"useSinglePeerConnection\": true, \"tokenExpiresAt\": 1793695665, \"apiKey\": \"runtimebb6ddca3ee9f8b9853ea4f4f\"}, \"error\": \"stream closed\"}\n2026-11-03T08:43:10.186Z\tINFO\tlivekit\ttelemetry/events.go:200\tstats worker active\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"worker\": {\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"isConnected\": false, \"closedAt\": \"0001-01-01T00:00:00.000Z\", \"refCount\": {\"count\": 1}}, \"guard\": {\"self\": 53865411356680, \"activated\": true, \"released\": true}}\n2026-11-03T08:43:10.186Z\tDEBUG\tlivekit\tservice/signal.go:183\tsignal stream closed\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"connID\": \"CO_5sejS8bLgT94\", \"error\": \"stream closed\"}\n2026-11-03T08:43:10.186Z\tDEBUG\tlivekit.transport\trtc/transportmanager.go:1109\tsignal source valid\t{\"room\": \"ade840db-db46-42e0-ba99-bacc79457174\", \"roomID\": \"RM_cnmsXbDywRWy\", \"participant\": \"user:OS67LUlSqq2zBqUIZeOoue8GGwBwrlqV:281f772d-389e-459e-87b2-79ca217b7e57\", \"participantID\": \"PA_62F7GvrkthLE\", \"remote\": false, \"valid\": false}\n2026-11-03T08:43:10.186Z\tINFO\tlivekit\trtc/",
+  "haproxyDiagnostics": "[NOTICE]   (1) : New worker (8) forked\n[NOTICE]   (1) : Loading success.\n[NOTICE]   (8) : haproxy version is 3.0.30-47d806b\n[WARNING]  (8) : [haproxy.main()] Failed to drop supplementary groups. Using 'gid'/'group' without 'uid'/'user' is generally useless.\n",
+  "cleanupVerified": true,
+  "completedAt": "2026-11-03T08:43:14.062Z",
+  "outerCleanupVerified": true
+}
