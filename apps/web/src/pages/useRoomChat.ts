@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { api } from "../api";
+import { api, ApiError } from "../api";
 import type { ChatMessage } from "../api";
 
 export function useRoomChat(
   slug: string,
   token?: string,
   request: typeof api = api,
+  enabled = true,
 ) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [error, setError] = useState("");
@@ -37,12 +38,26 @@ export function useRoomChat(
     });
   }, []);
   useEffect(() => {
-    if (!token) return;
+    cursor.current = undefined;
+    pending.current = undefined;
+    setMessages([]);
+    setHasEarlier(false);
+    setError("");
+    setLoading(Boolean(token));
+  }, [slug, token]);
+  useEffect(() => {
+    if (!token || !enabled) return;
     const controller = new AbortController();
     let inFlight = false;
+    let failures = 0;
+    let stopped = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     const sync = async () => {
-      if (inFlight) return;
+      if (inFlight || stopped || controller.signal.aborted) return;
+      if (document.visibilityState === "hidden") return;
+      if (timer) clearTimeout(timer);
       inFlight = true;
+      let delay = 3000;
       try {
         // Read bounded pages; further history catches up on the next poll.
         for (let page = 0; page < 3; page++) {
@@ -67,24 +82,40 @@ export function useRoomChat(
           if (response.nextCursor) cursor.current = response.nextCursor;
           setLoading(false);
           setError("");
+          failures = 0;
           if (!response.hasMore) break;
         }
       } catch (e) {
         if (!controller.signal.aborted) {
           setError((e as Error).message);
           setLoading(false);
+          failures++;
+          delay = Math.max(
+            Math.min(30000, 3000 * 2 ** Math.min(failures, 4)),
+            e instanceof ApiError
+              ? Math.min(300000, (e.retryAfter ?? 0) * 1000)
+              : 0,
+          );
+          // Revocation and closed rooms cannot recover by polling this token.
+          stopped =
+            e instanceof ApiError &&
+            [401, 403, 404, 409, 410].includes(e.status);
         }
       } finally {
         inFlight = false;
+        if (!controller.signal.aborted && !stopped)
+          timer = setTimeout(() => void sync(), delay);
       }
     };
+    const resume = () => void sync();
     void sync();
-    const timer = setInterval(() => void sync(), 3000);
+    document.addEventListener("visibilitychange", resume);
     return () => {
       controller.abort();
-      clearInterval(timer);
+      if (timer) clearTimeout(timer);
+      document.removeEventListener("visibilitychange", resume);
     };
-  }, [slug, token, refresh, merge, request]);
+  }, [slug, token, enabled, refresh, merge, request]);
   const send = async (text: string) => {
     if (!token)
       throw new Error("Сеанс чата не найден. Переподключитесь к встрече.");

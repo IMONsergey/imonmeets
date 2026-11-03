@@ -41,5 +41,6 @@ export async function requireBudget(
       429,
       "RATE_LIMIT",
       "Слишком много запросов. Повторите позже.",
+      result.retryAfter ?? seconds,
     );
 }

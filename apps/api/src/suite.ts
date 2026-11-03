@@ -244,6 +244,7 @@ export async function registerSuite(
   }
   app.post("/api/rooms/:slug/waiting-status", async (req) => {
     const { row, expired } = await waitingTicket(req, pool);
+    await requireBudget(limiter, `waiting-read:${row.id}`, 60, 60);
     return {
       status: expired ? "expired" : row.status,
       expiresAt: row.expires_at,
@@ -345,6 +346,8 @@ export async function registerSuite(
       "CHAT_SESSION_INVALID",
       "Сеанс чата истек. Подключитесь к встрече снова.",
     );
+    if (!write)
+      await requireBudget(limiter, `chat-read:${session.identity}`, 120, 60);
     return { r, session };
   }
   async function messages(roomId: string, query: unknown) {

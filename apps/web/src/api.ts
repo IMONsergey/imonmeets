@@ -352,6 +352,7 @@ export async function api<T>(
           "Не удалось выполнить запрос. Попробуйте еще раз.",
         response.status,
         data.error?.code ?? data.code,
+        Number(response.headers.get("Retry-After")) || undefined,
       );
     }
     if (path === "/auth/sign-out") notifyAuthChange("signed-out");
@@ -422,6 +423,7 @@ export class ApiError extends Error {
     message: string,
     public status: number,
     public code?: string,
+    public retryAfter?: number,
   ) {
     super(message);
   }

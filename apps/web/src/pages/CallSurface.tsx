@@ -106,7 +106,7 @@ export function CallSurface({
   const [message, setMessage] = useState("");
   const [canScreenShare, setCanScreenShare] = useState(false);
   const { chatMessages, send, isSending } = useChat();
-  const persistentChat = useRoomChat(slug, chatToken, request);
+  const persistentChat = useRoomChat(slug, chatToken, request, chatOpen);
   const shownMessages = chatToken
     ? persistentChat.messages.map((entry) => ({
         id: entry.id,

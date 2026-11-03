@@ -128,10 +128,12 @@ export async function createApp(
       ),
   });
   app.setErrorHandler((e, req, reply) => {
-    if (e instanceof ApiError)
+    if (e instanceof ApiError) {
+      if (e.retryAfter) reply.header("Retry-After", String(e.retryAfter));
       return reply
         .code(e.status)
         .send({ error: { code: e.code, message: e.message } });
+    }
     if (e instanceof z.ZodError)
       return reply.code(400).send({
         error: {
@@ -228,8 +230,8 @@ export async function createApp(
         const budget = path.startsWith("/api/auth/")
           ? { key: "auth", max: 30 }
           : path.endsWith("/join")
-            ? { key: "join", max: 20 }
-            : { key: "api", max: 300 };
+            ? { key: "join-ip", max: 600 }
+            : { key: "api-ip", max: 6000 };
         const result = await limiter.consume(
           `${budget.key}:${ip}`,
           budget.max,
@@ -258,6 +260,9 @@ export async function createApp(
     headers.set("x-imon-client-ip", clientIp(req, c.originProxySecret));
     return headers;
   }
+  // A coarse IP ceiling handles anonymous abuse. Verified users and room
+  // capabilities receive their own budgets so an office NAT is not one user.
+  const budgetedUsers = new WeakSet<FastifyRequest>();
   async function user(
     req: FastifyRequest,
     required = true,
@@ -273,6 +278,10 @@ export async function createApp(
       "EMAIL_UNVERIFIED",
       "Подтвердите адрес почты.",
     );
+    if (!budgetedUsers.has(req)) {
+      await requireBudget(limiter, `api-user:${session.user.id}`, 300, 60);
+      budgetedUsers.add(req);
+    }
     return session.user;
   }
   async function membership(

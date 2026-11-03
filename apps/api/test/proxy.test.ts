@@ -89,7 +89,7 @@ test("proxy guard rejects missing/forged secret and rate limits validated client
         },
         payload: { name: "Review" },
       });
-    for (let i = 0; i < 20; i++)
+    for (let i = 0; i < 600; i++)
       assert.equal((await join("203.0.113.12")).statusCode, 503);
     assert.equal((await join("203.0.113.12")).statusCode, 429);
     assert.equal((await join("203.0.113.13")).statusCode, 503);

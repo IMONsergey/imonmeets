@@ -319,3 +319,19 @@ test("room-scoped credentials use headers and their expiration does not sign the
     Reflect.deleteProperty(globalThis, "window");
   }
 });
+
+test("API preserves server Retry-After for bounded room polling backoff", async (t) => {
+  t.mock.method(globalThis, "fetch", async () =>
+    Response.json(
+      { error: { code: "RATE_LIMIT", message: "Wait" } },
+      { status: 429, headers: { "Retry-After": "37" } },
+    ),
+  );
+  await assert.rejects(
+    api("/rooms/test/chat", undefined, undefined, { sessionErrors: false }),
+    (error: unknown) =>
+      error instanceof ApiError &&
+      error.status === 429 &&
+      error.retryAfter === 37,
+  );
+});
