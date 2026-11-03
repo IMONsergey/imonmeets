@@ -1,57 +1,124 @@
 {
   "reviewer": "Assistant linguistic review; not a native-speaker commercial acceptance",
   "quality_release_gate": "blocked",
+  "scope": "Frozen real outputs. Completion and control tests do not establish linguistic acceptance. No amounts, currencies or negations were repaired after inference.",
   "baseline_findings": [
     {
       "direction": "en-ru",
       "case_id": "contrast-self-correction",
-      "finding": "Final ten-euro command omitted; sentence wrapper restores it in the measured core case."
+      "finding": "Whole-utterance inference пропустил последнюю команду отправить 10 EUR; wrapper восстановил её в этом примере."
     },
     {
       "direction": "en-ru",
       "case_id": "original-en-ru-decimal-010",
-      "finding": "1050.05 euros corrupted into 1000,50 points,0,5 euros; sentence wrapper does not fix this."
+      "finding": "1050.05 EUR превратилось в «1000 и 50 баллов, ноль 5 евро». Wrapper не исправляет ошибку."
     },
     {
       "direction": "en-zh",
       "case_id": "contrast-usd-12000",
-      "finding": "USD currency omitted."
+      "finding": "Сумма 12000 сохранена, но валюта USD пропущена; wrapper не исправляет это."
     },
     {
       "direction": "en-zh",
       "case_id": "contrast-cny-contrast",
-      "finding": "Contrast12 yuan changed into120000."
+      "finding": "Контраст «не 12 юаней» превращён в «не 120000»; ошибка сохраняется с wrapper."
     },
     {
       "direction": "en-zh",
       "case_id": "contrast-decimal-eur",
-      "finding": "1050.05 EUR changed into1500 EUR plus5cents."
+      "finding": "1050 EUR и 5 евроцентов превращены в 1500 EUR и 5 美分; wrapper не исправляет сумму и обозначение центов."
     },
     {
       "direction": "zh-en",
       "case_id": "contrast-cny-contrast",
-      "finding": "Yuan converted to dollars without authorization."
+      "finding": "Юани заменены на доллары без основания; wrapper сохраняет ошибку."
     },
     {
       "direction": "zh-en",
       "case_id": "contrast-decimal-eur",
-      "finding": "5eurocents changed into50euros."
+      "finding": "Пять евроцентов превращены в 50 EUR; wrapper сохраняет ошибку."
     },
     {
       "direction": "en-ar",
       "case_id": "contrast-time-1515",
-      "finding": "Quarter past3 rendered as3pm; minutes omitted."
+      "finding": "15:15 передано как 15:00, четверть часа потеряна в обоих вариантах."
     },
     {
       "direction": "ar-en",
       "case_id": "contrast-sergey-meeting-price",
-      "finding": "Complete12000USD price sentence omitted."
+      "finding": "Whole-utterance inference пропустил всё предложение о цене 12000 USD; wrapper восстановил его."
     },
     {
       "direction": "ar-en",
       "case_id": "contrast-self-correction",
-      "finding": "Final ten-euro command omitted."
+      "finding": "Whole-utterance inference пропустил финальную команду отправить 10 EUR; wrapper восстановил её."
     }
   ],
-  "policy": "Keep original outputs immutable. Wrapper ablation uses the same hashes and does not count as an independent model. Never repair numbers/currencies after translation to turn a failure into a pass. Holdout/native-speaker verification remains separate."
+  "wrapper_findings": [
+    {
+      "direction": "en-ru / ru-en / ar-en",
+      "case_id": "contrast-self-correction",
+      "finding": "Явная сегментация восстановила последнюю команду отправить 10 EUR. Это изменение wrapper на тех же model SHA, а не сравнение независимых моделей."
+    },
+    {
+      "direction": "ar-en",
+      "case_id": "contrast-sergey-meeting-price",
+      "finding": "После разделения предложений сохранена цена 12000 USD, полностью отсутствовавшая в baseline."
+    },
+    {
+      "direction": "en-zh",
+      "case_id": "contrast-self-correction",
+      "finding": "Несмотря на восстановление суммы, склейка без гарантированной пунктуации даёт «转帐是... 不 取消只送十欧元。». Граница отмены и следующего поручения недостаточно явная; перед TTS это требует отдельного исправления и повторной проверки. Текущий wrapper не принят."
+    },
+    {
+      "direction": "en-ru / en-zh / zh-en / en-ar",
+      "case_id": "numeric-currency-time-regressions",
+      "finding": "Ошибки десятичных сумм, валют и 15:15 остаются. Сегментация устраняет часть пропусков, но не исправляет качество самого MT."
+    }
+  ],
+  "heldout_findings": [
+    {
+      "direction": "en-ru",
+      "case_id": "heldout-cancel-fifty-send-fifteen",
+      "finding": "Baseline оставил только «Отправь 50 евро», потеряв отмену и замену на 15 EUR. Wrapper сохранил все три предложения."
+    },
+    {
+      "direction": "ru-en",
+      "case_id": "heldout-cancel-fifty-send-fifteen",
+      "finding": "Baseline пропустил исходные 50 EUR, сохранив отмену и 15 EUR. Wrapper восстановил всю последовательность."
+    },
+    {
+      "direction": "en-zh",
+      "case_id": "heldout-name-before-arrival",
+      "finding": "Baseline пропустил запрет начинать до прибытия; wrapper восстановил запрет и сохранил 15:15."
+    },
+    {
+      "direction": "zh-en",
+      "case_id": "heldout-decimal-two-amounts",
+      "finding": "2350.07 USD превратилось в недопустимое «$235.0.70» и в baseline, и с wrapper. Это новый критический дефект вне исходных примеров настройки."
+    },
+    {
+      "direction": "en-zh",
+      "case_id": "heldout-cancel-fifty-send-fifteen",
+      "finding": "Суммы 50/15 EUR и отмена присутствуют, но вывод «寄50欧元不,取消这个。送15欧元代替。» не гарантирует ясную границу первого предложения. Нативная и голосовая приёмка не выполнена."
+    },
+    {
+      "direction": "en-ar",
+      "case_id": "heldout-decimal-two-amounts",
+      "finding": "Вывод содержит «350.07 2» / «350.70 2». Это неоднозначное представление групп цифр в RTL-контексте; без нативной проверки и произнесения его нельзя принять как корректную финансовую сумму. Здесь не заявляется доказанная замена числового значения."
+    },
+    {
+      "direction": "ar-en",
+      "case_id": "heldout-separate-currencies",
+      "finding": "Запрет складывать EUR и USD как одну валюту передан как «Don't put them together as a coin». Числа сохранены, но инструкция требует исправления и нативной оценки."
+    },
+    {
+      "direction": "zh-en",
+      "case_id": "heldout-cancel-fifty-send-fifteen",
+      "finding": "Wrapper возвращает слово cancel, однако выдаёт «50 euros. No, cancel. For 15 euros.» без ясной команды отправки. Это не коммерческая приёмка смысла."
+    }
+  ],
+  "asr_acceptance": "Aggregate WER/CER on the preserved 40 FLEURS IDs per language only. No independent native review or noisy/overlapping meeting-audio acceptance. Small improves aggregate errors in all four measured languages but raises wall time and RTF.",
+  "cancellation_evidence": "Four cancellations of requests on warmed real ASR workers, with PID reap verified. Native decoder entry was not separately instrumented. Historical cancel_to_reaped_seconds includes possible scheduler overshoot because nominal 100ms was subtracted.",
+  "policy": "Original outputs are immutable. Same-model wrapper ablation is not an independent model comparison. Never repair numbers or currencies after translation to turn a failure into a pass. Native-speaker verification and speech latency acceptance remain open."
 }
