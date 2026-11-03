@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS_INTEGRATED_PURE_CHECKS_NOT_DEPLOYED",
+  "recordedAt": "2026-11-03T15:17:43.781731+00:00",
+  "branch": "release/integrated-google-edge-20261103",
+  "baseCommit": "2718c9fb181eb646d76d1ed9d70fc979f29d9387",
+  "integratedCodeCommit": "bd57484c24bbba3f0f7daaa7f2ad85df0df5e9c6",
+  "lineage": [
+    {
+      "change": "Google identity-only OAuth scope guard",
+      "reviewedSourceCommit": "34beb48afdc80d369d0242371e0cb2505c186cf5",
+      "integratedCherryPick": "6b3bf557b31eb9ef866202d086e17435e45ad863"
+    },
+    {
+      "change": "Separate paid-VPS TLS ingress generator",
+      "reviewedSourceCommit": "f5eb135d30c650b6a32c39a9d4c8bf124ec9ce19",
+      "integratedCherryPick": "bd57484c24bbba3f0f7daaa7f2ad85df0df5e9c6"
+    }
+  ],
+  "focusedPureChecks": {
+    "environment": "isolated scratch host",
+    "nodeVersion": "v24.22.1",
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "scripts/test-google-oauth-policy.mjs",
+      "scripts/test-edge-vps-ingress.mjs",
+      "scripts/test-external-media-policy.mjs",
+      "scripts/test-compose-cutover.mjs"
+    ],
+    "counts": {
+      "tests": 50,
+      "pass": 50,
+      "fail": 0,
+      "skip": 0,
+      "cancelled": 0
+    },
+    "suiteCounts": {
+      "googleOAuthPolicy": 6,
+      "edgeVpsIngress": 17,
+      "externalMediaPolicy": 11,
+      "composeCutover": 16
+    },
+    "durationMs": 808.857983,
+    "logFile": "integrated-focused.log",
+    "logSha256": "d1085466b376e7fb33ff8582419b68675d108cd2e623603897ac4a9d6ed81fa2",
+    "sourceSha256": {
+      ".github/workflows/ci.yml": "3dea96787e70bc2a784150482d7345eb20c9428a7cb5ec3087cda621b50ac2ab",
+      "apps/api/src/google-oauth-policy.ts": "ca6fbd2d0c4b569dea84bc083ea1c895f3efb3458b0023f4c19568dfe8e7bf3c",
+      "compose.edge-vps-ingress.yml": "8d079590bb2bf7f2f1fc0abea0396f5135d036efd56f00c94ac7c93928c0ce12",
+      "package.json": "358febb426cb2a5115f316a38dc5b9feb891c704e2fcc6d775ded94bd8af59f3",
+      "scripts/check-compose-cutover.mjs": "c4d923dab91168e2ef6b2b9232e4d50f7fe58d148d8de3e9393a483666d103c4",
+      "scripts/external-media-policy.mjs": "8bc9730c4e5ec9e1c19be50678812de6171ae6fe03ce8f686b0ecfac424e10c8",
+      "scripts/prepare-edge-vps-ingress.mjs": "8668b841bd9a2dcde7b8509494b9d7e1ffe60429e9486a35624c8b311fc91828",
+      "scripts/prepare-ingress443.mjs": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+      "scripts/test-compose-cutover.mjs": "5dd7251df4a1a775890ffee8a9bdf41a9f17046b9b7fcb210fa523c6790f1b9c",
+      "scripts/test-edge-vps-ingress.mjs": "8a61f6e7e84f4b3b8d249b1858e0d948afd2861f3e6751833300328750c7bd66",
+      "scripts/test-external-media-policy.mjs": "85ac895bd5bda673586cc880836b9696bff686475c816568ce0d854c67c28fde",
+      "scripts/test-google-oauth-policy.mjs": "691e5a1fbb75b70c6665519f74b59079e58165501f4b9b885fdb113564718270"
+    },
+    "networkRequests": false,
+    "listenersOpened": false,
+    "sharedServerHeavyJob": false
+  },
+  "staticCiGateCheck": {
+    "status": "PASS_STATIC_WORKFLOW_GATES",
+    "parser": "PyYAML 6.0.3",
+    "focusedGates": [
+      "scripts/test-google-oauth-policy.mjs",
+      "scripts/test-edge-vps-ingress.mjs",
+      "scripts/test-external-media-policy.mjs",
+      "scripts/test-compose-cutover.mjs"
+    ],
+    "workflowExecuted": false,
+    "receiptSha256": "2f6403dc81524f685ad029addabb96ed3f89a8da64edb0ffa5682dcb6083368d",
+    "allListedGatesOccurExactlyOnce": true
+  },
+  "upstreamRuntimeCi": {
+    "verifiedBy": "primary agent through GitHub",
+    "sourceCommit": "34beb48afdc80d369d0242371e0cb2505c186cf5",
+    "runId": 41646676289,
+    "url": "https://github.com/IMONsergey/imonmeets/actions/runs/41646676289",
+    "jobId": 125953724412,
+    "conclusion": "success",
+    "successfulSteps": 26,
+    "includes": [
+      "full typecheck/build",
+      "npm test",
+      "UI checks",
+      "immutable image build",
+      "installed-package inventory"
+    ],
+    "artifact": {
+      "id": 13236340119,
+      "name": "imonmeets-candidate-evidence",
+      "archiveDigest": "sha256:f9a03ba2d24eaa9ded0b455e48e4963299fe2b09bc45b48b96eb665ef03cbaab",
+      "archiveDigestIsDockerImageId": false
+    }
+  },
+  "runtimeSourceEquivalence": {
+    "referenceCommit": "34beb48afdc80d369d0242371e0cb2505c186cf5",
+    "paths": [
+      "apps",
+      "packages",
+      "Dockerfile",
+      ".dockerignore",
+      "package.json",
+      "package-lock.json",
+      "tsconfig*.json"
+    ],
+    "trackedFiles": 145,
+    "gitLsTreeTextSha256": "472a01d713f6f010dee445a03bf305d2e7f29a0b7792a67d98c78e61a655a80a",
+    "byteIdentical": true,
+    "focusedGoogleNonCiInputsMatched": 7,
+    "focusedGoogleCiInputChanged": "one additional edge generator test gate"
+  },
+  "duplicateLocalApiBuild": {
+    "submitted": false,
+    "reason": "Successful full upstream CI and identical runtime/build inputs made a duplicate shared-server job unnecessary."
+  },
+  "edgeLoopback": {
+    "receipt": "edge-vps-loopback-harness-20261103.json",
+    "receiptSha256": "1f59139602151d729f1bb3fcddc6145a7cfeb1f58c7c74d71c375f84f4c75825",
+    "status": "PASS_ISOLATED_FIXTURE_LOOPBACK_ONLY",
+    "runtimeReceiptSha256": "938113f355da91123c02f104ea2a3aa88ad658619ec0aca0c0627fb762c5bd2a",
+    "summary": {
+      "originalHaproxySyntax": "PASS",
+      "loopbackHaproxySyntax": "PASS",
+      "realTcpTlsRouting": {
+        "passed": 19,
+        "failed": 0
+      },
+      "fixtureSelfCheck": {
+        "passed": 11,
+        "failed": 0
+      },
+      "backendAccepts": {
+        "nginx": 6,
+        "turn": 3,
+        "witness": 2
+      },
+      "allNegativeCasesReachedBackends": false,
+      "untouchedDeploymentImageAcceptance": "PENDING"
+    },
+    "validationFilesSha256": {
+      "scripts/verify-edge-vps-loopback.py": "23477357901c33f1e260232f7a5785d2988b41716e6f92a16aade96d54ed7b9f",
+      "tools/edge-vps-loopback/Dockerfile": "f813def18ae1d5a0a4db6c17cbdbddc278aa91c43afc64236c7d82f8d43678dd",
+      "tools/edge-vps-loopback/image-provenance.py": "e9c1890fe9d7f42182000e180fead2059fb312a650329f955e29d913d67c7481",
+      "docs/edge-vps-loopback-validation.md": "1fcd36e04804880bda83ded873899cb5e9e0f73b26adcc754aaa3925fd6c6fd1",
+      "docs/verification/edge-vps-loopback-harness-20261103.json": "1f59139602151d729f1bb3fcddc6145a7cfeb1f58c7c74d71c375f84f4c75825"
+    },
+    "fixtureImageId": "sha256:8ba7bd2d4d7eba067d8b5e6137100676c67f6d6bff967e932770fda203150f68",
+    "officialBinaryAndOriginalScannedSharedLibrariesUnchanged": true,
+    "untouchedDeploymentImageAccepted": false,
+    "productionAccepted": false
+  },
+  "latestOperationalObservations": {
+    "reportedBy": "primary agent",
+    "automaticOffsiteBackup": {
+      "checkedAt": "2026-11-03T15:16:19.135596+00:00",
+      "ok": true,
+      "backupOk": true,
+      "automatic": true,
+      "recordingSyncOk": true,
+      "serverHealthOk": true,
+      "serverHealthCheckedAt": "2026-11-03T15:15:06.181Z",
+      "backupCreatedAt": "2026-11-03T15:01:09.369924Z",
+      "receiverManuallyRunOrChangedForRecovery": false,
+      "priorFailureCause": "not retained; not inferred"
+    },
+    "google": {
+      "existingClientConfirmed": true,
+      "policyAccepted": true,
+      "credentialTransferred": false,
+      "clientSecretOwnerHandoffRequired": true,
+      "audience": "External",
+      "publishingStatus": "Testing",
+      "testUsers": 0,
+      "brandingComplete": false,
+      "legalDocumentApiStatus": {
+        "privacy": 404,
+        "terms": 404
+      },
+      "providerUiMutatedDuringCurrentInspection": false
+    }
+  },
+  "acceptanceBoundaries": {
+    "finalIntegrationCommitCi": "PENDING_AFTER_PUBLICATION",
+    "finalIntegrationCommitImage": "PENDING_AFTER_PUBLICATION",
+    "mainTunnelBridgeAndTlsOnlyRenderer": "NOT_IMPLEMENTED",
+    "httpAcmeBootstrapAndPerHostRenewal": "NOT_IMPLEMENTED",
+    "actualTunnelNetwork": "NOT_CONFIGURED_OR_VALIDATED",
+    "public443": "NOT_ACCEPTED",
+    "untouchedDeploymentImageRuntime": "PENDING",
+    "externalTurnMedia": "PENDING",
+    "witness": "STAGED_NOT_ENROLLED",
+    "longRecordingAndResources": "PENDING",
+    "googleRealLogin": "PENDING",
+    "productionDeployed": false,
+    "mainModified": false,
+    "dnsModified": false,
+    "networkOrVpnModified": false,
+    "keysCreatedOrTransferred": false,
+    "additionalPurchase": false,
+    "prohibitedMainDockerCommandRetriedOrBypassed": false
+  },
+  "notes": [
+    "Tests bind source bytes, not future deployment state.",
+    "The historical 21-stage cfa4a1ca receipt and old image are not image evidence for this integration.",
+    "A private tunnel address or source ACL alone does not create an encrypted or confined transport.",
+    "The final receipt commit adds tooling and documentation only after the two reviewed code cherry-picks."
+  ]
+}

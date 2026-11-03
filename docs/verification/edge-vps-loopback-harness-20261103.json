@@ -1,0 +1,728 @@
+{
+  "schema": 1,
+  "checkedAt": "2026-11-03T15:19:31.601845+00:00",
+  "status": "PASS_ISOLATED_FIXTURE_LOOPBACK_ONLY",
+  "candidateCommit": "f5eb135d30c650b6a32c39a9d4c8bf124ec9ce19",
+  "sourceIdentityRule": "Exact source hashes; integration HEAD may differ while the candidate bytes remain identical.",
+  "validationSourceFilesSha256": {
+    "scripts/verify-edge-vps-loopback.py": "23477357901c33f1e260232f7a5785d2988b41716e6f92a16aade96d54ed7b9f",
+    "tools/edge-vps-loopback/Dockerfile": "f813def18ae1d5a0a4db6c17cbdbddc278aa91c43afc64236c7d82f8d43678dd",
+    "tools/edge-vps-loopback/image-provenance.py": "e9c1890fe9d7f42182000e180fead2059fb312a650329f955e29d913d67c7481"
+  },
+  "summary": {
+    "originalHaproxySyntax": "PASS",
+    "loopbackHaproxySyntax": "PASS",
+    "realTcpTlsRouting": {
+      "passed": 19,
+      "failed": 0
+    },
+    "fixtureSelfCheck": {
+      "passed": 11,
+      "failed": 0
+    },
+    "backendAccepts": {
+      "nginx": 6,
+      "turn": 3,
+      "witness": 2
+    },
+    "allNegativeCasesReachedBackends": false,
+    "untouchedDeploymentImageAcceptance": "PENDING"
+  },
+  "runtimeReceipt": {
+    "schema": 1,
+    "candidateCommit": "f5eb135d30c650b6a32c39a9d4c8bf124ec9ce19",
+    "checkedAt": "2026-11-03T15:15:31.852461+00:00",
+    "executionUid": 65534,
+    "executionEuid": 65534,
+    "harnessSha256": "23477357901c33f1e260232f7a5785d2988b41716e6f92a16aade96d54ed7b9f",
+    "pythonOpenSsl": "OpenSSL 3.5.9 29 Sep 2026",
+    "status": "PASS_NATIVE_LOOPBACK_ROUTING_PINNED_IMAGE_PENDING",
+    "checks": [
+      {
+        "name": "route-app.example.test",
+        "status": "PASS",
+        "seconds": 0.102,
+        "details": {
+          "sni": "app.example.test",
+          "backend": "nginx",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [],
+          "proxyV2": true
+        }
+      },
+      {
+        "name": "route-rtc.example.test",
+        "status": "PASS",
+        "seconds": 0.016,
+        "details": {
+          "sni": "rtc.example.test",
+          "backend": "nginx",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [],
+          "proxyV2": true
+        }
+      },
+      {
+        "name": "route-recordings.example.test",
+        "status": "PASS",
+        "seconds": 0.114,
+        "details": {
+          "sni": "recordings.example.test",
+          "backend": "nginx",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [],
+          "proxyV2": true
+        }
+      },
+      {
+        "name": "route-turn.example.test",
+        "status": "PASS",
+        "seconds": 0.012,
+        "details": {
+          "sni": "turn.example.test",
+          "backend": "turn",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [],
+          "proxyV2": false
+        }
+      },
+      {
+        "name": "route-witness.example.test",
+        "status": "PASS",
+        "seconds": 0.012,
+        "details": {
+          "sni": "witness.example.test",
+          "backend": "witness",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [],
+          "proxyV2": false
+        }
+      },
+      {
+        "name": "route-APP.EXAMPLE.TEST",
+        "status": "PASS",
+        "seconds": 0.009,
+        "details": {
+          "sni": "APP.EXAMPLE.TEST",
+          "backend": "nginx",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [],
+          "proxyV2": true
+        }
+      },
+      {
+        "name": "fragmented-nginx",
+        "status": "PASS",
+        "seconds": 0.129,
+        "details": {
+          "sni": "app.example.test",
+          "backend": "nginx",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [
+            1,
+            5,
+            138,
+            1523
+          ],
+          "proxyV2": true
+        }
+      },
+      {
+        "name": "fragmented-turn",
+        "status": "PASS",
+        "seconds": 0.13,
+        "details": {
+          "sni": "turn.example.test",
+          "backend": "turn",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [
+            1,
+            5,
+            138,
+            1524
+          ],
+          "proxyV2": false
+        }
+      },
+      {
+        "name": "fragmented-witness",
+        "status": "PASS",
+        "seconds": 0.128,
+        "details": {
+          "sni": "witness.example.test",
+          "backend": "witness",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [
+            1,
+            5,
+            140,
+            1527
+          ],
+          "proxyV2": false
+        }
+      },
+      {
+        "name": "tls12-nginx",
+        "status": "PASS",
+        "seconds": 0.01,
+        "details": {
+          "sni": "app.example.test",
+          "backend": "nginx",
+          "tls": "TLSv1.2",
+          "fragmentCuts": [],
+          "proxyV2": true
+        }
+      },
+      {
+        "name": "tls12-turn",
+        "status": "PASS",
+        "seconds": 0.007,
+        "details": {
+          "sni": "turn.example.test",
+          "backend": "turn",
+          "tls": "TLSv1.2",
+          "fragmentCuts": [],
+          "proxyV2": false
+        }
+      },
+      {
+        "name": "foreign-sni",
+        "status": "PASS",
+        "seconds": 0.052,
+        "details": {
+          "outcome": "EOF",
+          "elapsedSeconds": 0.001,
+          "backendConnectionDelta": 0
+        }
+      },
+      {
+        "name": "suffix-sni",
+        "status": "PASS",
+        "seconds": 0.052,
+        "details": {
+          "outcome": "EOF",
+          "elapsedSeconds": 0.0,
+          "backendConnectionDelta": 0
+        }
+      },
+      {
+        "name": "trailing-dot-sni",
+        "status": "PASS",
+        "seconds": 0.051,
+        "details": {
+          "outcome": "EOF",
+          "elapsedSeconds": 0.0,
+          "backendConnectionDelta": 0
+        }
+      },
+      {
+        "name": "missing-sni",
+        "status": "PASS",
+        "seconds": 0.051,
+        "details": {
+          "outcome": "EOF",
+          "elapsedSeconds": 0.0,
+          "backendConnectionDelta": 0
+        }
+      },
+      {
+        "name": "plain-http",
+        "status": "PASS",
+        "seconds": 5.058,
+        "details": {
+          "outcome": "EOF",
+          "elapsedSeconds": 5.007,
+          "backendConnectionDelta": 0
+        }
+      },
+      {
+        "name": "idle",
+        "status": "PASS",
+        "seconds": 5.058,
+        "details": {
+          "outcome": "EOF",
+          "elapsedSeconds": 5.007,
+          "backendConnectionDelta": 0
+        }
+      },
+      {
+        "name": "truncated-hello",
+        "status": "PASS",
+        "seconds": 5.058,
+        "details": {
+          "outcome": "EOF",
+          "elapsedSeconds": 5.007,
+          "backendConnectionDelta": 0
+        }
+      },
+      {
+        "name": "malformed-tls",
+        "status": "PASS",
+        "seconds": 5.056,
+        "details": {
+          "outcome": "EOF",
+          "elapsedSeconds": 5.005,
+          "backendConnectionDelta": 0
+        }
+      }
+    ],
+    "gates": {
+      "originalSyntax": "PASS",
+      "loopbackSyntax": "PASS",
+      "realHaproxyLoopbackRouting": "PASS",
+      "pinnedImageRuntime": "PENDING"
+    },
+    "productionChanges": false,
+    "externalNetworkRequests": false,
+    "userKeysUsed": false,
+    "dnsChanged": false,
+    "tunnelsConfigured": false,
+    "public443Accepted": false,
+    "mainNginxOrTurnAccepted": false,
+    "sourceHashes": {
+      "scripts/prepare-edge-vps-ingress.mjs": "8668b841bd9a2dcde7b8509494b9d7e1ffe60429e9486a35624c8b311fc91828",
+      "scripts/prepare-ingress443.mjs": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+      "compose.edge-vps-ingress.yml": "8d079590bb2bf7f2f1fc0abea0396f5135d036efd56f00c94ac7c93928c0ce12"
+    },
+    "candidateConfigurationSha256": "ef25dac3cbb1c2f134f9b0dbe21481ecc3855ccb6e59b30f1a852cb0778ec1df",
+    "expectedImage": "haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3",
+    "runtime": {
+      "binarySha256": "d1e3d6d9f2b113705f24a155863898e54efd2a0fe729c6ba6d7d67f4d54ecca1",
+      "versionOutputSha256": "eb4191176482bd1fa46920d0480238475baf48d1dea4e0d27f752ee9736ce777",
+      "versionLine": "HAProxy version 3.0.30-47d806b 2026/10/14 - https://haproxy.org/"
+    },
+    "loopbackConfigurationSha256": "5d00965e8d540ee2bbd0dc13bca85f1c6e69e3e5b8a96c739526f430dcf2d3b7",
+    "configurationRewrites": [
+      {
+        "from": "    user haproxy",
+        "to": ""
+      },
+      {
+        "from": "    group haproxy",
+        "to": ""
+      },
+      {
+        "from": "    bind 93.184.216.34:443",
+        "to": "    bind 127.0.0.1:39913"
+      },
+      {
+        "from": "    server nginx 10.255.254.2:8445 send-proxy-v2 source 10.255.254.1",
+        "to": "    server nginx 127.0.0.1:58371 send-proxy-v2 source 127.0.0.1"
+      },
+      {
+        "from": "    server turn 10.255.254.2:5349 source 10.255.254.1",
+        "to": "    server turn 127.0.0.1:59735 source 127.0.0.1"
+      },
+      {
+        "from": "    server witness_tls 127.0.0.1:8446",
+        "to": "    server witness_tls 127.0.0.1:48657"
+      }
+    ],
+    "backendAccepts": {
+      "nginx": 6,
+      "turn": 3,
+      "witness": 2
+    },
+    "fixtureCertificatesRemoved": true,
+    "completedAt": "2026-11-03T15:15:59.391598+00:00"
+  },
+  "runtimeReceiptSha256": "938113f355da91123c02f104ea2a3aa88ad658619ec0aca0c0627fb762c5bd2a",
+  "containerReceipt": {
+    "startedAt": "2026-11-03T15:15:26.952930+00:00",
+    "dockerContext": "desktop-linux",
+    "imageId": "sha256:8ba7bd2d4d7eba067d8b5e6137100676c67f6d6bff967e932770fda203150f68",
+    "containerName": "imon-edge-loopback-20261103-zgsryhz-captured",
+    "timeoutSeconds": 150,
+    "hostPortsPublished": false,
+    "hostDataMounted": false,
+    "productionChanges": false,
+    "mainServerUsed": false,
+    "rerunReason": "Capture full evidence before tmpfs disappears; prior optional logging configuration prevented startup",
+    "wrapperSha256": "5fd298b4f77182b557071ab3e7a03b1dcf3f43661192794c4d407ccccf3a215f",
+    "bounds": {
+      "NetworkMode": "none",
+      "ReadonlyRootfs": true,
+      "Privileged": false,
+      "CapDrop": [
+        "ALL"
+      ],
+      "CapAdd": null,
+      "SecurityOpt": [
+        "no-new-privileges"
+      ],
+      "Memory": 268435456,
+      "MemorySwap": 268435456,
+      "NanoCpus": 500000000,
+      "PidsLimit": 64,
+      "Tmpfs": {
+        "/tmp": "rw,nosuid,nodev,noexec,size=64m,mode=1777"
+      },
+      "PortBindings": {},
+      "LogConfig": {
+        "Type": "json-file",
+        "Config": {}
+      }
+    },
+    "dockerStartExit": 0,
+    "containerState": {
+      "Status": "exited",
+      "ExitCode": 0,
+      "OOMKilled": false,
+      "StartedAt": "2026-11-03T15:15:27.680698534Z",
+      "FinishedAt": "2026-11-03T15:15:59.525826386Z",
+      "Error": ""
+    },
+    "artifactTarSha256": "c6146eee9e9853c3be7fb30d1068408afecb0500ba3cbdd02003a86149aa0305",
+    "harnessStatus": "PASS_NATIVE_LOOPBACK_ROUTING_PINNED_IMAGE_PENDING",
+    "harnessChecksPassed": 19,
+    "harnessChecksFailed": 0,
+    "harnessReceiptSha256": "938113f355da91123c02f104ea2a3aa88ad658619ec0aca0c0627fb762c5bd2a",
+    "containerRemoved": true,
+    "finishedAt": "2026-11-03T15:15:59.925138+00:00"
+  },
+  "imageProvenance": {
+    "schema": 1,
+    "status": "FIXTURE_DERIVATIVE_NOT_DEPLOYMENT_IMAGE",
+    "checkedAt": "2026-11-03T15:05:41.107113+00:00",
+    "declaredBaseImage": "haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3",
+    "baseHaproxyBinaryUnchanged": true,
+    "haproxyBinarySha256": {
+      "/usr/local/sbin/haproxy": "d1e3d6d9f2b113705f24a155863898e54efd2a0fe729c6ba6d7d67f4d54ecca1"
+    },
+    "baseLibraryFileCount": 21,
+    "baseLibraryFilesChanged": {
+      "/lib/apk/db/scripts.tar.gz": {
+        "before": "47b2b4121e5da9f92d8e88f9eb626134f5f0b4477d82e2a6dc609f8166da84cd",
+        "after": "3aa9bada1248f3c0725c1719ba748700c286bd9e4fc08c2e826a59ae56afa9fb"
+      },
+      "/lib/apk/db/installed": {
+        "before": "54ada82de989684e4202813c8d41ac7afddc7dc984a813153ff7ea2e6bb44ef5",
+        "after": "ac249c7b9cadf117e88690cc617e2139c4db5c8473f52b8400b40053e6fe0503"
+      }
+    },
+    "baseLibraryManifestSha256": "d8ee172c4771864a6c17d03e153e6d488da51dce6b4664e456f9d8485dadfd22",
+    "fixtureDependencies": [
+      "python3",
+      "openssl",
+      "nodejs"
+    ],
+    "nodeVersion": "v24.22.1",
+    "opensslVersion": "OpenSSL 3.5.9 29 Sep 2026 (Library: OpenSSL 3.5.9 29 Sep 2026)",
+    "pythonOpenSsl": "OpenSSL 3.5.9 29 Sep 2026",
+    "haproxyVersion": "HAProxy version 3.0.30-47d806b 2026/10/14 - https://haproxy.org/\nStatus: long-term supported branch - will stop receiving fixes around Q2 2029.\nKnown bugs: http://www.haproxy.org/bugs/bugs-3.0.30.html\nRunning on: Linux 6.12.76-linuxkit #1 SMP PREEMPT_DYNAMIC Fri May 29 10:02:54 UTC 2026 x86_64\nBuild options :\n  TARGET  = linux-musl\n  CC      = cc\n  CFLAGS  = -O2 -g -fwrapv -fvect-cost-model=very-cheap\n  OPTIONS = USE_PTHREAD_EMULATION=1 USE_GETADDRINFO=1 USE_OPENSSL=1 USE_LUA=1 USE_PROMEX=1 USE_PCRE2=1 USE_PCRE2_JIT=1\n  DEBUG   = \n\nFeature list : -51DEGREES +ACCEPT4 +BACKTRACE -CLOSEFROM +CPU_AFFINITY +CRYPT_H -DEVICEATLAS +DL -ENGINE +EPOLL -EVPORTS +GETADDRINFO -KQUEUE -LIBATOMIC +LIBCRYPT +LINUX_CAP +LINUX_SPLICE +LINUX_TPROXY +LUA +MATH -MEMORY_PROFILING +NETFILTER +NS -OBSOLETE_LINKER +OPENSSL -OPENSSL_AWSLC -OPENSSL_WOLFSSL -OT -PCRE +PCRE2 +PCRE2_JIT -PCRE_JIT +POLL +PRCTL -PROCCTL +PROMEX +PTHREAD_EMULATION -QUIC -QUIC_OPENSSL_COMPAT +RT +SHM_OPEN +SLZ +SSL -STATIC_PCRE -STATIC_PCRE2 -SYSTEMD +TFO +THREAD +THREAD_DUMP +TPROXY -WURFL -ZLIB\n\nDefault settings :\n  bufsize = 16384, maxrewrite = 1024, maxpollevents = 200\n\nBuilt with multi-threading support (MAX_TGROUPS=16, MAX_THREADS=256, default=16).\nBuilt with OpenSSL version : OpenSSL 3.5.9 29 Sep 2026\nRunning on OpenSSL version : OpenSSL 3.5.9 29 Sep 2026\nOpenSSL library supports TLS extensions : yes\nOpenSSL library supports SNI : yes\nOpenSSL library supports : TLSv1.0 TLSv1.1 TLSv1.2 TLSv1.3\nOpenSSL providers loaded : default\nBuilt with Lua version : Lua 5.4.8\nBuilt with the Prometheus exporter as a service\nBuilt with network namespace support.\nBuilt with libslz for stateless compression.\nCompression algorithms supported : identity(\"identity\"), deflate(\"deflate\"), raw-deflate(\"deflate\"), gzip(\"gzip\")\nBuilt with transparent proxy support using: IP_TRANSPARENT IPV6_TRANSPARENT IP_FREEBIND\nBuilt with PCRE2 version : 10.49 2026-09-28\nPCRE2 library supports JIT : yes\nEncrypted password support via crypt(3): yes\nBuilt with gcc compiler version 15.2.0\n\nAvailable polling systems :\n      epoll : pref=300,  test result OK\n       poll : pref=200,  test result OK\n     select : pref=150,  test result OK\nTotal: 3 (3 usable), will use epoll.\n\nAvailable multiplexer protocols :\n(protocols marked as <default> cannot be specified using 'proto' keyword)\n         h2 : mode=HTTP  side=FE|BE  mux=H2    flags=HTX|HOL_RISK|NO_UPG\n  <default> : mode=HTTP  side=FE|BE  mux=H1    flags=HTX\n         h1 : mode=HTTP  side=FE|BE  mux=H1    flags=HTX|NO_UPG\n       fcgi : mode=HTTP  side=BE     mux=FCGI  flags=HTX|HOL_RISK|NO_UPG\n  <default> : mode=TCP   side=FE|BE  mux=PASS  flags=\n       none : mode=TCP   side=FE|BE  mux=PASS  flags=NO_UPG\n\nAvailable services : prometheus-exporter\nAvailable filters :\n\t[BWLIM] bwlim-in\n\t[BWLIM] bwlim-out\n\t[CACHE] cache\n\t[COMP] compression\n\t[FCGI] fcgi-app\n\t[SPOE] spoe\n\t[TRACE] trace",
+    "fixtureHaproxyRuntimeAccepted": false,
+    "deployedImageAccepted": false
+  },
+  "originalImageFileChangesExplanation": "Only the two named Alpine package-manager database files changed. HAProxy and all original shared-library files in the scanned /lib and /usr/lib trees stayed byte-identical.",
+  "fixtureSelfCheckReceipt": {
+    "schema": 1,
+    "candidateCommit": "f5eb135d30c650b6a32c39a9d4c8bf124ec9ce19",
+    "checkedAt": "2026-11-03T15:18:01.011012+00:00",
+    "executionUid": 0,
+    "executionEuid": 0,
+    "harnessSha256": "23477357901c33f1e260232f7a5785d2988b41716e6f92a16aade96d54ed7b9f",
+    "pythonOpenSsl": "OpenSSL 3.5.8 25 Aug 2026",
+    "status": "PASS_FIXTURE_SELF_CHECK_ONLY",
+    "checks": [
+      {
+        "name": "fixture-nginx-direct-tls",
+        "status": "PASS",
+        "seconds": 0.005,
+        "details": {
+          "sni": "nginx.example.test",
+          "backend": "nginx",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [],
+          "proxyV2": true
+        }
+      },
+      {
+        "name": "fixture-turn-direct-tls",
+        "status": "PASS",
+        "seconds": 0.002,
+        "details": {
+          "sni": "turn.example.test",
+          "backend": "turn",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [],
+          "proxyV2": false
+        }
+      },
+      {
+        "name": "fixture-witness-direct-tls",
+        "status": "PASS",
+        "seconds": 0.004,
+        "details": {
+          "sni": "witness.example.test",
+          "backend": "witness",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [],
+          "proxyV2": false
+        }
+      },
+      {
+        "name": "fixture-fragmented-client-hello",
+        "status": "PASS",
+        "seconds": 0.122,
+        "details": {
+          "sni": "turn.example.test",
+          "backend": "turn",
+          "tls": "TLSv1.3",
+          "fragmentCuts": [
+            1,
+            5,
+            138,
+            1524
+          ],
+          "proxyV2": false
+        }
+      },
+      {
+        "name": "fixture-tls12",
+        "status": "PASS",
+        "seconds": 0.002,
+        "details": {
+          "sni": "app.example.test",
+          "backend": "nginx",
+          "tls": "TLSv1.2",
+          "fragmentCuts": [],
+          "proxyV2": true
+        }
+      },
+      {
+        "name": "fixture-turn-rejects-proxy",
+        "status": "PASS",
+        "seconds": 0.0,
+        "details": {
+          "outcome": "RESET",
+          "elapsedSeconds": 0.0
+        }
+      },
+      {
+        "name": "fixture-witness-rejects-proxy",
+        "status": "PASS",
+        "seconds": 0.0,
+        "details": {
+          "outcome": "RESET",
+          "elapsedSeconds": 0.0
+        }
+      },
+      {
+        "name": "fixture-nginx-rejects-missing-proxy",
+        "status": "PASS",
+        "seconds": 0.0,
+        "details": {
+          "outcome": "RESET",
+          "elapsedSeconds": 0.0
+        }
+      },
+      {
+        "name": "fixture-nginx-rejects-local-command",
+        "status": "PASS",
+        "seconds": 0.0,
+        "details": {
+          "outcome": "RESET",
+          "elapsedSeconds": 0.0
+        }
+      },
+      {
+        "name": "fixture-nginx-rejects-wrong-length",
+        "status": "PASS",
+        "seconds": 0.0,
+        "details": {
+          "outcome": "RESET",
+          "elapsedSeconds": 0.0
+        }
+      },
+      {
+        "name": "fixture-wrong-backend-certificate-rejected",
+        "status": "PASS",
+        "seconds": 0.002,
+        "details": {
+          "certificateMismatchRejected": true
+        }
+      }
+    ],
+    "gates": {
+      "originalSyntax": "PENDING",
+      "loopbackSyntax": "PENDING",
+      "realHaproxyLoopbackRouting": "PENDING",
+      "pinnedImageRuntime": "PENDING"
+    },
+    "productionChanges": false,
+    "externalNetworkRequests": false,
+    "userKeysUsed": false,
+    "dnsChanged": false,
+    "tunnelsConfigured": false,
+    "public443Accepted": false,
+    "mainNginxOrTurnAccepted": false,
+    "sourceHashes": {
+      "scripts/prepare-edge-vps-ingress.mjs": "8668b841bd9a2dcde7b8509494b9d7e1ffe60429e9486a35624c8b311fc91828",
+      "scripts/prepare-ingress443.mjs": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+      "compose.edge-vps-ingress.yml": "8d079590bb2bf7f2f1fc0abea0396f5135d036efd56f00c94ac7c93928c0ce12"
+    },
+    "candidateConfigurationSha256": "ef25dac3cbb1c2f134f9b0dbe21481ecc3855ccb6e59b30f1a852cb0778ec1df",
+    "expectedImage": "haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3",
+    "fixtureConfigurationRewrites": [
+      {
+        "from": "    user haproxy",
+        "to": ""
+      },
+      {
+        "from": "    group haproxy",
+        "to": ""
+      },
+      {
+        "from": "    bind 93.184.216.34:443",
+        "to": "    bind 127.0.0.1:24443"
+      },
+      {
+        "from": "    server nginx 10.255.254.2:8445 send-proxy-v2 source 10.255.254.1",
+        "to": "    server nginx 127.0.0.1:46307 send-proxy-v2 source 127.0.0.1"
+      },
+      {
+        "from": "    server turn 10.255.254.2:5349 source 10.255.254.1",
+        "to": "    server turn 127.0.0.1:36529 source 127.0.0.1"
+      },
+      {
+        "from": "    server witness_tls 127.0.0.1:8446",
+        "to": "    server witness_tls 127.0.0.1:44415"
+      }
+    ],
+    "fixtureCertificatesRemoved": true,
+    "completedAt": "2026-11-03T15:18:02.204560+00:00"
+  },
+  "earlierScratchRuntimeUnavailableReceipt": {
+    "schema": 1,
+    "candidateCommit": "f5eb135d30c650b6a32c39a9d4c8bf124ec9ce19",
+    "checkedAt": "2026-11-03T14:52:55.405376+00:00",
+    "executionUid": 0,
+    "executionEuid": 0,
+    "harnessSha256": "2f8a113e1981e1ee0b119d0cf46a41a285eed51f74708848cb8aedd7cb17a539",
+    "pythonOpenSsl": "OpenSSL 3.5.8 25 Aug 2026",
+    "status": "BLOCKED_HAPROXY_RUNTIME_UNAVAILABLE",
+    "checks": [],
+    "gates": {
+      "originalSyntax": "PENDING",
+      "loopbackSyntax": "PENDING",
+      "realHaproxyLoopbackRouting": "PENDING",
+      "pinnedImageRuntime": "PENDING"
+    },
+    "productionChanges": false,
+    "externalNetworkRequests": false,
+    "userKeysUsed": false,
+    "dnsChanged": false,
+    "tunnelsConfigured": false,
+    "public443Accepted": false,
+    "mainNginxOrTurnAccepted": false,
+    "sourceHashes": {
+      "scripts/prepare-edge-vps-ingress.mjs": "8668b841bd9a2dcde7b8509494b9d7e1ffe60429e9486a35624c8b311fc91828",
+      "scripts/prepare-ingress443.mjs": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+      "compose.edge-vps-ingress.yml": "8d079590bb2bf7f2f1fc0abea0396f5135d036efd56f00c94ac7c93928c0ce12"
+    },
+    "candidateConfigurationSha256": "ef25dac3cbb1c2f134f9b0dbe21481ecc3855ccb6e59b30f1a852cb0778ec1df",
+    "expectedImage": "haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3",
+    "runtimeDiscovery": {
+      "haproxy": null,
+      "docker": null,
+      "podman": null,
+      "node": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "openssl": "/usr/bin/openssl"
+    },
+    "completedAt": "2026-11-03T14:52:55.494844+00:00"
+  },
+  "executionHistory": [
+    {
+      "kind": "completed-first-runtime",
+      "startedAt": "2026-11-03T15:07:46.308170+00:00",
+      "containerState": {
+        "Status": "exited",
+        "ExitCode": 0,
+        "OOMKilled": false,
+        "StartedAt": "2026-11-03T15:07:47.905106815Z",
+        "FinishedAt": "2026-11-03T15:08:20.866161695Z",
+        "Error": ""
+      },
+      "containerRemoved": true,
+      "summary": {
+        "status": "PASS_NATIVE_LOOPBACK_ROUTING_PINNED_IMAGE_PENDING",
+        "checksPassed": 19,
+        "checksFailed": 0,
+        "receipt": "/tmp/runtime-evidence/receipt.json",
+        "exitCode": 0
+      },
+      "detailedEvidenceExport": "FAILED_AFTER_EXIT_TMPFS_GONE"
+    },
+    {
+      "kind": "container-never-started",
+      "startedAt": "2026-11-03T15:12:25.946579+00:00",
+      "containerState": {
+        "Status": "created",
+        "ExitCode": 128,
+        "OOMKilled": false,
+        "StartedAt": "0001-01-01T00:00:00Z",
+        "FinishedAt": "0001-01-01T00:00:00Z",
+        "Error": "failed to create task for container: failed to initialize logging driver: compression cannot be enabled when max file count is 1"
+      },
+      "containerRemoved": true,
+      "testsExecuted": false,
+      "reason": "Optional local logging max-file=1 setting was incompatible with compression; default logging was restored."
+    },
+    {
+      "kind": "completed-runtime-with-full-evidence",
+      "startedAt": "2026-11-03T15:15:26.952930+00:00",
+      "containerName": "imon-edge-loopback-20261103-zgsryhz-captured",
+      "runtimeReceiptSha256": "938113f355da91123c02f104ea2a3aa88ad658619ec0aca0c0627fb762c5bd2a",
+      "testsPassed": 19,
+      "containerRemoved": true
+    }
+  ],
+  "stdoutEvidenceExport": {
+    "sha256": "5fd298b4f77182b557071ab3e7a03b1dcf3f43661192794c4d407ccccf3a215f",
+    "source": "import base64,io,json,pathlib,subprocess,sys,tarfile\nresult=subprocess.run([\"python3\",\"/work/scripts/verify-edge-vps-loopback.py\",\"--output\",\"/tmp/runtime-evidence\"],capture_output=True,text=True,timeout=110)\nprint(json.dumps({\"harnessConsole\":result.stdout,\"harnessError\":result.stderr,\"exitCode\":result.returncode}))\nfolder=pathlib.Path(\"/tmp/runtime-evidence\")\nallowed={\"candidate.cfg\",\"loopback.cfg\",\"receipt.json\",\"haproxy-version.txt\",\"original-syntax.log\",\"loopback-syntax.log\",\"haproxy.log\"}\nbuffer=io.BytesIO()\nwith tarfile.open(fileobj=buffer,mode=\"w:gz\") as archive:\n for source in sorted(folder.iterdir()):\n  assert source.is_file() and source.name in allowed\n  data=source.read_bytes()\n  info=tarfile.TarInfo(source.name);info.size=len(data);info.mode=0o600;info.mtime=0\n  archive.addfile(info,io.BytesIO(data))\nprint(\"IMON_EVIDENCE_BASE64:\"+base64.b64encode(buffer.getvalue()).decode(),flush=True)\nsys.exit(result.returncode)\n"
+  },
+  "evidenceManifest": {
+    "archiveSha256": "db9787c98f27afcb125a8e95fa0595133e8bde37dfd5ab781c9dc590ac38bc69",
+    "files": {
+      "context-manifest.json": "12532c8a2ddf34f4de6fb93acc5a8aff535fc7a547620c644452d33da4a63783",
+      "build-result.json": "d4905313d9204e69e4aa23b62219d4f2d0bb66625343a975e307a963e6330e7a",
+      "build.log": "9fc710d409ac381f8e4c013ef1de615c0d118ff22481977ac6b776363a1cbe18",
+      "docker-run-receipt.json": "df186202666f8ef17c13f6aedbff5b983ffe5401ae72c1e8cfcef64a02419fb0",
+      "runtime-console.log": "1e49d3bf381e15ba766b10b186d7d1389cd2df49adee6d9b107d189a0774ddab",
+      "docker-run-receipt-final.json": "2ef4cae884636c45b73ff6279cdacd4bc0ab340dc3a2daad3093adcff3801a12",
+      "docker-run-receipt-captured.json": "37ca29f5d65c67b9a5a0ad2b3f0ec71138518067799038e83bf1adeca35186b5",
+      "stdout-evidence-wrapper.py": "5fd298b4f77182b557071ab3e7a03b1dcf3f43661192794c4d407ccccf3a215f",
+      "image-provenance/image-provenance.json": "6c5c346e75d53a9ddd921a97cce16821ed94586cbd8015d8b09e4ddb849da916",
+      "image-provenance/base-haproxy-version.txt": "eb4191176482bd1fa46920d0480238475baf48d1dea4e0d27f752ee9736ce777",
+      "image-provenance/base-haproxy.sha256": "fe8e5c3759aa13cc3993ae0fb066c5e63b7b9634dee5e9fef659365043534338",
+      "image-provenance/base-library-files.sha256": "d8ee172c4771864a6c17d03e153e6d488da51dce6b4664e456f9d8485dadfd22",
+      "runtime-evidence-captured/candidate.cfg": "ef25dac3cbb1c2f134f9b0dbe21481ecc3855ccb6e59b30f1a852cb0778ec1df",
+      "runtime-evidence-captured/loopback.cfg": "5d00965e8d540ee2bbd0dc13bca85f1c6e69e3e5b8a96c739526f430dcf2d3b7",
+      "runtime-evidence-captured/receipt.json": "938113f355da91123c02f104ea2a3aa88ad658619ec0aca0c0627fb762c5bd2a",
+      "runtime-evidence-captured/haproxy-version.txt": "eb4191176482bd1fa46920d0480238475baf48d1dea4e0d27f752ee9736ce777",
+      "runtime-evidence-captured/original-syntax.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "runtime-evidence-captured/loopback-syntax.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "runtime-evidence-captured/haproxy.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "independentReview": "Read-only review found no blocking false-pass issue. Global backend totals are asserted before and after HAProxy termination. Runtime/fixture/image boundaries remain explicit.",
+  "remainingGates": [
+    "Untouched deployment image startup, configured privilege transition, actual mounts and capabilities",
+    "Two-host authenticated tunnel, main-side endpoints and tunnel-loss confinement",
+    "Real nginx client IP, signaling admission and signed recording paths",
+    "Real coturn allocation and external TURN443 audio/video",
+    "Witness TLS, enrollment, durable ACK and recovery",
+    "Public DNS, certificates/renewal, VPN continuity, public443 and capacity acceptance"
+  ],
+  "productionChanges": false,
+  "mainServerPrivilegedDockerUsed": false,
+  "hostPortsPublished": false,
+  "hostUserDataMounted": false,
+  "externalRequestsDuringRuntime": false,
+  "publicOfficialImageAndPackageDownloadsDuringBuild": true,
+  "userKeysUsed": false,
+  "temporaryFixtureKeysRemoved": true,
+  "dnsChanged": false,
+  "tunnelsConfigured": false,
+  "public443Accepted": false
+}

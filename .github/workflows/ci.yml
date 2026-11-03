@@ -54,6 +54,7 @@ jobs:
           scripts/test-runtime-inventory.mjs
           scripts/test-external-media-policy.mjs
           scripts/test-google-oauth-policy.mjs
+          scripts/test-edge-vps-ingress.mjs
       - name: Deletion deployment manifests use existing private mounts
         run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-deletion-compose.py
       - name: Merged Compose cutover identity and private configuration preflight
