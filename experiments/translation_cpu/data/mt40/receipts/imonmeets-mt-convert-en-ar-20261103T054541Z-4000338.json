@@ -1,0 +1,18 @@
+{
+  "unit": "imonmeets-mt-convert-en-ar-20261103T054541Z-4000338",
+  "started_at": "2026-11-03T05:45:41Z",
+  "finished_at": "2026-11-03T05:45:51.751544+00:00",
+  "runtime_max_seconds": 600,
+  "exit_code": 0,
+  "command": [
+    "/home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/.venv-marian/bin/python",
+    "tools/convert_opus_release.py",
+    "en-ar"
+  ],
+  "log": "imonmeets-mt-convert-en-ar-20261103T054541Z-4000338.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}

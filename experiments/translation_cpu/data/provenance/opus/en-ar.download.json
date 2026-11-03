@@ -1,0 +1,108 @@
+{
+  "repository": "Helsinki-NLP/Tatoeba-Challenge",
+  "model_id": "eng-ara/opus-2021-02-23",
+  "card_revision": "5509af44a74016748c26f41ab164b64f48445f3f",
+  "card_url": "https://github.com/Helsinki-NLP/Tatoeba-Challenge/blob/5509af44a74016748c26f41ab164b64f48445f3f/models/eng-ara/README.md",
+  "card_sha256": "b022e548f7c23c36c66f65a1d7328072533077fe90982090df62659f86474fdf",
+  "card_license": "CC-BY-4.0 under official OPUS original-weight grant",
+  "archive_url": "https://object.pouta.csc.fi/Tatoeba-MT-models/eng-ara/opus-2021-02-23.zip",
+  "original_weight_license": "CC-BY-4.0",
+  "target_token": ">>ara<<",
+  "selection_reason": "Original URL linked by HF card returned HTTP404; choose official standard transformer release within CPU1/2GiB budget, not transformer-big",
+  "unavailable_hf_original": {
+    "source": {
+      "repository": "Helsinki-NLP/opus-mt-en-ar",
+      "card_revision": "03087980e8ce753d64b3248ed0a912444545b840",
+      "card_url": "https://huggingface.co/Helsinki-NLP/opus-mt-en-ar/blob/03087980e8ce753d64b3248ed0a912444545b840/README.md",
+      "card_sha256": "7cc0866ce36041ab0f6e2d32241ebd55f3c372b44024f3fa36252da6b412129a",
+      "card_license": "apache-2.0",
+      "archive_url": "https://object.pouta.csc.fi/Tatoeba-MT-models/eng-ara/opus-2020-07-03.zip",
+      "original_weight_license": "CC-BY-4.0",
+      "target_token": ">>ara<<"
+    },
+    "observed_status": 404,
+    "receipt": "imonmeets-mt-download-en-ar-20261103T054326Z-3981197"
+  },
+  "retrieved_at": "2026-11-03T05:45:41.787903+00:00",
+  "archive_sha256": "857a0d6383f4cb4b990a4915f3a21cb9ab9d00d8837d99ed73bd9f8a5df3af7a",
+  "archive_bytes": 284565615,
+  "download_seconds": 4.864,
+  "response_metadata": {
+    "Content-Length": "284565615",
+    "ETag": "\"cd01fa655d41229b24b092adc40a174c\"",
+    "Last-Modified": "Sat, 10 Apr 2021 18:46:27 GMT",
+    "Content-Type": "application/zip"
+  },
+  "archive_members": [
+    {
+      "name": "README.md",
+      "bytes": 1019,
+      "compressed_bytes": 462
+    },
+    {
+      "name": "LICENSE",
+      "bytes": 18652,
+      "compressed_bytes": 5916
+    },
+    {
+      "name": "opus.spm32k-spm32k.transformer.model1.npz.best-perplexity.npz",
+      "bytes": 305474977,
+      "compressed_bytes": 283268251
+    },
+    {
+      "name": "opus.spm32k-spm32k.vocab.yml",
+      "bytes": 1155970,
+      "compressed_bytes": 458334
+    },
+    {
+      "name": "opus.spm32k-spm32k.transformer.valid1.log",
+      "bytes": 4774,
+      "compressed_bytes": 875
+    },
+    {
+      "name": "opus.spm32k-spm32k.transformer.train1.log",
+      "bytes": 80954,
+      "compressed_bytes": 10634
+    },
+    {
+      "name": "source.spm",
+      "bytes": 801074,
+      "compressed_bytes": 407441
+    },
+    {
+      "name": "source.tcmodel",
+      "bytes": 0,
+      "compressed_bytes": 0
+    },
+    {
+      "name": "target.spm",
+      "bytes": 916890,
+      "compressed_bytes": 409927
+    },
+    {
+      "name": "decoder.yml",
+      "bytes": 259,
+      "compressed_bytes": 144
+    },
+    {
+      "name": "preprocess.sh",
+      "bytes": 1979,
+      "compressed_bytes": 582
+    },
+    {
+      "name": "postprocess.sh",
+      "bytes": 80,
+      "compressed_bytes": 78
+    },
+    {
+      "name": "config.mk",
+      "bytes": 94,
+      "compressed_bytes": 88
+    },
+    {
+      "name": "opus-2021-02-23.yml",
+      "bytes": 1278,
+      "compressed_bytes": 495
+    }
+  ]
+}

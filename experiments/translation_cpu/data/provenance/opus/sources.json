@@ -50,14 +50,30 @@
       "target_token": null
     },
     "en-ar": {
-      "repository": "Helsinki-NLP/opus-mt-en-ar",
-      "card_revision": "03087980e8ce753d64b3248ed0a912444545b840",
-      "card_url": "https://huggingface.co/Helsinki-NLP/opus-mt-en-ar/blob/03087980e8ce753d64b3248ed0a912444545b840/README.md",
-      "card_sha256": "7cc0866ce36041ab0f6e2d32241ebd55f3c372b44024f3fa36252da6b412129a",
-      "card_license": "apache-2.0",
-      "archive_url": "https://object.pouta.csc.fi/Tatoeba-MT-models/eng-ara/opus-2020-07-03.zip",
+      "repository": "Helsinki-NLP/Tatoeba-Challenge",
+      "model_id": "eng-ara/opus-2021-02-23",
+      "card_revision": "5509af44a74016748c26f41ab164b64f48445f3f",
+      "card_url": "https://github.com/Helsinki-NLP/Tatoeba-Challenge/blob/5509af44a74016748c26f41ab164b64f48445f3f/models/eng-ara/README.md",
+      "card_sha256": "b022e548f7c23c36c66f65a1d7328072533077fe90982090df62659f86474fdf",
+      "card_license": "CC-BY-4.0 under official OPUS original-weight grant",
+      "archive_url": "https://object.pouta.csc.fi/Tatoeba-MT-models/eng-ara/opus-2021-02-23.zip",
       "original_weight_license": "CC-BY-4.0",
-      "target_token": ">>ara<<"
+      "target_token": ">>ara<<",
+      "selection_reason": "Original URL linked by HF card returned HTTP404; choose official standard transformer release within CPU1/2GiB budget, not transformer-big",
+      "unavailable_hf_original": {
+        "source": {
+          "repository": "Helsinki-NLP/opus-mt-en-ar",
+          "card_revision": "03087980e8ce753d64b3248ed0a912444545b840",
+          "card_url": "https://huggingface.co/Helsinki-NLP/opus-mt-en-ar/blob/03087980e8ce753d64b3248ed0a912444545b840/README.md",
+          "card_sha256": "7cc0866ce36041ab0f6e2d32241ebd55f3c372b44024f3fa36252da6b412129a",
+          "card_license": "apache-2.0",
+          "archive_url": "https://object.pouta.csc.fi/Tatoeba-MT-models/eng-ara/opus-2020-07-03.zip",
+          "original_weight_license": "CC-BY-4.0",
+          "target_token": ">>ara<<"
+        },
+        "observed_status": 404,
+        "receipt": "imonmeets-mt-download-en-ar-20261103T054326Z-3981197"
+      }
     },
     "ar-en": {
       "repository": "Helsinki-NLP/opus-mt-ar-en",

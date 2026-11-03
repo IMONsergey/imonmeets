@@ -1,0 +1,18 @@
+{
+  "unit": "imonmeets-mt-download-en-ar-retry-20261103T054536Z-3999690",
+  "started_at": "2026-11-03T05:45:36Z",
+  "finished_at": "2026-11-03T05:45:41.850529+00:00",
+  "runtime_max_seconds": 720,
+  "exit_code": 0,
+  "command": [
+    "/usr/bin/python3",
+    "tools/fetch_opus_release.py",
+    "en-ar"
+  ],
+  "log": "imonmeets-mt-download-en-ar-retry-20261103T054536Z-3999690.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}
