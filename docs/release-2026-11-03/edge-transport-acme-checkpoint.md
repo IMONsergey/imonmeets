@@ -1,6 +1,6 @@
 # Edge transport and HTTPS commissioning: 3 November 2026
 
-Status: the dedicated private transport is active, tested and enabled on both hosts. The verified CI image is downloaded on main. Canonical HTTPS and application cutover remain pending.
+Status: the dedicated private transport is active, tested and enabled on both hosts. The verified CI image is downloaded on main. Four new DNS names now resolve authoritatively to edge. Canonical HTTPS and application cutover remain pending.
 
 This is an operations checkpoint based on immutable release source `05cc907784afe09c156026cc822d3f6bf08bd4c3`. The operations-only branch updates evidence and documentation. It does not change that release, its image, application code, installed transport helpers or the live application.
 
@@ -25,6 +25,7 @@ The application and existing VPN retain their previous deployment. No new IPv4 o
 | Actual two-host transport | Handshake, three approved TCP paths, denied source/port, unit stop and recovery passed |
 | Actual private transport proof | 8 checks passed; temporary listeners removed |
 | Transport autostart | Dedicated unit active and enabled on both hosts; cold boot not tested |
+| New DNS names | Both authoritative servers return the expected edge IPv4 for rtc, turn, recordings and witness; meets remains on main |
 | HTTP/ACME/main bridge/witness/renewal focused checks | 51 passed |
 | Native nginx syntax stage | All seven parsed; four full checks returned zero; three edge cases failed on unavailable edge IP binding |
 | Native nginx state after fixture attempt | Existing nginx active; public 8443 health HTTP 200; temporary loopback ports absent |
@@ -56,11 +57,29 @@ Main downloaded the nine public release assets through one ordinary-user job, `2
 
 The successful download does not resolve the queue's lack of Docker access. A resource-intensive image import still needs a reviewed path consistent with the mandatory queue and its existing restrictions. Do not infer that the archive is loaded, or repeat the failed privileged build through another launcher.
 
+## DNS preparation
+
+Chrome became available again at approximately `2026-11-03T17:24Z`. Four A records were added through the existing REG.RU zone. The existing meets record and all other records were preserved.
+
+| Name | Authoritative A record | Change |
+| --- | --- | --- |
+| meets.imon.world | 94.249.186.240 | Preserved on main |
+| rtc.imon.world | 94.249.188.77 | Added |
+| turn.imon.world | 94.249.188.77 | Added |
+| recordings.imon.world | 94.249.188.77 | Added |
+| witness.imon.world | 94.249.188.77 | Added |
+
+The first authoritative check at 17:29 UTC still returned NXDOMAIN for the four new names. At `2026-11-03T17:37:22Z`, all ten A queries across `ns1.reg.ru` and `ns2.reg.ru` returned NOERROR, the authoritative flag and exactly the expected address. TTL is 86400 seconds and was not changed. This accepts authoritative publication, not all recursive caches or HTTP/HTTPS serving. See [DNS receipt](../../verification/edge-dns-bootstrap-20261103.json).
+
+![Four new A records in the REG.RU zone](../verification/dns-records-20261103.png)
+
 ## Next action and remaining cutover work
 
-The explicitly selected Chrome connection was unavailable at `2026-11-03T17:11:13Z`: the browser tool reported no connected originating browser instance. Restore Chrome's connection to this chat before editing the domain zone and testing real Google sign-in. The new Google secret is already privately staged; do not request another download.
+The new Google secret is already privately staged; another client or secret download is unnecessary.
 
-No DNS changes have been made in this commissioning phase. Keep the meets A record on main during bootstrap. Prepare the four new DNS names and verify the edge HTTP challenge path, then issue the separate main and witness certificates and accept the actual protected TLS paths. The main challenge handler stays on loopback; the dedicated bridge owns the private address so shared nginx startup stays independent of the tunnel.
+Keep the meets A record on main during bootstrap. Verify the actual edge HTTP challenge paths, then issue the separate owner-local main and witness certificates and accept the protected TLS paths. The full design uses a main loopback challenge handler and a separate private bridge. An explicit standalone native HTTP-only bootstrap is being prepared to make certificate commissioning independent of the unresolved Docker import path and unfinished renewal contexts. It must own only the dedicated private ACME listener and keep shared nginx and the existing VPN independent of the tunnel. Its code and runtime acceptance are separate from the frozen application image.
+
+Before changing meets A, review the actual offsite backup/monitor destination. The supported HTTPS puller follows its configured baseUrl and has no resolve/connect-to pin option. If the installed configuration uses meets.imon.world:8443, preserving the old main listener alone will not preserve that path after DNS moves to an edge that serves only ports 80/443. A fresh allowlisted configuration check and explicit monitor transition are required; do not silently fall back to SSH or add an unsupported pin key. Account for the existing 86400-second DNS TTL.
 
 At the controlled application transition, use the immutable source/image above and preserve existing mail/auth credentials and quotas. Reconcile the private runtime staging into the deliberate final environment before activation. Obtain fresh backup/recovery evidence, drain active calls and recordings, retire or guard the exact legacy RTC bypass, update recording-storage CORS as well as application URLs, and prevent the old TURN renewal dispatch from competing with the new certificate writer. Preserve the existing 8443 offsite and health routes.
 

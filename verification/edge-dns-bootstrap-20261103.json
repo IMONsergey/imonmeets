@@ -1,0 +1,206 @@
+{
+  "schema": 1,
+  "status": "PASS_AUTHORITATIVE_DNS_BOOTSTRAP",
+  "provider": "REG.RU",
+  "zone": "imon.world",
+  "uiChangesObserved": true,
+  "changedRecords": [
+    {
+      "name": "rtc.imon.world",
+      "type": "A",
+      "address": "94.249.188.77"
+    },
+    {
+      "name": "turn.imon.world",
+      "type": "A",
+      "address": "94.249.188.77"
+    },
+    {
+      "name": "recordings.imon.world",
+      "type": "A",
+      "address": "94.249.188.77"
+    },
+    {
+      "name": "witness.imon.world",
+      "type": "A",
+      "address": "94.249.188.77"
+    }
+  ],
+  "meetsARecordPreserved": "94.249.186.240",
+  "otherRecordsChanged": false,
+  "ttlChanged": false,
+  "capturedAt": "2026-11-03T17:37:22.381450+00:00",
+  "authoritativeDns": {
+    "allTenQueriesMatchedExpected": true,
+    "queries": [
+      {
+        "server": "ns1.reg.ru",
+        "name": "meets.imon.world",
+        "type": "A",
+        "exitCode": 0,
+        "rcode": "NOERROR",
+        "authoritative": true,
+        "answers": [
+          {
+            "name": "meets.imon.world",
+            "ttl": 86400,
+            "address": "94.249.186.240"
+          }
+        ],
+        "matchedExpectedSingleAddress": true
+      },
+      {
+        "server": "ns1.reg.ru",
+        "name": "rtc.imon.world",
+        "type": "A",
+        "exitCode": 0,
+        "rcode": "NOERROR",
+        "authoritative": true,
+        "answers": [
+          {
+            "name": "rtc.imon.world",
+            "ttl": 86400,
+            "address": "94.249.188.77"
+          }
+        ],
+        "matchedExpectedSingleAddress": true
+      },
+      {
+        "server": "ns1.reg.ru",
+        "name": "turn.imon.world",
+        "type": "A",
+        "exitCode": 0,
+        "rcode": "NOERROR",
+        "authoritative": true,
+        "answers": [
+          {
+            "name": "turn.imon.world",
+            "ttl": 86400,
+            "address": "94.249.188.77"
+          }
+        ],
+        "matchedExpectedSingleAddress": true
+      },
+      {
+        "server": "ns1.reg.ru",
+        "name": "recordings.imon.world",
+        "type": "A",
+        "exitCode": 0,
+        "rcode": "NOERROR",
+        "authoritative": true,
+        "answers": [
+          {
+            "name": "recordings.imon.world",
+            "ttl": 86400,
+            "address": "94.249.188.77"
+          }
+        ],
+        "matchedExpectedSingleAddress": true
+      },
+      {
+        "server": "ns1.reg.ru",
+        "name": "witness.imon.world",
+        "type": "A",
+        "exitCode": 0,
+        "rcode": "NOERROR",
+        "authoritative": true,
+        "answers": [
+          {
+            "name": "witness.imon.world",
+            "ttl": 86400,
+            "address": "94.249.188.77"
+          }
+        ],
+        "matchedExpectedSingleAddress": true
+      },
+      {
+        "server": "ns2.reg.ru",
+        "name": "meets.imon.world",
+        "type": "A",
+        "exitCode": 0,
+        "rcode": "NOERROR",
+        "authoritative": true,
+        "answers": [
+          {
+            "name": "meets.imon.world",
+            "ttl": 86400,
+            "address": "94.249.186.240"
+          }
+        ],
+        "matchedExpectedSingleAddress": true
+      },
+      {
+        "server": "ns2.reg.ru",
+        "name": "rtc.imon.world",
+        "type": "A",
+        "exitCode": 0,
+        "rcode": "NOERROR",
+        "authoritative": true,
+        "answers": [
+          {
+            "name": "rtc.imon.world",
+            "ttl": 86400,
+            "address": "94.249.188.77"
+          }
+        ],
+        "matchedExpectedSingleAddress": true
+      },
+      {
+        "server": "ns2.reg.ru",
+        "name": "turn.imon.world",
+        "type": "A",
+        "exitCode": 0,
+        "rcode": "NOERROR",
+        "authoritative": true,
+        "answers": [
+          {
+            "name": "turn.imon.world",
+            "ttl": 86400,
+            "address": "94.249.188.77"
+          }
+        ],
+        "matchedExpectedSingleAddress": true
+      },
+      {
+        "server": "ns2.reg.ru",
+        "name": "recordings.imon.world",
+        "type": "A",
+        "exitCode": 0,
+        "rcode": "NOERROR",
+        "authoritative": true,
+        "answers": [
+          {
+            "name": "recordings.imon.world",
+            "ttl": 86400,
+            "address": "94.249.188.77"
+          }
+        ],
+        "matchedExpectedSingleAddress": true
+      },
+      {
+        "server": "ns2.reg.ru",
+        "name": "witness.imon.world",
+        "type": "A",
+        "exitCode": 0,
+        "rcode": "NOERROR",
+        "authoritative": true,
+        "answers": [
+          {
+            "name": "witness.imon.world",
+            "ttl": 86400,
+            "address": "94.249.188.77"
+          }
+        ],
+        "matchedExpectedSingleAddress": true
+      }
+    ],
+    "recursiveCachePropagationEvaluated": false,
+    "httpsAcceptance": false
+  },
+  "sourceObservationSha256": "41711b52fcca19e929047e8e511f378c545bb2cdf6dc0497d62e534f717b22bc",
+  "screenshot": "docs/verification/dns-records-20261103.png",
+  "screenshotSha256": "89dc11b2267155acb5221f66161a4065b213a58dea3f1b10b338cbe0212d8e13",
+  "httpChallengeAccepted": false,
+  "certificateIssued": false,
+  "public443Accepted": false
+}
