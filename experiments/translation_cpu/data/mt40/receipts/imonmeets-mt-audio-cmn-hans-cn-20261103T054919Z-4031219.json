@@ -1,0 +1,18 @@
+{
+  "unit": "imonmeets-mt-audio-cmn-hans-cn-20261103T054919Z-4031219",
+  "started_at": "2026-11-03T05:49:19Z",
+  "finished_at": "2026-11-03T05:49:32.281081+00:00",
+  "runtime_max_seconds": 900,
+  "exit_code": 0,
+  "command": [
+    "/home/sergey/imonmeets-translation-cpu-20261102/.venv/bin/python",
+    "tools/fetch_selected_fleurs_audio.py",
+    "cmn_hans_cn"
+  ],
+  "log": "imonmeets-mt-audio-cmn-hans-cn-20261103T054919Z-4031219.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}
