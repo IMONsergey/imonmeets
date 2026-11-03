@@ -1,3 +1,4 @@
+import { loadDeletionConfig } from "./deletion-journal.js";
 import { parseEmbedAllowedOrigins } from "./embedding.js";
 import { loadPublicInformation } from "./public-information.js";
 
@@ -174,6 +175,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     throw new Error("Billing amount must be at least one ruble");
   return {
     publicInformation,
+    deletionJournal: loadDeletionConfig(env),
     embedAllowedOrigins: parseEmbedAllowedOrigins(
       env.EMBED_ALLOWED_ORIGINS,
       env.NODE_ENV === "production",

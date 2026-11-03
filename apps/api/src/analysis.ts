@@ -1,3 +1,4 @@
+import { deletionTransaction } from "./deletion-journal.js";
 import { createHash, randomUUID } from "node:crypto";
 import { request as httpRequest } from "node:http";
 import { request as httpsRequest } from "node:https";
@@ -464,40 +465,64 @@ export async function registerAnalysis(
   app.delete(route, async (req) => {
     const u = (await user(req))!,
       { workspaceId, recordingId } = params(req.params);
-    const deletedId = await transaction(pool, async (db) => {
-      const member = await lockWorkspace(db, workspaceId, u.id);
-      const rec = (
-        await db.query(
-          "SELECT r.id,room.created_by FROM im_recordings r JOIN im_rooms room ON room.id=r.room_id WHERE r.id=$1 AND r.workspace_id=$2 FOR UPDATE OF r",
+    const deletion = await deletionTransaction(
+      pool,
+      d.deletionJournal,
+      async (db, record) => {
+        const member = await lockWorkspace(db, workspaceId, u.id);
+        const rec = (
+          await db.query(
+            "SELECT r.id,room.created_by FROM im_recordings r JOIN im_rooms room ON room.id=r.room_id WHERE r.id=$1 AND r.workspace_id=$2 FOR UPDATE OF r",
+            [recordingId, workspaceId],
+          )
+        ).rows[0];
+        assert(rec, 404, "RECORDING_NOT_FOUND", "Запись не найдена.");
+        assert(
+          canManage(member.role, rec.created_by, u.id),
+          403,
+          "FORBIDDEN",
+          "Недостаточно прав.",
+        );
+        const generation = (
+          await db.query(
+            "SELECT id FROM im_recording_analysis WHERE recording_id=$1 AND workspace_id=$2 FOR UPDATE",
+            [recordingId, workspaceId],
+          )
+        ).rows[0];
+        if (generation)
+          await record({
+            actorId: u.id,
+            target: {
+              kind: "analysis",
+              workspaceId,
+              recordingId,
+              analysisId: generation.id,
+            },
+          });
+        const deleted = await db.query(
+          "DELETE FROM im_recording_analysis WHERE recording_id=$1 AND workspace_id=$2 RETURNING id",
           [recordingId, workspaceId],
-        )
-      ).rows[0];
-      assert(rec, 404, "RECORDING_NOT_FOUND", "Запись не найдена.");
-      assert(
-        canManage(member.role, rec.created_by, u.id),
-        403,
-        "FORBIDDEN",
-        "Недостаточно прав.",
-      );
-      const deleted = await db.query(
-        "DELETE FROM im_recording_analysis WHERE recording_id=$1 AND workspace_id=$2 RETURNING id",
-        [recordingId, workspaceId],
-      );
-      await audit(
-        db,
-        workspaceId,
-        u.id,
-        "recording.analysis_deleted",
-        recordingId,
-      );
-      return deleted.rows[0]?.id as string | undefined;
-    });
+        );
+        await audit(
+          db,
+          workspaceId,
+          u.id,
+          "recording.analysis_deleted",
+          recordingId,
+        );
+        return deleted.rows[0]?.id as string | undefined;
+      },
+    );
+    const deletedId = deletion.value;
     // Only cancel the deleted generation; a concurrently retried job has a new ID.
     if (deletedId && active?.job.id === deletedId) {
       active.invalidated = true;
       active.controller.abort();
     }
-    return { ok: true };
+    return {
+      ok: true,
+      ...(deletion.deletion ? { deletion: deletion.deletion } : {}),
+    };
   });
 
   type AnalysisJob = {

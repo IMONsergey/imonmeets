@@ -1,0 +1,76 @@
+{
+  "scope": "DATA-02 deletion-journal foundation",
+  "verifiedAt": "2026-11-03T07:12:24.359971+00:00",
+  "limits": {
+    "cpu": "1",
+    "memory": "2GiB",
+    "tasks": 128
+  },
+  "checks": [
+    {
+      "command": [
+        "/opt/imon-runtime/node/bin/node",
+        "node_modules/prettier/bin/prettier.cjs",
+        "--write",
+        "apps/api/src/deletion-journal.ts",
+        "apps/api/src/deletion-replay.ts",
+        "apps/api/src/app.ts",
+        "apps/api/src/config.ts",
+        "apps/api/src/suite.ts",
+        "apps/api/src/analysis.ts",
+        "apps/api/test/deletion-journal.test.ts",
+        "apps/api/test/deletion-replay.integration.test.ts",
+        "scripts/init-deletion-journal.mjs",
+        "scripts/replay-deletion-journal.mjs",
+        "docs/deletion-journal-and-restore.md"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "/opt/imon-runtime/node/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "/home/sergey/.local/state/imonmeets-commercial-20261103/identity-data-tests-tsconfig.json"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "/opt/imon-runtime/node/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-isolation=none",
+        "apps/api/test/deletion-journal.test.ts",
+        "apps/api/test/deletion-replay.integration.test.ts",
+        "apps/api/test/suite.integration.test.ts",
+        "apps/api/test/identity.integration.test.ts",
+        "apps/api/test/analysis.integration.test.ts"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0
+    }
+  ],
+  "database": "disposable loopback test database and unique schemas",
+  "oldBackupAcceptance": "actual pg_dump before four scoped API deletions, restore old schema, replay, verify no resurrection, replay idempotent",
+  "externalServicesStarted": false,
+  "realOffsiteTopologyVerified": false,
+  "productionChanges": false,
+  "commercialData02": "blocked pending independent receiver deployment, release-bound restore/media/key/retention acceptance",
+  "testSummary": {
+    "tests": 37,
+    "passed": 37,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scopeLimit": "four manual deletion types; automatic/chat/backup retention and real physical offsite cleanup are not certified",
+  "startupAcceptance": "createApp replay removes restored data before returning an application; old restored session receives401"
+}

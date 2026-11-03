@@ -2,6 +2,8 @@ import {
   publicInformationSummary,
   isApplicationPage,
 } from "./public-information.js";
+import { openDeletionJournal } from "./deletion-journal.js";
+import { replayDeletionJournal } from "./deletion-replay.js";
 import Fastify, { type FastifyRequest } from "fastify";
 import rateLimit from "@fastify/rate-limit";
 import staticPlugin from "@fastify/static";
@@ -131,6 +133,10 @@ export async function createApp(
     auth = options.auth || createAuth(c, pool, sendMail),
     media = options.media || createMedia(c),
     limiter = options.limiter ?? postgresLimiter(pool);
+  // Migrations are the release entrypoint prerequisite. Recover deletions before any listener or timer.
+  const deletionJournal = await openDeletionJournal(c.deletionJournal);
+  if (deletionJournal)
+    await replayDeletionJournal(pool, deletionJournal, media, c);
   const app = Fastify({
     logger: options.logger ?? true,
     bodyLimit: 1024 * 1024,
@@ -2017,6 +2023,7 @@ export async function createApp(
   const suiteDependencies = {
     c,
     pool,
+    deletionJournal,
     media,
     limiter,
     user,

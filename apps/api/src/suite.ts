@@ -1,3 +1,7 @@
+import {
+  deletionTransaction,
+  type DeletionJournal,
+} from "./deletion-journal.js";
 import { randomBytes, randomUUID, createHash } from "node:crypto";
 import { verifyPassword } from "better-auth/crypto";
 import { accountExportStream } from "./account-export.js";
@@ -33,6 +37,7 @@ export type SuiteDependencies = {
   pool: Pool;
   media: Media;
   limiter: RateLimiter;
+  deletionJournal?: DeletionJournal;
   paymentRequest?: typeof fetch;
   user: (req: FastifyRequest, required?: boolean) => Promise<User | null>;
   membership: (
@@ -536,78 +541,92 @@ export async function registerSuite(
         [u.id],
       )
     ).rows;
-    await transaction(pool, async (db) => {
-      // The same workspace lock order as membership/grant mutations prevents a revoked account racing a new grant.
-      for (const w of workspaces)
-        await db.query(
-          "SELECT id FROM im_workspaces WHERE id=$1 FOR NO KEY UPDATE",
-          [w.id],
-        );
-      await db.query('SELECT id FROM "user" WHERE id=$1 FOR UPDATE', [u.id]);
-      assert(
-        !(
+    const deletion = await deletionTransaction(
+      pool,
+      d.deletionJournal,
+      async (db, record) => {
+        // The same workspace lock order as membership/grant mutations prevents a revoked account racing a new grant.
+        for (const w of workspaces)
           await db.query(
-            "SELECT 1 FROM im_payments WHERE user_id=$1 AND status IN ('creating','pending','waiting_for_capture') LIMIT 1",
+            "SELECT id FROM im_workspaces WHERE id=$1 FOR NO KEY UPDATE",
+            [w.id],
+          );
+        await db.query('SELECT id FROM "user" WHERE id=$1 FOR UPDATE', [u.id]);
+        assert(
+          !(
+            await db.query(
+              "SELECT 1 FROM im_payments WHERE user_id=$1 AND status IN ('creating','pending','waiting_for_capture') LIMIT 1",
+              [u.id],
+            )
+          ).rowCount,
+          409,
+          "PAYMENT_PENDING",
+          "Сначала завершите или отмените незавершенный платеж у платежного оператора.",
+        );
+        const owners = (
+          await db.query(
+            "SELECT workspace_id FROM im_members WHERE user_id=$1 AND role='owner'",
             [u.id],
           )
-        ).rowCount,
-        409,
-        "PAYMENT_PENDING",
-        "Сначала завершите или отмените незавершенный платеж у платежного оператора.",
-      );
-      const owners = (
-        await db.query(
-          "SELECT workspace_id FROM im_members WHERE user_id=$1 AND role='owner'",
-          [u.id],
-        )
-      ).rows;
-      assert(
-        !owners.length,
-        409,
-        "OWNED_WORKSPACES",
-        "Сначала передайте или удалите рабочие пространства, которыми владеете.",
-      );
-      const affected = (
-        await db.query(
-          "SELECT r.* FROM im_rooms r WHERE r.status='open' AND EXISTS(SELECT 1 FROM im_room_access a WHERE a.room_id=r.id AND a.user_id=$1) ORDER BY r.id FOR UPDATE OF r",
-          [u.id],
-        )
-      ).rows;
-      for (const room of affected) {
-        await retireMedia(db, room);
-        await db.query(
-          "UPDATE im_rooms SET media_generation=media_generation+1,media_started=false,slug=$2 WHERE id=$1",
-          [room.id, secret()],
+        ).rows;
+        assert(
+          !owners.length,
+          409,
+          "OWNED_WORKSPACES",
+          "Сначала передайте или удалите рабочие пространства, которыми владеете.",
         );
-      }
-      await db.query(
-        "UPDATE im_rooms r SET created_by=(SELECT m.user_id FROM im_members m WHERE m.workspace_id=r.workspace_id AND m.role='owner') WHERE created_by=$1",
-        [u.id],
-      );
-      await db.query(
-        "DELETE FROM im_invitations WHERE created_by=$1 OR lower(email)=lower($2)",
-        [u.id, u.email],
-      );
-      await db.query("DELETE FROM im_messages WHERE user_id=$1", [u.id]);
-      await db.query("DELETE FROM im_room_access WHERE user_id=$1", [u.id]);
-      await db.query("DELETE FROM im_removed_members WHERE user_id=$1", [u.id]);
-      await db.query(
-        "UPDATE im_waiting_requests SET decided_by=NULL WHERE decided_by=$1",
-        [u.id],
-      );
-      await db.query(
-        "UPDATE im_audit SET actor_id=NULL,resource_id=CASE WHEN resource_id=$1 THEN NULL ELSE resource_id END WHERE actor_id=$1 OR resource_id=$1",
-        [u.id],
-      );
-      await db.query(
-        'DELETE FROM "verification" WHERE identifier=$1 OR identifier=$2 OR value=$2',
-        [u.email, u.id],
-      );
-      await db.query('DELETE FROM "user" WHERE id=$1', [u.id]);
-      await audit(db, null, null, "account.deleted", null);
-    });
+        await record({
+          actorId: u.id,
+          target: { kind: "account", accountId: u.id },
+        });
+        const affected = (
+          await db.query(
+            "SELECT r.* FROM im_rooms r WHERE r.status='open' AND EXISTS(SELECT 1 FROM im_room_access a WHERE a.room_id=r.id AND a.user_id=$1) ORDER BY r.id FOR UPDATE OF r",
+            [u.id],
+          )
+        ).rows;
+        for (const room of affected) {
+          await retireMedia(db, room);
+          await db.query(
+            "UPDATE im_rooms SET media_generation=media_generation+1,media_started=false,slug=$2 WHERE id=$1",
+            [room.id, secret()],
+          );
+        }
+        await db.query(
+          "UPDATE im_rooms r SET created_by=(SELECT m.user_id FROM im_members m WHERE m.workspace_id=r.workspace_id AND m.role='owner') WHERE created_by=$1",
+          [u.id],
+        );
+        await db.query(
+          "DELETE FROM im_invitations WHERE created_by=$1 OR lower(email)=lower($2)",
+          [u.id, u.email],
+        );
+        await db.query("DELETE FROM im_messages WHERE user_id=$1", [u.id]);
+        await db.query("DELETE FROM im_room_access WHERE user_id=$1", [u.id]);
+        await db.query("DELETE FROM im_removed_members WHERE user_id=$1", [
+          u.id,
+        ]);
+        await db.query(
+          "UPDATE im_waiting_requests SET decided_by=NULL WHERE decided_by=$1",
+          [u.id],
+        );
+        await db.query(
+          "UPDATE im_audit SET actor_id=NULL,resource_id=CASE WHEN resource_id=$1 THEN NULL ELSE resource_id END WHERE actor_id=$1 OR resource_id=$1",
+          [u.id],
+        );
+        await db.query(
+          'DELETE FROM "verification" WHERE identifier=$1 OR identifier=$2 OR value=$2',
+          [u.email, u.id],
+        );
+        await db.query('DELETE FROM "user" WHERE id=$1', [u.id]);
+        await audit(db, null, null, "account.deleted", null);
+      },
+    );
     const mediaPending = !(await drainRetirements(undefined, 4));
-    return { ok: true, mediaPending };
+    return {
+      ok: true,
+      mediaPending,
+      ...(deletion.deletion ? { deletion: deletion.deletion } : {}),
+    };
   });
   app.delete("/api/workspaces/:workspaceId", async (req) => {
     const u = (await user(req))!,
@@ -672,63 +691,75 @@ export async function registerSuite(
       "MEDIA_DISCONNECT_PENDING",
       "Встречи закрыты. Дождитесь отключения участников и повторите удаление пространства.",
     );
-    await transaction(pool, async (db) => {
-      const m = await lockWorkspace(db, workspaceId!, u.id);
-      assert(m.role === "owner", 403, "FORBIDDEN", "Недостаточно прав.");
-      assert(
-        !(
-          await db.query(
-            "SELECT 1 FROM im_recordings WHERE workspace_id=$1 AND deleted_at IS NULL LIMIT 1",
-            [workspaceId],
-          )
-        ).rowCount,
-        409,
-        "RECORDINGS_REMAIN",
-        "Сначала удалите записи пространства.",
-      );
-      assert(
-        !(
-          await db.query(
-            "SELECT 1 FROM im_payments WHERE workspace_id=$1 AND status IN ('creating','pending','waiting_for_capture') LIMIT 1",
-            [workspaceId],
-          )
-        ).rowCount,
-        409,
-        "PAYMENT_PENDING",
-        "Дождитесь окончательного статуса платежа.",
-      );
-      // Holding the workspace lock also excludes concurrent room creation and recording starts.
-      assert(
-        !(
-          await db.query(
-            "SELECT 1 FROM im_rooms WHERE workspace_id=$1 AND status='open' LIMIT 1",
-            [workspaceId],
-          )
-        ).rowCount,
-        409,
-        "WORKSPACE_CHANGED",
-        "Пространство изменилось. Повторите удаление.",
-      );
-      await db.query(
-        "DELETE FROM im_room_access WHERE room_id IN (SELECT id FROM im_rooms WHERE workspace_id=$1)",
-        [workspaceId],
-      );
-      await db.query("DELETE FROM im_recordings WHERE workspace_id=$1", [
-        workspaceId,
-      ]);
-      await db.query("DELETE FROM im_removed_members WHERE workspace_id=$1", [
-        workspaceId,
-      ]);
-      await db.query("DELETE FROM im_media_retirements WHERE workspace_id=$1", [
-        workspaceId,
-      ]);
-      await db.query("DELETE FROM im_audit WHERE workspace_id=$1", [
-        workspaceId,
-      ]);
-      await db.query("DELETE FROM im_workspaces WHERE id=$1", [workspaceId]);
-      await audit(db, null, u.id, "workspace.deleted", null);
-    });
-    return { ok: true };
+    const deletion = await deletionTransaction(
+      pool,
+      d.deletionJournal,
+      async (db, record) => {
+        const m = await lockWorkspace(db, workspaceId!, u.id);
+        assert(m.role === "owner", 403, "FORBIDDEN", "Недостаточно прав.");
+        assert(
+          !(
+            await db.query(
+              "SELECT 1 FROM im_recordings WHERE workspace_id=$1 AND deleted_at IS NULL LIMIT 1",
+              [workspaceId],
+            )
+          ).rowCount,
+          409,
+          "RECORDINGS_REMAIN",
+          "Сначала удалите записи пространства.",
+        );
+        assert(
+          !(
+            await db.query(
+              "SELECT 1 FROM im_payments WHERE workspace_id=$1 AND status IN ('creating','pending','waiting_for_capture') LIMIT 1",
+              [workspaceId],
+            )
+          ).rowCount,
+          409,
+          "PAYMENT_PENDING",
+          "Дождитесь окончательного статуса платежа.",
+        );
+        // Holding the workspace lock also excludes concurrent room creation and recording starts.
+        assert(
+          !(
+            await db.query(
+              "SELECT 1 FROM im_rooms WHERE workspace_id=$1 AND status='open' LIMIT 1",
+              [workspaceId],
+            )
+          ).rowCount,
+          409,
+          "WORKSPACE_CHANGED",
+          "Пространство изменилось. Повторите удаление.",
+        );
+        await record({
+          actorId: u.id,
+          target: { kind: "workspace", workspaceId: workspaceId! },
+        });
+        await db.query(
+          "DELETE FROM im_room_access WHERE room_id IN (SELECT id FROM im_rooms WHERE workspace_id=$1)",
+          [workspaceId],
+        );
+        await db.query("DELETE FROM im_recordings WHERE workspace_id=$1", [
+          workspaceId,
+        ]);
+        await db.query("DELETE FROM im_removed_members WHERE workspace_id=$1", [
+          workspaceId,
+        ]);
+        await db.query(
+          "DELETE FROM im_media_retirements WHERE workspace_id=$1",
+          [workspaceId],
+        );
+        await db.query("DELETE FROM im_audit WHERE workspace_id=$1", [
+          workspaceId,
+        ]);
+        await db.query("DELETE FROM im_workspaces WHERE id=$1", [workspaceId]);
+        await audit(db, null, u.id, "workspace.deleted", null);
+      },
+    );
+    return {
+      ok: true,
+      ...(deletion.deletion ? { deletion: deletion.deletion } : {}),
+    };
   });
   async function deleteRecordingObjects(maxJobs = 8) {
     if (!c.recordingConfigured) return;
@@ -773,46 +804,63 @@ export async function registerSuite(
     async (req) => {
       const u = (await user(req))!,
         { workspaceId, recordingId } = params(req);
-      await transaction(pool, async (db) => {
-        const m = await lockWorkspace(db, workspaceId!, u.id),
-          r = (
-            await db.query(
-              "SELECT rec.*,room.created_by FROM im_recordings rec JOIN im_rooms room ON room.id=rec.room_id WHERE rec.workspace_id=$1 AND rec.id=$2 FOR UPDATE OF rec",
-              [workspaceId, recordingId],
-            )
-          ).rows[0];
-        assert(r, 404, "RECORDING_NOT_FOUND", "Запись не найдена.");
-        assert(
-          canManage(m.role, r.created_by, u.id),
-          403,
-          "FORBIDDEN",
-          "Недостаточно прав.",
-        );
-        assert(
-          ["complete", "failed"].includes(r.status),
-          409,
-          "RECORDING_ACTIVE",
-          "Сначала остановите запись и дождитесь завершения обработки.",
-        );
-        await db.query(
-          "UPDATE im_recordings SET deletion_requested_at=COALESCE(deletion_requested_at,now()) WHERE id=$1",
-          [r.id],
-        );
-        await audit(
-          db,
-          workspaceId!,
-          u.id,
-          "recording.deletion_requested",
-          r.id,
-        );
-      });
+      const deletion = await deletionTransaction(
+        pool,
+        d.deletionJournal,
+        async (db, record) => {
+          const m = await lockWorkspace(db, workspaceId!, u.id),
+            r = (
+              await db.query(
+                "SELECT rec.*,room.created_by FROM im_recordings rec JOIN im_rooms room ON room.id=rec.room_id WHERE rec.workspace_id=$1 AND rec.id=$2 FOR UPDATE OF rec",
+                [workspaceId, recordingId],
+              )
+            ).rows[0];
+          assert(r, 404, "RECORDING_NOT_FOUND", "Запись не найдена.");
+          assert(
+            canManage(m.role, r.created_by, u.id),
+            403,
+            "FORBIDDEN",
+            "Недостаточно прав.",
+          );
+          assert(
+            ["complete", "failed"].includes(r.status),
+            409,
+            "RECORDING_ACTIVE",
+            "Сначала остановите запись и дождитесь завершения обработки.",
+          );
+          await record({
+            actorId: u.id,
+            target: {
+              kind: "recording",
+              workspaceId: workspaceId!,
+              recordingId: r.id,
+              egressId: r.egress_id ?? null,
+            },
+          });
+          await db.query(
+            "UPDATE im_recordings SET deletion_requested_at=COALESCE(deletion_requested_at,now()) WHERE id=$1",
+            [r.id],
+          );
+          await audit(
+            db,
+            workspaceId!,
+            u.id,
+            "recording.deletion_requested",
+            r.id,
+          );
+        },
+      );
       await deleteRecordingObjects(2);
       const row = (
         await pool.query("SELECT deleted_at FROM im_recordings WHERE id=$1", [
           recordingId,
         ])
       ).rows[0];
-      return { ok: true, deletionPending: !row?.deleted_at };
+      return {
+        ok: true,
+        deletionPending: !row?.deleted_at,
+        ...(deletion.deletion ? { deletion: deletion.deletion } : {}),
+      };
     },
   );
   let retentionBusy = false;
