@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generatedAt": "2026-11-03T16:57:19.099225+00:00",
-  "status": "TRANSPORT_ACTIVE_HANDSHAKE_VERIFIED_LIVE_CONFINEMENT_PENDING",
+  "generatedAt": "2026-11-03T17:16:10.973679+00:00",
+  "status": "PRIVATE_TRANSPORT_VERIFIED_ACTIVE_AND_ENABLED_PUBLIC_ACCEPTANCE_PENDING",
   "baseCommit": "f2cb148179ec7b8680056c95d942c10c85c7dfbb",
   "fileSha256": {
     "scripts/manage-edge-transport.py": "ae28a044556fa1428c0fd9d66c932fe65e94dd0a660a99f87d8d5e6656594928",
@@ -9,7 +9,7 @@
     "scripts/test-edge-transport-lifecycle.py": "19405fa68a67e9724dde88196661f1bbae7b50f7a6a41e7a9166f9e7a2ac3df0",
     "scripts/test-edge-transport.py": "9f68671819bdd1d6c1d8dde16fd8670952c05c19770c1e1c3e58b73b81f0e88c",
     "scripts/verify-edge-transport-netns.py": "8d534c915711f63de70c7a9c24546592b9aef628ea1f69a62ddd282f2d83b2e1",
-    "docs/edge-wireguard-transport.md": "768e71d170d6f1e9c122d7aceb9bb1db49106c8dde0d5737f47d71613ba1d03c"
+    "docs/edge-wireguard-transport.md": "083513c9d77874f258bbe4124e1d01fd7cf79f3c6c4f20d0507147e8463740a1"
   },
   "checks": {
     "test-edge-transport.py": {
@@ -32,13 +32,9 @@
     "exitCode": 0,
     "scope": "local generated unit syntax, no activation"
   },
-  "kernelConfinementAccepted": false,
-  "liveTunnelAccepted": false,
+  "liveTunnelAccepted": true,
   "bootPersistenceAccepted": false,
   "public443Accepted": false,
-  "productionChanges": false,
-  "networkChanges": false,
-  "keysCreated": false,
   "initialIsolatedAttempt": {
     "status": "FAIL",
     "failedPhase": "linkUpRecovery",
@@ -48,7 +44,7 @@
     "originalReceiptPreserved": true,
     "controlledRouteRecoveryPending": false
   },
-  "scope": "Offline tooling and isolated namespace acceptance; host-specific staging records retained privately.",
+  "scope": "Offline tooling, isolated namespace suite and separate real-host private TCP/stop acceptance. Host-specific material retained privately.",
   "namespaceRuntimeAccepted": true,
   "sanitizedNamespaceReceipts": [
     "verification/edge-transport-netns-attempt1-20261103.json",
@@ -62,5 +58,13 @@
     "cleanupPassed": true
   },
   "liveCommissioningReceipt": "verification/edge-transport-commissioning-20261103.json",
-  "wireGuardHandshakeVerified": true
+  "wireGuardHandshakeVerified": true,
+  "liveTcpSourceAndStopConfinementAccepted": true,
+  "bootAutoStartConfigured": true,
+  "applicationProductionChanged": false,
+  "livePrivateTcpProofReceipt": "verification/edge-transport-live-private-tcp-proof-20261103.json",
+  "generatorSideEffects": {
+    "networkChanges": false,
+    "keysCreated": false
+  }
 }

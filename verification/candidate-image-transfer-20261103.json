@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "status": "PASS_CANDIDATE_IMAGE_TRANSFER",
+  "sourceCommit": "05cc907784afe09c156026cc822d3f6bf08bd4c3",
+  "ciRunId": 41680113351,
+  "ciConclusion": "success",
+  "releaseId": 432988504,
+  "candidateTag": "candidate-05cc907784afe09c156026cc822d3f6bf08bd4c3",
+  "imageId": "sha256:b6057fb8c0824423dc4825a439a73fb1e8e0f228e9f9dabd0fe0c20328b51ab1",
+  "archiveBytes": 110737913,
+  "archiveSha256": "7f0202c3f1410b78fb6039b8125ffe146078f824cc78e23b92142a4cbba61b84",
+  "manifestSha256": "55c9d4167c39c1c580da651021b58e9843468b065ced6615de1e74b5e06b0c25",
+  "verifiedAssetCount": 9,
+  "allAssetSizesAndSha256Verified": true,
+  "exactSourceTransferValidatorPassed": true,
+  "destinationRole": "main",
+  "ordinaryUserJob": {
+    "id": "20261103T171305-ce4bac91c2",
+    "state": "succeeded",
+    "exitCode": 0,
+    "completedAt": "2026-11-03T17:13:14Z",
+    "timedOut": false,
+    "diskReserveBreached": false
+  },
+  "privateReceiptSha256": "45838467c8d9eb786d9773001cf7c78c3c2a07f3f222018fb671a5a9fc94c0ed",
+  "rootPrivilegesUsed": false,
+  "dockerUsed": false,
+  "queueRestrictionsChanged": false,
+  "imageImported": false,
+  "deployed": false,
+  "runtimeAcceptance": false,
+  "privatePathsAndHostInventoryOmitted": true
+}

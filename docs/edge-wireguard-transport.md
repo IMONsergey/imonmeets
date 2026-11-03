@@ -5,8 +5,15 @@ The two host configurations and unit files are verified, and the dedicated trans
 is active with a current mutual WireGuard handshake. Existing routes, firewall
 rules, listeners and the current main application health were preserved.
 [Sanitized commissioning evidence](../verification/edge-transport-commissioning-20261103.json)
-records each phase. Live private TCP and stop-confinement proof, boot persistence,
-and public 443 acceptance are still pending. The transport is not enabled at boot. Generating a candidate itself never
+records each phase. The separate
+[live private TCP and stop proof](../verification/edge-transport-live-private-tcp-proof-20261103.json)
+passed all eight checks. It verified the observed private source on three ports,
+denied a wrong source and an extra listening port, and confirmed terminal failure
+for unbound clients during an owned edge-unit stop followed by verified recovery.
+Temporary echo sockets were removed. Only the dedicated transport unit is enabled
+at boot on both hosts; current guard dependencies and hardening were checked.
+A cold boot has not been tested. Public 443, TURN/PROXY application behavior and
+native application acceptance remain separate pending gates. Generating a candidate itself never
 installs a package, creates a private key, or changes a network.
 
 The [first sanitized namespace receipt](../verification/edge-transport-netns-attempt1-20261103.json)

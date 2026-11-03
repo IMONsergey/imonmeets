@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "suite": "transport-live-private-tcp-and-stop-v1",
+  "status": "PASS",
+  "harnessSha256": "f55f16b67dacff42e8704f87874af41717f59284e975ffc4cc9b6c6d53a1f6c1",
+  "originalPrivateProofReceiptSha256": "1b27aa0bff90e015598cc6e91ea0e16898081efb8897f311e12b8efdb22a8ace",
+  "publishedIntegrationCommit": "05cc907784afe09c156026cc822d3f6bf08bd4c3",
+  "checks": {
+    "bothOwnedUnitsAndGuardsInitiallyReady": {
+      "status": "PASS"
+    },
+    "approvedPortsWithObservedPrivateSource": {
+      "status": "PASS",
+      "ports": [
+        5349,
+        8445,
+        18080
+      ],
+      "allObservedSourcesMatchedExpectedPrivatePeer": true,
+      "allEchoNoncesMatched": true
+    },
+    "deniedListeningPort8446": {
+      "status": "PASS",
+      "connected": false,
+      "errno": null
+    },
+    "deniedPublicSource": {
+      "status": "PASS",
+      "connected": false,
+      "errno": null
+    },
+    "ownedUnitStopTerminalForUnboundClients": {
+      "status": "PASS",
+      "ports": [
+        5349,
+        8445,
+        18080
+      ],
+      "guardRetained": true,
+      "peerRouteLookupFailed": true
+    },
+    "ownedUnitRestartSourceBoundRecovery": {
+      "status": "PASS",
+      "active": true,
+      "guardVerified": true,
+      "ports": [
+        5349,
+        8445,
+        18080
+      ],
+      "allObservedSourcesMatchedExpectedPrivatePeer": true,
+      "allEchoNoncesMatched": true
+    },
+    "bothGuardTablesUnchanged": {
+      "status": "PASS"
+    },
+    "existingMainHealth": {
+      "status": "PASS",
+      "statusValue": "ok",
+      "mediaConfigured": true
+    }
+  },
+  "checksPassed": 8,
+  "scope": "Actual two-host private TCP sources, denied port/source, owned EDGE unit stop and controlled restart. No live policy-rule removal or packet capture.",
+  "temporaryEchoProcessStopped": true,
+  "cleanupErrors": [],
+  "edgeRestorationStillRequired": false,
+  "tcpSourceAndStopConfinementAccepted": true,
+  "namespaceSuiteReused": false,
+  "nativeApplicationSuiteEvaluated": false,
+  "firewallOrPolicyRuleEdits": false,
+  "packetCaptureUsed": false,
+  "bootAutoStart": {
+    "main": {
+      "unit": "imon-meets-transport.service",
+      "enabled": true,
+      "active": true,
+      "guardActive": true,
+      "guardDependenciesVerified": true,
+      "noNewPrivilegesPreserved": true,
+      "restartPerformedForEnable": false,
+      "hostRebooted": false,
+      "originalPrivateReceiptSha256": "0ec5aa21316ecf64c1cdb60d25f8c4e72d13b47839a0306830cac54869e02a54"
+    },
+    "edge": {
+      "unit": "imon-meets-transport.service",
+      "enabled": true,
+      "active": true,
+      "guardActive": true,
+      "guardDependenciesVerified": true,
+      "noNewPrivilegesPreserved": true,
+      "restartPerformedForEnable": false,
+      "hostRebooted": false,
+      "originalPrivateReceiptSha256": "d0a5fb64c50269a6b79b430ff0896496274d3a087958ee322d9b8dbf3d45bd32"
+    }
+  },
+  "coldBootAcceptance": false,
+  "public443Accepted": false,
+  "turnProtocolAccepted": false,
+  "proxyV2Accepted": false,
+  "realKeysAndHostInventoryOmitted": true
+}
