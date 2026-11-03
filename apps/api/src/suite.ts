@@ -209,8 +209,13 @@ export async function registerSuite(
       )
     ).rows[0];
     assert(
-      account?.password &&
-        (await verifyPassword({ hash: account.password, password })),
+      account?.password,
+      403,
+      "PASSWORD_NOT_SET",
+      "Добавьте пароль IMON Meets по ссылке на подтвержденную почту в настройках безопасности, затем повторите действие.",
+    );
+    assert(
+      await verifyPassword({ hash: account.password, password }),
       403,
       "INVALID_PASSWORD",
       "Неверный пароль.",

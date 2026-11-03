@@ -1,0 +1,72 @@
+{
+  "date": "2026-11-03",
+  "branch": "fix/commercial-identity-20261103",
+  "base": "cef80dd3640a05ee848459c03bd2c4541199832b",
+  "mail_commit": "f3fc65fd50e588f451c2235b621059dbe405da47",
+  "isolation": {
+    "database": "disposable loopback PostgreSQL, unique schema per integration test",
+    "providers": "loopback OAuth issuer and mocked mail transport; browser intercepts every request",
+    "production_mutated": false,
+    "real_mail_sent": false,
+    "real_google_used": false
+  },
+  "verification": [
+    {
+      "unit": "imonmeets-identity-mail-red-20261103",
+      "expected_failures": 3,
+      "reason": "request budget, missing transport quota and final-slot concurrency reproduced"
+    },
+    {
+      "unit": "imonmeets-identity-mfa-red3-20261103",
+      "expected_failures": 1,
+      "reason": "OAuth callback left a provisional full session"
+    },
+    {
+      "unit": "imonmeets-identity-timing-red-20261103",
+      "expected_failures": 1,
+      "reason": "recovery HTTP response waited for held mail provider"
+    },
+    {
+      "unit": "imonmeets-identity-types-20261103",
+      "exit_code": 0,
+      "checks": [
+        "API TypeScript",
+        "web TypeScript",
+        "e2e TypeScript"
+      ]
+    },
+    {
+      "unit": "imonmeets-identity-browser2-20261103",
+      "exit_code": 0,
+      "tests_passed": 1,
+      "browser": "headless Chrome, production Vite bundle, all requests intercepted"
+    },
+    {
+      "unit": "imonmeets-identity-auth-final-20261103",
+      "exit_code": 0,
+      "checks": [
+        "formatter",
+        "API TypeScript",
+        "e2e TypeScript"
+      ],
+      "api_tests_passed": 35,
+      "api_tests_failed": 0,
+      "api_tests_skipped": 0
+    }
+  ],
+  "resources": {
+    "node": "24 via /opt/imon-runtime/node/bin/node",
+    "cpu": "100%",
+    "memory": "2GiB",
+    "verification_lock": "verify.lock",
+    "bounded": true
+  },
+  "fixture_type_fix": "Two assert.ok(c.smtp.from) guards added for the parent integration's wider test typecheck; configured sender value was already exercised by passing tests.",
+  "deployment_contract": {
+    "migration": "unified-mfa-v1 revokes legacy MFA sessions/grants once; preserves factors",
+    "api_stop_grace_period": "35s or more",
+    "google_real_e2e": "separate deployment gate",
+    "email_inbox_acceptance": "separate deployment gate",
+    "mail_ambiguity": "operator reconciliation only; no automatic retry"
+  }
+}

@@ -8,7 +8,13 @@ import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { TrackSource } from "livekit-server-sdk";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
-import { createAuth, createMailer, MailDeliveryError } from "./auth.js";
+import {
+  createAuth,
+  createMailer,
+  MailDeliveryError,
+  drainAuthTasks,
+} from "./auth.js";
+import { registerIdentityRoutes } from "./identity.js";
 import type { Config } from "./config.js";
 import { createPool, transaction } from "./db.js";
 import {
@@ -104,12 +110,13 @@ export async function createApp(
     limiter?: RateLimiter;
     paymentRequest?: typeof fetch;
     auth?: ReturnType<typeof createAuth>;
+    sendMail?: ReturnType<typeof createMailer>;
   } = {},
 ) {
   const pool = options.pool || createPool(c.databaseUrl),
-    auth = options.auth || createAuth(c, pool),
+    sendMail = options.sendMail ?? createMailer(c, pool),
+    auth = options.auth || createAuth(c, pool, sendMail),
     media = options.media || createMedia(c),
-    sendMail = createMailer(c, pool),
     limiter = options.limiter ?? postgresLimiter(pool);
   const app = Fastify({
     logger: options.logger ?? true,
@@ -582,6 +589,7 @@ export async function createApp(
       return reply.send(body);
     },
   });
+  registerIdentityRoutes(app, { c, pool, auth, limiter, sendMail });
   app.get("/api/config", async () => ({
     appName: "IMON Meets",
     embedAllowedOrigins: c.embedAllowedOrigins,
@@ -1419,7 +1427,13 @@ export async function createApp(
       return r.rows[0];
     });
     const inviteUrl = `${c.appUrl}/invite#token=${token}`;
-    let emailDelivery: "not_configured" | "accepted" | "uncertain" | "rejected" | "rate_limited" | "ledger" = "not_configured";
+    let emailDelivery:
+      | "not_configured"
+      | "accepted"
+      | "uncertain"
+      | "rejected"
+      | "rate_limited"
+      | "ledger" = "not_configured";
     if (c.emailConfigured) {
       try {
         await sendMail(
@@ -1430,7 +1444,10 @@ export async function createApp(
         emailDelivery = "accepted";
       } catch (e) {
         emailDelivery = e instanceof MailDeliveryError ? e.kind : "uncertain";
-        req.log.error({ kind: emailDelivery }, "Invitation email delivery failed");
+        req.log.error(
+          { kind: emailDelivery },
+          "Invitation email delivery failed",
+        );
       }
     }
     return { invitation: invitationJson(result), inviteUrl, emailDelivery };
@@ -2098,6 +2115,10 @@ export async function createApp(
     clearInterval(recordingRetryTimer);
   });
   app.addHook("onClose", async () => {
+    if (!(await drainAuthTasks(auth)))
+      app.log.warn(
+        "Authentication tasks reached the shutdown deadline; unresolved deliveries remain blocked by the ledger",
+      );
     if (!options.pool) await pool.end();
   });
   return app;

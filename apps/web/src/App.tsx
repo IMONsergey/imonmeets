@@ -250,6 +250,7 @@ export default function App() {
     "/register",
     "/forgot-password",
     "/reset-password",
+    "/set-password",
     "/verify-email",
   ].includes(path);
   useEffect(() => {

@@ -140,6 +140,10 @@ test(
         loggedIn = false;
         return json({ ok: true });
       }
+      if (path === "/api/me/security")
+        return route.fulfill({
+          json: { hasPassword: true, addPasswordAvailable: true },
+        });
       if (path === "/api/me")
         return loggedIn
           ? json({
