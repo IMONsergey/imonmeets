@@ -1,0 +1,210 @@
+{
+  "schema": 1,
+  "scope": "Disposable IPv4 namespace fixture only; addresses below are synthetic test topology, not host inventory.",
+  "attempt": 1,
+  "sourceCommit": "e953638c9b1f171656a9cdfa1334e617880f59c5",
+  "harnessSha256": "e40a000c540c4a2370dcd840e50fcea6916ac7de7adc9d3312ae0633a8c882ec",
+  "generatorSha256": "354afdfa64a104b94313e69c763b4e0498dfcbd31e00494c39763aeb29346bff",
+  "originalPrivateReceiptSha256": "9e72f454a757e73a40380e2854fca39858f81bb40482a9e4178c00e3de0f1ebc",
+  "status": "FAIL",
+  "failure": {
+    "code": "HEALTHY_TCP_8445_FAILED",
+    "returncode": null
+  },
+  "elapsedSeconds": 4.45,
+  "allowedTcpPorts": [
+    5349,
+    8445,
+    18080
+  ],
+  "udpPort": 21843,
+  "checks": {
+    "capturePositiveControl": {
+      "status": "PASS",
+      "captures": {
+        "edge": {
+          "frames": 8,
+          "ipv4": 2,
+          "privateIpv4": 1,
+          "txPrivateIpv4": 1,
+          "rxPrivateIpv4": 0,
+          "udpIpv4": 1,
+          "kernelPackets": 8,
+          "kernelDrops": 0
+        },
+        "main": {
+          "frames": 6,
+          "ipv4": 2,
+          "privateIpv4": 1,
+          "txPrivateIpv4": 0,
+          "rxPrivateIpv4": 1,
+          "udpIpv4": 1,
+          "kernelPackets": 6,
+          "kernelDrops": 0
+        }
+      }
+    },
+    "realNftSyntaxAndKernelApply": {
+      "status": "PASS"
+    },
+    "healthyWithLaterDropFirewall": {
+      "status": "PASS",
+      "tcp": {
+        "5349": {
+          "connected": true,
+          "echoed": true,
+          "stage": "echo",
+          "errno": null,
+          "source": "10.203.77.1"
+        },
+        "8445": {
+          "connected": true,
+          "echoed": true,
+          "stage": "echo",
+          "errno": null,
+          "source": "10.203.77.1"
+        },
+        "18080": {
+          "connected": true,
+          "echoed": true,
+          "stage": "echo",
+          "errno": null,
+          "source": "10.203.77.1"
+        }
+      },
+      "handshakesObserved": true,
+      "withoutExplicitTcpAllow": {
+        "connected": false,
+        "echoed": false,
+        "stage": "connect",
+        "errno": null
+      }
+    },
+    "healthyNoWanLeak": {
+      "status": "PASS",
+      "newPrivateIpv4Frames": 0,
+      "captures": {
+        "edge": {
+          "frames": 53,
+          "ipv4": 39,
+          "privateIpv4": 1,
+          "txPrivateIpv4": 1,
+          "rxPrivateIpv4": 0,
+          "udpIpv4": 37,
+          "kernelPackets": 53,
+          "kernelDrops": 0
+        },
+        "main": {
+          "frames": 51,
+          "ipv4": 39,
+          "privateIpv4": 1,
+          "txPrivateIpv4": 0,
+          "rxPrivateIpv4": 1,
+          "udpIpv4": 37,
+          "kernelPackets": 51,
+          "kernelDrops": 0
+        }
+      }
+    },
+    "deniedOtherListeningPort": {
+      "status": "PASS",
+      "probe": {
+        "connected": false,
+        "echoed": false,
+        "stage": "connect",
+        "errno": null
+      }
+    },
+    "deniedWrongSource": {
+      "status": "PASS",
+      "probe": {
+        "connected": false,
+        "echoed": false,
+        "stage": "connect",
+        "errno": null
+      }
+    },
+    "deniedTrafficNoWanLeak": {
+      "status": "PASS",
+      "newPrivateIpv4Frames": 0,
+      "captures": {
+        "edge": {
+          "frames": 53,
+          "ipv4": 39,
+          "privateIpv4": 1,
+          "txPrivateIpv4": 1,
+          "rxPrivateIpv4": 0,
+          "udpIpv4": 37,
+          "kernelPackets": 53,
+          "kernelDrops": 0
+        },
+        "main": {
+          "frames": 51,
+          "ipv4": 39,
+          "privateIpv4": 1,
+          "txPrivateIpv4": 0,
+          "rxPrivateIpv4": 1,
+          "udpIpv4": 37,
+          "kernelPackets": 51,
+          "kernelDrops": 0
+        }
+      }
+    },
+    "linkDownRetainsGuardNoWanLeak": {
+      "status": "PASS",
+      "newPrivateIpv4Frames": 0,
+      "captures": {
+        "edge": {
+          "frames": 53,
+          "ipv4": 39,
+          "privateIpv4": 1,
+          "txPrivateIpv4": 1,
+          "rxPrivateIpv4": 0,
+          "udpIpv4": 37,
+          "kernelPackets": 53,
+          "kernelDrops": 0
+        },
+        "main": {
+          "frames": 51,
+          "ipv4": 39,
+          "privateIpv4": 1,
+          "txPrivateIpv4": 0,
+          "rxPrivateIpv4": 1,
+          "udpIpv4": 37,
+          "kernelPackets": 51,
+          "kernelDrops": 0
+        }
+      }
+    },
+    "linkUpRecovery": {
+      "status": "PENDING"
+    },
+    "interfaceDeletedTerminalUnreachableNoWanLeak": {
+      "status": "PENDING"
+    },
+    "policyRemovedUnboundDefaultFallbackNoWanLeak": {
+      "status": "PENDING"
+    },
+    "hostNetworkPreservation": {
+      "status": "PASS"
+    },
+    "ownedResourceCleanup": {
+      "status": "PASS"
+    }
+  },
+  "cleanup": {
+    "status": "PASS",
+    "errors": [],
+    "temporaryFilesRemoved": true
+  },
+  "hostNetworkUnchanged": true,
+  "hostInventoryOmitted": true,
+  "ephemeralNamespaceIdentifiersOmitted": true,
+  "keysAndGeneratedPeerConfigsOmitted": true,
+  "temporaryKeysRemoved": true,
+  "liveTunnelAccepted": false,
+  "public443Accepted": false,
+  "bootPersistenceAccepted": false,
+  "ipv6RuntimeAccepted": false,
+  "forwardingRuntimeAccepted": false
+}

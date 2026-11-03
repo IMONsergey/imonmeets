@@ -1,0 +1,547 @@
+{
+  "schema": 1,
+  "status": "NATIVE_SYNTAX_PARSED_BIND_BOUNDARY_NOT_ACCEPTED",
+  "sourceCommit": "e9b685240e765e51467c5de0c2e9e542450a764b",
+  "checkedAt": "2026-11-03T16:48:24.611191+00:00",
+  "harnessSha256": "ba52b62507b00e926d830b6c8ea83731673fd30e3b05fec0bd860fe3f1224369",
+  "executionUid": 1000,
+  "executionEuid": 1000,
+  "executionUser": "sergey",
+  "sourceHashes": {
+    "scripts/prepare-edge-certificates.mjs": "0d08764c46646deeb04a1d8c01180e4d290243f420e5faff57105f2aedcbf142",
+    "scripts/edge-certificate-policy.mjs": "649d3ea75d5ddabeb47868c10adc4e18a9d4d550298da9ecbe262e84dbad4514",
+    "scripts/prepare-edge-main-ingress.mjs": "828a5c33baf3a356e6227d57cddc0b118718e7e1786cfd10bde6c3a3d5de2f39",
+    "scripts/prepare-edge-vps-ingress.mjs": "8668b841bd9a2dcde7b8509494b9d7e1ffe60429e9486a35624c8b311fc91828",
+    "scripts/prepare-ingress443.mjs": "2e8812bd2721f9b63b20b74252ad12a104c4e152829feb2d9000a90400f125a7",
+    "scripts/ingress-nginx-tls.mjs": "7ab6007bd7f162e3fd4917fad47733a8f929baafe8f6147bf5f23b29d932da8c"
+  },
+  "fixtures": [
+    {
+      "path": "certificate-candidate/imonmeets-edge-nginx.service",
+      "sha256": "91a6961a257f7f36ff7fd36b43f9a93d0de8ad091ce9610aad49503ea0ca8220",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/imonmeets-main-cert-renew.service",
+      "sha256": "55ec12f53f679e93e96d096bf231f3c139c762493b838ee9d74648c6ad6598c2",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/imonmeets-main-cert-renew.timer",
+      "sha256": "d44ac647d8d969c7d2e3afce56ed7823205c6331b41de2add0f56c7caa344759",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/imonmeets-witness-cert-renew.service",
+      "sha256": "2c90f0cb5f35ffbef75afbfae94fe073cf76546ddd81be67e9d93e3981c23a0a",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/imonmeets-witness-cert-renew.timer",
+      "sha256": "2f0f7fbedd6ad24de7507c9d59ad7c9b468baebd7f08ae999f1b525bbf631143",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/main-certbot.ini",
+      "sha256": "29383a987fe43795f40393726d62216fe2e2b6905573ef218eee8dc32db10cd8",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/main-renewal.json",
+      "sha256": "9320157cd1d1934eb68ee81f32b1d03f7ec4570ec32011bfd116a65144280d54",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/nginx.edge-http.conf",
+      "sha256": "7868ed4569150a732a183456144765ed6347ebffea3e32dc2ece4f75e32b1291",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/nginx.edge-witness-tls.conf",
+      "sha256": "21f277ed9fb3a443d0685a1b4d9b4bf9f252b877276f2df3e8a06fc750dfc191",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/nginx.edge.conf",
+      "sha256": "3cb06581f745fe05ce822c5a4a5f680dd2e2cf51dad0d946824b44a8c12fe7d2",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/nginx.main-acme.conf",
+      "sha256": "c5a2f1d186646a45e242905040360000227a308ea0d9da3c5fc913d3565a333d",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/plan.json",
+      "sha256": "f2eb8e282fd631ba0c42509bd527a9bb01eb2ff275eb445a1a84f32e008e5a46",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/witness-certbot.ini",
+      "sha256": "29383a987fe43795f40393726d62216fe2e2b6905573ef218eee8dc32db10cd8",
+      "mode": "0600"
+    },
+    {
+      "path": "certificate-candidate/witness-renewal.json",
+      "sha256": "509252f8c4175a5ecd5d825db5658e9a42c619375f92afaafeed174b1358262e",
+      "mode": "0600"
+    },
+    {
+      "path": "main-candidate/haproxy-main.cfg",
+      "sha256": "d03850e15eb76feab16b841b6a20bdb78fc5ad974738bdd60f4820d2dc08b5e5",
+      "mode": "0600"
+    },
+    {
+      "path": "main-candidate/imonmeets-commercial-trust.conf",
+      "sha256": "cfe93687579419cb0145f003d41aec14474fb953fe375f15ce8ef69db6bf064e",
+      "mode": "0600"
+    },
+    {
+      "path": "main-candidate/imonmeets-signaling-auth.conf",
+      "sha256": "b7ada7551b875e1475d07d810f1bd78928a6b1c3f184efe43aaf2830931173b8",
+      "mode": "0600"
+    },
+    {
+      "path": "main-candidate/nginx.tls.conf",
+      "sha256": "7ea108a5912b535e7c2185ca1abc5b20aeca489a1eefe166dde2d5585dbd6de8",
+      "mode": "0600"
+    },
+    {
+      "path": "main-candidate/plan.json",
+      "sha256": "bd1bf8d3f19c315a681589440abfe5a61d7ffd4035a93ab20477891c50ee4ff8",
+      "mode": "0600"
+    },
+    {
+      "path": "adapted/nginx.edge-http.conf",
+      "originalSha256": "7868ed4569150a732a183456144765ed6347ebffea3e32dc2ece4f75e32b1291",
+      "sha256": "3986fab20061e18bccad9fb4843c2348b6168b9e175b4d656b82156d2f904d08",
+      "mode": "0600"
+    },
+    {
+      "path": "adapted/nginx.main-acme.conf",
+      "originalSha256": "c5a2f1d186646a45e242905040360000227a308ea0d9da3c5fc913d3565a333d",
+      "sha256": "e8a4341fbf245fb7467993f7dce6ad7c560494b5b249f39d5cb5458c22204e4f",
+      "mode": "0600"
+    },
+    {
+      "path": "adapted/nginx.edge-witness-tls.conf",
+      "originalSha256": "21f277ed9fb3a443d0685a1b4d9b4bf9f252b877276f2df3e8a06fc750dfc191",
+      "sha256": "16eb225b8ca389502b3cc0f498335d5543ef86fdca8790903db74309ff87b81e",
+      "mode": "0600"
+    },
+    {
+      "path": "adapted/nginx.tls.conf",
+      "originalSha256": "7ea108a5912b535e7c2185ca1abc5b20aeca489a1eefe166dde2d5585dbd6de8",
+      "sha256": "5ef3bd1f3f9a409404e7d846b435810a1d1a723a442a06a2a2f20d06d7526245",
+      "mode": "0600"
+    }
+  ],
+  "adaptations": [
+    {
+      "file": "nginx.edge-http.conf",
+      "from": "/dev/null",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/nginx.edge-http.conf.errors",
+      "count": 6,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.edge-http.conf",
+      "from": "/var/lib/imonmeets-witness-acme",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/witness-webroot",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.main-acme.conf",
+      "from": "/dev/null",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/nginx.main-acme.conf.errors",
+      "count": 2,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.main-acme.conf",
+      "from": "/var/lib/imonmeets-acme",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-webroot",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.edge-witness-tls.conf",
+      "from": "/dev/null",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/nginx.edge-witness-tls.conf.errors",
+      "count": 2,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.edge-witness-tls.conf",
+      "from": "/etc/imonmeets/tls/witness/current/fullchain.pem",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/witness-synthetic-certificate/fullchain.pem",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.edge-witness-tls.conf",
+      "from": "/etc/imonmeets/tls/witness/current/privkey.pem",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/witness-synthetic-certificate/privkey.pem",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.tls.conf",
+      "from": "/dev/null",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/nginx.tls.conf.errors",
+      "count": 4,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.tls.conf",
+      "from": "/etc/imonmeets/tls/main/current/fullchain.pem",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-synthetic-certificate/fullchain.pem",
+      "count": 3,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.tls.conf",
+      "from": "/etc/imonmeets/tls/main/current/privkey.pem",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-synthetic-certificate/privkey.pem",
+      "count": 3,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.tls.conf",
+      "from": "/etc/nginx/snippets/imonmeets-commercial-trust.conf",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-candidate/imonmeets-commercial-trust.conf",
+      "count": 2,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.tls.conf",
+      "from": "/etc/nginx/snippets/imonmeets-signaling-auth.conf",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-candidate/imonmeets-signaling-auth.conf",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "edge-http-bootstrap",
+      "kind": "isolated-parser-root",
+      "sha256": "8ab6e8d7a1b3c037d303f9cbc4ed92cd4cd4c6feb4f9404977266bc28313bca2",
+      "pidLogTempPrefix": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/edge-http-bootstrap-prefix",
+      "productionRootNotLoaded": true
+    },
+    {
+      "file": "main-loopback-acme",
+      "kind": "isolated-parser-root",
+      "sha256": "c6c8de549459d38fa82988c6b178328772e4a52a0bc68ff2ac95b44a4575bff9",
+      "pidLogTempPrefix": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-loopback-acme-prefix",
+      "productionRootNotLoaded": true
+    },
+    {
+      "file": "witness-loopback-tls",
+      "kind": "isolated-parser-root",
+      "sha256": "65611f3f9696277b6c11f8166558f0ab60515c1897f4c16b2a14d4e0da0d9429",
+      "pidLogTempPrefix": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/witness-loopback-tls-prefix",
+      "productionRootNotLoaded": true
+    },
+    {
+      "file": "main-protected-tls",
+      "kind": "isolated-parser-root",
+      "sha256": "52bbf356fcf36b8ef1a1be84e3ff616fcd99f8342bc5395552c44720e50a3dd1",
+      "pidLogTempPrefix": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-protected-tls-prefix",
+      "productionRootNotLoaded": true
+    },
+    {
+      "file": "combined-main-http-context",
+      "kind": "isolated-parser-root",
+      "sha256": "6a90d9cdbaf1deb95a050a3f556bf9166f32054f4e4694e051e690539f331160",
+      "pidLogTempPrefix": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/combined-main-http-context-prefix",
+      "productionRootNotLoaded": true
+    },
+    {
+      "file": "nginx.edge.conf",
+      "from": "/run/imonmeets-edge-nginx/nginx.pid",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/nginx.pid",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.edge.conf",
+      "from": "/dev/null",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/error.log",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.edge.conf",
+      "from": "/tmp/imonmeets-edge-client-body",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/client-body-temp",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.edge.conf",
+      "from": "/tmp/imonmeets-edge-proxy",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/proxy-temp",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.edge.conf",
+      "from": "/etc/imonmeets/edge-nginx/http.conf",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/adapted/nginx.edge-http.conf",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.edge.conf",
+      "from": "/etc/imonmeets/edge-nginx/tls/*.conf",
+      "to": "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/tls/*.conf",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    },
+    {
+      "file": "nginx.edge.conf",
+      "from": "http {\n",
+      "to": "http {\n    fastcgi_temp_path /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/fastcgi-temp;\n    uwsgi_temp_path /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/uwsgi-temp;\n    scgi_temp_path /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/scgi-temp;\n",
+      "count": 1,
+      "purpose": "owned fixture path only"
+    }
+  ],
+  "checks": [
+    {
+      "name": "edge-http-bootstrap",
+      "argv": [
+        "/usr/sbin/nginx",
+        "-e",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/edge-http-bootstrap-prefix/startup.log",
+        "-p",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/edge-http-bootstrap-prefix/",
+        "-c",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/edge-http-bootstrap-prefix/nginx.conf",
+        "-t"
+      ],
+      "exitCode": 1,
+      "status": "FAIL",
+      "stdout": "",
+      "stderr": "nginx: the configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/edge-http-bootstrap-prefix/nginx.conf syntax is ok\nnginx: [emerg] bind() to 94.249.188.77:80 failed (99: Cannot assign requested address)\nnginx: configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/edge-http-bootstrap-prefix/nginx.conf test failed",
+      "syntaxReportedOk": true,
+      "completeTestSucceeded": false
+    },
+    {
+      "name": "main-loopback-acme",
+      "argv": [
+        "/usr/sbin/nginx",
+        "-e",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-loopback-acme-prefix/startup.log",
+        "-p",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-loopback-acme-prefix/",
+        "-c",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-loopback-acme-prefix/nginx.conf",
+        "-t"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": "nginx: the configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-loopback-acme-prefix/nginx.conf syntax is ok\nnginx: configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-loopback-acme-prefix/nginx.conf test is successful",
+      "syntaxReportedOk": true,
+      "completeTestSucceeded": true
+    },
+    {
+      "name": "witness-loopback-tls",
+      "argv": [
+        "/usr/sbin/nginx",
+        "-e",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/witness-loopback-tls-prefix/startup.log",
+        "-p",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/witness-loopback-tls-prefix/",
+        "-c",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/witness-loopback-tls-prefix/nginx.conf",
+        "-t"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": "nginx: the configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/witness-loopback-tls-prefix/nginx.conf syntax is ok\nnginx: configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/witness-loopback-tls-prefix/nginx.conf test is successful",
+      "syntaxReportedOk": true,
+      "completeTestSucceeded": true
+    },
+    {
+      "name": "main-protected-tls",
+      "argv": [
+        "/usr/sbin/nginx",
+        "-e",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-protected-tls-prefix/startup.log",
+        "-p",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-protected-tls-prefix/",
+        "-c",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-protected-tls-prefix/nginx.conf",
+        "-t"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": "nginx: the configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-protected-tls-prefix/nginx.conf syntax is ok\nnginx: configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/main-protected-tls-prefix/nginx.conf test is successful",
+      "syntaxReportedOk": true,
+      "completeTestSucceeded": true
+    },
+    {
+      "name": "combined-main-http-context",
+      "argv": [
+        "/usr/sbin/nginx",
+        "-e",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/combined-main-http-context-prefix/startup.log",
+        "-p",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/combined-main-http-context-prefix/",
+        "-c",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/combined-main-http-context-prefix/nginx.conf",
+        "-t"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": "nginx: the configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/combined-main-http-context-prefix/nginx.conf syntax is ok\nnginx: configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/combined-main-http-context-prefix/nginx.conf test is successful",
+      "syntaxReportedOk": true,
+      "completeTestSucceeded": true
+    },
+    {
+      "name": "generated-edge-root-with-empty-tls-directory",
+      "argv": [
+        "/usr/sbin/nginx",
+        "-e",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/startup.log",
+        "-p",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/",
+        "-c",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/nginx.conf",
+        "-t"
+      ],
+      "exitCode": 1,
+      "status": "FAIL",
+      "stdout": "",
+      "stderr": "nginx: [warn] the \"user\" directive makes sense only if the master process runs with super-user privileges, ignored in /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/nginx.conf:1\nnginx: the configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/nginx.conf syntax is ok\nnginx: [emerg] bind() to 94.249.188.77:80 failed (99: Cannot assign requested address)\nnginx: configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/nginx.conf test failed",
+      "syntaxReportedOk": true,
+      "completeTestSucceeded": false
+    },
+    {
+      "name": "generated-edge-root-with-witness-tls",
+      "argv": [
+        "/usr/sbin/nginx",
+        "-e",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/startup.log",
+        "-p",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/",
+        "-c",
+        "/home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/nginx.conf",
+        "-t"
+      ],
+      "exitCode": 1,
+      "status": "FAIL",
+      "stdout": "",
+      "stderr": "nginx: [warn] the \"user\" directive makes sense only if the master process runs with super-user privileges, ignored in /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/nginx.conf:1\nnginx: the configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/nginx.conf syntax is ok\nnginx: [emerg] bind() to 94.249.188.77:80 failed (99: Cannot assign requested address)\nnginx: configuration file /home/sergey/.local/state/imonmeets-edge-acme-20261103/nginx-syntax-l_9xgmo0/generated-edge-prefix/nginx.conf test failed",
+      "syntaxReportedOk": true,
+      "completeTestSucceeded": false
+    }
+  ],
+  "nginxBinary": "/usr/sbin/nginx",
+  "nginxBinarySha256": "5bfff15e0a9e0bce5c71be8179d77880f9b17c3f575194ff93c912a415756eed",
+  "nginxVersion": "nginx version: nginx/1.24.0 (Ubuntu)",
+  "nginxBuild": "nginx version: nginx/1.24.0 (Ubuntu)\nbuilt with OpenSSL 3.0.13 30 Jan 2024\nTLS SNI support enabled\nconfigure arguments: --with-cc-opt='-g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/nginx-eG8bTS/nginx-1.24.0=. -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/nginx-eG8bTS/nginx-1.24.0=/usr/src/nginx-1.24.0-2ubuntu7.19 -fPIC -Wdate-time -D_FORTIFY_SOURCE=3' --with-ld-opt='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -Wl,-z,relro -Wl,-z,now -fPIC' --prefix=/usr/share/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=stderr --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --modules-path=/usr/lib/nginx/modules --http-client-body-temp-path=/var/lib/nginx/body --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --http-proxy-temp-path=/var/lib/nginx/proxy --http-scgi-temp-path=/var/lib/nginx/scgi --http-uwsgi-temp-path=/var/lib/nginx/uwsgi --with-compat --with-debug --with-pcre-jit --with-http_ssl_module --with-http_stub_status_module --with-http_realip_module --with-http_auth_request_module --with-http_v2_module --with-http_dav_module --with-http_slice_module --with-threads --with-http_addition_module --with-http_flv_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_mp4_module --with-http_random_index_module --with-http_secure_link_module --with-http_sub_module --with-mail_ssl_module --with-stream_ssl_module --with-stream_ssl_preread_module --with-stream_realip_module --with-http_geoip_module=dynamic --with-http_image_filter_module=dynamic --with-http_perl_module=dynamic --with-http_xslt_module=dynamic --with-mail=dynamic --with-stream=dynamic --with-stream_geoip_module=dynamic",
+  "fixtureHostnames": [
+    "meets.imon.world",
+    "rtc.imon.world",
+    "recordings.imon.world",
+    "turn.imon.world",
+    "witness.imon.world"
+  ],
+  "fixtureAddresses": {
+    "edgePublic": "94.249.188.77",
+    "vpnMainPublic": "94.249.186.240",
+    "edgeTunnel": "10.203.77.1",
+    "mainTunnel": "10.203.77.2"
+  },
+  "listenAddressesAdapted": false,
+  "upstreamAddressesAdapted": false,
+  "privateEnvironmentRead": false,
+  "realPrivateKeysRead": false,
+  "realPrivateIncludesRead": false,
+  "fixtureSecretsOnly": true,
+  "externalNetworkRequests": false,
+  "servicesReloaded": false,
+  "nativeOwnershipAccepted": false,
+  "turnRuntimeAccepted": false,
+  "httpRoutingAccepted": false,
+  "tlsServingAccepted": false,
+  "public443Accepted": false,
+  "legacyRenewTurn": {
+    "path": "/usr/local/lib/imonmeets/renew-turn",
+    "privateEnvironmentRead": false,
+    "scriptBodyReturned": false,
+    "status": "READ_ONLY_INSPECTED",
+    "sha256": "b672f6410a5a6d045a4d875821a0aa210f0351119b9dfe5d05fe875d60a273fe",
+    "mode": "0o755",
+    "ownerUid": 0,
+    "ownerGid": 0,
+    "invokesPrepareTurn": true,
+    "usesCertOnly": true,
+    "usesLineageArgument": true,
+    "usesImplicitDotEnv": true,
+    "usesImplicitComposeRestart": true,
+    "usesExplicitComposeProject": false,
+    "usesExplicitComposeFiles": false,
+    "hasExpectedLineageGuard": true,
+    "referencesDefaultPreviewLineage": true,
+    "referencesTurnPrivateDirectory": true,
+    "literalProjectDirectory": "/home/sergey/imonmeets",
+    "inferredTurnDirectory": "/home/sergey/imonmeets/deploy/turn-private",
+    "targetInference": "literal cd plus relative path; environment overrides were not read"
+  },
+  "syntheticRuntimeContextsOnly": true,
+  "fixtureDirectoryRemoved": true,
+  "fixtureKeysRemoved": true,
+  "completedAt": "2026-11-03T16:48:24.931030+00:00",
+  "originalAttemptReceiptSha256": "a489c6239d3ce091ed219f477c13aefff559f13e44d9ac694b6edcd23ca4ea32",
+  "originalAttemptStatus": "BLOCKED_NATIVE_NGINX_SYNTAX",
+  "executedHarnessArtifact": "docs/verification/edge-certificates-nginx-attempt-20261103.py.txt",
+  "currentHarnessDefaultGuard": "REFUSES_WITHOUT_EXPLICIT_APPROVED_TEST_SOCKET_BIND_CONTEXT",
+  "currentHarnessDefaultGuardLocalCheck": "PASS_WITHOUT_NGINX_INVOCATION",
+  "syntaxReportedOkCount": 7,
+  "completeTestExitZeroCount": 4,
+  "edgeBindFailureCount": 3,
+  "socketBindAttemptObserved": true,
+  "socketOperationsInstrumented": false,
+  "briefLoopbackBindsOrListeners": "UNKNOWN_NOT_INSTRUMENTED",
+  "nativeNonListeningBoundaryAccepted": false,
+  "nginxWorkerCycleStartRequested": false,
+  "originalAssertionCorrection": {
+    "field": "listenersStarted",
+    "originalValue": false,
+    "replacement": "Unknown transient test-mode socket activity; nginx -t reached bind and may listen",
+    "reason": "Test mode does not guarantee no socket operations"
+  },
+  "persistentProductionConfigurationModified": false,
+  "postAttemptReadOnlyObservation": {
+    "checkedAt": "2026-11-03T16:54:35.986711+00:00",
+    "nginxTestRepeated": false,
+    "nginxService": {
+      "exitCode": 0,
+      "state": "active"
+    },
+    "tcpListeners": {
+      "exitCode": 0,
+      "selectedLocalAddresses": [
+        "94.249.186.240:80",
+        "94.249.186.240:443",
+        "94.249.186.240:5349",
+        "94.249.186.240:5349",
+        "94.249.186.240:8443"
+      ],
+      "fixtureLoopbackPortsStillListening": []
+    },
+    "existingHealth": {
+      "url": "https://meets.imon.world:8443/api/health",
+      "resolvedAddress": "94.249.186.240",
+      "exitCode": 0,
+      "httpStatus": "200",
+      "bodyReturned": false
+    }
+  }
+}

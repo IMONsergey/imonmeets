@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "status": "ACTIVE_HANDSHAKE_VERIFIED_CONFINEMENT_PENDING",
+  "scope": "Dedicated transport commissioning only; no native application acceptance claim.",
+  "originalPrivateReceiptSha256": "d35c63722f50c9eda9a52ba5e655aacb9f15c3aac813f68687edd5c7e5e28ff3",
+  "phases": [
+    {
+      "role": "main",
+      "phase": "preflight",
+      "status": "PASS",
+      "preflightPassed": true,
+      "health": {
+        "httpStatus": 200,
+        "status": "ok",
+        "mediaConfigured": true
+      }
+    },
+    {
+      "role": "edge",
+      "phase": "preflight",
+      "status": "PASS",
+      "preflightPassed": true,
+      "health": null
+    },
+    {
+      "role": "main",
+      "phase": "firewall",
+      "status": "PASS",
+      "exactUfwRulesAdded": 2,
+      "unrelatedIptablesPreserved": true
+    },
+    {
+      "role": "main",
+      "phase": "guard",
+      "status": "PASS",
+      "guardVerified": true,
+      "terminalRouteBeforeLink": true,
+      "transportLinkAbsent": true
+    },
+    {
+      "role": "edge",
+      "phase": "guard",
+      "status": "PASS",
+      "guardVerified": true,
+      "terminalRouteBeforeLink": true,
+      "transportLinkAbsent": true
+    },
+    {
+      "role": "main",
+      "phase": "link",
+      "status": "PASS",
+      "ownedTransportLinkStarted": true
+    },
+    {
+      "role": "edge",
+      "phase": "link",
+      "status": "PASS",
+      "ownedTransportLinkStarted": true
+    },
+    {
+      "role": "main",
+      "phase": "verify",
+      "status": "PASS",
+      "health": {
+        "httpStatus": 200,
+        "status": "ok",
+        "mediaConfigured": true
+      },
+      "handshakeVerified": true,
+      "unrelatedNetworkAndListenersPreserved": true
+    },
+    {
+      "role": "edge",
+      "phase": "verify",
+      "status": "PASS",
+      "health": null,
+      "handshakeVerified": true,
+      "unrelatedNetworkAndListenersPreserved": true
+    }
+  ],
+  "wireGuardHandshakeVerified": true,
+  "nestedNamespacePrefixReviewComplete": true,
+  "existingMainHealthPreserved": true,
+  "unrelatedRoutesRulesFirewallAndListenersPreserved": true,
+  "isolatedNamespaceSuitePassedPreviously": true,
+  "livePrivateTcpAndStopProofAccepted": false,
+  "nativeApplicationAcceptanceEvaluated": false,
+  "bootEnabled": false,
+  "ingressChanged": false,
+  "dnsChanged": false,
+  "public443Accepted": false,
+  "realKeysAndHostInventoryOmitted": true
+}

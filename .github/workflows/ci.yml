@@ -7,6 +7,11 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    outputs:
+      candidate_artifact_id: ${{ steps.candidate-image-upload.outputs.artifact-id }}
+      candidate_manifest_sha256: ${{ steps.candidate-image-export.outputs.manifest_sha256 }}
+      candidate_archive_sha256: ${{ steps.candidate-image-export.outputs.archive_sha256 }}
+      candidate_image_id: ${{ steps.candidate-image-export.outputs.image_id }}
     services:
       postgres:
         image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
@@ -55,6 +60,13 @@ jobs:
           scripts/test-external-media-policy.mjs
           scripts/test-google-oauth-policy.mjs
           scripts/test-edge-vps-ingress.mjs
+          scripts/test-edge-main-ingress.mjs
+          scripts/test-edge-certificates.mjs
+      - name: Dedicated edge transport policy and lifecycle
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-edge-transport.py
+          PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-edge-transport-lifecycle.py
+          PYTHONDONTWRITEBYTECODE=1 python3 scripts/verify-edge-transport-netns.py --self-check
       - name: Deletion deployment manifests use existing private mounts
         run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-deletion-compose.py
       - name: Merged Compose cutover identity and private configuration preflight
@@ -66,6 +78,8 @@ jobs:
       - name: Browser state and accessibility regression checks
         run: |
           IMON_BROWSER_EXECUTABLE="$(node --input-type=module -e 'import { chromium } from "@playwright/test"; console.log(chromium.executablePath())')" npm run test:ui
+      - name: Candidate image transfer identity and refusal regressions
+        run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-ci-candidate-image.py
       - name: Build immutable candidate and verify its installed npm inventory
         run: |
           python3 scripts/build-release-image.py --output-dir "$RUNNER_TEMP/imonmeets-candidate-image"
@@ -88,3 +102,81 @@ jobs:
           path: |
             ${{ runner.temp }}/imonmeets-candidate-image/build-receipt.json
             ${{ runner.temp }}/imonmeets-runtime-evidence/
+      - name: Export the already verified immutable candidate image
+        id: candidate-image-export
+        if: github.event_name == 'push' && github.ref == 'refs/heads/release/edge-transport-acme-20261103' && github.repository == 'IMONsergey/imonmeets'
+        timeout-minutes: 10
+        run: |
+          python3 scripts/ci-candidate-image.py export \
+            --source-commit "$GITHUB_SHA" \
+            --build-receipt "$RUNNER_TEMP/imonmeets-candidate-image/build-receipt.json" \
+            --inventory-directory "$RUNNER_TEMP/imonmeets-runtime-evidence/runtime-inventory" \
+            --directory "$RUNNER_TEMP/imonmeets-image-transfer"
+      - name: Preserve the bounded candidate image transfer
+        id: candidate-image-upload
+        if: github.event_name == 'push' && github.ref == 'refs/heads/release/edge-transport-acme-20261103' && github.repository == 'IMONsergey/imonmeets'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: imonmeets-image-transfer-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/imonmeets-image-transfer/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+          overwrite: false
+          include-hidden-files: false
+
+  publish-candidate-image:
+    needs: verify
+    if: needs.verify.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/release/edge-transport-acme-20261103' && github.repository == 'IMONsergey/imonmeets'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    concurrency:
+      group: imonmeets-candidate-release-${{ github.sha }}
+      cancel-in-progress: false
+    steps:
+      - name: Check out the trusted verifier at the exact successful source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Download only this run's immutable transfer artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          artifact-ids: ${{ needs.verify.outputs.candidate_artifact_id }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/imonmeets-image-transfer
+      - name: Verify source, image, payload and evidence identities
+        env:
+          IMON_EXPECTED_MANIFEST_SHA256: ${{ needs.verify.outputs.candidate_manifest_sha256 }}
+          IMON_EXPECTED_ARCHIVE_SHA256: ${{ needs.verify.outputs.candidate_archive_sha256 }}
+          IMON_EXPECTED_IMAGE_ID: ${{ needs.verify.outputs.candidate_image_id }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python3 scripts/ci-candidate-image.py verify \
+            --source-commit "$GITHUB_SHA" \
+            --directory "$RUNNER_TEMP/imonmeets-image-transfer" \
+            --expected-manifest-sha256 "$IMON_EXPECTED_MANIFEST_SHA256" \
+            --expected-archive-sha256 "$IMON_EXPECTED_ARCHIVE_SHA256" \
+            --expected-image-id "$IMON_EXPECTED_IMAGE_ID" \
+            --notes-file "$RUNNER_TEMP/imonmeets-candidate-notes.md"
+      - name: Publish a new candidate prerelease without replacing existing assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/ci-candidate-image.py check-release-absent --source-commit "$GITHUB_SHA"
+          IMON_TRANSFER_DIR="$RUNNER_TEMP/imonmeets-image-transfer"
+          gh release create "candidate-$GITHUB_SHA" \
+            "$IMON_TRANSFER_DIR/imonmeets-app-$GITHUB_SHA.tar.gz" \
+            "$IMON_TRANSFER_DIR/transfer-manifest.json" \
+            "$IMON_TRANSFER_DIR/SHA256SUMS" \
+            "$IMON_TRANSFER_DIR/build-receipt.json" \
+            "$IMON_TRANSFER_DIR/inventory-receipt.json" \
+            "$IMON_TRANSFER_DIR/installed-npm-tree.json" \
+            "$IMON_TRANSFER_DIR/installed-npm-inventory.json" \
+            "$IMON_TRANSFER_DIR/dependency-lock-sbom.cdx.json" \
+            "$IMON_TRANSFER_DIR/runtime-npm-sbom.cdx.json" \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --prerelease --latest=false --title "IMON Meets candidate $GITHUB_SHA" \
+            --notes-file "$RUNNER_TEMP/imonmeets-candidate-notes.md"

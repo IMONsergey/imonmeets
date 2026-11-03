@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "status": "READ_ONLY_SANITIZED_SNAPSHOT",
+  "observedAt": "2026-11-03T16:34:58.997395+00:00",
+  "privateIncludesRead": false,
+  "privateKeysRead": false,
+  "serviceChanges": false,
+  "files": [
+    {
+      "path": "/etc/nginx/conf.d/imonmeets-public.conf",
+      "readable": true,
+      "sha256": "3e7ecc5a093ddc644e34d93b3884dc9a504339f13040888e1f114d2de4d95553",
+      "serverBlocks": [
+        {
+          "serverNames": [
+            "imonmeets-api.94-249-186-240.sslip.io imonmeets-rtc.94-249-186-240.sslip.io"
+          ],
+          "listeners": [
+            "94.249.186.240:80"
+          ],
+          "directLoopbackUpstreams": [],
+          "authRequestDirectivePresent": false,
+          "includePaths": [],
+          "locationSelectors": [
+            "^~ /.well-known/acme-challenge/ ",
+            "/ "
+          ]
+        },
+        {
+          "serverNames": [
+            "imonmeets-api.94-249-186-240.sslip.io"
+          ],
+          "listeners": [
+            "94.249.186.240:8443 ssl"
+          ],
+          "directLoopbackUpstreams": [
+            "http://127.0.0.1:3540",
+            "http://127.0.0.1:8333"
+          ],
+          "authRequestDirectivePresent": false,
+          "includePaths": [
+            "/etc/nginx/snippets/imonmeets-offsite.conf"
+          ],
+          "locationSelectors": [
+            "= /imon-recordings ",
+            "= /imon-recordings/ ",
+            "^~ /imon-recordings/ ",
+            "/embed/ ",
+            "/api/ ",
+            "/ "
+          ]
+        },
+        {
+          "serverNames": [
+            "imonmeets-rtc.94-249-186-240.sslip.io"
+          ],
+          "listeners": [
+            "94.249.186.240:8443 ssl"
+          ],
+          "directLoopbackUpstreams": [
+            "http://127.0.0.1:7880"
+          ],
+          "authRequestDirectivePresent": false,
+          "includePaths": [],
+          "locationSelectors": [
+            "/ "
+          ]
+        }
+      ]
+    },
+    {
+      "path": "/etc/nginx/conf.d/meets.imon.world.conf",
+      "readable": true,
+      "sha256": "264b12b0ed206b89d37c5d661e3137926f496fded4a4fa4cd2fa783210624a74",
+      "serverBlocks": [
+        {
+          "serverNames": [
+            "meets.imon.world"
+          ],
+          "listeners": [
+            "94.249.186.240:80"
+          ],
+          "directLoopbackUpstreams": [],
+          "authRequestDirectivePresent": false,
+          "includePaths": [],
+          "locationSelectors": [
+            "^~ /.well-known/acme-challenge/ ",
+            "/ "
+          ]
+        },
+        {
+          "serverNames": [
+            "meets.imon.world"
+          ],
+          "listeners": [
+            "94.249.186.240:8443 ssl"
+          ],
+          "directLoopbackUpstreams": [
+            "http://127.0.0.1:3540"
+          ],
+          "authRequestDirectivePresent": false,
+          "includePaths": [
+            "/etc/nginx/snippets/meets-proxy-trust.conf",
+            "/etc/nginx/snippets/meets-proxy-trust.conf"
+          ],
+          "locationSelectors": [
+            "^~ /_ops/ ",
+            "^~ /api/ ",
+            "^~ /embed/ ",
+            "~* \\.(?:js|css|map|png|jpe?g|gif|svg|ico|webp|woff2?|ttf)$ ",
+            "/ "
+          ]
+        }
+      ]
+    }
+  ]
+}

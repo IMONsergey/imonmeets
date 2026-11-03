@@ -1,0 +1,284 @@
+#!/usr/bin/env python3
+"""Native nginx parser acceptance only: no listener start, reload or real key use."""
+import argparse
+import datetime
+import hashlib
+import json
+import os
+from pathlib import Path
+import pwd
+import shutil
+import subprocess
+import tempfile
+
+
+SOURCE_COMMIT = "e9b685240e765e51467c5de0c2e9e542450a764b"
+SOURCE_FILES = [
+    "scripts/prepare-edge-certificates.mjs",
+    "scripts/edge-certificate-policy.mjs",
+    "scripts/prepare-edge-main-ingress.mjs",
+    "scripts/prepare-edge-vps-ingress.mjs",
+    "scripts/prepare-ingress443.mjs",
+    "scripts/ingress-nginx-tls.mjs",
+]
+HOSTS = ["meets.imon.world", "rtc.imon.world", "recordings.imon.world", "turn.imon.world", "witness.imon.world"]
+
+
+def digest(value):
+    return hashlib.sha256(value).hexdigest()
+
+
+def require(ok, code):
+    if not ok:
+        raise RuntimeError(code)
+
+
+def run(argv, cwd=None):
+    return subprocess.run(argv, cwd=cwd, input="", capture_output=True, text=True,
+                          timeout=15, env={"PATH": os.environ.get("PATH", "/usr/sbin:/usr/bin:/bin")})
+
+
+def private_file(path, data):
+    with path.open("xb") as f:
+        os.chmod(path, 0o600)
+        f.write(data if isinstance(data, bytes) else data.encode())
+
+
+def inspect_legacy_hook():
+    # Content is never returned. Do not open any file named by this script.
+    path = Path("/usr/local/lib/imonmeets/renew-turn")
+    result = {"path": str(path), "privateEnvironmentRead": False, "scriptBodyReturned": False}
+    try:
+        stat = path.lstat()
+        require(path.is_file() and not path.is_symlink() and stat.st_size < 65536, "UNSUPPORTED_LEGACY_HOOK_FILE")
+        raw = path.read_bytes()
+    except FileNotFoundError:
+        result["status"] = "ABSENT"
+        return result
+    except PermissionError:
+        result["status"] = "NOT_READABLE_AS_ORDINARY_USER"
+        return result
+    except RuntimeError as e:
+        result["status"] = str(e)
+        return result
+    import re
+    text = raw.decode("utf8", errors="replace")
+    result.update({
+        "status": "READ_ONLY_INSPECTED",
+        "sha256": digest(raw), "mode": oct(stat.st_mode & 0o777),
+        "ownerUid": stat.st_uid, "ownerGid": stat.st_gid,
+        "invokesPrepareTurn": bool(re.search(r"scripts/prepare-turn\.mjs", text)),
+        "usesCertOnly": "--cert-only" in text,
+        "usesLineageArgument": "--lineage" in text,
+        "usesImplicitDotEnv": bool(re.search(r"--env-file(?:=|\s+)\.env(?:\s|$)", text)),
+        "usesImplicitComposeRestart": bool(re.search(r"^\s*docker compose restart turn\s*$", text, re.M)),
+        "usesExplicitComposeProject": "--project-name" in text or "--project-directory" in text,
+        "usesExplicitComposeFiles": bool(re.search(r"docker compose[^\n]*\s-f\s", text)),
+        "hasExpectedLineageGuard": bool(re.search(r'test\s+"\$1"\s*=\s*"\$expected_lineage"', text)),
+        "referencesDefaultPreviewLineage": "imonmeets-preview" in text,
+        "referencesTurnPrivateDirectory": "deploy/turn-private" in text,
+    })
+    # Only literal safe filesystem paths are retained, never arbitrary shell text.
+    project = re.search(r"(?m)^\s*cd\s+(/[A-Za-z0-9_./-]+)\s*$", text)
+    result["literalProjectDirectory"] = project.group(1) if project else None
+    result["inferredTurnDirectory"] = str(Path(project.group(1)) / "deploy/turn-private") if project and result["referencesTurnPrivateDirectory"] else None
+    result["targetInference"] = "literal cd plus relative path; environment overrides were not read"
+    return result
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repo-root", required=True)
+    parser.add_argument("--output", required=True)
+    parser.add_argument("--nginx", default="/usr/sbin/nginx")
+    args = parser.parse_args()
+    root = Path(args.repo_root).resolve()
+    output = Path(args.output)
+    require(os.getuid() != 0 and os.geteuid() == os.getuid(), "ORDINARY_USER_REQUIRED")
+    require(output.is_absolute() and output.parent.is_dir() and not output.exists() and not output.is_symlink(), "NEW_ABSOLUTE_OUTPUT_REQUIRED")
+    require((output.parent.stat().st_mode & 0o077) == 0 and output.parent.stat().st_uid == os.getuid(), "PRIVATE_OUTPUT_PARENT_REQUIRED")
+    nginx = Path(args.nginx).resolve(strict=True)
+    require(nginx.is_file() and os.access(nginx, os.X_OK), "NGINX_UNAVAILABLE")
+    node = shutil.which("node")
+    require(node is not None and shutil.which("openssl") is not None, "NODE_OPENSSL_REQUIRED")
+    receipt = {
+        "schema": 1, "status": "NOT_RUN", "sourceCommit": SOURCE_COMMIT,
+        "checkedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "harnessSha256": digest(Path(__file__).read_bytes()),
+        "executionUid": os.getuid(), "executionEuid": os.geteuid(),
+        "executionUser": pwd.getpwuid(os.getuid()).pw_name,
+        "sourceHashes": {}, "fixtures": [], "adaptations": [], "checks": [],
+        "nginxBinary": str(nginx), "nginxBinarySha256": digest(nginx.read_bytes()),
+        "nginxVersion": (run([str(nginx), "-v"]).stderr).strip(),
+        "nginxBuild": (run([str(nginx), "-V"]).stderr).strip(),
+        "fixtureHostnames": HOSTS,
+        "fixtureAddresses": {"edgePublic": "94.249.188.77", "vpnMainPublic": "94.249.186.240", "edgeTunnel": "10.203.77.1", "mainTunnel": "10.203.77.2"},
+        "listenAddressesAdapted": False, "upstreamAddressesAdapted": False,
+        "productionChanges": False, "privateEnvironmentRead": False,
+        "realPrivateKeysRead": False, "realPrivateIncludesRead": False,
+        "fixtureSecretsOnly": True, "externalNetworkRequests": False,
+        "listenersStarted": False, "servicesReloaded": False,
+        "nativeOwnershipAccepted": False, "turnRuntimeAccepted": False,
+        "httpRoutingAccepted": False, "tlsServingAccepted": False,
+        "public443Accepted": False,
+    }
+    fixture = None
+    exit_code = 1
+    try:
+        for name in SOURCE_FILES:
+            actual = (root / name).read_bytes()
+            expected = subprocess.check_output(["git", "-C", str(root), "show", SOURCE_COMMIT + ":" + name])
+            require(actual == expected, "SOURCE_SNAPSHOT_MISMATCH")
+            receipt["sourceHashes"][name] = digest(actual)
+        receipt["legacyRenewTurn"] = inspect_legacy_hook()
+        fixture = Path(tempfile.mkdtemp(prefix="nginx-syntax-", dir=output.parent))
+        os.chmod(fixture, 0o700)
+        context = {
+            "node": node, "codeDirectory": "/usr/local/lib/imonmeets/edge-certificates",
+            "projectDirectory": "/opt/imonmeets/runtime", "projectName": "imonmeets",
+            "envFile": "/etc/imonmeets/private/fixture-not-read.env",
+            "composeFiles": ["/opt/imonmeets/runtime/compose.yml", "/opt/imonmeets/runtime/compose.turn.yml"],
+            "turnDirectory": "/opt/imonmeets/runtime/deploy/turn-private",
+        }
+        env = {
+            "EDGE_PUBLIC_IP": "94.249.188.77", "VPN_PUBLIC_IP": "94.249.186.240",
+            "EDGE_TUNNEL_LOCAL_IP": "10.203.77.1", "EDGE_MAIN_TUNNEL_IP": "10.203.77.2",
+            "APP_URL": "https://meets.imon.world", "LIVEKIT_URL": "wss://rtc.imon.world",
+            "TURN_PUBLIC_HOST": "turn.imon.world", "EDGE_WITNESS_HOST": "witness.imon.world",
+            "RECORDING_ENABLED": "true", "S3_PUBLIC_ENDPOINT": "https://recordings.imon.world", "S3_BUCKET": "imon-recordings",
+            "LIVEKIT_SIGNALING_AUTH_ENABLED": "true", "TLS_CERT_NAME": "imonmeets-edge-main",
+            "EDGE_WITNESS_TLS_CERT_NAME": "imonmeets-edge-witness",
+            "EDGE_MAIN_ACME_PORT": "18080", "EDGE_MANAGED_TLS": "true",
+            "ACME_EMAIL": "fixture@example.test",
+            "EDGE_MAIN_RENEWAL_CONTEXT": json.dumps(context),
+            "EDGE_WITNESS_RENEWAL_CONTEXT": json.dumps({k: context[k] for k in ["node", "codeDirectory"]}),
+            "ORIGIN_PROXY_SECRET": "synthetic-native-proxy-secret-20261103",
+            "LIVEKIT_SIGNALING_AUTH_SECRET": "synthetic-native-signal-secret-20261103",
+        }
+        bridge = """const {writeEdgeCertificateCandidate}=await import(process.argv[1]);
+const {writeEdgeMainCandidate}=await import(process.argv[2]);
+const env=JSON.parse(process.argv[4]);
+await writeEdgeCertificateCandidate(process.argv[3]+'/certificate-candidate',env);
+await writeEdgeMainCandidate(process.argv[3]+'/main-candidate',env);"""
+        gen = run([node, "--input-type=module", "-e", bridge,
+                   (root / "scripts/prepare-edge-certificates.mjs").as_uri(),
+                   (root / "scripts/prepare-edge-main-ingress.mjs").as_uri(), str(fixture), json.dumps(env)], root)
+        require(gen.returncode == 0, "FIXTURE_GENERATION_FAILED")
+        receipt["syntheticRuntimeContextsOnly"] = True
+        for directory in [fixture / "certificate-candidate", fixture / "main-candidate"]:
+            require(directory.stat().st_mode & 0o777 == 0o700, "FIXTURE_DIRECTORY_MODE")
+            for p in sorted(directory.iterdir()):
+                require(p.stat().st_mode & 0o777 == 0o600, "FIXTURE_FILE_MODE")
+                receipt["fixtures"].append({"path": str(p.relative_to(fixture)), "sha256": digest(p.read_bytes()), "mode": "0600"})
+        cert_paths = {}
+        for role, names in [("main", HOSTS[:4]), ("witness", HOSTS[4:])]:
+            cert_dir = fixture / (role + "-synthetic-certificate")
+            cert_dir.mkdir(mode=0o700)
+            cert = cert_dir / "fullchain.pem"
+            key = cert_dir / "privkey.pem"
+            result = run(["openssl", "req", "-x509", "-newkey", "ec", "-pkeyopt", "ec_paramgen_curve:P-256", "-nodes", "-days", "1",
+                          "-subj", "/CN=" + names[0], "-addext", "subjectAltName=" + ",".join("DNS:" + n for n in names),
+                          "-keyout", str(key), "-out", str(cert)])
+            require(result.returncode == 0, "SYNTHETIC_CERTIFICATE_FAILED")
+            os.chmod(cert, 0o600); os.chmod(key, 0o600)
+            cert_paths[role] = (cert, key)
+        adapted = fixture / "adapted"
+        adapted.mkdir(mode=0o700)
+
+        def replace(text, label, old, new, expected=None):
+            count = text.count(old)
+            require(count > 0 and (expected is None or count == expected), "FIXTURE_ADAPTATION_COUNT_MISMATCH")
+            receipt["adaptations"].append({"file": label, "from": old, "to": new, "count": count, "purpose": "owned fixture path only"})
+            return text.replace(old, new)
+
+        adapted_files = {}
+        for name, directory in [("nginx.edge-http.conf", "certificate-candidate"), ("nginx.main-acme.conf", "certificate-candidate"),
+                                ("nginx.edge-witness-tls.conf", "certificate-candidate"), ("nginx.tls.conf", "main-candidate")]:
+            original = (fixture / directory / name).read_text()
+            text = replace(original, name, "/dev/null", str(fixture / (name + ".errors")))
+            if name == "nginx.edge-http.conf":
+                webroot = fixture / "witness-webroot"; webroot.mkdir(mode=0o700)
+                text = replace(text, name, "/var/lib/imonmeets-witness-acme", str(webroot), 1)
+            elif name == "nginx.main-acme.conf":
+                webroot = fixture / "main-webroot"; webroot.mkdir(mode=0o700)
+                text = replace(text, name, "/var/lib/imonmeets-acme", str(webroot), 1)
+            else:
+                role = "main" if name == "nginx.tls.conf" else "witness"
+                for leaf, p in zip(["fullchain.pem", "privkey.pem"], cert_paths[role]):
+                    text = replace(text, name, f"/etc/imonmeets/tls/{role}/current/{leaf}", str(p), 3 if role == "main" else 1)
+                if role == "main":
+                    for leaf, count in [("imonmeets-commercial-trust.conf", 2), ("imonmeets-signaling-auth.conf", 1)]:
+                        text = replace(text, name, "/etc/nginx/snippets/" + leaf, str(fixture / "main-candidate" / leaf), count)
+            dest = adapted / name
+            private_file(dest, text)
+            adapted_files[name] = dest
+            receipt["fixtures"].append({"path": str(dest.relative_to(fixture)), "originalSha256": digest(original.encode()), "sha256": digest(text.encode()), "mode": "0600"})
+
+        def isolated_root(name, snippets):
+            prefix = fixture / (name + "-prefix"); prefix.mkdir(mode=0o700)
+            temps = []
+            for kind in ["client_body", "proxy", "fastcgi", "uwsgi", "scgi"]:
+                p = prefix / (kind + "-temp"); p.mkdir(mode=0o700)
+                temps.append(f"    {kind}_temp_path {p};")
+            conf = prefix / "nginx.conf"
+            text = f"worker_processes 1;\npid {prefix}/nginx.pid;\nerror_log {prefix}/error.log warn;\nevents {{ worker_connections 64; }}\nhttp {{\n    access_log off;\n" + "\n".join(temps) + "\n" + "\n".join(f"    include {x};" for x in snippets) + "\n}\n"
+            private_file(conf, text)
+            receipt["adaptations"].append({"file": name, "kind": "isolated-parser-root", "sha256": digest(text.encode()), "pidLogTempPrefix": str(prefix), "productionRootNotLoaded": True})
+            return prefix, conf
+
+        def check(name, prefix, conf):
+            argv = [str(nginx), "-e", str(prefix / "startup.log"), "-p", str(prefix) + "/", "-c", str(conf), "-t"]
+            result = run(argv)
+            receipt["checks"].append({"name": name, "argv": argv, "exitCode": result.returncode,
+                                      "status": "PASS" if result.returncode == 0 else "FAIL",
+                                      "stdout": result.stdout.strip(), "stderr": result.stderr.strip()})
+
+        for label, names in [
+            ("edge-http-bootstrap", ["nginx.edge-http.conf"]),
+            ("main-loopback-acme", ["nginx.main-acme.conf"]),
+            ("witness-loopback-tls", ["nginx.edge-witness-tls.conf"]),
+            ("main-protected-tls", ["nginx.tls.conf"]),
+            ("combined-main-http-context", ["nginx.main-acme.conf", "nginx.tls.conf"]),
+        ]:
+            check(label, *isolated_root(label, [adapted_files[n] for n in names]))
+
+        # Parse the generated dedicated edge root too, once without TLS material
+        # and once with its wrapper included. Only owned filesystem paths differ.
+        label = "nginx.edge.conf"
+        text = (fixture / "certificate-candidate" / label).read_text()
+        prefix = fixture / "generated-edge-prefix"; prefix.mkdir(mode=0o700)
+        tls_dir = prefix / "tls"; tls_dir.mkdir(mode=0o700)
+        for old, new in [
+            ("/run/imonmeets-edge-nginx/nginx.pid", str(prefix / "nginx.pid")),
+            ("/dev/null", str(prefix / "error.log")),
+            ("/tmp/imonmeets-edge-client-body", str(prefix / "client-body-temp")),
+            ("/tmp/imonmeets-edge-proxy", str(prefix / "proxy-temp")),
+            ("/etc/imonmeets/edge-nginx/http.conf", str(adapted_files["nginx.edge-http.conf"])),
+            ("/etc/imonmeets/edge-nginx/tls/*.conf", str(tls_dir / "*.conf")),
+        ]:
+            text = replace(text, label, old, new, 1)
+        extra = "".join(f"    {kind}_temp_path {prefix}/{kind}-temp;\n" for kind in ["fastcgi", "uwsgi", "scgi"])
+        text = replace(text, label, "http {\n", "http {\n" + extra, 1)
+        conf = prefix / "nginx.conf"; private_file(conf, text)
+        check("generated-edge-root-with-empty-tls-directory", prefix, conf)
+        private_file(tls_dir / "witness.conf", adapted_files["nginx.edge-witness-tls.conf"].read_bytes())
+        check("generated-edge-root-with-witness-tls", prefix, conf)
+        require(all(x["status"] == "PASS" for x in receipt["checks"]), "NATIVE_NGINX_SYNTAX_FAILED")
+        receipt["status"] = "PASS_NATIVE_NGINX_SYNTAX_ONLY"
+        exit_code = 0
+    except Exception as e:
+        receipt["status"] = "BLOCKED_NATIVE_NGINX_SYNTAX"
+        receipt["errorCode"] = str(e) if isinstance(e, RuntimeError) else type(e).__name__
+    finally:
+        if fixture is not None:
+            shutil.rmtree(fixture)
+        receipt["fixtureDirectoryRemoved"] = fixture is not None and not fixture.exists()
+        receipt["fixtureKeysRemoved"] = receipt["fixtureDirectoryRemoved"]
+        receipt["completedAt"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        private_file(output, json.dumps(receipt, indent=2) + "\n")
+    print(json.dumps({"status": receipt["status"], "checks": len(receipt["checks"]), "receiptSha256": digest(output.read_bytes())}))
+    return exit_code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

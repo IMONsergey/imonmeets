@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline loopback harness for the f5eb135 edge candidate; no downloads/Docker.
+"""Offline loopback harness for a pinned edge source snapshot; no downloads/Docker.
 
 Requires Python 3.10+, Node, OpenSSL and a trusted, preinstalled HAProxy 3.0.x.
 --self-test validates only these fixtures. It never certifies HAProxy routing.
@@ -24,10 +24,11 @@ import time
 import uuid
 
 
-COMMIT = "f5eb135d30c650b6a32c39a9d4c8bf124ec9ce19"
+COMMIT = "07216f70401b22049ecd4e4ea6be3d6446787448"
 SOURCE_HASHES = {
     "scripts/prepare-edge-vps-ingress.mjs": "8668b841bd9a2dcde7b8509494b9d7e1ffe60429e9486a35624c8b311fc91828",
-    "scripts/prepare-ingress443.mjs": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+    "scripts/prepare-ingress443.mjs": "2e8812bd2721f9b63b20b74252ad12a104c4e152829feb2d9000a90400f125a7",
+    "scripts/ingress-nginx-tls.mjs": "7ab6007bd7f162e3fd4917fad47733a8f929baafe8f6147bf5f23b29d932da8c",
     "compose.edge-vps-ingress.yml": "8d079590bb2bf7f2f1fc0abea0396f5135d036efd56f00c94ac7c93928c0ce12",
 }
 FIXTURE = {

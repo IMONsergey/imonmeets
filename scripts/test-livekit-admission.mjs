@@ -25,6 +25,7 @@ import { chromium, firefox, webkit } from "@playwright/test";
 import { AccessToken } from "livekit-server-sdk";
 import { harness, password } from "../apps/api/test/suite-harness.ts";
 import { createMedia } from "../apps/api/src/media.ts";
+import { ingressSourceEvidence } from "./ingress-source-evidence.mjs";
 
 assert.equal(
   process.env.IMON_ISOLATED_LIVEKIT_ACCEPTANCE,
@@ -307,9 +308,10 @@ try {
     process.env.IMON_INGRESS_GENERATOR ??
       path.join(root, "scripts/prepare-ingress443.mjs"),
   );
-  receipt.generatorSha256 = createHash("sha256")
-    .update(readFileSync(generator))
+  receipt.generatorEvidenceCollectorSha256 = createHash("sha256")
+    .update(readFileSync(new URL("./ingress-source-evidence.mjs", import.meta.url)))
     .digest("hex");
+  Object.assign(receipt, ingressSourceEvidence(generator));
   const { ingressConfig, renderIngress, HAPROXY_IMAGE } = await import(
     pathToFileURL(generator).href
   );

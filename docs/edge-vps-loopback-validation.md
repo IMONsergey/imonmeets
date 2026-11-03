@@ -1,7 +1,8 @@
 # Isolated HAProxy loopback validation
 
-Status on 2026-11-03: **PASS_ISOLATED_FIXTURE_LOOPBACK_ONLY**. The unchanged
-candidate passed HAProxy syntax checking, and **19 real TCP/TLS routing checks
+Historical result for `f5eb135` on 2026-11-03:
+**PASS_ISOLATED_FIXTURE_LOOPBACK_ONLY**. That unchanged candidate passed HAProxy
+syntax checking, and **19 real TCP/TLS routing checks
 passed** in a restricted, disposable Linux container on the Mac's local Docker
 Desktop. This was a fixture derivative of the exact pinned official image.
 The main server's privileged Docker access was not retried.
@@ -14,6 +15,14 @@ Detailed evidence, source hashes and the runtime boundary are recorded in
 This is an additional validation tool for the
 [edge VPS candidate](edge-vps-ingress.md), not an ingress deployment.
 
+The current harness source pin follows the reviewed TLS-helper extraction at
+`07216f70401b22049ecd4e4ea6be3d6446787448`. The edge-generated fixture configuration
+remains byte-identical; the new source dependency is pinned explicitly. This
+maintenance change does not turn the historical runtime receipt into a new
+native test or acceptance of the separate main bridge. See
+[edge-main-ingress.md](edge-main-ingress.md) for that candidate and its pending
+runtime boundary.
+
 ## Files and source identity
 
 `scripts/verify-edge-vps-loopback.py` is a standalone Python program with no pip
@@ -21,11 +30,12 @@ dependencies. It uses the existing Node generator and invokes OpenSSL to create
 short-lived local fixture certificates. It does not use Docker, sudo, cloud
 APIs, DNS resolution, provider credentials, existing certificates or key files.
 
-The input is the exact candidate from commit
-`f5eb135d30c650b6a32c39a9d4c8bf124ec9ce19`. The harness checks SHA256 for:
+The current input source snapshot is commit
+`07216f70401b22049ecd4e4ea6be3d6446787448`. The harness checks SHA256 for:
 
 - `scripts/prepare-edge-vps-ingress.mjs`
 - `scripts/prepare-ingress443.mjs`
+- `scripts/ingress-nginx-tls.mjs`
 - `compose.edge-vps-ingress.yml`
 
 These source hashes were independently compared with `git show` for that commit.
@@ -200,13 +210,15 @@ invalid. It was removed, and the successful repeat restored the first run's
 default logging settings. This setup failure is retained separately and is not
 counted as a test execution or a passing run.
 
-For a later authorized reproduction, construct a context from the same explicit
-file allowlist rather than passing the entire repository to `docker build`:
+For a later authorized reproduction, construct a context from the current
+explicit seven-file allowlist, which adds the extracted TLS helper, rather than
+passing the entire repository to `docker build`:
 
 ```sh
 tar -cf - \
   scripts/prepare-edge-vps-ingress.mjs \
   scripts/prepare-ingress443.mjs \
+  scripts/ingress-nginx-tls.mjs \
   scripts/verify-edge-vps-loopback.py \
   compose.edge-vps-ingress.yml \
   tools/edge-vps-loopback/Dockerfile \

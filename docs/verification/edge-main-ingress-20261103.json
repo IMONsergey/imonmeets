@@ -1,0 +1,316 @@
+{
+  "schema": 1,
+  "status": "FOCUSED_CANDIDATE_NOT_DEPLOYED",
+  "recordedAt": "2026-11-03T16:00:10.640148+00:00",
+  "baseCommit": "f2cb148179ec7b8680056c95d942c10c85c7dfbb",
+  "implementationCommit": "07216f70401b22049ecd4e4ea6be3d6446787448",
+  "branch": "feature/edge-main-endpoints-20261103",
+  "sourceHashes": {
+    ".github/workflows/ci.yml": "4a0e5ea2914c88e2889f63c3c931c0acc0d0a9846b7a6d6c46f6a92a46fa30a2",
+    "compose.edge-main-ingress.yml": "acc526392bb47da6aeb9a14b38805bee200a8703c7bd54021db655d998b66151",
+    "compose.edge-vps-ingress.yml": "8d079590bb2bf7f2f1fc0abea0396f5135d036efd56f00c94ac7c93928c0ce12",
+    "scripts/fixtures/ingress443-render-f2cb148.json": "840d45dc847da3ca88db9cbd51122e24977fff1de79e3358cedf4655a5ca0236",
+    "scripts/ingress-nginx-tls.mjs": "7ab6007bd7f162e3fd4917fad47733a8f929baafe8f6147bf5f23b29d932da8c",
+    "scripts/ingress-source-evidence.mjs": "88979463e5b6b49087c8899c841023f18e9e582d15aa3da831b852a8d27b1a5e",
+    "scripts/prepare-edge-main-ingress.mjs": "7cf2db7857d75ebd5b186164ab2c85deac1c80a9a30fedda0336b8c9df187be0",
+    "scripts/prepare-edge-vps-ingress.mjs": "8668b841bd9a2dcde7b8509494b9d7e1ffe60429e9486a35624c8b311fc91828",
+    "scripts/prepare-ingress443.mjs": "2e8812bd2721f9b63b20b74252ad12a104c4e152829feb2d9000a90400f125a7",
+    "scripts/test-edge-main-ingress.mjs": "6cab7ab4559daf33ac30db2045b06adbba633459bcf643a44ca966d0e676af4b",
+    "scripts/test-edge-vps-ingress.mjs": "8a61f6e7e84f4b3b8d249b1858e0d948afd2861f3e6751833300328750c7bd66",
+    "scripts/test-ingress443-config.mjs": "f03a3c2ceadf0c808f79fc7480bfc0542685c3940daac55f7059003d41745ed4",
+    "scripts/test-livekit-admission.mjs": "577e83c8e52005a4284bf02c221e3008759c3f879a08696a6e270cdadc2e6a2e",
+    "scripts/verify-edge-vps-loopback.py": "18b8e84c1ccf8d5048f1ccf07283170e38591df3a9da150a37e1770ca8eb7149",
+    "tools/edge-vps-loopback/Dockerfile": "028964243b0294ea22c4042f0ae98ecac5a807884f150faeae01dfc9cb66b103"
+  },
+  "focusedTests": {
+    "command": "node --test scripts/test-ingress443-config.mjs scripts/test-edge-vps-ingress.mjs scripts/test-edge-main-ingress.mjs",
+    "environment": "isolated scratch; no shared-server runtime job",
+    "tests": 36,
+    "pass": 36,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "outputSha256": "0b5d13653bc6e7ef3ddf061962477a150c0a82924b6dbf14fcc8e712386a33b1",
+    "checkNames": [
+      "legacy single-host output remains byte-exact: no-recordings",
+      "legacy single-host output remains byte-exact: recordings",
+      "legacy single-host output remains byte-exact: custom-layout",
+      "closed bridge restricts each listener to its exact edge peer before routing",
+      "nginx retains exactly the accepted protected TLS blocks without a public or HTTP listener",
+      "app internal routes, forwarded-address replacement and signaling admission are preserved",
+      "signed recording requests keep original host/path/query and read-only access",
+      "only the two private include files contain secret values",
+      "plan identifies the closed contract without promoting runtime or public acceptance",
+      "untrusted or ambiguous tunnel endpoints are rejected before any config is written",
+      "TLS lineage and private includes require explicit non-injectable values",
+      "edge hostname uniqueness and strict origin policy also protect main TLS config",
+      "generation creates private files and writes a matching secrets-free plan last",
+      "existing output files, directories and symlinks remain untouched",
+      "invalid CLI inputs produce fixed diagnostics without leaking values or paths",
+      "source evidence records the imported TLS helper and detects its independent modification",
+      "historical monolithic generator overrides do not acquire a fictitious helper dependency",
+      "each allowed SNI reaches its intended endpoint and wire format",
+      "foreign, missing, suffix-confused SNI has no fallback route",
+      "disabled recording removes its name from both admission and routes",
+      "plan describes the same routing while keeping all runtime gates unaccepted",
+      "missing explicit network inputs fail closed",
+      "both tunnel endpoints reject public and every non-RFC1918 address class",
+      "RFC1918 validation accepts all three private ranges without discovering routes",
+      "public bind and preserved VPN inputs reject special-purpose and alternate numeric spellings",
+      "SNI names are normalized before cross-role collision checks",
+      "unsafe SNI input cannot inject configuration or broaden the allowlist",
+      "origins reject credentials, alternate ports, paths and URL-parser normalization tricks",
+      "recording and admission settings must be explicit",
+      "unrelated environment secrets are never copied or read into outputs",
+      "standalone manifest can read root-owned 0600 config without broad container authority",
+      "writer creates only a private new config/plan pair, matching the pure output",
+      "invalid input leaves no candidate; existing output and symlink targets remain untouched",
+      "CLI requires an explicit absolute output and reports sanitized failure",
+      "wildcard address cannot bind across the separately preserved VPN interface",
+      "the generated candidate binds only the explicitly selected address"
+    ]
+  },
+  "preservedLegacyOutput": {
+    "baseline": "scripts/fixtures/ingress443-render-f2cb148.json",
+    "capturedBeforeExtraction": true,
+    "sourceCommit": "f2cb148179ec7b8680056c95d942c10c85c7dfbb",
+    "fixtureCases": 3,
+    "legacyOutputHashesMatched": 12,
+    "tlsOnlyHashesMatched": 3,
+    "fixtures": [
+      "no-recordings",
+      "recordings",
+      "custom-layout"
+    ]
+  },
+  "staticValidation": {
+    "ciYamlParse": "PASS_PYYAML",
+    "mainComposeYamlParse": "PASS_PYYAML",
+    "composeRuntimeValidation": "PENDING",
+    "livekitAdmissionRunnerNodeSyntax": "PASS",
+    "ciPureGateCommands": [
+      "node --test apps/deletion-witness/test.mjs apps/deletion-witness/client.integration.test.mjs scripts/test-launch-readiness.mjs scripts/test-legal-consent-readiness.mjs scripts/test-release-manifest.mjs scripts/test-ingress443-config.mjs scripts/test-runtime-inventory.mjs scripts/test-external-media-policy.mjs scripts/test-google-oauth-policy.mjs scripts/test-edge-vps-ingress.mjs scripts/test-edge-main-ingress.mjs",
+      "node --test scripts/test-compose-cutover.mjs"
+    ],
+    "existingGoogleMediaComposeAndEdgeGatesRetainedExactlyOnce": true
+  },
+  "independentReview": {
+    "scope": "main bridge, shared renderer, private writer, manifest and preserved contracts",
+    "functionalBlockers": 0,
+    "finding": "P2: entrypoint-only acceptance hash omitted the extracted TLS helper dependency",
+    "resolution": "Collector now records the real relative TLS helper and its own source hash; historical monolithic override is explicit; two focused regression checks pass",
+    "independentFollowupOfCollectorFix": false,
+    "runtimeAcceptancePerformed": false
+  },
+  "edgeFixtureMaintenance": {
+    "sourcePin": "07216f70401b22049ecd4e4ea6be3d6446787448",
+    "sourcePinsComparedWithGitShow": true,
+    "dockerBuildContextFiles": 7,
+    "generatedEdgeConfigurationUnchanged": true,
+    "historicalNativeChecks": 19,
+    "historicalReceipt": "docs/verification/edge-vps-loopback-harness-20261103.json",
+    "nativeRoutingRerun": false,
+    "selfCheckReceipt": {
+      "schema": 1,
+      "candidateCommit": "07216f70401b22049ecd4e4ea6be3d6446787448",
+      "checkedAt": "2026-11-03T15:56:34.000475+00:00",
+      "executionUid": 0,
+      "executionEuid": 0,
+      "harnessSha256": "18b8e84c1ccf8d5048f1ccf07283170e38591df3a9da150a37e1770ca8eb7149",
+      "pythonOpenSsl": "OpenSSL 3.5.8 25 Aug 2026",
+      "status": "PASS_FIXTURE_SELF_CHECK_ONLY",
+      "checks": [
+        {
+          "name": "fixture-nginx-direct-tls",
+          "status": "PASS",
+          "seconds": 0.008,
+          "details": {
+            "sni": "nginx.example.test",
+            "backend": "nginx",
+            "tls": "TLSv1.3",
+            "fragmentCuts": [],
+            "proxyV2": true
+          }
+        },
+        {
+          "name": "fixture-turn-direct-tls",
+          "status": "PASS",
+          "seconds": 0.007,
+          "details": {
+            "sni": "turn.example.test",
+            "backend": "turn",
+            "tls": "TLSv1.3",
+            "fragmentCuts": [],
+            "proxyV2": false
+          }
+        },
+        {
+          "name": "fixture-witness-direct-tls",
+          "status": "PASS",
+          "seconds": 0.012,
+          "details": {
+            "sni": "witness.example.test",
+            "backend": "witness",
+            "tls": "TLSv1.3",
+            "fragmentCuts": [],
+            "proxyV2": false
+          }
+        },
+        {
+          "name": "fixture-fragmented-client-hello",
+          "status": "PASS",
+          "seconds": 0.126,
+          "details": {
+            "sni": "turn.example.test",
+            "backend": "turn",
+            "tls": "TLSv1.3",
+            "fragmentCuts": [
+              1,
+              5,
+              138,
+              1524
+            ],
+            "proxyV2": false
+          }
+        },
+        {
+          "name": "fixture-tls12",
+          "status": "PASS",
+          "seconds": 0.002,
+          "details": {
+            "sni": "app.example.test",
+            "backend": "nginx",
+            "tls": "TLSv1.2",
+            "fragmentCuts": [],
+            "proxyV2": true
+          }
+        },
+        {
+          "name": "fixture-turn-rejects-proxy",
+          "status": "PASS",
+          "seconds": 0.0,
+          "details": {
+            "outcome": "RESET",
+            "elapsedSeconds": 0.0
+          }
+        },
+        {
+          "name": "fixture-witness-rejects-proxy",
+          "status": "PASS",
+          "seconds": 0.001,
+          "details": {
+            "outcome": "RESET",
+            "elapsedSeconds": 0.0
+          }
+        },
+        {
+          "name": "fixture-nginx-rejects-missing-proxy",
+          "status": "PASS",
+          "seconds": 0.0,
+          "details": {
+            "outcome": "RESET",
+            "elapsedSeconds": 0.0
+          }
+        },
+        {
+          "name": "fixture-nginx-rejects-local-command",
+          "status": "PASS",
+          "seconds": 0.0,
+          "details": {
+            "outcome": "RESET",
+            "elapsedSeconds": 0.0
+          }
+        },
+        {
+          "name": "fixture-nginx-rejects-wrong-length",
+          "status": "PASS",
+          "seconds": 0.0,
+          "details": {
+            "outcome": "RESET",
+            "elapsedSeconds": 0.0
+          }
+        },
+        {
+          "name": "fixture-wrong-backend-certificate-rejected",
+          "status": "PASS",
+          "seconds": 0.002,
+          "details": {
+            "certificateMismatchRejected": true
+          }
+        }
+      ],
+      "gates": {
+        "originalSyntax": "PENDING",
+        "loopbackSyntax": "PENDING",
+        "realHaproxyLoopbackRouting": "PENDING",
+        "pinnedImageRuntime": "PENDING"
+      },
+      "productionChanges": false,
+      "externalNetworkRequests": false,
+      "userKeysUsed": false,
+      "dnsChanged": false,
+      "tunnelsConfigured": false,
+      "public443Accepted": false,
+      "mainNginxOrTurnAccepted": false,
+      "sourceHashes": {
+        "scripts/prepare-edge-vps-ingress.mjs": "8668b841bd9a2dcde7b8509494b9d7e1ffe60429e9486a35624c8b311fc91828",
+        "scripts/prepare-ingress443.mjs": "2e8812bd2721f9b63b20b74252ad12a104c4e152829feb2d9000a90400f125a7",
+        "scripts/ingress-nginx-tls.mjs": "7ab6007bd7f162e3fd4917fad47733a8f929baafe8f6147bf5f23b29d932da8c",
+        "compose.edge-vps-ingress.yml": "8d079590bb2bf7f2f1fc0abea0396f5135d036efd56f00c94ac7c93928c0ce12"
+      },
+      "candidateConfigurationSha256": "ef25dac3cbb1c2f134f9b0dbe21481ecc3855ccb6e59b30f1a852cb0778ec1df",
+      "expectedImage": "haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3",
+      "fixtureConfigurationRewrites": [
+        {
+          "from": "    user haproxy",
+          "to": ""
+        },
+        {
+          "from": "    group haproxy",
+          "to": ""
+        },
+        {
+          "from": "    bind 93.184.216.34:443",
+          "to": "    bind 127.0.0.1:24443"
+        },
+        {
+          "from": "    server nginx 10.255.254.2:8445 send-proxy-v2 source 10.255.254.1",
+          "to": "    server nginx 127.0.0.1:57667 send-proxy-v2 source 127.0.0.1"
+        },
+        {
+          "from": "    server turn 10.255.254.2:5349 source 10.255.254.1",
+          "to": "    server turn 127.0.0.1:57705 source 127.0.0.1"
+        },
+        {
+          "from": "    server witness_tls 127.0.0.1:8446",
+          "to": "    server witness_tls 127.0.0.1:49291"
+        }
+      ],
+      "fixtureCertificatesRemoved": true,
+      "completedAt": "2026-11-03T15:56:36.325833+00:00"
+    }
+  },
+  "remainingGates": {
+    "mainHaproxyNativeSyntax": "PENDING",
+    "mainNginxNativeSyntax": "PENDING",
+    "pinnedImagePrivilegeDropAndRuntime": "PENDING",
+    "twoHopTlsAndWrongSourceDenial": "PENDING",
+    "unchangedSingleProxyV2Tuple": "PENDING",
+    "rawTurnTlsBytes": "PENDING",
+    "protectedSignalingAndSignedStorageRuntime": "PENDING",
+    "authenticatedTunnelAndInterfaceConfinement": "PENDING",
+    "transportLossFailClosed": "PENDING",
+    "certificateCoverageAndRenewal": "PENDING",
+    "separateHttpAcmePath": "PENDING",
+    "dnsAndPublic443": "PENDING",
+    "witnessEnrollment": "PENDING",
+    "externalMediaAndLongRecordingResourceBounds": "PENDING"
+  },
+  "productionChanges": false,
+  "deployed": false,
+  "userSecretsUsed": false,
+  "realNetworkOrFirewallChanges": false,
+  "dnsChanged": false,
+  "public443Accepted": false
+}

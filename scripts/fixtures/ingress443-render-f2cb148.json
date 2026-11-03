@@ -1,0 +1,65 @@
+{
+  "sourceCommit": "f2cb148179ec7b8680056c95d942c10c85c7dfbb",
+  "sourceSha256": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+  "cases": [
+    {
+      "name": "no-recordings",
+      "overrides": {
+        "RECORDING_ENABLED": "false"
+      },
+      "hashes": {
+        "nginx": "0afcd7b1690c225de5e41f309a5556d6ba009de64c4afaba6f3830d53e19b624",
+        "haproxy": "0f553d847b04a9ac39eed21c6068934109f4ba0323ece0d94551140a06d4fc49",
+        "trust": "cb73117ccc7cc184b6b8e98e0c570b2d4a327ead76bead5148fc5e5752c3d536",
+        "signal": "4d73d1063c2a2de850219b8cbeb19470c123693f582c680b27309d7db35a11c0"
+      },
+      "tlsOnlySha256": "179f090796006c3d7cb6cf12aeda8efcd4a4080475d80b7f9e0d3564a5e00a15"
+    },
+    {
+      "name": "recordings",
+      "overrides": {
+        "RECORDING_ENABLED": "true",
+        "S3_PUBLIC_ENDPOINT": "https://recordings.example.test",
+        "S3_BUCKET": "imon-recordings"
+      },
+      "hashes": {
+        "nginx": "3f6aec94b6f39d1ddb7e7cf414713fa8e3e0ae11157c040201fd09db59bba15d",
+        "haproxy": "60eaadedd15c975a053907c6ddabaade58f93e2d31cd0b79173c626a610846a4",
+        "trust": "cb73117ccc7cc184b6b8e98e0c570b2d4a327ead76bead5148fc5e5752c3d536",
+        "signal": "4d73d1063c2a2de850219b8cbeb19470c123693f582c680b27309d7db35a11c0"
+      },
+      "tlsOnlySha256": "cb3b815274fad7c27ee63ba62857ca5ffbe904287860cfc190b7c2d3c43cb9bf"
+    },
+    {
+      "name": "custom-layout",
+      "overrides": {
+        "RECORDING_ENABLED": "true",
+        "S3_PUBLIC_ENDPOINT": "https://recordings.example.test",
+        "S3_BUCKET": "imon-recordings",
+        "TLS_CERT_NAME": "fixture-cert"
+      },
+      "layout": {
+        "bind": "127.0.0.2",
+        "publicPort": 2443,
+        "httpPort": 2080,
+        "nginxPort": 2445,
+        "apiPort": 2540,
+        "rtcPort": 2880,
+        "s3Port": 2333,
+        "turnPort": 2349,
+        "cert": "/tmp/fixture.crt",
+        "key": "/tmp/fixture.key",
+        "trust": "/tmp/trust.conf",
+        "signal": "/tmp/signal.conf",
+        "acme": "/tmp/acme"
+      },
+      "hashes": {
+        "nginx": "c3ae287fa32702bd720e978434da8cf521c0389085b4855728cd881c8645a0d0",
+        "haproxy": "45bd811941d541dd30a235a3bf94a3716dc84cf49e212f534cd94cf5254ca0d4",
+        "trust": "cb73117ccc7cc184b6b8e98e0c570b2d4a327ead76bead5148fc5e5752c3d536",
+        "signal": "4d73d1063c2a2de850219b8cbeb19470c123693f582c680b27309d7db35a11c0"
+      },
+      "tlsOnlySha256": "019a89ce691a46abac87530636820dbcc765e80060ce0e50937cb98e4148ccd9"
+    }
+  ]
+}
