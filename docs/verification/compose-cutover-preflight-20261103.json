@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "scope": "Standalone static Compose preflight; synthetic normalized Compose and Docker inspect inputs only",
+  "verifiedAt": "2026-11-03T11:40:26.178270+00:00",
+  "baseCommit": "cfa4a1ca98abee30cedf0d4ecac89c1149d500a5",
+  "branch": "fix/compose-cutover-preflight-20261103",
+  "runtime": {
+    "environment": "separate ChatGPT scratch execution host, not shared production workstation",
+    "node": "v24.22.1"
+  },
+  "commands": [
+    {
+      "command": "node --test scripts/test-compose-cutover.mjs",
+      "phase": "red-initial-validator-stub",
+      "exitCode": 1,
+      "tests": 15,
+      "pass": 1,
+      "fail": 14,
+      "logSha256": "d5d308e24e0d8350be62d66d4640d80e2c74afd49f591c63e1f4062ddf872afa"
+    },
+    {
+      "command": "node --test scripts/test-compose-cutover.mjs",
+      "phase": "red-journal-tmpfs-overlay",
+      "exitCode": 1,
+      "tests": 16,
+      "pass": 15,
+      "fail": 1,
+      "logSha256": "1c17f9a5f657208b1c36cc63fcff5dbd70bad964485a9d4a4d643a6ee9d709fd"
+    },
+    {
+      "command": "node --test scripts/test-compose-cutover.mjs",
+      "phase": "green-final-formatted-source",
+      "exitCode": 0,
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "skipped": 0,
+      "logSha256": "dcaec0f6d6a9b4068bab60ad83d1bc406da7919d666b44ea8932347d7e239ffb"
+    }
+  ],
+  "fileSha256": {
+    "scripts/check-compose-cutover.mjs": "c4d923dab91168e2ef6b2b9232e4d50f7fe58d148d8de3e9393a483666d103c4",
+    "scripts/test-compose-cutover.mjs": "5dd7251df4a1a775890ffee8a9bdf41a9f17046b9b7fcb210fa523c6790f1b9c",
+    ".github/workflows/ci.yml": "8a8e9715b9e264b90270db0b2d40a2fd8778283138edc2c44b55d0553ec3f906",
+    "docs/compose-cutover-preflight.md": "c8f604a3e3240736937e52d3c326cd8c4f5d7595ba58d81678058010e8a57ff0"
+  },
+  "productionChanges": false,
+  "deployed": false,
+  "providersContacted": false,
+  "dockerStarted": false,
+  "databaseUsed": false,
+  "limits": [
+    "No new actual Compose rendering was executed; canonical rendering semantics are taken from installed Compose observations and existing deletion-compose regression.",
+    "No full application suite rerun: no runtime application files changed; the shared workstation queue was full, and focused pure tests ran on a separate scratch host.",
+    "Static preflight does not verify host directories, witness connectivity/independence, enrollment, migration, running image, ingress, media or commercial readiness."
+  ]
+}
