@@ -136,6 +136,10 @@ def main():
             rendered = json.loads(subprocess.check_output(["node", "--input-type=module", "-e", code, json.dumps({"env": env, "layout": layout})], cwd=ROOT))
             for key_name, file_name in [("nginx", "routes.conf"), ("haproxy", "haproxy.cfg"), ("trust", "trust.conf"), ("signal", "signal.conf")]:
                 (folder / file_name).write_text(rendered[key_name])
+            # This synthetic routing-only fixture is mounted into the non-root
+            # HAProxy container. Make just that file readable across its UID;
+            # the host directory stays private and production output stays0600.
+            (folder / "haproxy.cfg").chmod(0o644)
             (folder / "nginx.conf").write_text(f"worker_processes 1;\npid {folder}/nginx.pid;\nerror_log {folder}/nginx.error.log warn;\nevents {{ worker_connections 128; }}\nhttp {{ access_log off; client_body_temp_path {folder}/body; proxy_temp_path {folder}/proxy; include {folder}/routes.conf; }}\n")
             for kind, port in [("api", api_port), ("rtc", rtc_port), ("s3", s3_port), ("turn", turn_port)]:
                 server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
@@ -279,4 +283,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except subprocess.CalledProcessError as error:
+        for captured in (error.stdout, error.stderr):
+            if captured:
+                print(captured.decode(errors="replace") if isinstance(captured, bytes) else captured, flush=True)
+        raise

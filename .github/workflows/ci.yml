@@ -11,7 +11,7 @@ jobs:
       postgres:
         image: postgres:17-bookworm@sha256:839fbb5a4942a7758dd93e18b42ea5649807491a0545b5eeeb8f0b8bb11857a5
         env:
-          POSTGRES_USER: imonmeets
+          POSTGRES_USER: imonmeets_test
           POSTGRES_PASSWORD: ci-only-test-password
           POSTGRES_DB: imonmeets_test
         ports: ["5432:5432"]
@@ -27,15 +27,29 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run typecheck
       - run: npm run build
+      - name: Pin the disposable PostgreSQL restore target
+        env:
+          CI_DATABASE_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          test -n "$CI_DATABASE_CONTAINER"
+          docker inspect "$CI_DATABASE_CONTAINER" >/dev/null
+          docker rename "$CI_DATABASE_CONTAINER" imonmeets-ci-tests
       - run: npm test
         env:
-          TEST_DATABASE_URL: postgres://imonmeets:ci-only-test-password@localhost:5432/imonmeets_test
+          TEST_DATABASE_URL: postgres://imonmeets_test:ci-only-test-password@127.0.0.1:5432/imonmeets_test
+          TEST_RESTORE_PG_CONTAINER: imonmeets-ci-tests
       - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-pull-encrypted-backup.py
       - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-offsite-monitor.py
       - name: Recording backup encryption and lifecycle regressions
         run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-recording-backup.py
-      - name: Launch readiness evidence gates
-        run: node --test --test-isolation=none scripts/test-launch-readiness.mjs
+      - name: Deletion receiver and release evidence gates
+        run: >-
+          node --test
+          apps/deletion-witness/test.mjs
+          apps/deletion-witness/client.integration.test.mjs
+          scripts/test-launch-readiness.mjs
+          scripts/test-release-manifest.mjs
+          scripts/test-ingress443-config.mjs
       - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-prepare-recording.py
       - run: PYTHONDONTWRITEBYTECODE=1 python3 apps/analysis-worker/test_worker.py
       - run: npm audit --omit=dev --audit-level=high
