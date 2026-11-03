@@ -50,13 +50,13 @@ class StageBoundsTests(unittest.IsolatedAsyncioTestCase):
         active = asyncio.create_task(stage.request({"owned": "native-buffer"}))
         await eventually(lambda: stage.pid is not None)
         process, pid = stage._process, stage.pid
-        original_wait = process.wait
+        original_wait = process.wait_exited
         reserved = stage.stats["pending_bytes"]
         queued = asyncio.create_task(stage.request({"queued": True}))
         await eventually(lambda: stage.stats["pending"] == 2)
         async def cannot_prove_reap():
             await asyncio.sleep(60)
-        process.wait = cannot_prove_reap
+        process.wait_exited = cannot_prove_reap
         try:
             active.cancel()
             with self.assertRaises(StageCleanupError):
@@ -76,7 +76,7 @@ class StageBoundsTests(unittest.IsolatedAsyncioTestCase):
                 await stage.close()
             self.assertEqual(stage.stats["pending_bytes"], reserved)
         finally:
-            process.wait = original_wait
+            process.wait_exited = original_wait
             await stage.close()
         self.assertIsNone(stage.pid)
         self.assertEqual(stage.stats["pending"], 0)
@@ -147,7 +147,8 @@ class StageBoundsTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_cancel_during_os_spawn_retains_ownership_until_reaped(self):
         stage = ProcessStage([sys.executable, "-u", "-c", HANG], terminate_grace_seconds=.03)
-        original_spawn = asyncio.create_subprocess_exec
+        from process_stage import spawn_owned_process
+        original_spawn = spawn_owned_process
         created, release = asyncio.Event(), asyncio.Event()
         spawned = []
         async def delayed_return(*args, **kwargs):
@@ -156,7 +157,7 @@ class StageBoundsTests(unittest.IsolatedAsyncioTestCase):
             created.set()
             await release.wait()
             return process
-        with patch("process_stage.asyncio.create_subprocess_exec", delayed_return):
+        with patch("process_stage.spawn_owned_process", delayed_return):
             call = asyncio.create_task(stage.request({}))
             await created.wait()
             pid = spawned[0].pid

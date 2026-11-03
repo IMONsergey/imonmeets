@@ -37,6 +37,8 @@
 | RU→ZH и ZH→RU | В текущем MTProcessEngine нет этих direct routes; возможен двухэтапный путь через EN | Выполнить отдельную приемку реальных двухэтапных выходов и полной задержки |
 | RU→AR и AR→RU | Та же граница: direct routes нет, возможен pivot EN | Проверить два hop, арабский смысл, числа и итоговое произнесение |
 
+Текущий ASRProcessEngine закреплен за одним исходным языком, MTProcessEngine за одним направлением; один adapter владеет одним экземпляром каждого. TrackHandle задает единственный целевой язык, fanout на языки нескольких слушателей отсутствует. Многоязычные fake-engine tests не доказывают такую реальную комнату. Требуется отдельный bounded router/cache с переиспользованием ASR и MT для слушателей одного языка и собственной приемкой лимитов/учета минут.
+
 Текущие шесть измеренных direct маршрутов - EN↔RU, EN↔ZH, EN↔AR. Они совпадают только с двумя из шести требуемых RU-маршрутов. `tools/run_mt40.py` умеет подготовить второй hop, но сохраненных новых OPUS RU↔ZH/AR outputs в этой серии нет. Тест корректности связывания исходных примеров не заменяет вычисление и приемку второго hop.
 
 Исторически 2 ноября запускались synthetic Piper/Argos zh→ru и ar→ru через EN. Эти результаты не выброшены, но их голоса и точная Argos lineage не приняты. Они не доказывают текущую коммерческую цепочку на сохраненном FLEURS.
@@ -110,7 +112,9 @@ Kokoro из сохраненного shortlist имеет EN/ZH inventory, но 
 
 Контрольная приемка: 6/6 новых tests, затем полный suite 93/93, без failures/errors/skips, 21.542 с. Unit `imonmeets-mt-participant-full-control-20261103T092127Z-1688583`; CPUQuota 100%, MemoryMax 2 GiB, TasksMax 128, RuntimeMaxSec 90, общий verify.lock, exit 0. Raw logs и JSON receipts сохранены. Предыдущая реальная model smoke не повторялась и не выдается за проверку нового commit.
 
-## 7. Открытый дефект владения процессами
+## 7. Обнаруженный дефект владения процессами и последующее исправление
+
+**Обновление после participant commit:** последующее исправление реализовано в узком Linux sole-reaper контракте с полным прогоном 101/101 control tests и дополнительными 8/8 targeted tests финальной обработки ECHILD после независимого review. Детали, ограничения и реальные child regressions: `OWNERSHIP_2026-11-03.md`. Ниже сохранена исходная причина и граница дефекта.
 
 `process_stage.py`, исходный SHA-256 `8898ee3a251f9f2b11b76eb9b7d7c46664d45f41a8108bfc52ba7f04664ddc40`: `_stop()` вызывает SIGTERM для числовой PGID, ожидает `process.wait()`, затем безусловно вызывает SIGKILL для той же числовой PGID. После успешного reap лидера нет доказательства, что номер все еще обозначает собственную группу. Повторная попытка close при failed reap имеет ту же проблему доверия числовому идентификатору.
 
@@ -120,13 +124,13 @@ Kokoro из сохраненного shortlist имеет EN/ZH inventory, но 
 
 Обязательные regression cases следующего исправления: parent exits/descendant retains pipes и игнорирует TERM; leader уже reaped и PGID считается повторно использованной, чужой сигнал запрещен; cancel во время spawn; повторный close после unproven reap; native-buffer reservation не отпускается до доказанного завершения; bounded return и отказ принимать новую работу при неопределенном владении. Если произвольное дерево нельзя безопасно завершить, сузить контракт и оставить admission закрытым, явно отчитавшись о неполной очистке.
 
-Этот дефект не исправлен текущим participant commit. Существующий green child-process test подтверждает обычный cleanup и не является доказательством защиты от reuse. До следующего ownership исправления нельзя считать управление процессами полностью принятым для продаваемой функции.
+Participant commit сам по себе этот дефект не исправлял. Следующее изменение удерживает прямого дочернего лидера unreaped до последнего group signal, использует pidfd/WNOWAIT и явно запрещает внешних reapers. Escaped descendants с удерживаемым stdout вызывают конечную ошибку и закрытие admission. Это проверено на actual OS children, но не является поддержкой произвольных process trees или разрешением запускать перевод в production.
 
 ## 8. Полный остаток для функции перевода
 
 | Приоритет | Задача | Критерий приемки |
 | --- | --- | --- |
-| P0 | Устранить reuse-риск native worker cleanup | Negative ownership tests и конечный результат при parent/descendant/cancel гонках |
+| P0, реализовано в узком Linux-контракте | Устранить reuse-риск native worker cleanup | Полный прогон 101/101 + финальная focused-проверка 8/8; production обязан соблюдать sole-reaper и bounded-cgroup контракт |
 | P0 | Привести routing к RU↔EN/ZH/AR | Каждый требуемый маршрут имеет exact chain, actual hop output, hash и время |
 | P0 | Исправить или заменить MT с критическими смысловыми ошибками | Замороженные known failures + новые holdout; независимая приемка носителями, без скрытой правки сумм |
 | P0 | Получить разрешенную TTS цепочку на четыре языка | Exact voice/base/data/runtime grants, attribution, hashes; отдельно успешная проверка звука |
@@ -149,4 +153,17 @@ Kokoro из сохраненного shortlist имеет EN/ZH inventory, но 
 
 ## Следующий исполнимый этап
 
-Сначала закрыть ownership cleanup и адаптировать будущую room integration к ParticipantHandle. Затем на сохраненной выборке выполнить отсутствующие четыре RU↔ZH/AR маршрута через уже проверенные OPUS artifacts, не пересобирая выборку и не загружая новые модели. Реальные jobs остаются по одному, CPU 1, RAM 2 GiB, с конечным runtime и checkpoint на направление. Это даст честное решение, подходит ли существующий MT вообще; одновременно можно собирать права на TTS кандидатов без запуска запрещенных голосов. Включать платную голосовую функцию до прохождения этих gates нельзя.
+Ownership cleanup и ParticipantHandle реализованы в изолированном адаптере; будущая room integration должна соблюдать их контракты. Следующий этап на сохраненной выборке выполнить отсутствующие четыре RU↔ZH/AR маршрута через уже проверенные OPUS artifacts, не пересобирая выборку и не загружая новые модели. Реальные jobs остаются по одному, CPU 1, RAM 2 GiB, с конечным runtime и checkpoint на направление. Это даст честное решение, подходит ли существующий MT вообще; одновременно можно собирать права на TTS кандидатов без запуска запрещенных голосов. Включать платную голосовую функцию до прохождения этих gates нельзя.
+
+### Команды следующей MT-выборки, сейчас не запускались
+
+Использовать существующий artifact root `/home/sergey/imonmeets-translation-cpu-20261102`: там проверены наличие `.venv/bin/python` и всех шести `data/models/opus_ct2` directories. Перед исполнением заново проверить actual HEAD/status/jobs и прежние hashes выборки. Запускать по одной команде, дожидаясь receipt предыдущей. Каждый job ограничен 1 CPU, 2 GiB, 180 с; не увеличивать бюджет после отказа.
+
+```bash
+bash /home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/tools/run_bounded.sh mt40-ru-zh 180 /home/sergey/imonmeets-translation-cpu-20261102/.venv/bin/python /home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/tools/run_mt40.py ru-zh
+bash /home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/tools/run_bounded.sh mt40-zh-ru 180 /home/sergey/imonmeets-translation-cpu-20261102/.venv/bin/python /home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/tools/run_mt40.py zh-ru
+bash /home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/tools/run_bounded.sh mt40-ru-ar 180 /home/sergey/imonmeets-translation-cpu-20261102/.venv/bin/python /home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/tools/run_mt40.py ru-ar
+bash /home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/tools/run_bounded.sh mt40-ar-ru 180 /home/sergey/imonmeets-translation-cpu-20261102/.venv/bin/python /home/sergey/imonmeets-translation-cpu-20261102/experiments/translation_cpu/tools/run_mt40.py ar-ru
+```
+
+Runner берет фактический сохраненный first-hop output, проверяет совпадение input/model hash и передает его во второй hop, не подставляя gold English. Создаются новые файлы четырех направлений в `data/mt40/opus-original-20261103/`; существующие шесть direct outputs не переписываются. `pipeline_mt_seconds` будет суммой времен ранее измеренного first hop и нового second hop, а не новым live end-to-end замером. Target tokens `>>cmn_Hans<<` и `>>ara<<` остаются обязательными. После этого требуются смысловая проверка новых outputs, новые heldout через оба hop и отдельный живой pipeline, если качество позволит продолжать.

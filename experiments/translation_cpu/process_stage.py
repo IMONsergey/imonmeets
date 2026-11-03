@@ -1,6 +1,7 @@
 """A local JSON-lines model worker whose CPU work can be terminated on cancellation."""
 from __future__ import annotations
 import asyncio,json,math,os,signal
+from owned_process import OwnedSpawnError, ProcessOwnershipError, ProcessOwnershipLostError, require_owned_process_support, spawn_owned_process
 
 class StageProtocolError(RuntimeError):pass
 class StageExecutionError(RuntimeError):pass
@@ -11,6 +12,7 @@ class StageCleanupError(RuntimeError):
 
 class ProcessStage:
     def __init__(self,command,*,timeout_seconds=45,max_input_bytes=4*1024*1024,max_output_bytes=128*1024,max_pending=4,max_pending_bytes=8*1024*1024,max_queue_seconds=10,terminate_grace_seconds=.25,reap_timeout_seconds=1):
+        require_owned_process_support()
         if not command or not all(isinstance(x,str) and x for x in command):raise ValueError('Explicit executable argv required')
         limits=(timeout_seconds,max_input_bytes,max_output_bytes,max_pending,max_pending_bytes,max_queue_seconds,terminate_grace_seconds,reap_timeout_seconds)
         if any(isinstance(x,bool) or not isinstance(x,(int,float)) or not math.isfinite(x) or x<=0 for x in limits):raise ValueError('Positive finite limits required')
@@ -33,14 +35,18 @@ class ProcessStage:
         if self._process is not None:return self._process
         environment={k:os.environ[k] for k in ['PATH','LANG','LC_ALL','TZ'] if k in os.environ}
         environment.update({'OMP_NUM_THREADS':'1','OPENBLAS_NUM_THREADS':'1','MKL_NUM_THREADS':'1','NUMEXPR_NUM_THREADS':'1','CUDA_VISIBLE_DEVICES':'','HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1','TOKENIZERS_PARALLELISM':'false','PYTHONUNBUFFERED':'1','PYTHONNOUSERSITE':'1'})
-        spawn=asyncio.create_task(asyncio.create_subprocess_exec(*self.command,stdin=asyncio.subprocess.PIPE,stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.DEVNULL,limit=self.max_output_bytes+1,start_new_session=True,env=environment))
-        try:self._process=await asyncio.shield(spawn)
-        except asyncio.CancelledError:
-            # Retain ownership even when cancellation races OS process creation.
-            while not spawn.done():
-                try:await asyncio.shield(spawn)
-                except asyncio.CancelledError:continue
-            self._process=spawn.result()
+        spawn=asyncio.create_task(spawn_owned_process(self.command,environment=environment,max_output_bytes=self.max_output_bytes))
+        try:
+            try:self._process=await asyncio.shield(spawn)
+            except asyncio.CancelledError:
+                # Retain ownership even when cancellation races OS process creation.
+                while not spawn.done():
+                    try:await asyncio.shield(spawn)
+                    except asyncio.CancelledError:continue
+                self._process=spawn.result()
+                raise
+        except OwnedSpawnError as error:
+            self._process=error.process
             raise
         return self._process
 
@@ -48,18 +54,34 @@ class ProcessStage:
         process=self._process
         if process is None:return
         try:
-            try:os.killpg(process.pid,signal.SIGTERM)
-            except ProcessLookupError:pass
-            try:await asyncio.wait_for(process.wait(),self.terminate_grace_seconds)
-            except asyncio.TimeoutError:pass
-            # Terminate descendants even when their parent exited on SIGTERM.
-            try:os.killpg(process.pid,signal.SIGKILL)
-            except ProcessLookupError:pass
-            await asyncio.wait_for(process.wait(),self.reap_timeout_seconds)
+            if process.unproven_descendants:
+                raise ProcessOwnershipError('escaped descendant cleanup remains unproven')
+            if process.stdin is not None:process.stdin.close()
+            if not process.reaped:
+                process.signal_group(signal.SIGTERM)
+                try:await asyncio.wait_for(process.wait_exited(),self.terminate_grace_seconds)
+                except asyncio.TimeoutError:pass
+                # wait_exited uses WNOWAIT: even an exited leader retains its PID.
+                # Group signals are complete before the sole owner reaps it.
+                process.signal_group(signal.SIGKILL)
+                await asyncio.wait_for(process.wait_exited(),self.reap_timeout_seconds)
+                process.reap()
+            try:
+                if process.stdout is not None:
+                    await asyncio.wait_for(process.stdout.drain_eof(),self.reap_timeout_seconds)
+            except BaseException:
+                # A descendant outside the original group may retain the pipe.
+                # Close descriptors, permanently quarantine and never guess a PID.
+                process.unproven_descendants=True
+                process.close_pipes()
+                raise
+            process.close_pipes()
         except BaseException as error:
-            # Never lose a native worker handle on failed wait/reap (including
-            # uninterruptible kernel I/O). A new request must not spawn beside it.
             self._closed=True;self._cleanup_failure=type(error).__name__
+            if isinstance(error,ProcessOwnershipLostError):
+                try:process.close_lost_observation()
+                except BaseException as close_error:
+                    self._cleanup_failure+="/descriptor-close-"+type(close_error).__name__
             for task in tuple(self._requests):
                 if task is not self._active_call:task.cancel()
             raise StageCleanupError('worker retirement unproven; stage quarantined') from error

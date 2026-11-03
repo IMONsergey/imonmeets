@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "base_commit": "361b996bbf779b5550ddea67c1d40ba94f644dfa",
+  "recorded_at": "2026-11-03T09:39:44.113913+00:00",
+  "source_sha256": {
+    "owned_process.py": "424ef39f6fef9e8b03229c28c758f8cae4e028773fa695303612ff106091c519",
+    "process_stage.py": "571c4a483c9c42849cf42ceb0dd1decbdd27c71c54c98baa34331e82d469e6f5",
+    "real_engines.py": "915942a4fc8a3f7bbf25cb57b3dfa03848a5d6f50bc5b51fc9e131acf2e6c24f",
+    "streaming_adapter.py": "e517ca8c830168a4c718455f1bb93feee4d5fd572098553161fb797070b42904",
+    "tests/test_process_ownership.py": "a05feebfc4f09dd237f98bab27464126f1a05393d6f3e99169a896016fd0a072",
+    "tests/test_process_stage.py": "ae2c92af366d2f76d17dab4d72b9a6e6613cccf0854f0251a306cbc9792668ad",
+    "tests/test_worker_lifecycle.py": "541df86dbb245c71eb9dc2c34f55885417833c83bba742ffdafc97ecf41db0da",
+    "tests/test_participant_identity.py": "818c94d55f52a4922c6d4973bcdc4742d75841e0e0941dffca6ab4114730096c",
+    "tools/run_bounded.sh": "197b1b7a10e7078386d5dc874ab7956cebc91f3585c7583e9dd2dd89b1f9d761"
+  },
+  "receipts_sha256": {
+    "imonmeets-mt-ownership-new-regressions-20261103T093624Z-1827254.json": "010317c4ebfb959220e5caff753611521ed5bdbbec220c151cb020ac231de0c9",
+    "imonmeets-mt-ownership-focused-20261103T093348Z-1804947.json": "c2d831da9b95027e98245d92ffb2864de8d6db9cae92b540c185bb86d7666a21",
+    "imonmeets-mt-ownership-full-control-20261103T093642Z-1829963.json": "8d274800998ca4bf9633891f3154c2241a3c890b9acc725b0d871d1d9b7423c8",
+    "imonmeets-mt-ownership-red-20261103T093224Z-1792725.json": "63f99027dd40d427e8cbba511f6f96089baa430984174fdddac45f3cbf7092f0"
+  },
+  "full_control_unit": "imonmeets-mt-ownership-full-control-20261103T093642Z-1829963",
+  "tests": 101,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "test_seconds": 21.018,
+  "existing_tracked_raw_files_checked": 303,
+  "existing_tracked_raw_evidence_unchanged": true,
+  "real_models_rerun": false,
+  "production_changes": false,
+  "contract": "Linux, sole reaper, retained session leader through all group signals; escaped descendants outside contract cause bounded quarantine on retained stdout",
+  "commercial_translation_gate": "BLOCKED"
+}

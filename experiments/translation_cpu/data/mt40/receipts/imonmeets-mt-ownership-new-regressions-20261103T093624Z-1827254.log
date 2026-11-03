@@ -1,0 +1,13 @@
+test_after_reap_neither_term_nor_kill_can_reuse_the_numeric_group (test_process_ownership.ProcessOwnershipTests.test_after_reap_neither_term_nor_kill_can_reuse_the_numeric_group) ... ok
+test_escaped_descendant_with_pipe_fails_bounded_and_fixture_cleans_by_pidfd (test_process_ownership.ProcessOwnershipTests.test_escaped_descendant_with_pipe_fails_bounded_and_fixture_cleans_by_pidfd) ... ok
+test_exited_leader_is_retained_until_term_ignoring_descendant_is_killed (test_process_ownership.ProcessOwnershipTests.test_exited_leader_is_retained_until_term_ignoring_descendant_is_killed) ... ok
+test_external_reap_echild_closes_admission_without_group_signals (test_process_ownership.ProcessOwnershipTests.test_external_reap_echild_closes_admission_without_group_signals) ... ok
+test_no_group_signal_may_follow_leader_reap (test_process_ownership.ProcessOwnershipTests.test_no_group_signal_may_follow_leader_reap) ... ok
+test_non_linux_and_external_sigchld_handler_fail_before_spawn (test_process_ownership.ProcessOwnershipTests.test_non_linux_and_external_sigchld_handler_fail_before_spawn) ... ok
+test_pidfd_setup_failure_retains_spawned_child_for_safe_cleanup (test_process_ownership.ProcessOwnershipTests.test_pidfd_setup_failure_retains_spawned_child_for_safe_cleanup) ... ok
+test_synchronous_spawn_throw_returns_error_and_releases_reservation (test_process_ownership.ProcessOwnershipTests.test_synchronous_spawn_throw_returns_error_and_releases_reservation) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.399s
+
+OK

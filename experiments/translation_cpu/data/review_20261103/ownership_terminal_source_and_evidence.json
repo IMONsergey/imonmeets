@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "base_commit": "361b996bbf779b5550ddea67c1d40ba94f644dfa",
+  "recorded_at": "2026-11-03T09:44:25.277276+00:00",
+  "source_sha256": {
+    "owned_process.py": "42bb722818e48f9cc91102d5057035f5f43f527fd5446657f470abffb338c823",
+    "process_stage.py": "fad65414496ef71b7b56482b2b18243ec8e2e1e330cbcb7f445bb8017a934aec",
+    "real_engines.py": "915942a4fc8a3f7bbf25cb57b3dfa03848a5d6f50bc5b51fc9e131acf2e6c24f",
+    "streaming_adapter.py": "e517ca8c830168a4c718455f1bb93feee4d5fd572098553161fb797070b42904",
+    "tests/test_process_ownership.py": "46a6f84b196fd414a399237ae9917a50aa7df1e70a78d8e8134a610d2c4f30dd",
+    "tests/test_process_stage.py": "ae2c92af366d2f76d17dab4d72b9a6e6613cccf0854f0251a306cbc9792668ad",
+    "tests/test_worker_lifecycle.py": "541df86dbb245c71eb9dc2c34f55885417833c83bba742ffdafc97ecf41db0da",
+    "tests/test_participant_identity.py": "818c94d55f52a4922c6d4973bcdc4742d75841e0e0941dffca6ab4114730096c",
+    "tools/run_bounded.sh": "197b1b7a10e7078386d5dc874ab7956cebc91f3585c7583e9dd2dd89b1f9d761"
+  },
+  "final_focused_receipt": "imonmeets-mt-ownership-terminal-fds-20261103T094113Z-1870215.json",
+  "final_focused_receipt_sha256": "75556f57cae22be35edec55f273623af7e0eaf638a66958b6a73133773aa8dab",
+  "final_focused_tests": 8,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "test_seconds": 0.427,
+  "earlier_full_suite_record": "ownership_source_and_evidence.json",
+  "earlier_full_suite_record_sha256": "599e930aee4c219466e91c490c1b387a028e8f75dac7911b07e61fac061c15c2",
+  "earlier_full_suite_tests": 101,
+  "changed_sources_since_full_suite": [
+    "owned_process.py",
+    "process_stage.py",
+    "tests/test_process_ownership.py"
+  ],
+  "full_suite_repeated_after_terminal_fd_followup": false,
+  "independent_read_only_review": "/root/product_audit approved final sole-reaper boundary and sticky terminal ownership-loss cleanup",
+  "model_manifest_unchanged": true,
+  "real_models_rerun": false,
+  "production_changes": false,
+  "commercial_translation_gate": "BLOCKED"
+}

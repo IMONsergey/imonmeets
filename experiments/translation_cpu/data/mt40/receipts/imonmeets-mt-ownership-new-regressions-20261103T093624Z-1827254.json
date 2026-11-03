@@ -1,0 +1,24 @@
+{
+  "unit": "imonmeets-mt-ownership-new-regressions-20261103T093624Z-1827254",
+  "started_at": "2026-11-03T09:36:24Z",
+  "finished_at": "2026-11-03T09:36:25.152494+00:00",
+  "runtime_max_seconds": 30,
+  "exit_code": 0,
+  "command": [
+    "/usr/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_process_ownership.py",
+    "-v"
+  ],
+  "log": "imonmeets-mt-ownership-new-regressions-20261103T093624Z-1827254.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}

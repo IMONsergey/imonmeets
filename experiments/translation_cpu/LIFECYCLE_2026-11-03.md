@@ -256,7 +256,9 @@ The negative reproducer failed before the change, then six new regression tests
 and the complete 93-test control suite passed under CPU1/RAM2GiB. The prior real
 model smoke remains historical evidence; it was not rerun for this API change.
 See `COMMERCIAL_REVIEW_2026-11-03.md` and the `participant-*` receipts for exact
-results and scope. That independent review also identified an OPEN process-group
+results and scope. That independent review also identified a process-group
 ownership issue: `_stop()` can signal a numeric PGID after leader wait/reap.
-The ordinary descendant test does not prove safety against PGID reuse. No claim
-of complete native-process ownership acceptance is made while that issue remains.
+The ordinary descendant test does not prove safety against PGID reuse. The subsequent fix and its sole-reaper Linux contract are documented in
+`OWNERSHIP_2026-11-03.md`; 101 control tests pass, including retained-zombie
+ownership and escaped-descendant bounded quarantine. The wrapper does not claim
+termination or reaping of arbitrary escaped process trees.

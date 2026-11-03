@@ -1,0 +1,15 @@
+test_no_group_signal_may_follow_leader_reap (test_process_ownership.ProcessOwnershipTests.test_no_group_signal_may_follow_leader_reap) ... ok
+test_queued_request_survives_active_cancellation (test_process_stage.ProcessStageConcurrencyTests.test_queued_request_survives_active_cancellation) ... ok
+test_cancel_kills_worker_and_prevents_late_effect (test_process_stage.ProcessStageTests.test_cancel_kills_worker_and_prevents_late_effect) ... ok
+test_close_cancels_running_work_and_rejects_new_work (test_process_stage.ProcessStageTests.test_close_cancels_running_work_and_rejects_new_work) ... ok
+test_oversized_input_is_rejected_before_process_start (test_process_stage.ProcessStageTests.test_oversized_input_is_rejected_before_process_start) ... ok
+test_oversized_output_is_rejected_and_worker_killed (test_process_stage.ProcessStageTests.test_oversized_output_is_rejected_and_worker_killed) ... ok
+test_pending_cap_and_cancelled_waiter_do_not_kill_active_worker (test_process_stage.ProcessStageTests.test_pending_cap_and_cancelled_waiter_do_not_kill_active_worker) ... ok
+test_real_process_reuse_and_correlated_responses (test_process_stage.ProcessStageTests.test_real_process_reuse_and_correlated_responses) ... ok
+test_timeout_kills_sigterm_resistant_process (test_process_stage.ProcessStageTests.test_timeout_kills_sigterm_resistant_process) ... ok
+test_wrong_response_id_kills_worker (test_process_stage.ProcessStageTests.test_wrong_response_id_kills_worker) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.093s
+
+OK

@@ -8,7 +8,7 @@ The saved 40 common FLEURS sentence IDs and source TSVs are unchanged and commit
 
 Actual selected audio is streamed from the official pinned test archives. The complete archive SHA-256 is verified against the pinned HF LFS object, but only the manifest-selected 40 WAVs per language are persisted. No Dataset Viewer/current-revision proxy is substituted. Audio hashes and exact frames/sample-rate are in `data/fleurs_subset/audio-*.json`.
 
-See [independent commercial review](COMMERCIAL_REVIEW_2026-11-03.md), [measured results](RESULTS_2026-11-03.md), [continuation scope](CONTINUATION.md), and [artifact rights](LICENSE_MANIFEST.md). The real process workers in `real_engines.py` and `tools/model_worker.py` support local ASR and MT only. The current bounded adapter lifecycle and its separate control evidence are documented in [LIFECYCLE_2026-11-03.md](LIFECYCLE_2026-11-03.md). They do not supply TTS, a LiveKit integration, commercial acceptance or first-audio latency evidence.
+See [independent commercial review](COMMERCIAL_REVIEW_2026-11-03.md), [measured results](RESULTS_2026-11-03.md), [continuation scope](CONTINUATION.md), and [artifact rights](LICENSE_MANIFEST.md). The real process workers in `real_engines.py` and `tools/model_worker.py` support local ASR and MT only. The current bounded adapter lifecycle and its separate control evidence are documented in [LIFECYCLE_2026-11-03.md](LIFECYCLE_2026-11-03.md). The retained-leader Linux process ownership contract and its 101-test receipt are in [OWNERSHIP_2026-11-03.md](OWNERSHIP_2026-11-03.md). They do not supply TTS, a LiveKit integration, commercial acceptance or first-audio latency evidence.
 
 ## Historical engines (2 November)
 
