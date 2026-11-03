@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-11-03T12:02:37.062061+00:00",
+  "integrationCommit": "277edda08a210dc2cd8cc102c668adb82f249e54",
+  "node": "v24.22.1",
+  "sourceHashesMatchMergedWorktree": true,
+  "productionChanges": false,
+  "externalMediaAcceptance": false,
+  "runs": [
+    {
+      "suite": "compose-preflight",
+      "exitCode": 0,
+      "stdout": "✔ rejects a stale runtime override even when migrate still uses the accepted image (1.718066ms)\n✔ accepts normalized Compose and does not invent a migrate journal mount requirement (0.226782ms)\n✔ requires both app and migrate to use exact immutable references (0.749338ms)\n✔ rejects mismatched source and image identity declarations in either service (0.412411ms)\n✔ requires production mode without pretending that the static gate proves public443 (0.2919ms)\n✔ catches lost or captured Resend configuration in either merged service (1.417044ms)\n✔ applies actual loadConfig Resend defaults and rejects Compose quota defaults that exceed Free limits (1.057091ms)\n✔ detects divergent mail or application origin overlays without printing values (0.264118ms)\n✔ requires a writable explicitly existing bind at the app journal path (0.510879ms)\n✔ checks journal and receiver presence but does not claim enrollment or independent host acceptance (0.482977ms)\n✔ rejects a tmpfs overlay that would hide the persistent journal or its contents (0.435045ms)\n✔ binds supplied real Docker image metadata to image and source without trusting a Compose label (0.742338ms)\n✔ does not confuse a registry manifest digest with the Docker image ID (0.370638ms)\n✔ malformed rendered input and malformed metadata fail closed (0.153031ms)\n✔ returns only fixed diagnostic codes and never serializes raw configuration (0.447454ms)\n✔ CLI reads an explicit bounded JSON file, exits by verdict and never modifies it (315.902798ms)\nℹ tests 16\nℹ suites 0\nℹ pass 16\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 444.996455\n",
+      "stderr": "",
+      "stdoutSha256": "74eff5645d65cd28a58c5e9c1286896e1f940937cf84657facd0368f86e5b626"
+    },
+    {
+      "suite": "media-turn443",
+      "exitCode": 0,
+      "stdout": "✔ requires an explicit endpoint and retains TLS443 without a legacy fallback (2.618472ms)\n✔ legacy5349 is available only when explicitly selected (0.159721ms)\n✔ validates scheme, hostname, TCP transport and the expected service port (0.472902ms)\n✔ constructor and later setConfiguration permit only the exact TLS443 endpoint (1.447669ms)\n✔ normal ICE is unchanged while every created peer is observed (0.525691ms)\n✔ relay acceptance requires received media and a nonempty selected expected TLS route (0.440864ms)\n✔ normal ICE still requires received audio, decoded frames and selected pairs (0.13933ms)\n✔ collects only the transport-selected candidate pair and retains no raw URLs or IPs (1.014788ms)\n✔ a matching unselected candidate cannot rescue a wrong selected endpoint (3.324585ms)\n✔ missing or failed selected pairs refuse media acceptance (1.749824ms)\n✔ failure diagnostics are bounded state fields and never inspect meeting text or URLs (0.911923ms)\nℹ tests 11\nℹ suites 0\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 118.599695\n",
+      "stderr": "",
+      "stdoutSha256": "f18f8b89f6453b7b1c0580f7f75f6a4472b10afffd2aeb50e1b9143203cafd00"
+    }
+  ],
+  "syntaxCheck": {
+    "exitCode": 0,
+    "stderr": ""
+  },
+  "sourceSha256": {
+    "compose-preflight/scripts/check-compose-cutover.mjs": "c4d923dab91168e2ef6b2b9232e4d50f7fe58d148d8de3e9393a483666d103c4",
+    "compose-preflight/scripts/test-compose-cutover.mjs": "5dd7251df4a1a775890ffee8a9bdf41a9f17046b9b7fcb210fa523c6790f1b9c",
+    "media-turn443/scripts/external-media-policy.mjs": "8bc9730c4e5ec9e1c19be50678812de6171ae6fe03ce8f686b0ecfac424e10c8",
+    "media-turn443/scripts/test-external-media-policy.mjs": "85ac895bd5bda673586cc880836b9696bff686475c816568ce0d854c67c28fde",
+    "media-turn443/scripts/verify-external-media.mjs": "e358d5a5a6982f050757ae3296ad45c86d339947d77ff9aa91bb90cb8474f6c0"
+  }
+}
