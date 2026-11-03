@@ -31,6 +31,17 @@ make a healthy preview an unhealthy service. They do not imply that public or
 commercial launch is ready. A TCP signaling check is not a completed media call;
 a supplied worker URL is not an accepted transcription system.
 
+The commercial-readiness release uses **evidence schema 2**. Set
+`RELEASE_COMMIT` to the exact 40-character Git commit and `RELEASE_IMAGE_DIGEST`
+to the actual `sha256:...` runtime image digest. Obtain these from the deployed
+image and release manifest, not from a guessed branch name. Missing identity
+blocks launch without changing service health. Every capability hash includes
+this identity, so receipts from a different build must be reviewed again.
+
+Public launch requires the ordinary HTTPS/WSS port 443 (no `:8443`) and explicit
+acceptance of a real TURN/TLS443 call. Local previews can remain healthy on
+nonstandard ports. The checker never changes listeners, VPN, DNS or certificates.
+
 **Exit status is a service-health signal, not a launch approval:**
 
 | Exit code | Meaning                                                                                                  |
@@ -50,7 +61,7 @@ commercial blockers without blocking a free public service.
 | `--env PATH`; project `.env`                        | Private deployment environment; parsed without executing shell or changing the process environment                                                  |
 | `--state-dir PATH`; project `ops-state`             | Directory for the default evidence files below                                                                                                      |
 | `health.json` in the state directory                | Existing local monitor result: `checkedAt`, `ok`, and `checks.api`, `checks.mediaSignaling`, `checks.backup`, `checks.disk`, each with boolean `ok` |
-| `mail-delivery-check.json` in the state directory   | `nonce`, `submittedAt`, `receivedAt`, `received:true`, and the matching SMTP `configurationHash`                                                    |
+| `mail-delivery-check.json` in the state directory   | `nonce`, `submittedAt`, `receivedAt`, `received:true`, and the matching email `configurationHash`                                                   |
 | `--acceptance PATH`; state `launch-acceptance.json` | Capability acceptance blocks described below                                                                                                        |
 | `--offsite PATH`; state `offsite-status.json`       | Actual external receiver status: `checkedAt`, `backupCreatedAt`, `backupOk:true`, `automatic:true`, and 64-character lowercase hex `verifiedSha256` |
 | `--alerts PATH`; state `alerts-status.json`         | Current independent monitor status: `checkedAt`, `ok:true`, `independentMonitor:true`, and matching alerts `configurationHash`                      |
@@ -77,24 +88,34 @@ Every capability block under `launch-acceptance.json` requires:
 
 | Capability      | Required assertions                                                                       |
 | --------------- | ----------------------------------------------------------------------------------------- |
-| `smtp`          | `senderAuthenticationVerified`, `verificationFlow`, `passwordResetFlow`, `invitationFlow` |
-| `media`         | `realTwoPartyCall`, `externalNetwork`, `targetCapacity`                                   |
+| `email`         | `senderAuthenticationVerified`, `verificationFlow`, `passwordResetFlow`, `invitationFlow` |
+| `media`         | `realTwoPartyCall`, `externalNetwork`, `targetCapacity`, `turnTls443`                     |
 | `alerts`        | `independentMonitor`, `incidentDelivery`, `recoveryDelivery`                              |
 | `recording`     | `startStop`, `privateDownload`, `deletion`, `retention`, `restore`                        |
 | `transcription` | `realRecordingProcessed`, `qualityReviewed`, `deletion`, `resourceBudget`                 |
 | `summary`       | `realRecordingProcessed`, `qualityReviewed`, `deletion`, `resourceBudget`                 |
 | `billing`       | `paymentVerified`, `cancellationVerified`, `receiptVerified`                              |
 
-SMTP additionally needs the received-message artifact above: the submitted nonce
+Email additionally needs the received-message artifact above: the submitted nonce
 must have been found in the destination inbox, and `receivedAt` must not precede
-`submittedAt`. The existing mail submission checker intentionally writes
-`received:false`; SMTP queue acceptance alone never proves inbox delivery.
+`submittedAt`. Mail submission checks intentionally write `received:false`.
+Neither SMTP queue acceptance nor a Resend API message ID proves inbox delivery.
+
+`EMAIL_PROVIDER=smtp` requires an external non-capture SMTP host and sender,
+plus a password if an SMTP user is configured. `EMAIL_PROVIDER=resend` requires
+external delivery mode, `RESEND_API_KEY` and `SMTP_FROM`; an unused SMTP host is
+irrelevant. Unknown providers fail closed. Output uses `checks.email` and
+`EXTERNAL_EMAIL_*` / `EMAIL_*` blocker codes for both transports. The old
+`smtp` capability name is accepted only as an alias to the new fingerprint;
+old SMTP-only hashes cannot pass. A transport or sender change invalidates
+delivery and flow receipts. API keys and passwords are never hashed or output.
 
 Media acceptance must cover the actual advertised target, external network and
 configured concurrent-room/participant budget. Enabling recording changes its
 hash because it changes resource demand. The gate does not assert support for
-every mobile network and does not require TCP 443 unless that network capability
-is separately promised and tested.
+every mobile network. `turnTls443` must come from actual media with UDP blocked,
+not a TLS handshake or a local-only call. Signaling authorization configuration
+also belongs to the media fingerprint.
 
 Alerts require both tested delivery of an incident and recovery, and a fresh
 working independent monitor. A notification arrangement that depends on an awake
@@ -123,18 +144,24 @@ sudo -n /opt/imon-runtime/node/bin/node scripts/check-launch-readiness.mjs \
   --env /home/sergey/imonmeets/.env --configuration-hashes
 ```
 
-Each hash is SHA256 of the ordered JSON pairs `[field, value-or-empty-string]`.
+Each hash is SHA256 of the ordered JSON pairs `[field, value-or-empty-string]`,
+prefixed with `evidenceSchema=2`, `RELEASE_COMMIT` and `RELEASE_IMAGE_DIGEST`.
 It identifies configuration, not proof of acceptance, and contains no password or
 secret-key inputs. A relevant configuration change invalidates the old evidence.
 
-| Capability hash            | Environment fields                                                                                                                           |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `smtp`                     | `APP_URL`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_FROM`                                                                 |
-| `media`                    | `APP_URL`, `LIVEKIT_URL`, `LIVEKIT_PUBLIC_IP`, `MAX_ACTIVE_ROOMS`, `MAX_PARTICIPANTS_PER_ROOM`, `MAX_ACTIVE_RECORDINGS`, `RECORDING_ENABLED` |
-| `alerts`                   | `APP_URL`                                                                                                                                    |
-| `recording`                | `APP_URL`, `LIVEKIT_URL`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_REGION`, `RECORDING_RETENTION_DAYS`                                                |
-| `billing`                  | `APP_URL`, `YOOKASSA_SHOP_ID`, `YOOKASSA_TEST_MODE`, `YOOKASSA_VAT_CODE`, `YOOKASSA_TAX_SYSTEM_CODE`, `BILLING_PRO_PRICE_KOPECKS`            |
-| `transcription`, `summary` | `APP_URL`, `ANALYSIS_WORKER_URL`                                                                                                             |
+| Capability hash            | Environment fields                                                                                                                                                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `email` (`smtp` alias)     | `APP_URL`, `EMAIL_DELIVERY_MODE`, `SMTP_FROM`, normalized `EMAIL_PROVIDER` (default `smtp`); SMTP only additionally includes `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`                                   |
+| `media`                    | `APP_URL`, `LIVEKIT_URL`, `LIVEKIT_PUBLIC_IP`, `MAX_ACTIVE_ROOMS`, `MAX_PARTICIPANTS_PER_ROOM`, `MAX_ACTIVE_RECORDINGS`, `RECORDING_ENABLED`, `LIVEKIT_SIGNALING_AUTH_ENABLED`, `TURN_PUBLIC_HOST`, `TURN_TLS_PORT` |
+| `alerts`                   | `APP_URL`                                                                                                                                                                                                           |
+| `recording`                | `APP_URL`, `LIVEKIT_URL`, `S3_ENDPOINT`, `S3_PUBLIC_ENDPOINT`, `S3_BUCKET`, `S3_REGION`, `RECORDING_RETENTION_DAYS`                                                                                                 |
+| `billing`                  | `APP_URL`, `YOOKASSA_SHOP_ID`, `YOOKASSA_TEST_MODE`, `YOOKASSA_VAT_CODE`, `YOOKASSA_TAX_SYSTEM_CODE`, `BILLING_PRO_PRICE_KOPECKS`                                                                                   |
+| `transcription`, `summary` | `APP_URL`, `ANALYSIS_WORKER_URL`, `ANALYSIS_MODEL_MANIFEST_SHA256`                                                                                                                                                  |
+
+Enabled analysis requires a valid SHA256 of the actual checked model manifest,
+as well as the private worker URL and secret. A configured model name alone is
+not a release identity. Merely copying a hash into the environment is not a
+quality or runtime acceptance test.
 
 Do not commit private environment or evidence files. Record actual acceptance
 results only after completing the corresponding procedure, preserving enough

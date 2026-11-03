@@ -10,6 +10,8 @@ const MINUTE = 60_000;
 const DAY = 24 * 60 * MINUTE;
 const enabled = (value) => value === "true";
 const present = (value) => typeof value === "string" && value.trim().length > 0;
+const releaseFields = ["RELEASE_COMMIT", "RELEASE_IMAGE_DIGEST"];
+const emailProvider = (env) => env.EMAIL_PROVIDER || "smtp";
 const fields = {
   media: [
     "APP_URL",
@@ -19,16 +21,12 @@ const fields = {
     "MAX_PARTICIPANTS_PER_ROOM",
     "MAX_ACTIVE_RECORDINGS",
     "RECORDING_ENABLED",
+    "LIVEKIT_SIGNALING_AUTH_ENABLED",
+    "TURN_PUBLIC_HOST",
+    "TURN_TLS_PORT",
   ],
   alerts: ["APP_URL"],
-  smtp: [
-    "APP_URL",
-    "SMTP_HOST",
-    "SMTP_PORT",
-    "SMTP_SECURE",
-    "SMTP_USER",
-    "SMTP_FROM",
-  ],
+  email: ["APP_URL", "EMAIL_DELIVERY_MODE", "SMTP_FROM"],
   billing: [
     "APP_URL",
     "YOOKASSA_SHOP_ID",
@@ -41,22 +39,39 @@ const fields = {
     "APP_URL",
     "LIVEKIT_URL",
     "S3_ENDPOINT",
+    "S3_PUBLIC_ENDPOINT",
     "S3_BUCKET",
     "S3_REGION",
     "RECORDING_RETENTION_DAYS",
   ],
-  transcription: ["APP_URL", "ANALYSIS_WORKER_URL"],
-  summary: ["APP_URL", "ANALYSIS_WORKER_URL"],
+  transcription: [
+    "APP_URL",
+    "ANALYSIS_WORKER_URL",
+    "ANALYSIS_MODEL_MANIFEST_SHA256",
+  ],
+  summary: ["APP_URL", "ANALYSIS_WORKER_URL", "ANALYSIS_MODEL_MANIFEST_SHA256"],
 };
 
 /** Identifies the deployment/sender/provider without including passwords or keys. */
 export function configurationHash(env, capability) {
-  if (!Object.hasOwn(fields, capability)) throw new Error("UNKNOWN_CAPABILITY");
-  return createHash("sha256")
-    .update(
-      JSON.stringify(fields[capability].map((key) => [key, env[key] || ""])),
-    )
-    .digest("hex");
+  // Keep the old name as an API alias, never as permission to reuse a v1 receipt.
+  const canonical = capability === "smtp" ? "email" : capability;
+  if (!Object.hasOwn(fields, canonical)) throw new Error("UNKNOWN_CAPABILITY");
+  const selected = [...releaseFields, ...fields[canonical]];
+  const pairs = [
+    ["evidenceSchema", "2"],
+    ...selected.map((key) => [key, env[key] || ""]),
+  ];
+  if (canonical === "email") {
+    const provider = emailProvider(env);
+    pairs.push(["EMAIL_PROVIDER", provider]);
+    if (provider === "smtp") {
+      for (const key of ["SMTP_HOST", "SMTP_PORT", "SMTP_SECURE", "SMTP_USER"])
+        pairs.push([key, env[key] || ""]);
+    }
+    // Resend has a fixed HTTPS API endpoint in the application. Keys are not fingerprints.
+  }
+  return createHash("sha256").update(JSON.stringify(pairs)).digest("hex");
 }
 
 export function isFresh(timestamp, now, maxAge) {
@@ -67,7 +82,10 @@ export function isFresh(timestamp, now, maxAge) {
 }
 
 function accepted(env, evidence, capability, requirements, now) {
-  const item = evidence?.[capability];
+  const item =
+    capability === "email"
+      ? (evidence?.email ?? evidence?.smtp)
+      : evidence?.[capability];
   return Boolean(
     item &&
     isFresh(item.acceptedAt, now, 30 * DAY) &&
@@ -108,28 +126,57 @@ export function evaluateReadiness({
     healthBlockers.push("OPERATIONS_REPORTED_FAILURE");
   const production =
     env.NODE_ENV === "production" || env.APP_ENV === "production";
+  const releaseIdentified =
+    /^[a-f0-9]{40}$/.test(env.RELEASE_COMMIT || "") &&
+    /^sha256:[a-f0-9]{64}$/.test(env.RELEASE_IMAGE_DIGEST || "");
+  checks.release = { identified: releaseIdentified };
+  if (!releaseIdentified) publicBlockers.push("RELEASE_IDENTITY_REQUIRED");
   let secureApp = false;
+  let canonicalPort = false;
   try {
     const url = new URL(env.APP_URL);
-    secureApp = url.protocol === "https:" && !url.username && !url.password;
+    secureApp =
+      url.protocol === "https:" &&
+      !url.username &&
+      !url.password &&
+      !url.search &&
+      !url.hash &&
+      url.pathname === "/";
+    canonicalPort = secureApp && url.port === "";
   } catch {
     /* Invalid config stays unready. */
   }
   if (!production || !secureApp || enabled(env.DEV_ALLOW_UNVERIFIED_EMAIL))
     publicBlockers.push("PRODUCTION_AUTH_CONFIGURATION_REQUIRED");
+  checks.canonicalHttps = { configured: canonicalPort };
+  if (!canonicalPort) publicBlockers.push("CANONICAL_HTTPS_PORT_REQUIRED");
+  let mediaEndpoint = false;
+  let mediaPort = false;
+  try {
+    const url = new URL(env.LIVEKIT_URL);
+    mediaEndpoint =
+      url.protocol === "wss:" &&
+      !url.username &&
+      !url.password &&
+      !url.search &&
+      !url.hash;
+    mediaPort = mediaEndpoint && url.port === "";
+  } catch {
+    /* Invalid media URL stays unready. */
+  }
   const mediaConfigured =
-    present(env.LIVEKIT_URL) &&
-    env.LIVEKIT_URL.startsWith("wss://") &&
+    mediaEndpoint &&
     present(env.LIVEKIT_API_KEY) &&
     present(env.LIVEKIT_API_SECRET);
   checks.mediaConfiguration = { configured: Boolean(mediaConfigured) };
   if (!mediaConfigured)
     publicBlockers.push("PUBLIC_MEDIA_CONFIGURATION_REQUIRED");
+  if (!mediaPort) publicBlockers.push("PUBLIC_MEDIA_HTTPS_PORT_REQUIRED");
   const mediaAccepted = accepted(
     env,
     acceptance,
     "media",
-    ["realTwoPartyCall", "externalNetwork", "targetCapacity"],
+    ["realTwoPartyCall", "externalNetwork", "targetCapacity", "turnTls443"],
     now,
   );
   checks.mediaAcceptance = { accepted: mediaAccepted };
@@ -161,27 +208,36 @@ export function evaluateReadiness({
   const captureHost = ["mailpit", "localhost", "127.0.0.1", "::1"].includes(
     (env.SMTP_HOST || "").toLowerCase(),
   );
+  const provider = emailProvider(env);
   const smtpConfigured =
+    provider === "smtp" &&
     env.EMAIL_DELIVERY_MODE === "external" &&
     !captureHost &&
     present(env.SMTP_HOST) &&
     present(env.SMTP_FROM) &&
     (!present(env.SMTP_USER) || present(env.SMTP_PASSWORD));
-  // SMTP accepted/queued is not inbox delivery. Existing send checker writes received:false.
+  const resendConfigured =
+    provider === "resend" &&
+    env.EMAIL_DELIVERY_MODE === "external" &&
+    present(env.RESEND_API_KEY) &&
+    present(env.SMTP_FROM);
+  const emailConfigured = smtpConfigured || resendConfigured;
+  // Neither SMTP queue acceptance nor Resend API acceptance is inbox delivery.
   const delivered = Boolean(
     mail?.received === true &&
     present(mail.nonce) &&
     isFresh(mail.receivedAt, now, 30 * DAY) &&
     isFresh(mail.submittedAt, now, 30 * DAY) &&
     Date.parse(mail.receivedAt) >= Date.parse(mail.submittedAt) &&
-    mail.configurationHash === configurationHash(env, "smtp"),
+    mail.configurationHash === configurationHash(env, "email"),
   );
-  const smtpAccepted =
+  const emailAccepted =
+    emailConfigured &&
     delivered &&
     accepted(
       env,
       acceptance,
-      "smtp",
+      "email",
       [
         "senderAuthenticationVerified",
         "verificationFlow",
@@ -191,21 +247,22 @@ export function evaluateReadiness({
       now,
     );
   const registrationEnabled = env.REGISTRATION_ENABLED !== "false";
-  checks.smtp = {
-    configured: Boolean(smtpConfigured),
+  checks.email = {
+    provider: ["smtp", "resend"].includes(provider) ? provider : "unsupported",
+    configured: Boolean(emailConfigured),
     inboxDeliveryVerified: delivered,
-    accepted: Boolean(smtpAccepted),
+    accepted: Boolean(emailAccepted),
   };
   checks.registration = {
     enabled: registrationEnabled,
-    ready: Boolean(registrationEnabled && smtpConfigured && smtpAccepted),
+    ready: Boolean(registrationEnabled && emailConfigured && emailAccepted),
   };
-  if (!smtpConfigured)
-    publicBlockers.push("EXTERNAL_SMTP_CONFIGURATION_REQUIRED");
-  if (!delivered) publicBlockers.push("SMTP_INBOX_DELIVERY_EVIDENCE_REQUIRED");
-  if (!smtpAccepted)
+  if (!emailConfigured)
+    publicBlockers.push("EXTERNAL_EMAIL_CONFIGURATION_REQUIRED");
+  if (!delivered) publicBlockers.push("EMAIL_INBOX_DELIVERY_EVIDENCE_REQUIRED");
+  if (!emailAccepted)
     publicBlockers.push(
-      "SMTP_AUTHENTICATION_AND_ACCOUNT_FLOW_ACCEPTANCE_REQUIRED",
+      "EMAIL_AUTHENTICATION_AND_ACCOUNT_FLOW_ACCEPTANCE_REQUIRED",
     );
   if (!registrationEnabled) publicBlockers.push("PUBLIC_REGISTRATION_DISABLED");
 
@@ -266,7 +323,8 @@ export function evaluateReadiness({
   const summaryEnabled = enabled(env.AI_SUMMARY_ENABLED);
   const workerConfigured =
     present(env.ANALYSIS_WORKER_URL) &&
-    (env.ANALYSIS_WORKER_SECRET || "").length >= 32;
+    (env.ANALYSIS_WORKER_SECRET || "").length >= 32 &&
+    /^[a-f0-9]{64}$/.test(env.ANALYSIS_MODEL_MANIFEST_SHA256 || "");
   for (const [name, on] of [
     ["transcription", transcriptionEnabled],
     ["summary", summaryEnabled],

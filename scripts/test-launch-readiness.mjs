@@ -16,6 +16,8 @@ function fixture() {
   const env = {
     APP_ENV: "production",
     APP_URL: "https://meet.example.test",
+    RELEASE_COMMIT: "a".repeat(40),
+    RELEASE_IMAGE_DIGEST: `sha256:${"b".repeat(64)}`,
     REGISTRATION_ENABLED: "true",
     EMAIL_DELIVERY_MODE: "external",
     SMTP_HOST: "smtp.example.test",
@@ -59,6 +61,7 @@ function fixture() {
         realTwoPartyCall: true,
         externalNetwork: true,
         targetCapacity: true,
+        turnTls443: true,
       },
       alerts: {
         acceptedAt: timestamp,
@@ -116,6 +119,9 @@ test("signaling health does not replace external media and target capacity accep
     },
     (i) => {
       i.acceptance.media.targetCapacity = false;
+    },
+    (i) => {
+      i.acceptance.media.turnTls443 = false;
     },
     (i) => {
       i.env.MAX_ACTIVE_ROOMS = "20";
@@ -206,7 +212,7 @@ test("captured mail with closed signup is a healthy preview, not a public launch
   );
   assert.ok(
     result.blockers.publicLaunch.includes(
-      "EXTERNAL_SMTP_CONFIGURATION_REQUIRED",
+      "EXTERNAL_EMAIL_CONFIGURATION_REQUIRED",
     ),
   );
 });
@@ -233,6 +239,178 @@ test("SMTP queue acceptance alone and an unrelated sender receipt cannot pass de
     mutation(input);
     assert.equal(evaluateReadiness(input).publicLaunchReady, false);
   }
+});
+
+function acceptEmail(input) {
+  const hash = configurationHash(input.env, "email");
+  input.mail.configurationHash = hash;
+  input.acceptance.email = {
+    ...input.acceptance.smtp,
+    configurationHash: hash,
+  };
+  delete input.acceptance.smtp;
+}
+
+test("Resend is configured without SMTP but still requires delivered mail and complete account flows", () => {
+  const input = fixture();
+  Object.assign(input.env, {
+    EMAIL_PROVIDER: "resend",
+    RESEND_API_KEY: "resend-test-key",
+  });
+  delete input.env.SMTP_HOST;
+  delete input.env.SMTP_USER;
+  delete input.env.SMTP_PASSWORD;
+  let result = evaluateReadiness(input);
+  assert.equal(result.checks.email.provider, "resend");
+  assert.equal(result.checks.email.configured, true);
+  assert.equal(result.checks.email.accepted, false);
+  assert.equal(result.publicLaunchReady, false);
+  assert.equal(
+    result.blockers.publicLaunch.includes(
+      "EXTERNAL_EMAIL_CONFIGURATION_REQUIRED",
+    ),
+    false,
+  );
+  acceptEmail(input);
+  assert.equal(evaluateReadiness(input).publicLaunchReady, true);
+  for (const change of [
+    (i) => {
+      i.mail.received = false;
+    },
+    (i) => {
+      i.acceptance.email.invitationFlow = false;
+    },
+    (i) => {
+      i.env.RESEND_API_KEY = "";
+    },
+    (i) => {
+      i.env.EMAIL_DELIVERY_MODE = "capture";
+    },
+    (i) => {
+      i.env.SMTP_FROM = "another@example.test";
+    },
+  ]) {
+    const changed = structuredClone(input);
+    change(changed);
+    assert.equal(evaluateReadiness(changed).publicLaunchReady, false);
+  }
+});
+
+test("provider fingerprints invalidate a different transport and never hash secrets or unused SMTP fields", () => {
+  const { env } = fixture();
+  const smtp = configurationHash(env, "email");
+  assert.equal(configurationHash(env, "smtp"), smtp);
+  assert.equal(
+    configurationHash({ ...env, EMAIL_PROVIDER: "smtp" }, "email"),
+    smtp,
+  );
+  const resendEnv = {
+    ...env,
+    EMAIL_PROVIDER: "resend",
+    RESEND_API_KEY: "first",
+  };
+  const resend = configurationHash(resendEnv, "email");
+  assert.notEqual(resend, smtp);
+  assert.equal(
+    configurationHash(
+      {
+        ...resendEnv,
+        RESEND_API_KEY: "rotated",
+        SMTP_HOST: "irrelevant",
+        SMTP_PASSWORD: "secret",
+      },
+      "email",
+    ),
+    resend,
+  );
+  assert.notEqual(
+    configurationHash({ ...resendEnv, SMTP_FROM: "new@example.test" }, "email"),
+    resend,
+  );
+  assert.notEqual(
+    configurationHash(
+      { ...resendEnv, EMAIL_DELIVERY_MODE: "capture" },
+      "email",
+    ),
+    resend,
+  );
+  const input = fixture();
+  input.env.EMAIL_PROVIDER = "unrecognized-private-value";
+  assert.equal(evaluateReadiness(input).checks.email.provider, "unsupported");
+  assert.equal(evaluateReadiness(input).checks.email.configured, false);
+  assert.equal(
+    JSON.stringify(evaluateReadiness(input)).includes(
+      "unrecognized-private-value",
+    ),
+    false,
+  );
+});
+
+test("exact release identity binds all capability receipts and missing identity blocks launch only", () => {
+  for (const change of [
+    (i) => {
+      delete i.env.RELEASE_COMMIT;
+    },
+    (i) => {
+      i.env.RELEASE_IMAGE_DIGEST = "latest";
+    },
+    (i) => {
+      i.env.RELEASE_COMMIT = "c".repeat(40);
+    },
+    (i) => {
+      i.env.RELEASE_IMAGE_DIGEST = `sha256:${"d".repeat(64)}`;
+    },
+  ]) {
+    const input = fixture();
+    change(input);
+    const result = evaluateReadiness(input);
+    assert.equal(result.serviceHealthy, true);
+    assert.equal(result.publicLaunchReady, false);
+    assert.equal(result.checks.email.accepted, false);
+    assert.equal(result.checks.mediaAcceptance.accepted, false);
+  }
+});
+
+test("ordinary HTTPS and WSS ports are required even if old nonstandard-port receipts claim success", () => {
+  for (const key of ["APP_URL", "LIVEKIT_URL"]) {
+    const input = fixture();
+    input.env[key] =
+      key === "APP_URL"
+        ? "https://meet.example.test:8443"
+        : "wss://media.example.test:8443";
+    for (const [capability, entry] of Object.entries(input.acceptance))
+      entry.configurationHash = configurationHash(input.env, capability);
+    input.mail.configurationHash = configurationHash(input.env, "email");
+    input.alerts.configurationHash = configurationHash(input.env, "alerts");
+    const result = evaluateReadiness(input);
+    assert.equal(result.serviceHealthy, true);
+    assert.equal(result.publicLaunchReady, false);
+    assert.ok(
+      result.blockers.publicLaunch.includes(
+        key === "APP_URL"
+          ? "CANONICAL_HTTPS_PORT_REQUIRED"
+          : "PUBLIC_MEDIA_HTTPS_PORT_REQUIRED",
+      ),
+    );
+  }
+});
+
+test("public recording endpoint and model manifest changes invalidate only their capability evidence", () => {
+  const { env } = fixture();
+  assert.notEqual(
+    configurationHash(env, "recording"),
+    configurationHash(
+      { ...env, S3_PUBLIC_ENDPOINT: "https://downloads.example.test" },
+      "recording",
+    ),
+  );
+  assert.notEqual(
+    configurationHash(env, "transcription"),
+    configurationHash(
+      { ...env, ANALYSIS_MODEL_MANIFEST_SHA256: "e".repeat(64) },
+      "transcription",
+    ),
+  );
 });
 
 test("stale, future or timezone-less operations never produce a healthy service", () => {
