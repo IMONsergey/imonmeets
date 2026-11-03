@@ -51,6 +51,7 @@ jobs:
           scripts/test-legal-consent-readiness.mjs
           scripts/test-release-manifest.mjs
           scripts/test-ingress443-config.mjs
+          scripts/test-runtime-inventory.mjs
       - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-prepare-recording.py
       - run: PYTHONDONTWRITEBYTECODE=1 python3 apps/analysis-worker/test_worker.py
       - run: npm audit --omit=dev --audit-level=high
@@ -58,3 +59,25 @@ jobs:
       - name: Browser state and accessibility regression checks
         run: |
           IMON_BROWSER_EXECUTABLE="$(node --input-type=module -e 'import { chromium } from "@playwright/test"; console.log(chromium.executablePath())')" npm run test:ui
+      - name: Build immutable candidate and verify its installed npm inventory
+        run: |
+          python3 scripts/build-release-image.py --output-dir "$RUNNER_TEMP/imonmeets-candidate-image"
+          IMON_CANDIDATE_IMAGE="$(python3 -c 'import json,os; print(json.load(open(os.environ["RUNNER_TEMP"]+"/imonmeets-candidate-image/build-receipt.json"))["imageId"])')"
+          mkdir "$RUNNER_TEMP/imonmeets-runtime-evidence"
+          chmod 700 "$RUNNER_TEMP/imonmeets-runtime-evidence"
+          sudo -n docker run --rm --network none --read-only \
+            --cpus 1 --memory 512m --pids-limit 128 --cap-drop ALL \
+            --security-opt no-new-privileges \
+            --user "$(id -u):$(id -g)" \
+            --tmpfs /tmp:rw,noexec,nosuid,size=64m \
+            --mount "type=bind,src=$PWD/scripts/verify-runtime-inventory.mjs,dst=/verification.mjs,readonly" \
+            --mount "type=bind,src=$RUNNER_TEMP/imonmeets-runtime-evidence,dst=/evidence" \
+            --entrypoint node "$IMON_CANDIDATE_IMAGE" /verification.mjs \
+            --expected-commit "$GITHUB_SHA" --output-dir /evidence/runtime-inventory
+      - name: Preserve candidate build and inventory receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: imonmeets-candidate-evidence
+          path: |
+            ${{ runner.temp }}/imonmeets-candidate-image/build-receipt.json
+            ${{ runner.temp }}/imonmeets-runtime-evidence/

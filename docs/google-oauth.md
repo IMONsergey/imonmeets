@@ -13,13 +13,23 @@ The application rejects a partial pair. The public /api/config response exposes 
 
 ## Exact Google Console callback
 
-The current server APP_URL is https://imonmeets.vercel.app. With Better Auth basePath=/api/auth, the exact Authorized redirect URI is:
+The audited live server still uses APP_URL=https://meets.imon.world:8443.
+The commercial target is https://meets.imon.world, after the 443 ingress cutover.
+Do not configure Google against the retained Vercel frontend by copying an old
+example: it is not the canonical backend origin.
 
-    https://imonmeets.vercel.app/api/auth/callback/google
+For the planned standard-HTTPS deployment, the exact Authorized redirect URI is:
+
+    https://meets.imon.world/api/auth/callback/google
 
 Authorized JavaScript origin:
 
-    https://imonmeets.vercel.app
+    https://meets.imon.world
+
+These planned entries become valid only after the runtime APP_URL, public TLS,
+proxy trust and callback route have moved together. The temporary current
+8443 origin would require its own exact callback including :8443; it is not the
+commercial target. No Google credentials or DNS were changed by this documentation.
 
 If the canonical APP_URL changes, derive both entries from its HTTPS origin and update the Google OAuth client to match exactly. Do not register wildcard callback paths or ephemeral Vercel preview URLs. The Google callback path is /api/auth/callback/google; the browser post-login callbackURL is a separate same-origin application path.
 
