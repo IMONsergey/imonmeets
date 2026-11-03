@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "retrieved_date": "2026-11-03",
+  "original_weight_license_source": {
+    "url": "https://github.com/Helsinki-NLP/Opus-MT/blob/e3c69562854ec0429bf33b2ca57805e9725a70db/README.md",
+    "revision": "e3c69562854ec0429bf33b2ca57805e9725a70db",
+    "sha256": "d5fa3a9481b9097c4a61c8b7e3dcb19cb8036f8d40cc04baa03a367ed9705bea",
+    "license_text_url": "https://creativecommons.org/licenses/by/4.0/legalcode.txt",
+    "license_text_sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411"
+  },
+  "models": {
+    "en-ru": {
+      "repository": "Helsinki-NLP/opus-mt-en-ru",
+      "card_revision": "bb09c99d180016eac6819df3dae68edb1690fdee",
+      "card_url": "https://huggingface.co/Helsinki-NLP/opus-mt-en-ru/blob/bb09c99d180016eac6819df3dae68edb1690fdee/README.md",
+      "card_sha256": "020bfd697b7d0da0338611cf445eb44ae45dda27ff49f2bf64e21ee46882b48b",
+      "card_license": "apache-2.0",
+      "archive_url": "https://object.pouta.csc.fi/OPUS-MT-models/en-ru/opus-2020-02-11.zip",
+      "original_weight_license": "CC-BY-4.0",
+      "target_token": null
+    },
+    "ru-en": {
+      "repository": "Helsinki-NLP/opus-mt-ru-en",
+      "card_revision": "fbd6dc73284f95536648512cc21d57f19191961a",
+      "card_url": "https://huggingface.co/Helsinki-NLP/opus-mt-ru-en/blob/fbd6dc73284f95536648512cc21d57f19191961a/README.md",
+      "card_sha256": "58decd5dfb14dfd59bd63a80286869798f94b7d432d249dd289de467ba9a1417",
+      "card_license": "cc-by-4.0",
+      "archive_url": "https://object.pouta.csc.fi/OPUS-MT-models/ru-en/opus-2020-02-26.zip",
+      "original_weight_license": "CC-BY-4.0",
+      "target_token": null
+    },
+    "en-zh": {
+      "repository": "Helsinki-NLP/opus-mt-en-zh",
+      "card_revision": "408d9bc410a388e1d9aef112a2daba955b945255",
+      "card_url": "https://huggingface.co/Helsinki-NLP/opus-mt-en-zh/blob/408d9bc410a388e1d9aef112a2daba955b945255/README.md",
+      "card_sha256": "83eee2a6598751f746a057e10d5c9dfd71d6b0cf0146f9e6c1bb3ebd6e90959b",
+      "card_license": "apache-2.0",
+      "archive_url": "https://object.pouta.csc.fi/Tatoeba-MT-models/eng-zho/opus-2020-07-17.zip",
+      "original_weight_license": "CC-BY-4.0",
+      "target_token": ">>cmn_Hans<<"
+    },
+    "zh-en": {
+      "repository": "Helsinki-NLP/opus-mt-zh-en",
+      "card_revision": "cf109095479db38d6df799875e34039d4938aaa6",
+      "card_url": "https://huggingface.co/Helsinki-NLP/opus-mt-zh-en/blob/cf109095479db38d6df799875e34039d4938aaa6/README.md",
+      "card_sha256": "7f4b7f90672cd55b85b213bbe21f4b2d0c92327e885734b7e86b019feb145a6b",
+      "card_license": "cc-by-4.0",
+      "archive_url": "https://object.pouta.csc.fi/Tatoeba-MT-models/zho-eng/opus-2020-07-17.zip",
+      "original_weight_license": "CC-BY-4.0",
+      "target_token": null
+    },
+    "en-ar": {
+      "repository": "Helsinki-NLP/opus-mt-en-ar",
+      "card_revision": "03087980e8ce753d64b3248ed0a912444545b840",
+      "card_url": "https://huggingface.co/Helsinki-NLP/opus-mt-en-ar/blob/03087980e8ce753d64b3248ed0a912444545b840/README.md",
+      "card_sha256": "7cc0866ce36041ab0f6e2d32241ebd55f3c372b44024f3fa36252da6b412129a",
+      "card_license": "apache-2.0",
+      "archive_url": "https://object.pouta.csc.fi/Tatoeba-MT-models/eng-ara/opus-2020-07-03.zip",
+      "original_weight_license": "CC-BY-4.0",
+      "target_token": ">>ara<<"
+    },
+    "ar-en": {
+      "repository": "Helsinki-NLP/opus-mt-ar-en",
+      "card_revision": "c5b2a50db78d6be98ae207223f8d4f63bc7a0ff1",
+      "card_url": "https://huggingface.co/Helsinki-NLP/opus-mt-ar-en/blob/c5b2a50db78d6be98ae207223f8d4f63bc7a0ff1/README.md",
+      "card_sha256": "35e4a45fc28e591430ec663b3a5dff970311d90f94fcba3d9c983d5fe999a170",
+      "card_license": "apache-2.0",
+      "archive_url": "https://object.pouta.csc.fi/OPUS-MT-models/ar-en/opus-2019-12-18.zip",
+      "original_weight_license": "CC-BY-4.0",
+      "target_token": null
+    }
+  }
+}

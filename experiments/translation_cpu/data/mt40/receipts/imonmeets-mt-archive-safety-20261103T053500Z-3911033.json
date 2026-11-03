@@ -1,0 +1,24 @@
+{
+  "unit": "imonmeets-mt-archive-safety-20261103T053500Z-3911033",
+  "started_at": "2026-11-03T05:35:00Z",
+  "finished_at": "2026-11-03T05:35:13.385141+00:00",
+  "runtime_max_seconds": 60,
+  "exit_code": 0,
+  "command": [
+    "/usr/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_opus_release_safety.py",
+    "-v"
+  ],
+  "log": "imonmeets-mt-archive-safety-20261103T053500Z-3911033.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}

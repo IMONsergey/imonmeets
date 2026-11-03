@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "description": "Authored text-only semantic contrasts for real MT. Reference variants are review aids, not evidence of native-speaker acceptance; no voice assets.",
+  "cases": [
+    {"id":"approve-positive","slots":{"negation":false,"action":"approve payment"},"texts":{"en":"We approve the payment.","ru":"Мы одобряем платеж.","zh":"我们批准这笔付款。","ar":"نحن نوافق على الدفع."}},
+    {"id":"approve-negative","slots":{"negation":true,"action":"approve payment"},"texts":{"en":"We do not approve the payment.","ru":"Мы не одобряем платеж.","zh":"我们不批准这笔付款。","ar":"نحن لا نوافق على الدفع."}},
+    {"id":"usd-12000","slots":{"amount":12000,"currency":"USD"},"texts":{"en":"The price is twelve thousand dollars.","ru":"Цена составляет двенадцать тысяч долларов.","zh":"价格是一万二千美元。","ar":"السعر اثنا عشر ألف دولار."}},
+    {"id":"usd-1200","slots":{"amount":1200,"currency":"USD"},"texts":{"en":"The price is one thousand two hundred dollars.","ru":"Цена составляет тысячу двести долларов.","zh":"价格是一千二百美元。","ar":"السعر ألف ومئتا دولار."}},
+    {"id":"rub-12000","slots":{"amount":12000,"currency":"RUB"},"texts":{"en":"The price is twelve thousand rubles.","ru":"Цена составляет двенадцать тысяч рублей.","zh":"价格是一万二千卢布。","ar":"السعر اثنا عشر ألف روبل."}},
+    {"id":"cny-contrast","slots":{"amount":125000,"currency":"CNY","contrast_amount":12,"negation":true},"texts":{"en":"The total is one hundred twenty-five thousand yuan, not twelve yuan.","ru":"Общая сумма составляет сто двадцать пять тысяч юаней, а не двенадцать юаней.","zh":"总价是十二万五千元，不是十二元。","ar":"المجموع مئة وخمسة وعشرون ألف يوان، وليس اثني عشر يواناً."}},
+    {"id":"decimal-eur","slots":{"amount":1050.05,"currency":"EUR"},"texts":{"en":"The amount is one thousand fifty euros and five cents.","ru":"Сумма составляет тысячу пятьдесят евро и пять центов.","zh":"金额是一千零五十欧元零五欧分。","ar":"المبلغ ألف وخمسون يورو وخمسة سنتات."}},
+    {"id":"conditional-negation","slots":{"negation":true,"action":"approve price","condition":"review contract"},"texts":{"en":"Do not approve the price before reviewing the contract.","ru":"Не одобряйте цену до проверки договора.","zh":"审查合同之前，不要批准价格。","ar":"لا توافق على السعر قبل مراجعة العقد."}},
+    {"id":"sergey-meeting-price","slots":{"name":"Sergey","amount":12000,"currency":"USD","meaning":"can start meeting now"},"texts":{"en":"Hello, Sergey. We can start the meeting now. The price is twelve thousand dollars.","ru":"Здравствуйте, Сергей. Мы можем начать встречу сейчас. Цена составляет двенадцать тысяч долларов.","zh":"你好，谢尔盖。我们现在可以开始会议。价格是一万二千美元。","ar":"مرحباً سيرغي. يمكننا بدء الاجتماع الآن. السعر اثنا عشر ألف دولار."}},
+    {"id":"time-1515","slots":{"time":"15:15"},"texts":{"en":"The meeting starts at three fifteen in the afternoon.","ru":"Встреча начинается в пятнадцать часов пятнадцать минут.","zh":"会议在下午三点十五分开始。","ar":"يبدأ الاجتماع في الساعة الثالثة والربع بعد الظهر."}},
+    {"id":"self-correction","slots":{"interruption":true,"negation":true,"amount":10,"currency":"EUR"},"texts":{"en":"The transfer is ... no, cancel that. Send only ten euros.","ru":"Перевод составляет... нет, отмените это. Отправьте только десять евро.","zh":"转账金额是……不，取消。只汇十欧元。","ar":"التحويل هو... لا، ألغِ ذلك. أرسل عشرة يورو فقط."}},
+    {"id":"name-five-minutes","slots":{"name":"Maria Volkova","amount":5,"unit":"minutes"},"texts":{"en":"Maria Volkova will join in five minutes.","ru":"Мария Волкова подключится через пять минут.","zh":"玛丽亚·沃尔科娃将在五分钟后加入。","ar":"ستنضم ماريا فولكوفا بعد خمس دقائق."}}
+  ]
+}

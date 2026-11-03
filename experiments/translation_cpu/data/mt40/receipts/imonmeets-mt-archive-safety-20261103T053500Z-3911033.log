@@ -1,0 +1,13 @@
+test_archive_hooks_are_not_selected (test_opus_release_safety.OpusReleaseSafetyTests.test_archive_hooks_are_not_selected) ... ok
+test_decoder_cannot_escape_directory (test_opus_release_safety.OpusReleaseSafetyTests.test_decoder_cannot_escape_directory) ... ok
+test_decoder_symlink_is_rejected (test_opus_release_safety.OpusReleaseSafetyTests.test_decoder_symlink_is_rejected) ... ok
+test_duplicate_is_rejected (test_opus_release_safety.OpusReleaseSafetyTests.test_duplicate_is_rejected) ... ok
+test_member_size_is_bounded (test_opus_release_safety.OpusReleaseSafetyTests.test_member_size_is_bounded) ... ok
+test_missing_license_is_rejected (test_opus_release_safety.OpusReleaseSafetyTests.test_missing_license_is_rejected) ... ok
+test_path_traversal_absolute_and_backslash_are_rejected (test_opus_release_safety.OpusReleaseSafetyTests.test_path_traversal_absolute_and_backslash_are_rejected) ... ok
+test_symlink_is_rejected (test_opus_release_safety.OpusReleaseSafetyTests.test_symlink_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.003s
+
+OK

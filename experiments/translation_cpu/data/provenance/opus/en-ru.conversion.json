@@ -1,0 +1,97 @@
+{
+  "direction": "en-ru",
+  "source_archive_sha256": "798027c7e4ae7ddf89fea13ce80de517b6726d7e710fa5a9b5a376316dbf1677",
+  "source_npz_sha256": "c92e6575c8ca7816926ca045149e8376758d39b24d6c228d2c685cc9a623226b",
+  "source_npz": "opus.spm32k-spm32k.transformer-align.model1.npz.best-perplexity.npz",
+  "license": "CC-BY-4.0",
+  "license_sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9",
+  "source_files": [
+    {
+      "path": "LICENSE",
+      "bytes": 18652,
+      "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9"
+    },
+    {
+      "path": "README.md",
+      "bytes": 906,
+      "sha256": "5b06e18de0760979432961c923a9013ff92a8d29f7f64d0a97d91ba07fdca08f"
+    },
+    {
+      "path": "decoder.yml",
+      "bytes": 265,
+      "sha256": "29ddfbbf6e9e97f160da3dfb0854d32069af9cddca00cf45eaffd2c44c6a619d"
+    },
+    {
+      "path": "opus.spm32k-spm32k.transformer-align.model1.npz.best-perplexity.npz",
+      "bytes": 304892209,
+      "sha256": "c92e6575c8ca7816926ca045149e8376758d39b24d6c228d2c685cc9a623226b"
+    },
+    {
+      "path": "opus.spm32k-spm32k.vocab.yml",
+      "bytes": 1317639,
+      "sha256": "884159dda0857b7b3dd92d6b6ac1d000ee7d34cdf728c1a4c6c1e92a457d9f6d"
+    },
+    {
+      "path": "source.spm",
+      "bytes": 802781,
+      "sha256": "16bebef1389a0b8ab452772c4e35b9e605e5713f8ac7baa71ca701394eaa086d"
+    },
+    {
+      "path": "target.spm",
+      "bytes": 1080169,
+      "sha256": "745998e51ba5b058e38b7ac7765c25c43ed5c1c39cc92b27163b9b2e323c9d7c"
+    }
+  ],
+  "converted_files": [
+    {
+      "path": "LICENSE",
+      "bytes": 18652,
+      "sha256": "945fbcb37deca05bccd7c3ca0e261679f1f5373515504fdbad68f6f3cf6f49b9"
+    },
+    {
+      "path": "README.md",
+      "bytes": 906,
+      "sha256": "5b06e18de0760979432961c923a9013ff92a8d29f7f64d0a97d91ba07fdca08f"
+    },
+    {
+      "path": "config.json",
+      "bytes": 221,
+      "sha256": "152eb448f1020eb55f90971d7b95f61896abee8415d555ca51ae7897ac0a0e68"
+    },
+    {
+      "path": "model.bin",
+      "bytes": 81422197,
+      "sha256": "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d"
+    },
+    {
+      "path": "shared_vocabulary.json",
+      "bytes": 2300269,
+      "sha256": "bf1812383ed402163a2ed1b553e175e7db96a54ed68b6c15566018fdf945ed99"
+    },
+    {
+      "path": "source.spm",
+      "bytes": 802781,
+      "sha256": "16bebef1389a0b8ab452772c4e35b9e605e5713f8ac7baa71ca701394eaa086d"
+    },
+    {
+      "path": "target.spm",
+      "bytes": 1080169,
+      "sha256": "745998e51ba5b058e38b7ac7765c25c43ed5c1c39cc92b27163b9b2e323c9d7c"
+    }
+  ],
+  "model_sha256": "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d",
+  "target_token": null,
+  "quantization": "int8",
+  "conversion_seconds": 3.529,
+  "converter": "CTranslate2 MarianConverter",
+  "versions": {
+    "ctranslate2": "4.8.4",
+    "numpy": "2.5.4",
+    "PyYAML": "6.0.3",
+    "sentencepiece": "0.2.2"
+  },
+  "created_at": "2026-11-03T05:35:21.285936+00:00",
+  "pickle_allowed": false,
+  "remote_code": false,
+  "archive_scripts_executed": false
+}

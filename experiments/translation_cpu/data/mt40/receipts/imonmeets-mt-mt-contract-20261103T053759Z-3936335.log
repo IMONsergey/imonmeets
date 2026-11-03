@@ -1,0 +1,10 @@
+test_all_directions_preserve_exact_ids_and_gold_target (test_mt40_contract.MT40ContractTests.test_all_directions_preserve_exact_ids_and_gold_target) ... ok
+test_no_empty_silence_is_sent_to_mt (test_mt40_contract.MT40ContractTests.test_no_empty_silence_is_sent_to_mt) ... ok
+test_pivot_input_identity_matches_real_first_hop_cases (test_mt40_contract.MT40ContractTests.test_pivot_input_identity_matches_real_first_hop_cases) ... ok
+test_self_translation_rejected (test_mt40_contract.MT40ContractTests.test_self_translation_rejected) ... ok
+test_target_tokens_are_literal_prefixes (test_mt40_contract.MT40ContractTests.test_target_tokens_are_literal_prefixes) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.036s
+
+OK
