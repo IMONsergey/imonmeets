@@ -26,6 +26,9 @@ CREATE TABLE IF NOT EXISTS im_rooms (id text PRIMARY KEY,workspace_id text NOT N
 ALTER TABLE im_rooms ADD COLUMN IF NOT EXISTS media_closed boolean NOT NULL DEFAULT false;
 ALTER TABLE im_rooms ADD COLUMN IF NOT EXISTS media_generation integer NOT NULL DEFAULT 0;
 ALTER TABLE im_rooms ADD COLUMN IF NOT EXISTS media_started boolean NOT NULL DEFAULT false;
+ALTER TABLE im_rooms ADD COLUMN IF NOT EXISTS archived_at timestamptz;
+CREATE INDEX IF NOT EXISTS im_rooms_listing ON im_rooms(workspace_id,created_at DESC,id DESC);
+CREATE INDEX IF NOT EXISTS im_rooms_open_quota ON im_rooms(workspace_id) WHERE status='open';
 CREATE TABLE IF NOT EXISTS im_media_retirements(name text PRIMARY KEY,workspace_id text NOT NULL REFERENCES im_workspaces(id),attempts integer NOT NULL DEFAULT 0,next_attempt_at timestamptz NOT NULL DEFAULT now(),last_error text);
 CREATE INDEX IF NOT EXISTS im_media_retry ON im_media_retirements(next_attempt_at);
 CREATE TABLE IF NOT EXISTS im_removed_members(workspace_id text NOT NULL REFERENCES im_workspaces(id),user_id text NOT NULL REFERENCES "user"(id),PRIMARY KEY(workspace_id,user_id));

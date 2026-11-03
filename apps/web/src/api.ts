@@ -23,6 +23,7 @@ export type Room = {
   waitingRoom?: boolean;
   maxParticipants: number;
   status: "open" | "closed";
+  archivedAt?: string | null;
   createdBy: string;
   createdAt: string;
 };

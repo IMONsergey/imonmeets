@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
   ArrowRight,
@@ -188,18 +188,33 @@ export function Dashboard({
   const [joining, setJoining] = useState(false);
   const [instant, setInstant] = useState(false);
   const [selectedDate, setSelectedDate] = useState(() => new Date());
-  const load = useCallback(
-    () =>
-      api<{ rooms: Room[] }>(`/workspaces/${workspace.id}/rooms`)
-        .then((value) => {
-          setOverview(value);
-          setError("");
-        })
-        .catch((e) => setError(e.message)),
-    [workspace.id],
-  );
+  const dashboardVersion = useRef(0);
+  const load = useCallback(async () => {
+    const version = ++dashboardVersion.current;
+    try {
+      const rooms: Room[] = [];
+      let before: string | undefined;
+      do {
+        const page = await api<{ rooms: Room[]; nextCursor?: string | null }>(
+          `/workspaces/${workspace.id}/rooms?view=open${before ? `&before=${encodeURIComponent(before)}` : ""}`,
+        );
+        if (version !== dashboardVersion.current) return;
+        rooms.push(...page.rooms);
+        if (page.nextCursor && page.nextCursor === before)
+          throw new Error("Не удалось загрузить расписание. Повторите запрос.");
+        before = page.nextCursor ?? undefined;
+      } while (before);
+      setOverview({ rooms });
+      setError("");
+    } catch (e) {
+      if (version === dashboardVersion.current) setError((e as Error).message);
+    }
+  }, [workspace.id]);
   useEffect(() => {
     void load();
+    return () => {
+      dashboardVersion.current++;
+    };
   }, [load]);
   const sameDay = (a: Date, b: Date) =>
     a.getFullYear() === b.getFullYear() &&
@@ -772,18 +787,45 @@ export function Rooms({
   const [sharing, setSharing] = useState<Room>();
   const [historyRoom, setHistoryRoom] = useState<Room>();
   const [busy, setBusy] = useState("");
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const listVersion = useRef(0);
   const load = useCallback(
-    () =>
-      api<{ rooms: Room[] }>(`/workspaces/${workspace.id}/rooms`)
-        .then((r) => {
-          setRooms(r.rooms);
-          setError("");
-        })
-        .catch((e) => setError(e.message)),
-    [workspace.id],
+    async (before?: string) => {
+      const version = ++listVersion.current;
+      if (before) setLoadingMore(true);
+      const queryString = new URLSearchParams({
+        view: filter,
+        ...(query ? { q: query } : {}),
+        ...(before ? { before } : {}),
+      });
+      try {
+        const response = await api<{
+          rooms: Room[];
+          nextCursor?: string | null;
+        }>(`/workspaces/${workspace.id}/rooms?${queryString}`);
+        if (version !== listVersion.current) return;
+        setRooms((previous) =>
+          before ? [...(previous ?? []), ...response.rooms] : response.rooms,
+        );
+        setNextCursor(response.nextCursor ?? null);
+        setError("");
+      } catch (e) {
+        if (version === listVersion.current) setError((e as Error).message);
+      } finally {
+        if (version === listVersion.current) setLoadingMore(false);
+      }
+    },
+    [workspace.id, filter, query],
   );
   useEffect(() => {
-    void load();
+    setRooms(undefined);
+    setNextCursor(null);
+    const timer = setTimeout(() => void load(), 150);
+    return () => {
+      clearTimeout(timer);
+      listVersion.current++;
+    };
   }, [load]);
   useEffect(() => {
     const updateFromLocation = () => {
@@ -804,11 +846,7 @@ export function Rooms({
     addEventListener("popstate", updateFromLocation);
     return () => removeEventListener("popstate", updateFromLocation);
   }, []);
-  const visible = rooms?.filter(
-    (r) =>
-      (filter === "all" || r.status === filter) &&
-      r.title.toLowerCase().includes(query.toLowerCase()),
-  );
+  const visible = rooms;
   const canManage = (r: Room) =>
     workspace.role !== "member" || r.createdBy === user.id;
   return (
@@ -816,7 +854,7 @@ export function Rooms({
       <PageHeading
         eyebrow="МЕСТО ДЛЯ РАЗГОВОРА"
         title="Встречи"
-        text="Запланированные встречи и постоянные комнаты вашего пространства."
+        text="В лимит тарифа входят только открытые комнаты. Завершенные встречи и архив сохраняют историю и записи."
       >
         <Button className="primary" onClick={() => setEditor(true)}>
           <Plus size={18} />
@@ -840,6 +878,7 @@ export function Rooms({
             {[
               ["open", "Открытые"],
               ["closed", "Завершенные"],
+              ["archived", "Архив"],
               ["all", "Все встречи"],
             ].map(([value, label]) => (
               <button
@@ -881,7 +920,11 @@ export function Rooms({
                     <span
                       className={`badge ${room.status === "open" ? "green" : "gray"}`}
                     >
-                      {room.status === "open" ? "Открыта" : "Завершена"}
+                      {room.archivedAt
+                        ? "В архиве"
+                        : room.status === "open"
+                          ? "Открыта"
+                          : "Завершена"}
                     </span>
                   </div>
                   {room.description && (
@@ -910,7 +953,7 @@ export function Rooms({
                       )}{" "}
                       {room.allowGuests ? "Вход по ссылке" : "Только команда"}
                     </span>
-                    {room.waitingRoom && (
+                    {(room.waitingRoom) && (
                       <span>
                         <ShieldCheck size={14} />
                         Зал ожидания
@@ -931,6 +974,33 @@ export function Rooms({
                   >
                     <MessageSquare size={18} />
                   </Button>
+                  {room.status === "closed" && canManage(room) && (
+                    <Button
+                      busy={busy === room.id}
+                      disabled={Boolean(busy)}
+                      onClick={async () => {
+                        setBusy(room.id);
+                        try {
+                          await api(
+                            `/workspaces/${workspace.id}/rooms/${room.id}/${room.archivedAt ? "unarchive" : "archive"}`,
+                            {},
+                          );
+                          await load();
+                          notify(
+                            room.archivedAt
+                              ? "Встреча возвращена в завершенные"
+                              : "Встреча в архиве. История и записи сохранены.",
+                          );
+                        } catch (e) {
+                          notify((e as Error).message, true);
+                        } finally {
+                          setBusy("");
+                        }
+                      }}
+                    >
+                      {room.archivedAt ? "Вернуть из архива" : "В архив"}
+                    </Button>
+                  )}
                   {room.status === "open" && (
                     <>
                       <CalendarExport room={room} notify={notify} compact />
@@ -1009,9 +1079,11 @@ export function Rooms({
             title={
               query
                 ? "Ничего не найдено"
-                : filter === "closed"
-                  ? "Завершенных встреч пока нет"
-                  : "Встреч пока нет"
+                : filter === "archived"
+                  ? "Архив пока пуст"
+                  : filter === "closed"
+                    ? "Завершенных встреч пока нет"
+                    : "Встреч пока нет"
             }
             text={
               query
@@ -1019,7 +1091,7 @@ export function Rooms({
                 : "Создайте встречу и отправьте участникам ссылку."
             }
             action={
-              !query && filter !== "closed" ? (
+              !query && !["closed", "archived"].includes(filter) ? (
                 <Button className="primary" onClick={() => setEditor(true)}>
                   <Plus size={17} />
                   Новая встреча
@@ -1027,6 +1099,11 @@ export function Rooms({
               ) : undefined
             }
           />
+        )}
+        {nextCursor && (
+          <Button busy={loadingMore} onClick={() => void load(nextCursor)}>
+            Показать еще
+          </Button>
         )}
       </div>
       {editor && (

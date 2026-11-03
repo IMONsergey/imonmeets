@@ -65,6 +65,7 @@ const roomJson = (r: Row) => ({
   status: r.status,
   createdBy: r.created_by,
   createdAt: r.created_at,
+  archivedAt: r.archived_at ?? null,
 });
 const recordingJson = (r: Row) => ({
   id: r.id,
@@ -844,7 +845,7 @@ export async function createApp(
     await membership(workspaceId!, u.id);
     const [rooms, members, recordings] = await Promise.all([
       pool.query(
-        "SELECT * FROM im_rooms WHERE workspace_id=$1 ORDER BY created_at DESC LIMIT 100",
+        "SELECT * FROM im_rooms WHERE workspace_id=$1 AND archived_at IS NULL ORDER BY created_at DESC LIMIT 100",
         [workspaceId],
       ),
       pool.query(
@@ -866,13 +867,27 @@ export async function createApp(
     const u = (await user(req))!,
       { workspaceId } = params(req);
     await membership(workspaceId!, u.id);
+    const query = z
+      .object({
+        view: z.enum(["all", "open", "closed", "archived"]).default("all"),
+        q: z.string().trim().max(160).optional(),
+        before: z.uuid().optional(),
+      })
+      .strict()
+      .parse(req.query);
+    const result = await pool.query(
+      `SELECT * FROM im_rooms WHERE workspace_id=$1
+       AND ($2='all' OR ($2='archived' AND archived_at IS NOT NULL) OR ($2 IN ('open','closed') AND status=$2 AND archived_at IS NULL))
+       AND ($3::text IS NULL OR strpos(lower(title),lower($3))>0)
+       AND ($4::text IS NULL OR (created_at,id)<(SELECT created_at,id FROM im_rooms WHERE workspace_id=$1 AND id=$4))
+       ORDER BY created_at DESC,id DESC LIMIT 101`,
+      [workspaceId, query.view, query.q || null, query.before ?? null],
+    );
+    const page = result.rows.slice(0, 100);
     return {
-      rooms: (
-        await pool.query(
-          "SELECT * FROM im_rooms WHERE workspace_id=$1 ORDER BY created_at DESC",
-          [workspaceId],
-        )
-      ).rows.map(roomJson),
+      rooms: page.map(roomJson),
+      nextCursor: result.rows.length > 100 ? page.at(-1)!.id : null,
+      roomsQuotaBasis: "open",
     };
   });
   app.post("/api/workspaces/:workspaceId/rooms", async (req) => {
@@ -884,14 +899,14 @@ export async function createApp(
       await lockWorkspace(db, workspaceId!, u.id);
       const planLimits = await workspaceLimits(db, c, workspaceId!);
       const count = await db.query(
-        "SELECT count(*)::int AS n FROM im_rooms WHERE workspace_id=$1",
+        "SELECT count(*)::int AS n FROM im_rooms WHERE workspace_id=$1 AND status='open'",
         [workspaceId],
       );
       assert(
         count.rows[0].n < planLimits.rooms,
         409,
         "ROOM_LIMIT",
-        "Достигнут лимит комнат пространства.",
+        "Достигнут лимит открытых комнат. Завершите одну из встреч, чтобы создать новую.",
       );
       await requireBudget(limiter, `room-create:${u.id}`, 30, 3600, db);
       assert(
@@ -1052,6 +1067,43 @@ export async function createApp(
       );
     return { room: roomJson(room) };
   });
+  for (const action of ["archive", "unarchive"] as const) {
+    app.post(
+      `/api/workspaces/:workspaceId/rooms/:roomId/${action}`,
+      async (req) => {
+        const u = (await user(req))!,
+          { workspaceId, roomId } = params(req);
+        return transaction(pool, async (db) => {
+          const m = await lockWorkspace(db, workspaceId!, u.id);
+          const room = await scopedRoom(workspaceId!, roomId!, db, true);
+          assert(
+            canManage(m.role, room.created_by, u.id),
+            403,
+            "FORBIDDEN",
+            "Недостаточно прав.",
+          );
+          assert(
+            room.status === "closed",
+            409,
+            "ROOM_NOT_CLOSED",
+            "Сначала завершите встречу. Архив сохраняет историю и записи.",
+          );
+          const result = await db.query(
+            `UPDATE im_rooms SET archived_at=${action === "archive" ? "COALESCE(archived_at,now())" : "NULL"} WHERE id=$1 RETURNING *`,
+            [room.id],
+          );
+          await audit(
+            db,
+            workspaceId!,
+            u.id,
+            `room.${action === "archive" ? "archived" : "unarchived"}`,
+            room.id,
+          );
+          return { room: roomJson(result.rows[0]) };
+        });
+      },
+    );
+  }
   async function roomAccess(
     req: FastifyRequest,
     db: Pool | PoolClient = pool,
@@ -1066,7 +1118,7 @@ export async function createApp(
       [roomSlug],
     );
     const r = result.rows[0];
-    assert(r, 404, "ROOM_NOT_FOUND", "Встреча не найдена.");
+    assert(r && !r.archived_at, 404, "ROOM_NOT_FOUND", "Встреча не найдена.");
     const m = u
       ? (
           await db.query(
