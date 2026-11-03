@@ -4,4 +4,7 @@ services:
     environment:
       DELETION_JOURNAL_DIR: /var/lib/imonmeets/deletion-journal
     volumes:
-      - ${DELETION_JOURNAL_HOST_DIR:?Initialize private durable journal before startup}:/var/lib/imonmeets/deletion-journal
+      - type: bind
+        source: ${DELETION_JOURNAL_HOST_DIR:?Initialize private durable journal before startup}
+        target: /var/lib/imonmeets/deletion-journal
+        bind: { create_host_path: false }

@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "capturedAt": "2026-11-03T10:45:47.146220+00:00",
+  "scope": "Read-only production metadata and aggregate DB snapshot; no secret values or deletion target IDs",
+  "productionChanges": false,
+  "candidateSource": "d46de552200c87c16b4d8c604170c47f113cde54",
+  "runningImage": "sha256:601b62bbf561c82cc369f7ff8e920320f0745b9acfb4c8872fd94e3df623879e",
+  "runningRevisionLabel": "9bb2dab7a9356c0d75a5743e8c7f25ef7c77ab46",
+  "composeFiles": [
+    "/home/sergey/imonmeets/compose.yml",
+    "/home/sergey/imonmeets/compose.public.yml",
+    "/home/sergey/imonmeets/compose.turn.yml",
+    "/home/sergey/imonmeets/compose.recording.yml",
+    "/etc/imonmeets/compose-meets-runtime.yml"
+  ],
+  "effectiveMail": {
+    "EMAIL_DELIVERY_MODE": "external",
+    "EMAIL_PROVIDER": "resend"
+  },
+  "effectivePresence": {
+    "RESEND_API_KEY": true,
+    "SMTP_FROM": true,
+    "GOOGLE_CLIENT_ID": false,
+    "GOOGLE_CLIENT_SECRET": false,
+    "RELEASE_COMMIT": false,
+    "RELEASE_IMAGE_DIGEST": false,
+    "DELETION_WITNESS_URL": false,
+    "DELETION_JOURNAL_DIR": false,
+    "DELETION_JOURNAL_KEY": false
+  },
+  "legacyBaselineDraft": {
+    "capturedAt": "2026-11-03T10:39:11.090Z",
+    "privateDraftPath": "/home/sergey/.local/state/imonmeets-deployment-preflight-20261103/legacy-baseline-review-draft.json",
+    "privateDraftSha256": "84e5168121df3d00db715c83619e91ca8ce0bf746fd9917c9e2604743bdd9e8d",
+    "status": "DRAFT_NOT_APPROVED_NOT_FENCED",
+    "counts": {
+      "users": 7,
+      "workspaces": 6,
+      "rooms": 18,
+      "recordings": 2
+    },
+    "historicalWorkspaceEvents": 3,
+    "historicalDeletedWorkspacesCurrentlyPresent": 0,
+    "recordingRows": 2,
+    "recordingDeletionRequested": 2,
+    "recordingMarkedDeleted": 2,
+    "activeRecordingRows": 0,
+    "bindingTableExists": false,
+    "productionChanges": false
+  },
+  "acceptanceLimits": [
+    "No independent-host proof",
+    "No fresh Mac offsite delivery/decryption proof",
+    "No enrollment or migration performed",
+    "Retained audit events are not complete history",
+    "Deleted DB flags do not prove deletion of every backup/object version",
+    "Root-owned backup metadata read was rejected; no bypass attempted"
+  ]
+}

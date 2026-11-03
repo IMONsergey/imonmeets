@@ -15,11 +15,18 @@ services:
       WITNESS_JOURNAL_KEY: ${WITNESS_JOURNAL_KEY:?Provide existing journal verification key}
       WITNESS_API_TOKEN: ${WITNESS_API_TOKEN:?Provide dedicated application-to-receiver token}
     volumes:
-      - ${WITNESS_DATA_DIRECTORY:?Prepare private persistent directory}:/data
-      - ${WITNESS_PRIVATE_DIRECTORY:?Prepare private enrolled genesis and signing key}:/run/imon:ro
+      - type: bind
+        source: ${WITNESS_DATA_DIRECTORY:?Prepare private persistent directory}
+        target: /data
+        bind: { create_host_path: false }
+      - type: bind
+        source: ${WITNESS_PRIVATE_DIRECTORY:?Prepare private enrolled genesis and signing key}
+        target: /run/imon
+        read_only: true
+        bind: { create_host_path: false }
     init: true
     read_only: true
-    tmpfs: [/tmp:size=8m, mode=1777]
+    tmpfs: ["/tmp:size=8m,mode=1777"]
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     pids_limit: 64

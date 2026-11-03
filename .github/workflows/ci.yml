@@ -52,6 +52,8 @@ jobs:
           scripts/test-release-manifest.mjs
           scripts/test-ingress443-config.mjs
           scripts/test-runtime-inventory.mjs
+      - name: Deletion deployment manifests use existing private mounts
+        run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-deletion-compose.py
       - run: PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-prepare-recording.py
       - run: PYTHONDONTWRITEBYTECODE=1 python3 apps/analysis-worker/test_worker.py
       - run: npm audit --omit=dev --audit-level=high

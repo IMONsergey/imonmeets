@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "startedAt": "2026-11-03T10:31:27.997385+00:00",
+  "baseCommit": "d46de552200c87c16b4d8c604170c47f113cde54",
+  "scope": "Docker Compose config rendering with synthetic environment only; no daemon operation, service startup, credentials or production changes",
+  "productionChanges": false,
+  "candidateImagesChanged": false,
+  "limits": {
+    "cpu.max": "100000 100000",
+    "memory.max": "2147483648",
+    "pids.max": "64"
+  },
+  "before": {
+    "tests": 4,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0,
+    "logSha256": "39e43e8924857504d567a419d5af4e9d79e4baecb0e8138b7957753d117424b9"
+  },
+  "after": {
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "logSha256": "2ba04d7ef5a3ea27a7b6487c6ea5dd74c14588037b15ba257fb12c1902679cf2"
+  },
+  "files": {
+    "compose.deletion.yml": "8e25fbd23b04212e16ec82de3974728bbe1ed1554715e1efcd6272612ee91719",
+    "compose.deletion-witness.yml": "ca5d766736929cd1012c4faa1d4dd3f0892f51ebf292180a95902366d779788b",
+    "scripts/test-deletion-compose.py": "eaad0897a223a8e9da2d45a5d3f8785f407e932dc36efb0a65ddfc63e2825698",
+    ".github/workflows/ci.yml": "6b5e4c0d9dcc02ce40d8d3a4e06ca409b6d77ff41ee38829b0f80e501730f161"
+  },
+  "status": "PASS_COMPOSE_CONFIGURATION_ONLY",
+  "completedAt": "2026-11-03T10:31:30.651865+00:00"
+}
