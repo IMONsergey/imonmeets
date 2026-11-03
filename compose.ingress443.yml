@@ -1,0 +1,27 @@
+# Start only after reviewing docs/ingress443.md and validating the assigned IP.
+# This overlay does not replace nginx, LiveKit or the existing VPN container.
+services:
+  ingress443:
+    image: haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3
+    network_mode: host
+    command:
+      ["haproxy", "-W", "-db", "-f", "/usr/local/etc/haproxy/haproxy.cfg"]
+    volumes:
+      - type: bind
+        source: ./deploy/ingress443-private/haproxy.cfg
+        target: /usr/local/etc/haproxy/haproxy.cfg
+        read_only: true
+        bind: { create_host_path: false }
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE, SETUID, SETGID]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 32
+    cpus: 0.5
+    mem_limit: 128m
+    memswap_limit: 128m
+    restart: unless-stopped
+    stop_grace_period: 65s
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }

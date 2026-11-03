@@ -1,5 +1,6 @@
-# Optional authenticated relay. Port 443 remains owned by the existing VPN.
-# TLS on 5349 helps UDP-blocked networks; 443-only networks need a separate endpoint.
+# Optional authenticated relay. The existing VPN keeps its IP:443.
+# Default legacy mode advertises TLS5349 + UDP3478. TURN_INGRESS_443=true
+# generates loopback TLS5349 behind compose.ingress443.yml on a separate IP:443.
 services:
   livekit:
     user: "${TURN_UID:-1000}:${TURN_GID:-1000}"
