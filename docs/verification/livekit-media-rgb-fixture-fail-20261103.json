@@ -1,0 +1,558 @@
+{
+  "schema": 1,
+  "runId": "mediaaudio20261103c1",
+  "result": "FAIL",
+  "startedAt": "2026-11-03T08:22:21.185Z",
+  "checks": [
+    "exact local LiveKit 1.13.11 image; no pull",
+    "real API, nginx auth_request and pinned HAProxy SNI path; owned loopback ports only",
+    "real protected LiveKit validation accepts the persisted API grant"
+  ],
+  "limits": {
+    "verifierCpu": 1,
+    "verifierMemoryMiB": 2048,
+    "verifierTasks": 256,
+    "livekitCpu": 0.5,
+    "livekitMemoryMiB": 256,
+    "haproxyCpu": 0.1,
+    "haproxyMemoryMiB": 64
+  },
+  "scope": "isolated loopback; synthetic audio/video media acceptance FAILED; no real devices, mail, payments, TURN or production traffic",
+  "nodeVersion": "v24.21.0",
+  "coreCommit": "3181ce3245d5e3bb6f6eff629081fbaa20658746",
+  "generatorSha256": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+  "haproxyImage": "haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3",
+  "livekitImage": "sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20",
+  "livekitVersion": "livekit-server version 1.13.11",
+  "serverBindings": [
+    {
+      "containerPort": "34672/udp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "34672"
+    },
+    {
+      "containerPort": "36007/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "36007"
+    },
+    {
+      "containerPort": "7880/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "37221"
+    }
+  ],
+  "legacyValidationPreflight": {
+    "status": 200,
+    "body": "success"
+  },
+  "browserTransport": [],
+  "signalFrames": {
+    "/rtc/v1": 52
+  },
+  "media": [
+    {
+      "receiver": "b",
+      "width": 160,
+      "height": 90,
+      "decodedFrames": 3,
+      "rgb": [
+        18,
+        160,
+        67
+      ],
+      "expectedRgb": [
+        21,
+        138,
+        73
+      ]
+    },
+    {
+      "receiver": "a",
+      "width": 160,
+      "height": 90,
+      "decodedFrames": 2,
+      "rgb": [
+        47,
+        78,
+        178
+      ],
+      "expectedRgb": [
+        50,
+        85,
+        178
+      ]
+    }
+  ],
+  "mediaAccepted": false,
+  "mediaFailure": "Remote decoded frame must have the other participant's synthetic color",
+  "iceDiagnostics": [
+    {
+      "index": 0,
+      "states": [
+        {
+          "event": "icegatheringstatechange",
+          "ice": "new",
+          "connection": "new",
+          "gathering": "gathering"
+        },
+        {
+          "event": "iceconnectionstatechange",
+          "ice": "checking",
+          "connection": "new",
+          "gathering": "gathering"
+        },
+        {
+          "event": "connectionstatechange",
+          "ice": "checking",
+          "connection": "connecting",
+          "gathering": "gathering"
+        },
+        {
+          "event": "iceconnectionstatechange",
+          "ice": "connected",
+          "connection": "connecting",
+          "gathering": "gathering"
+        },
+        {
+          "event": "icegatheringstatechange",
+          "ice": "connected",
+          "connection": "connecting",
+          "gathering": "complete"
+        },
+        {
+          "event": "connectionstatechange",
+          "ice": "connected",
+          "connection": "connected",
+          "gathering": "complete"
+        }
+      ],
+      "candidates": [
+        "candidate:95839536 1 udp 2113937151 4b3b710e-8404-4641-8387-bc8fede0842d.local 58921 typ host generation 0 network-cost 999",
+        "candidate:705913919 1 udp 2113939711 5d30ae5e-5e14-42e8-b24c-e15368220d49.local 46436 typ host generation 0 network-cost 999"
+      ],
+      "errors": [],
+      "stats": [
+        {
+          "id": "CIT01_111_minptime=10;stereo=1;useinbandfec=1",
+          "type": "codec",
+          "mimeType": "audio/opus"
+        },
+        {
+          "id": "CIT01_96",
+          "type": "codec",
+          "mimeType": "video/VP8"
+        },
+        {
+          "id": "COT01_111_maxaveragebitrate=510000;minptime=10;stereo=1;useinbandfec=1",
+          "type": "codec",
+          "mimeType": "audio/opus"
+        },
+        {
+          "id": "COT01_96",
+          "type": "codec",
+          "mimeType": "video/VP8"
+        },
+        {
+          "id": "CPaDVa/mo4_mIBqr8ek",
+          "type": "candidate-pair",
+          "state": "succeeded",
+          "nominated": true,
+          "writable": true,
+          "localCandidateId": "IaDVa/mo4",
+          "remoteCandidateId": "ImIBqr8ek",
+          "bytesSent": 14109,
+          "bytesReceived": 7964,
+          "packetsSent": 84,
+          "packetsReceived": 71,
+          "requestsSent": 5,
+          "requestsReceived": 4,
+          "responsesSent": 4,
+          "responsesReceived": 5,
+          "currentRoundTripTime": 0.002
+        },
+        {
+          "id": "CPx2HcPS3f_Dy3EFYa1",
+          "type": "candidate-pair",
+          "state": "in-progress",
+          "nominated": false,
+          "writable": false,
+          "localCandidateId": "Ix2HcPS3f",
+          "remoteCandidateId": "IDy3EFYa1",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 5,
+          "requestsReceived": 0,
+          "responsesSent": 0,
+          "responsesReceived": 0
+        },
+        {
+          "id": "I21XVg+Rr",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": "",
+          "port": 9,
+          "networkType": "unknown"
+        },
+        {
+          "id": "IDy3EFYa1",
+          "type": "remote-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": "127.0.0.1",
+          "port": 34672
+        },
+        {
+          "id": "IS8Gyjrh0",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": "",
+          "port": 9,
+          "networkType": "unknown"
+        },
+        {
+          "id": "IT01A1816124808",
+          "type": "inbound-rtp",
+          "kind": "audio",
+          "mediaType": "audio",
+          "bytesReceived": 4054,
+          "packetsReceived": 53,
+          "codecId": "CIT01_111_minptime=10;stereo=1;useinbandfec=1",
+          "totalAudioEnergy": 0,
+          "totalSamplesReceived": 0,
+          "concealedSamples": 0
+        },
+        {
+          "id": "IT01V2306273873",
+          "type": "inbound-rtp",
+          "kind": "video",
+          "mediaType": "video",
+          "bytesReceived": 1094,
+          "packetsReceived": 2,
+          "framesDecoded": 2,
+          "framesReceived": 2,
+          "codecId": "CIT01_96"
+        },
+        {
+          "id": "IaDVa/mo4",
+          "type": "local-candidate",
+          "candidateType": "prflx",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": "",
+          "port": 40838,
+          "networkType": "unknown"
+        },
+        {
+          "id": "IkIyFoHH7",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": "",
+          "port": 46436,
+          "networkType": "unknown"
+        },
+        {
+          "id": "ImIBqr8ek",
+          "type": "remote-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "passive",
+          "address": "127.0.0.1",
+          "port": 36007
+        },
+        {
+          "id": "Ix2HcPS3f",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": "",
+          "port": 58921,
+          "networkType": "unknown"
+        },
+        {
+          "id": "OT01A1506130863",
+          "type": "outbound-rtp",
+          "kind": "audio",
+          "mediaType": "audio",
+          "bytesSent": 4046,
+          "packetsSent": 53,
+          "codecId": "COT01_111_maxaveragebitrate=510000;minptime=10;stereo=1;useinbandfec=1"
+        },
+        {
+          "id": "OT01V2124388426",
+          "type": "outbound-rtp",
+          "kind": "video",
+          "mediaType": "video",
+          "bytesSent": 5174,
+          "packetsSent": 16,
+          "framesEncoded": 4,
+          "codecId": "COT01_96"
+        },
+        {
+          "id": "T01",
+          "type": "transport",
+          "selectedCandidatePairId": "CPaDVa/mo4_mIBqr8ek",
+          "bytesSent": 14109,
+          "bytesReceived": 7964,
+          "packetsSent": 84,
+          "packetsReceived": 71,
+          "dtlsState": "connected",
+          "iceState": "connected"
+        }
+      ],
+      "localCandidates": [
+        "a=candidate:95839536 1 udp 2113937151 4b3b710e-8404-4641-8387-bc8fede0842d.local 58921 typ host generation 0 network-cost 999",
+        "a=candidate:705913919 1 udp 2113939711 5d30ae5e-5e14-42e8-b24c-e15368220d49.local 46436 typ host generation 0 network-cost 999"
+      ],
+      "remoteCandidates": [
+        "a=candidate:2878742611 1 udp 2130706431 127.0.0.1 34672 typ host generation 0",
+        "a=candidate:2878742611 2 udp 2130706431 127.0.0.1 34672 typ host generation 0",
+        "a=candidate:375738803 1 tcp 1671430143 127.0.0.1 36007 typ host tcptype passive generation 0",
+        "a=candidate:375738803 2 tcp 1671430143 127.0.0.1 36007 typ host tcptype passive generation 0"
+      ]
+    },
+    {
+      "index": 1,
+      "states": [
+        {
+          "event": "icegatheringstatechange",
+          "ice": "new",
+          "connection": "new",
+          "gathering": "gathering"
+        },
+        {
+          "event": "iceconnectionstatechange",
+          "ice": "checking",
+          "connection": "new",
+          "gathering": "gathering"
+        },
+        {
+          "event": "connectionstatechange",
+          "ice": "checking",
+          "connection": "connecting",
+          "gathering": "gathering"
+        },
+        {
+          "event": "iceconnectionstatechange",
+          "ice": "connected",
+          "connection": "connecting",
+          "gathering": "gathering"
+        },
+        {
+          "event": "icegatheringstatechange",
+          "ice": "connected",
+          "connection": "connecting",
+          "gathering": "complete"
+        },
+        {
+          "event": "connectionstatechange",
+          "ice": "connected",
+          "connection": "connected",
+          "gathering": "complete"
+        }
+      ],
+      "candidates": [
+        "candidate:3780883010 1 udp 2113937151 4b3b710e-8404-4641-8387-bc8fede0842d.local 46821 typ host generation 0 network-cost 999",
+        "candidate:723925630 1 udp 2113939711 5d30ae5e-5e14-42e8-b24c-e15368220d49.local 53081 typ host generation 0 network-cost 999"
+      ],
+      "errors": [],
+      "stats": [
+        {
+          "id": "CIT01_111_minptime=10;stereo=1;useinbandfec=1",
+          "type": "codec",
+          "mimeType": "audio/opus"
+        },
+        {
+          "id": "CIT01_96",
+          "type": "codec",
+          "mimeType": "video/VP8"
+        },
+        {
+          "id": "COT01_111_maxaveragebitrate=510000;minptime=10;stereo=1;useinbandfec=1",
+          "type": "codec",
+          "mimeType": "audio/opus"
+        },
+        {
+          "id": "COT01_96",
+          "type": "codec",
+          "mimeType": "video/VP8"
+        },
+        {
+          "id": "CPv9XBp4od_qxJaHwjQ",
+          "type": "candidate-pair",
+          "state": "in-progress",
+          "nominated": false,
+          "writable": false,
+          "localCandidateId": "Iv9XBp4od",
+          "remoteCandidateId": "IqxJaHwjQ",
+          "bytesSent": 0,
+          "bytesReceived": 0,
+          "packetsSent": 0,
+          "packetsReceived": 0,
+          "requestsSent": 5,
+          "requestsReceived": 0,
+          "responsesSent": 0,
+          "responsesReceived": 0
+        },
+        {
+          "id": "CPvPP4wRy8_+3IDQFYQ",
+          "type": "candidate-pair",
+          "state": "succeeded",
+          "nominated": true,
+          "writable": true,
+          "localCandidateId": "IvPP4wRy8",
+          "remoteCandidateId": "I+3IDQFYQ",
+          "bytesSent": 14162,
+          "bytesReceived": 8366,
+          "packetsSent": 88,
+          "packetsReceived": 74,
+          "requestsSent": 4,
+          "requestsReceived": 4,
+          "responsesSent": 4,
+          "responsesReceived": 4,
+          "currentRoundTripTime": 0.002
+        },
+        {
+          "id": "I+3IDQFYQ",
+          "type": "remote-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "passive",
+          "address": "127.0.0.1",
+          "port": 36007
+        },
+        {
+          "id": "I8qys0arJ",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": "",
+          "port": 53081,
+          "networkType": "unknown"
+        },
+        {
+          "id": "IT01A149372482",
+          "type": "inbound-rtp",
+          "kind": "audio",
+          "mediaType": "audio",
+          "bytesReceived": 4127,
+          "packetsReceived": 54,
+          "codecId": "CIT01_111_minptime=10;stereo=1;useinbandfec=1",
+          "totalAudioEnergy": 0,
+          "totalSamplesReceived": 0,
+          "concealedSamples": 0
+        },
+        {
+          "id": "IT01V168280422",
+          "type": "inbound-rtp",
+          "kind": "video",
+          "mediaType": "video",
+          "bytesReceived": 1276,
+          "packetsReceived": 3,
+          "framesDecoded": 3,
+          "framesReceived": 3,
+          "codecId": "CIT01_96"
+        },
+        {
+          "id": "IpqtbBU6/",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": "",
+          "port": 9,
+          "networkType": "unknown"
+        },
+        {
+          "id": "IqxJaHwjQ",
+          "type": "remote-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": "127.0.0.1",
+          "port": 34672
+        },
+        {
+          "id": "IrD+8THld",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": "",
+          "port": 9,
+          "networkType": "unknown"
+        },
+        {
+          "id": "Iv9XBp4od",
+          "type": "local-candidate",
+          "candidateType": "host",
+          "protocol": "udp",
+          "address": "",
+          "port": 46821,
+          "networkType": "unknown"
+        },
+        {
+          "id": "IvPP4wRy8",
+          "type": "local-candidate",
+          "candidateType": "prflx",
+          "protocol": "tcp",
+          "tcpType": "active",
+          "address": "",
+          "port": 40840,
+          "networkType": "unknown"
+        },
+        {
+          "id": "OT01A1736241230",
+          "type": "outbound-rtp",
+          "kind": "audio",
+          "mediaType": "audio",
+          "bytesSent": 4135,
+          "packetsSent": 54,
+          "codecId": "COT01_111_maxaveragebitrate=510000;minptime=10;stereo=1;useinbandfec=1"
+        },
+        {
+          "id": "OT01V2852134465",
+          "type": "outbound-rtp",
+          "kind": "video",
+          "mediaType": "video",
+          "bytesSent": 3546,
+          "packetsSent": 17,
+          "framesEncoded": 3,
+          "codecId": "COT01_96"
+        },
+        {
+          "id": "T01",
+          "type": "transport",
+          "selectedCandidatePairId": "CPvPP4wRy8_+3IDQFYQ",
+          "bytesSent": 14162,
+          "bytesReceived": 8366,
+          "packetsSent": 88,
+          "packetsReceived": 74,
+          "dtlsState": "connected",
+          "iceState": "connected"
+        }
+      ],
+      "localCandidates": [
+        "a=candidate:3780883010 1 udp 2113937151 4b3b710e-8404-4641-8387-bc8fede0842d.local 46821 typ host generation 0 network-cost 999"
+      ],
+      "remoteCandidates": [
+        "a=candidate:2878742611 1 udp 2130706431 127.0.0.1 34672 typ host generation 0",
+        "a=candidate:2878742611 2 udp 2130706431 127.0.0.1 34672 typ host generation 0",
+        "a=candidate:375738803 1 tcp 1671430143 127.0.0.1 36007 typ host tcptype passive generation 0",
+        "a=candidate:375738803 2 tcp 1671430143 127.0.0.1 36007 typ host tcptype passive generation 0"
+      ]
+    }
+  ],
+  "livekitMediaDiagnostics": "2026-11-03T08:22:30.381Z\tDEBUG\tlivekit.transport\trtc/transport.go:3006\trtx pairs found from sdp\t{\"room\": \"91063504-5dcf-44ab-8503-b5ebbb46568e\", \"roomID\": \"RM_LH2b4VWm95am\", \"participant\": \"user:oEsQeUJc0pC05k4HoTxn4dDsGHaQa8Db:4c23f543-3751-47f1-aa85-5542a4158659\", \"participantID\": \"PA_QTMYX5Hm3Qes\", \"remote\": false, \"transport\": \"PUBLISHER\", \"ssrcs\": {\"394243179\":2124388426}}\n2026-11-03T08:22:30.382Z\tINFO\tlivekit.transport.pion.pc\tv4@v4.2.18-warp.7/peerconnection.go:292\tsignaling state changed to stable\t{\"room\": \"91063504-5dcf-44ab-8503-b5ebbb46568e\", \"roomID\": \"RM_LH2b4VWm95am\", \"participant\": \"user:oEsQeUJc0pC05k4HoTxn4dDsGHaQa8Db:4c23f543-3751-47f1-aa85-5542a4158659\", \"participantID\": \"PA_QTMYX5Hm3Qes\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:22:30.382Z\tDEBUG\tlivekit.sub\tsfu/downtrack.go:624\tdowntrack bound: receiver not ready\t{\"room\": \"91063504-5dcf-44ab-8503-b5ebbb46568e\", \"roomID\": \"RM_LH2b4VWm95am\", \"participant\": \"user:oEsQeUJc0pC05k4HoTxn4dDsGHaQa8Db:4c23f543-3751-47f1-aa85-5542a4158659\", \"participantID\": \"PA_QTMYX5Hm3Qes\", \"remote\": false, \"trackID\": \"TR_Vn4gR4vgnWqDW\", \"relayed\": false, \"subscriberID\": \"PA_QTMYX5Hm3Qes:1793694150309059217\", \"codec\": {\"MimeType\":\"video/VP8\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"\",\"RTCPFeedback\":[{\"Type\":\"transport-cc\",\"Parameter\":\"\"},{\"Type\":\"goog-remb\",\"Parameter\":\"\"},{\"Type\":\"ccm\",\"Parameter\":\"fir\"},{\"Type\":\"nack\",\"Parameter\":\"\"},{\"Type\":\"nack\",\"Parameter\":\"pli\"}],\"PayloadType\":96}}\n2026-11-03T08:22:30.382Z\tDEBUG\tlivekit.sub\tsfu/downtrack.go:655\tdowntrack receiver ready\t{\"room\": \"91063504-5dcf-44ab-8503-b5ebbb46568e\", \"roomID\": \"RM_LH2b4VWm95am\", \"participant\": \"user:oEsQeUJc0pC05k4HoTxn4dDsGHaQa8Db:4c23f543-3751-47f1-aa85-5542a4158659\", \"participantID\": \"PA_QTMYX5Hm3Qes\", \"remote\": false, \"trackID\": \"TR_Vn4gR4vgnWqDW\", \"relayed\": false, \"subscriberID\": \"PA_QTMYX5Hm3Qes:1793694150309059217\"}\n2026-11-03T08:22:30.382Z\tDEBUG\tlivekit.sub\tsfu/downtrack.go:586\tDownTrack.Bind\t{\"room\": \"91063504-5dcf-44ab-8503-b5ebbb46568e\", \"roomID\": \"RM_LH2b4VWm95am\", \"participant\": \"user:oEsQeUJc0pC05k4HoTxn4dDsGHaQa8Db:4c23f543-3751-47f1-aa85-5542a4158659\", \"participantID\": \"PA_QTMYX5Hm3Qes\", \"remote\": false, \"trackID\": \"TR_Vn4gR4vgnWqDW\", \"relayed\": false, \"subscriberID\": \"PA_QTMYX5Hm3Qes:1793694150309059217\", \"codecs\": [{\"MimeType\":\"video/VP8\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"\",\"RTCPFeedback\":[{\"Type\":\"transport-cc\",\"Parameter\":\"\"},{\"Type\":\"goog-remb\",\"Parameter\":\"\"},{\"Type\":\"ccm\",\"Parameter\":\"fir\"},{\"Type\":\"nack\",\"Parameter\":\"\"},{\"Type\":\"nack\",\"Parameter\":\"pli\"}],\"PayloadType\":96}], \"matchCodec\": {\"MimeType\":\"video/VP8\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"\",\"RTCPFeedback\":[{\"Type\":\"transport-cc\",\"Parameter\":\"\"},{\"Type\":\"goog-remb\",\"Parameter\":\"\"},{\"Type\":\"ccm\",\"Parameter\":\"fir\"},{\"Type\":\"nack\",\"Parameter\":\"\"},{\"Type\":\"nack\",\"Parameter\":\"pli\"}],\"PayloadType\":96}, \"ssrc\": 2306273873, \"ssrcRTX\": 3618413505, \"isFECEnabled\": false, \"payloadType\": 96, \"payloadTypeRTX\": 97, \"codecParameters\": [{\"MimeType\":\"video/VP8\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"\",\"RTCPFeedback\":[{\"Type\":\"transport-cc\",\"Parameter\":\"\"},{\"Type\":\"goog-remb\",\"Parameter\":\"\"},{\"Type\":\"ccm\",\"Parameter\":\"fir\"},{\"Type\":\"nack\",\"Parameter\":\"\"},{\"Type\":\"nack\",\"Parameter\":\"pli\"}],\"PayloadType\":96},{\"MimeType\":\"video/rtx\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"apt=96\",\"RTCPFeedback\":null,\"PayloadType\":97},{\"MimeType\":\"video/VP9\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"profile-id=0\",\"RTCPFeedback\":[{\"Type\":\"transport-cc\",\"Parameter\":\"\"},{\"Type\":\"goog-remb\",\"Parameter\":\"\"},{\"Type\":\"ccm\",\"Parameter\":\"fir\"},{\"Type\":\"nack\",\"Parameter\":\"\"},{\"Type\":\"nack\",\"Parameter\":\"pli\"}],\"PayloadType\":98},{\"MimeType\":\"video/rtx\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"apt=98\",\"RTCPFeedback\":null,\"PayloadType\":99},{\"MimeType\":\"video/VP9\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"profile-id=1\",\"RTCPFeedback\":[{\"Type\":\"transport-cc\",\"Parameter\":\"\"},{\"Type\":\"goog-remb\",\"Parameter\":\"\"},{\"Type\":\"ccm\",\"Parameter\":\"fir\"},{\"Type\":\"nack\",\"Parameter\":\"\"},{\"Type\":\"nack\",\"Parameter\":\"pli\"}],\"PayloadType\":35},{\"MimeType\":\"video/rtx\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"apt=35\",\"RTCPFeedback\":null,\"PayloadType\":36},{\"MimeType\":\"video/H264\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f\",\"RTCPFeedback\":[{\"Type\":\"transport-cc\",\"Parameter\":\"\"},{\"Type\":\"goog-remb\",\"Parameter\":\"\"},{\"Type\":\"ccm\",\"Parameter\":\"fir\"},{\"Type\":\"nack\",\"Parameter\":\"\"},{\"Type\":\"nack\",\"Parameter\":\"pli\"}],\"PayloadType\":108},{\"MimeType\":\"video/rtx\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"apt=108\",\"RTCPFeedback\":null,\"PayloadType\":109},{\"MimeType\":\"video/H264\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42e01f\",\"RTCPFeedback\":[{\"Type\":\"transport-cc\",\"Parameter\":\"\"},{\"Type\":\"goog-remb\",\"Parameter\":\"\"},{\"Type\":\"ccm\",\"Parameter\":\"fir\"},{\"Type\":\"nack\",\"Parameter\":\"\"},{\"Type\":\"nack\",\"Parameter\":\"pli\"}],\"PayloadType\":114},{\"MimeType\":\"video/rtx\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"apt=114\",\"RTCPFeedback\":null,\"PayloadType\":115},{\"MimeType\":\"video/AV1\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"level-idx=5;profile=0;tier=0\",\"RTCPFeedback\":[{\"Type\":\"transport-cc\",\"Parameter\":\"\"},{\"Type\":\"goog-remb\",\"Parameter\":\"\"},{\"Type\":\"ccm\",\"Parameter\":\"fir\"},{\"Type\":\"nack\",\"Parameter\":\"\"},{\"Type\":\"nack\",\"Parameter\":\"pli\"}],\"PayloadType\":45},{\"MimeType\":\"video/rtx\",\"ClockRate\":90000,\"Channels\":0,\"SDPFmtpLine\":\"apt=45\",\"RTCPFeedback\":null,\"PayloadType\":46}]}\n2026-11-03T08:22:30.382Z\tDEBUG\tlivekit.pub\tsfu/receiver_base.go:498\tdowntrack added\t{\"room\": \"91063504-5dcf-44ab-8503-b5ebbb46568e\", \"roomID\": \"RM_LH2b4VWm95am\", \"participant\": \"guest:a31a65db-7735-457a-8ed1-407372054040\", \"participantID\": \"PA_v7VY9JECYttj\", \"remote\": false, \"trackID\": \"TR_Vn4gR4vgnWqDW\", \"relayed\": false, \"mime\": \"video/VP8\", \"subscriberID\": \"PA_QTMYX5Hm3Qes:1793694150309059217\"}\n202",
+  "error": "AssertionError [ERR_ASSERTION]: Remote decoded frame must have the other participant's synthetic color\n    at <anonymous> (/home/sergey/imonmeets-core-20261103/scripts/test-livekit-admission.mjs:1045:14)",
+  "livekitDiagnostics": "2026-11-03T08:22:31.810Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/selection.go:501\tIgnore nominate new pair prio 5764641605600403711 (local, prio 1671430143) tcp4 host 127.0.0.1:36007 (resolved: 127.0.0.1:36007) <-> tcp4 prflx 172.17.0.1:40838 related :0 (resolved: 172.17.0.1:40838) (remote, prio 1342185215), state: succeeded, nominated: true, nominateOnBindingSuccess: true, already nominated pair prio 5764641605600403711 (local, prio 1671430143) tcp4 host 127.0.0.1:36007 (resolved: 127.0.0.1:36007) <-> tcp4 prflx 172.17.0.1:40838 related :0 (resolved: 172.17.0.1:40838) (remote, prio 1342185215), state: succeeded, nominated: true, nominateOnBindingSuccess: true\t{\"room\": \"91063504-5dcf-44ab-8503-b5ebbb46568e\", \"roomID\": \"RM_LH2b4VWm95am\", \"participant\": \"user:oEsQeUJc0pC05k4HoTxn4dDsGHaQa8Db:4c23f543-3751-47f1-aa85-5542a4158659\", \"participantID\": \"PA_QTMYX5Hm3Qes\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:22:31.889Z\tDEBUG\tlivekit.pub.pub.sfu\trtpstats/rtpstats_receiver.go:765\tpropagation delay step change\t{\"room\": \"91063504-5dcf-44ab-8503-b5ebbb46568e\", \"roomID\": \"RM_LH2b4VWm95am\", \"participant\": \"user:oEsQeUJc0pC05k4HoTxn4dDsGHaQa8Db:4c23f543-3751-47f1-aa85-5542a4158659\", \"participantID\": \"PA_QTMYX5Hm3Qes\", \"remote\": false, \"trackID\": \"TR_V8UCAmbRW244M\", \"relayed\": false, \"mime\": \"video/VP8\", \"layer\": 0, \"ssrc\": 2124388426, \"currentSenderReport\": {\"RtpTimestamp\": 787266886, \"RtpTimestampExt\": 787266886, \"NtpTimestamp\": \"2026-11-03T08:22:31.888Z\", \"At\": \"2026-11-03T08:22:31.889Z\", \"AtAdjusted\": \"1970-01-01T00:00:00.000Z\", \"Packets\": 15, \"Octets\": 4939}, \"rtpStats\": {\"startTime\": \"2026-11-03T08:22:30.611Z\", \"endTime\": \"1970-01-01T00:00:00.000Z\", \"elapsed\": \"1.278084896s\", \"packetsExpected\": 3, \"packetsExpectedRate\": 2.3472619145950695, \"packetsSeenPrimary\": 3, \"packetsSeenPrimaryRate\": 2.3472619145950695, \"bytes\": 1537, \"bitrate\": 9620.644167286991, \"packetsOutOfOrder\": 0, \"packetsLost\": 0, \"packetsLostRate\": 0, \"packetLostPercentage\": 0, \"nacks\": 0, \"nackAcks\": 0, \"nackMisses\": 0, \"nackRepeated\": 0, \"plis\": 1, \"lastPli\": \"2026-11-03T08:22:30.611Z\", \"firstTime\": \"2026-11-03T08:22:30.611Z\", \"firstTimeAdjustment\": \"0s\", \"highestTime\": \"2026-11-03T08:22:31.605Z\", \"headerBytes\": 108, \"packetsDuplicate\": 9, \"packetsDuplicateRate\": 7.041785743785208, \"bytesDuplicate\": 3852, \"bitrateDuplicate\": 24111.074386720553, \"headerBytesDuplicate\": 360, \"packetsPadding\": 0, \"packetsPaddingRate\": 0, \"bytesPadding\": 0, \"bitratePadding\": 0, \"headerBytesPadding\": 0, \"fecPackets\": 0, \"fecBytes\": 0, \"fecPacketsDiscarded\": 0, \"fecPacketsRecovered\": 0, \"frames\": 3, \"frameRate\": 2.3472619145950695, \"jitter\": 30.35546875, \"maxJitter\": 30.35546875, \"firs\": 0, \"lastFir\": \"0001-01-01T00:00:00.000Z\", \"keyFrames\": 2, \"lastKeyFrame\": \"2026-11-03T08:22:31.106Z\", \"rtt\": 3, \"maxRtt\": 3, \"srFirst\": {}, \"srNewest\": {}, \"packetDrift\": {\"StartTime\": \"2026-11-03T08:22:30.611Z\", \"EndTime\": \"2026-11-03T08:22:31.605Z\", \"Duration\": 0.99430467, \"StartTimestamp\": 787151326, \"EndTimestamp\": 787241236, \"RtpClockTicks\": 89910, \"DriftSamples\": 423, \"DriftMs\": 4.7, \"ClockRate\": 90425.00021648293}, \"ntpReportDrift\": {}, \"receivedReportDrift\": {}, \"rebasedReportDrift\": {}, \"extStartSN\": 26531, \"extHighestSN\": 26533, \"extStartTS\": 787151326, \"extHighestTS\": 787241236, \"propagationDelayEstimator\": {\"lastSenderClockTimeNs\": \"2026-11-03T08:22:31.888Z\", \"lastPropagationDelayNs\": \"770.904µs\", \"lastDeltaPropagationDelayNs\": \"0s\", \"estimatedPropagationDelayNs\": \"770.904µs\", \"longTermDeltaPropagationDelayNs\": \"0s\", \"propagationDelayDeltaHighCount\": 0, \"propagationDelayDeltaHighStartTime\": \"0001-01-01T00:00:00.000Z\", \"propagationDelaySpikeNs\": \"0s\"}, \"clockSkewCount\": 0, \"clockSkewMediaPathCount\": 0, \"outOfOrderSenderReportCount\": 0, \"timeReversedCount\": 0, \"packetsDroppedPreStartTimestamp\": 0, \"packetsDroppedOldTimestamp\": 0, \"packetsDroppedPreStartSequenceNumber\": 0, \"packetsDroppedOldSequenceNumber\": 0, \"restartPackets\": []}}\n2026-11-03T08:22:31.889Z\tDEBUG\tlivekit.pub.pub.sfu\trtpstats/rtpstats_base.go:478\tadjusting first packet time\t{\"room\": \"91063504-5dcf-44ab-8503-b5ebbb46568e\", \"roomID\": \"RM_LH2b4VWm95am\", \"participant\": \"user:oEsQeUJc0pC05k4HoTxn4dDsGHaQa8Db:4c23f543-3751-47f1-aa85-5542a4158659\", \"participantID\": \"PA_QTMYX5Hm3Qes\", \"remote\": false, \"trackID\": \"TR_V8UCAmbRW244M\", \"relayed\": false, \"mime\": \"video/VP8\", \"layer\": 0, \"ssrc\": 2124388426, \"startTime\": \"2026-11-03T08:22:30.611Z\", \"nowTime\": \"2026-11-03T08:22:31.889Z\", \"before\": \"2026-11-03T08:22:30.611Z\", \"after\": \"2026-11-03T08:22:30.605Z\", \"adjustment\": \"6.174455ms\", \"firstTimeAdjustment\": \"6.174455ms\", \"extNowTS\": 787266915, \"extStartTS\": 787151326, \"srData\": {\"RtpTimestamp\": 787266886, \"RtpTimestampExt\": 787266886, \"NtpTimestamp\": \"2026-11-03T08:22:31.888Z\", \"At\": \"2026-11-03T08:22:31.889Z\", \"AtAdjusted\": \"2026-11-03T08:22:31.889Z\", \"Packets\": 15, \"Octets\": 4939}, \"tsOffset\": 0, \"timeSinceReceive\": \"324.544µs\", \"timeSinceFirst\": \"1.278147767s\", \"samplesDiff\": 115589, \"samplesDuration\": \"1.284322222s\"}\n2026-11-03T08:22:31.889Z\tDEBUG\tlivekit.sub\tsfu/forwarder.go:827\treceived RTCP sender report for reference layer spatial\t{\"room\": \"91063504-5dcf-44ab-8503-b5ebbb46568e\", \"roomID\": \"RM_LH2b4VWm95am\", \"participant\": \"guest:a31a65db-7735-457a-8ed1-407372054040\", \"participantID\": \"PA_v7VY9JECYttj\", \"remote\": false, \"trackID\": \"TR_V8UCAmbRW244M\", \"relayed\": false, \"subscriberID\": \"PA_v7VY9JECYttj:1793694149757678765\", \"layer\": 0, \"srData\": {\"RtpTimestamp\": 787266886, \"RtpTimestampExt\": 787266886, \"NtpTimestamp\": \"2026-11-03T08:22:31.888Z\", \"At\": \"2026-11-03T08:22:31.889Z\", \"AtAdjusted\": \"2026-11-03T08:22:31.889Z\", \"Packets\": 15, \"Octets\": 4939}}\n2026-11-03T08:22:31.889Z\tDEBUG\tlivekit.sub\trtpstats/rtpstats_base.go:478\tadjusting first packet time\t{\"room\": \"91063504-5dcf-44ab-8503-b5ebbb46568e\", \"roomID\": \"RM_LH2b4VWm95am\", \"participant\": \"guest:a31a65db-7735-457a-8ed1-407372054040\", \"participantID\": \"PA_v7VY9JECYttj\", \"remote\": false, \"trackID\": \"TR_V8UCAmbRW244M\", \"rela",
+  "haproxyDiagnostics": "[NOTICE]   (1) : New worker (8) forked\n[NOTICE]   (1) : Loading success.\n[NOTICE]   (8) : haproxy version is 3.0.30-47d806b\n[WARNING]  (8) : [haproxy.main()] Failed to drop supplementary groups. Using 'gid'/'group' without 'uid'/'user' is generally useless.\n",
+  "cleanupVerified": true,
+  "completedAt": "2026-11-03T08:22:34.490Z",
+  "outerCleanupVerified": true
+}

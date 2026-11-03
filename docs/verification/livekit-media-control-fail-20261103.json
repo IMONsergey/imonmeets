@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "runId": "mediadiag20261103a1",
+  "result": "FAIL",
+  "startedAt": "2026-11-03T08:15:31.936Z",
+  "checks": [
+    "exact local LiveKit 1.13.11 image; no pull",
+    "real API, nginx auth_request and pinned HAProxy SNI path; owned loopback ports only",
+    "real protected LiveKit validation accepts the persisted API grant"
+  ],
+  "limits": {
+    "verifierCpu": 1,
+    "verifierMemoryMiB": 2048,
+    "verifierTasks": 256,
+    "livekitCpu": 0.5,
+    "livekitMemoryMiB": 256,
+    "haproxyCpu": 0.1,
+    "haproxyMemoryMiB": 64
+  },
+  "scope": "isolated loopback signaling and admission only; WebRTC video attempted but NOT ACCEPTED; no real devices, mail, payments, TURN or production traffic",
+  "nodeVersion": "v24.21.0",
+  "coreCommit": "3181ce3245d5e3bb6f6eff629081fbaa20658746",
+  "generatorSha256": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+  "haproxyImage": "haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3",
+  "livekitImage": "sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20",
+  "livekitVersion": "livekit-server version 1.13.11",
+  "serverBindings": [
+    {
+      "containerPort": "40300/udp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "40300"
+    },
+    {
+      "containerPort": "42827/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "42827"
+    },
+    {
+      "containerPort": "7880/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "42573"
+    }
+  ],
+  "legacyValidationPreflight": {
+    "status": 200,
+    "body": "success"
+  },
+  "browserTransport": [],
+  "signalFrames": {
+    "/rtc/v1": 15
+  },
+  "mediaAccepted": false,
+  "mediaFailure": "page.evaluate: ConnectionError: could not establish pc connection\n    at Zo.internal (<anonymous>:1:153605)\n    at <anonymous>:1:295218",
+  "iceDiagnostics": [
+    {
+      "index": 0,
+      "states": [
+        {
+          "event": "icegatheringstatechange",
+          "ice": "new",
+          "connection": "new",
+          "gathering": "gathering"
+        },
+        {
+          "event": "iceconnectionstatechange",
+          "ice": "checking",
+          "connection": "new",
+          "gathering": "gathering"
+        },
+        {
+          "event": "connectionstatechange",
+          "ice": "checking",
+          "connection": "connecting",
+          "gathering": "gathering"
+        }
+      ],
+      "candidates": [
+        "candidate:1840167225 1 udp 2113937151 0a30d87c-af84-49d4-bb08-05cb0698ae3b.local 49438 typ host generation 0 network-cost 999",
+        "candidate:1108064310 1 udp 2113939711 852f8b7d-2325-41df-9b04-e5d31a124088.local 43561 typ host generation 0 network-cost 999"
+      ],
+      "errors": [],
+      "stats": [],
+      "localCandidates": [
+        "a=candidate:1840167225 1 udp 2113937151 0a30d87c-af84-49d4-bb08-05cb0698ae3b.local 49438 typ host generation 0 network-cost 999",
+        "a=candidate:1108064310 1 udp 2113939711 852f8b7d-2325-41df-9b04-e5d31a124088.local 43561 typ host generation 0 network-cost 999"
+      ],
+      "remoteCandidates": [
+        "a=candidate:2878742611 1 udp 2130706431 127.0.0.1 40300 typ host generation 0",
+        "a=candidate:2878742611 2 udp 2130706431 127.0.0.1 40300 typ host generation 0",
+        "a=candidate:375738803 1 tcp 1671430143 127.0.0.1 42827 typ host tcptype passive generation 0",
+        "a=candidate:375738803 2 tcp 1671430143 127.0.0.1 42827 typ host tcptype passive generation 0"
+      ]
+    }
+  ],
+  "livekitMediaDiagnostics": "2026-11-03T08:16:00.060Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:1689\tDiscarded 1 binding requests because they expired\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.145Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.170Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:1802\tInbound STUN (Request) from 172.17.0.1:40390 to udp4 host 127.0.0.1:40300 (resolved: 127.0.0.1:40300), useCandidate: true\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.170Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:1610\tPing STUN from udp4 host 127.0.0.1:40300 (resolved: 127.0.0.1:40300) to udp4 prflx 172.17.0.1:40390 related :0 (resolved: 172.17.0.1:40390)\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.296Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:1802\tInbound STUN (Request) from 172.17.0.1:40390 to udp4 host 127.0.0.1:40300 (resolved: 127.0.0.1:40300), useCandidate: true\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.297Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:1610\tPing STUN from udp4 host 127.0.0.1:40300 (resolved: 127.0.0.1:40300) to udp4 prflx 172.17.0.1:40390 related :0 (resolved: 172.17.0.1:40390)\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.297Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:1689\tDiscarded 2 binding requests because they expired\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.346Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.420Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:1802\tInbound STUN (Request) from 172.17.0.1:40390 to udp4 host 127.0.0.1:40300 (resolved: 127.0.0.1:40300), useCandidate: true\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.420Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:1610\tPing STUN from udp4 host 127.0.0.1:40300 (resolved: 127.0.0.1:40300) to udp4 prflx 172.17.0.1:40390 related :0 (resolved: 172.17.0.1:40390)\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.546Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:1802\tInbound STUN (Request) from 172.17.0.1:40390 to udp4 host 127.0.0.1:40300 (resolved: 127.0.0.1:40300), useCandidate: true\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.546Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:1610\tPing STUN from udp4 host 127.0.0.1:40300 (resolved: 127.0.0.1:40300) to udp4 prflx 172.17.0.1:40390 related :0 (resolved: 172.17.0.1:40390)\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.546Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:1689\tDiscarded 2 binding requests because they expired\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PUBLISHER\"}\n2026-11-03T08:16:00.549Z\tDEBUG\tlivekit.transport.pion.ice\tv4@v4.4.0-warp.3/agent.go:834\tPinging all candidates\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"transport\": \"PU",
+  "error": "page.evaluate: ConnectionError: could not establish pc connection\n    at Zo.internal (<anonymous>:1:153605)\n    at <anonymous>:1:295218\n    at <anonymous> (/home/sergey/imonmeets-core-20261103/scripts/test-livekit-admission.mjs:832:16)",
+  "livekitDiagnostics": "2026-11-03T08:16:04.582Z\tDEBUG\tlivekit\tsignalling/signallerasyncbase.go:92\tclosing signal connection\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"reason\": \"TRANSPORT_FAILURE\", \"connID\": \"CO_HarWJCdXR5f7\"}\n2026-11-03T08:16:04.582Z\tDEBUG\tlivekit\tservice/signal.go:183\tsignal stream closed\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"connID\": \"CO_HarWJCdXR5f7\", \"error\": \"stream closed\"}\n2026-11-03T08:16:04.582Z\tDEBUG\tlivekit.transport\trtc/transportmanager.go:1109\tsignal source valid\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"roomID\": \"RM_PUBX9AAR5XX3\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"participantID\": \"PA_ZMgQXYXW3ThS\", \"remote\": false, \"valid\": false}\n2026-11-03T08:16:04.582Z\tDEBUG\tlivekit\trouting/signal.go:139\tsignal stream closed\t{\"room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"reqNodeID\": \"ND_inEdEt8Sg8vf\", \"participant\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"connID\": \"CO_HarWJCdXR5f7\", \"participantInit\": {\"Identity\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"Reconnect\": false, \"ReconnectReason\": \"RR_UNKNOWN\", \"AutoSubscribe\": true, \"AutoSubscribeDataTrack\": false, \"Client\": {\"sdk\": \"JS\", \"version\": \"2.23.0\", \"protocol\": 17, \"os\": \"Linux\", \"deviceModel\": \"Other\", \"browser\": \"HeadlessChrome\", \"browserVersion\": \"156.0.0\", \"clientProtocol\": 2, \"capabilities\": [\"CAP_COMPRESSION_DEFLATE_RAW\"]}, \"Grants\": {\"Identity\": \"user:PKjHsQqcK9diQiG4MoveK7Ky2XgSDBeD:03ee2a76-2027-43e5-9123-56eea9da4489\", \"Kind\": \"\", \"KindDetails\": [], \"Video\": {\"RoomCreate\": false, \"RoomList\": false, \"RoomRecord\": false, \"RoomAdmin\": false, \"RoomJoin\": true, \"Room\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\", \"CanPublish\": true, \"CanSubscribe\": true, \"CanPublishData\": true, \"CanPublishSources\": [], \"CanUpdateOwnMetadata\": false, \"IngressAdmin\": false, \"Hidden\": false, \"Recorder\": false, \"Agent\": false, \"CanSubscribeMetrics\": \"not-set\", \"CanManageAgentSession\": \"not-set\", \"DestinationRoom\": \"\"}, \"SIP\": {}, \"Agent\": {}, \"Inference\": {}, \"Observability\": {}, \"AgentEndpoint\": {}, \"AgentThread\": {}, \"RoomConfig\": {}, \"RoomPreset\": \"\"}, \"TokenExpiresAt\": \"2026-11-03T08:20:45.000Z\", \"Region\": \"\", \"AdaptiveStream\": false, \"ID\": \"\", \"SubscriberAllowPause\": \"not-set\", \"DisableICELite\": false, \"CreateRoom\": {\"name\": \"cf7fa07b-d487-4974-a85f-62b659f95b81\"}, \"AddTrackRequests\": [], \"PublisherOffer\": {\"type\": \"offer\", \"sdp\": \"v=0\\r\\no=- 5476643212362585765 2 IN IP4 127.0.0.1\\r\\ns=-\\r\\nt=0 0\\r\\na=extmap-allow-mixed\\r\\na=msid-semantic:  WMS\\r\\na=group:BUNDLE 0 1 2 3 4 5 6\\r\\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\\r\\nc=IN IP4 0.0.0.0\\r\\na=rtpmap:111 opus/48000/2\\r\\na=rtpmap:63 red/48000/2\\r\\na=rtpmap:9 G722/8000\\r\\na=rtpmap:0 PCMU/8000\\r\\na=rtpmap:8 PCMA/8000\\r\\na=rtpmap:13 CN/8000\\r\\na=rtpmap:110 telephone-event/48000\\r\\na=rtpmap:126 telephone-event/8000\\r\\na=fmtp:111 minptime=10;useinbandfec=1\\r\\na=fmtp:63 111/111\\r\\na=rtcp:9 IN IP4 0.0.0.0\\r\\na=rtcp-fb:111 transport-cc\\r\\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\\r\\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\\r\\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\\r\\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\\r\\na=setup:actpass\\r\\na=mid:0\\r\\na=recvonly\\r\\na=ice-ufrag:FZ9R\\r\\na=ice-pwd:kLsB2jIcxpA+fbhVsptuFyZR\\r\\na=fingerprint:sha-256 DD:2C:BF:42:7A:0E:84:A6:13:B2:97:AC:AE:C5:29:8B:CB:F3:8D:BC:66:D8:FB:12:E7:6A:48:C3:47:A4:F4:7F\\r\\na=ice-options:trickle\\r\\na=rtcp-mux\\r\\na=rtcp-rsize\\r\\na=rtcp-xr:rcvr-rtt=all\\r\\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\\r\\nc=IN IP4 0.0.0.0\\r\\na=rtpmap:111 opus/48000/2\\r\\na=rtpmap:63 red/48000/2\\r\\na=rtpmap:9 G722/8000\\r\\na=rtpmap:0 PCMU/8000\\r\\na=rtpmap:8 PCMA/8000\\r\\na=rtpmap:13 CN/8000\\r\\na=rtpmap:110 telephone-event/48000\\r\\na=rtpmap:126 telephone-event/8000\\r\\na=fmtp:111 minptime=10;useinbandfec=1\\r\\na=fmtp:63 111/111\\r\\na=rtcp:9 IN IP4 0.0.0.0\\r\\na=rtcp-fb:111 transport-cc\\r\\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\\r\\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\\r\\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\\r\\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\\r\\na=setup:actpass\\r\\na=mid:1\\r\\na=recvonly\\r\\na=ice-ufrag:FZ9R\\r\\na=ice-pwd:kLsB2jIcxpA+fbhVsptuFyZR\\r\\na=fingerprint:sha-256 DD:2C:BF:42:7A:0E:84:A6:13:B2:97:AC:AE:C5:29:8B:CB:F3:8D:BC:66:D8:FB:12:E7:6A:48:C3:47:A4:F4:7F\\r\\na=ice-options:trickle\\r\\na=rtcp-mux\\r\\na=rtcp-rsize\\r\\na=rtcp-xr:rcvr-rtt=all\\r\\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\\r\\nc=IN IP4 0.0.0.0\\r\\na=rtpmap:111 opus/48000/2\\r\\na=rtpmap:63 red/48000/2\\r\\na=rtpmap:9 G722/8000\\r\\na=rtpmap:0 PCMU/8000\\r\\na=rtpmap:8 PCMA/8000\\r\\na=rtpmap:13 CN/8000\\r\\na=rtpmap:110 telephone-event/48000\\r\\na=rtpmap:126 telephone-event/8000\\r\\na=fmtp:111 minptime=10;useinbandfec=1\\r\\na=fmtp:63 111/111\\r\\na=rtcp:9 IN IP4 0.0.0.0\\r\\na=rtcp-fb:111 transport-cc\\r\\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\\r\\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\\r\\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\\r\\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\\r\\na=setup:actpass\\r\\na=mid:2\\r\\na=recvonly\\r\\na=ice-ufrag:FZ9R\\r\\na=ice-pwd:kLsB2jIcxpA+fbhVsptuFyZR\\r\\na=fingerprint:sha-256 DD:2C:BF:42:7A:0E:84:A6:13:B2:97:AC:AE:C5:29:8B:CB:F3:8D:BC:66:D8:FB:12:E7:6A:48:C3:47:A4:F4:7F\\r\\na=ice-options:trickle\\r\\na=rtcp-mux\\r\\na=rtcp-rsize\\r\\na=rtcp-xr:rcvr-rtt=all\\r\\nm=video 9 UDP/TLS/RTP/SAVPF 96 97 98 99 100 101 35 36 37 38 102 103 104 107 108 109 114 115 116 117 39 40 41 42 43 44 45 46 47 48 ",
+  "haproxyDiagnostics": "[NOTICE]   (1) : New worker (8) forked\n[NOTICE]   (1) : Loading success.\n[NOTICE]   (8) : haproxy version is 3.0.30-47d806b\n[WARNING]  (8) : [haproxy.main()] Failed to drop supplementary groups. Using 'gid'/'group' without 'uid'/'user' is generally useless.\n",
+  "cleanupVerified": true,
+  "completedAt": "2026-11-03T08:16:07.723Z",
+  "outerCleanupVerified": true
+}

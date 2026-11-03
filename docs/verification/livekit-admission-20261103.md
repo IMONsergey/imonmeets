@@ -1,5 +1,7 @@
 # LiveKit admission runtime acceptance — 2026-11-03
 
+> Historical signaling-only result. The later [strict audio/video acceptance](livekit-media-20261103.md) proves synthetic audio/video over ICE/TCP. The current runner requires real media and has no signaling-only fallback. This original receipt is unchanged.
+
 ## Result and boundary
 
 **PASS_SIGNALING_ONLY: 19 checks passed. `mediaAccepted=false`.**

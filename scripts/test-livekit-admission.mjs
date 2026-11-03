@@ -284,7 +284,7 @@ const receipt = {
     haproxyMemoryMiB: 64,
   },
   scope:
-    "isolated loopback; synthetic canvas video only; no real devices, mail, payments, TURN or production traffic",
+    "isolated loopback; synthetic canvas video and oscillator audio only; no real devices, mail, payments, TURN or production traffic",
 };
 function passed(name) {
   receipt.checks.push(name);
@@ -358,11 +358,14 @@ try {
       udp_port: mediaPort,
       use_external_ip: false,
       node_ip: "127.0.0.1",
-      enable_loopback_candidate: true,
+      // The SFU runs in a bridge container. Its own 127.0.0.1 is not the host
+      // loopback published by Docker; collecting it breaks reverse ICE checks.
+      // Advertise the host mapping, but keep the backing interface on the bridge.
+      enable_loopback_candidate: false,
       stun_servers: ["127.0.0.1:" + mediaPort],
     },
     keys: { [key]: secret },
-    logging: { level: "error", pion_level: "error" },
+    logging: { level: "debug", pion_level: "debug" },
   };
   writeFileSync(
     path.join(folder, "livekit.yaml"),
@@ -706,16 +709,210 @@ try {
   await page.setContent(
     "<!doctype html><title>Synthetic media acceptance</title><body></body>",
   );
+  await page.evaluate(() => {
+    const NativePeerConnection = window.RTCPeerConnection;
+    const keys = [
+      "id",
+      "type",
+      "kind",
+      "mediaType",
+      "state",
+      "nominated",
+      "selected",
+      "writable",
+      "localCandidateId",
+      "remoteCandidateId",
+      "selectedCandidatePairId",
+      "candidateType",
+      "protocol",
+      "tcpType",
+      "address",
+      "port",
+      "relatedAddress",
+      "relatedPort",
+      "networkType",
+      "bytesSent",
+      "bytesReceived",
+      "packetsSent",
+      "packetsReceived",
+      "requestsSent",
+      "requestsReceived",
+      "responsesSent",
+      "responsesReceived",
+      "currentRoundTripTime",
+      "connectionState",
+      "dtlsState",
+      "iceState",
+      "framesDecoded",
+      "framesEncoded",
+      "framesReceived",
+      "codecId",
+      "mimeType",
+      "totalAudioEnergy",
+      "totalSamplesReceived",
+      "concealedSamples",
+    ];
+    window.runtimeIce = [];
+    window.RTCPeerConnection = class ObservedPeerConnection extends (
+      NativePeerConnection
+    ) {
+      constructor(config, constraints) {
+        super(config, constraints);
+        const trace = {
+          index: window.runtimeIce.length,
+          states: [],
+          candidates: [],
+          errors: [],
+          stats: [],
+        };
+        window.runtimeIce.push(trace);
+        const capture = async () => {
+          try {
+            const stats = await this.getStats();
+            const filteredStats = Array.from(stats.values())
+              .filter((stat) =>
+                [
+                  "local-candidate",
+                  "remote-candidate",
+                  "candidate-pair",
+                  "transport",
+                  "inbound-rtp",
+                  "outbound-rtp",
+                  "codec",
+                ].includes(stat.type),
+              )
+              .map((stat) =>
+                Object.fromEntries(
+                  keys
+                    .filter((key) => stat[key] !== undefined)
+                    .map((key) => [key, stat[key]]),
+                ),
+              );
+            if (filteredStats.length) trace.stats = filteredStats;
+            if (this.localDescription)
+              trace.localCandidates =
+                this.localDescription.sdp
+                  .split("\r\n")
+                  .filter((line) => line.startsWith("a=candidate:"))
+                  .map((line) => line.replace(/ ufrag [^ ]+/g, "")) ?? [];
+            if (this.remoteDescription)
+              trace.remoteCandidates =
+                this.remoteDescription.sdp
+                  .split("\r\n")
+                  .filter((line) => line.startsWith("a=candidate:"))
+                  .map((line) => line.replace(/ ufrag [^ ]+/g, "")) ?? [];
+          } catch {
+            /* The SDK may already have closed this connection. */
+          }
+        };
+        trace.capture = capture;
+        this.addEventListener("icecandidate", (event) => {
+          if (event.candidate)
+            trace.candidates.push(
+              event.candidate.candidate.replace(/ ufrag [^ ]+/g, ""),
+            );
+        });
+        for (const event of [
+          "iceconnectionstatechange",
+          "connectionstatechange",
+          "icegatheringstatechange",
+        ])
+          this.addEventListener(event, () => {
+            trace.states.push({
+              event,
+              ice: this.iceConnectionState,
+              connection: this.connectionState,
+              gathering: this.iceGatheringState,
+            });
+            void capture();
+          });
+        this.addEventListener("icecandidateerror", (event) =>
+          trace.errors.push({
+            url: event.url,
+            errorCode: event.errorCode,
+            errorText: event.errorText,
+          }),
+        );
+        const timer = setInterval(() => {
+          void capture();
+        }, 500);
+        this.addEventListener("connectionstatechange", () => {
+          if (this.connectionState === "closed") clearInterval(timer);
+        });
+      }
+    };
+    window.runtimeIceSnapshot = async () => {
+      await Promise.all(window.runtimeIce.map((trace) => trace.capture()));
+      return window.runtimeIce.map(({ capture, ...trace }) => trace);
+    };
+  });
   await page.addScriptTag({ content: sdk.toString("utf8") });
   await page.evaluate(
     ({ serverUrl, localStun }) => {
       window.runtimePeers = {};
       window.runtimeTimers = [];
+      window.runtimeAudioContext = new AudioContext({ sampleRate: 48000 });
+      window.runtimeAudio = [];
+      window.runtimeAudioErrors = [];
+      window.runtimeOscillators = [];
+      window.runtimeAudioSnapshot = () =>
+        window.runtimeAudio.map(({ receiver, analyser, track }) => {
+          const samples = new Float32Array(analyser.fftSize);
+          analyser.getFloatTimeDomainData(samples);
+          const spectrum = new Float32Array(analyser.frequencyBinCount);
+          analyser.getFloatFrequencyData(spectrum);
+          let peak = 1;
+          for (let bin = 2; bin < spectrum.length; bin++)
+            if (spectrum[bin] > spectrum[peak]) peak = bin;
+          return {
+            receiver,
+            expectedHz: receiver === "a" ? 660 : 440,
+            dominantHz:
+              (peak * window.runtimeAudioContext.sampleRate) / analyser.fftSize,
+            rms: Math.sqrt(
+              samples.reduce((sum, sample) => sum + sample * sample, 0) /
+                samples.length,
+            ),
+            sampleRate: window.runtimeAudioContext.sampleRate,
+            contextState: window.runtimeAudioContext.state,
+            trackState: track.mediaStreamTrack.readyState,
+          };
+        });
       window.runtimeConnect = async (slot, token, publish) => {
         const sdk = window.LivekitClient,
           peer = new sdk.Room({ adaptiveStream: false, dynacast: false });
         window.runtimePeers[slot] = peer;
         peer.on(sdk.RoomEvent.TrackSubscribed, (track) => {
+          if (track.kind === "audio") {
+            // Attach using the SDK's normal playback path; the output stays muted.
+            const element = track.attach();
+            element.muted = true;
+            element.autoplay = true;
+            document.body.appendChild(element);
+            void element
+              .play()
+              .catch((error) => window.runtimeAudioErrors.push(String(error)));
+
+            const source = window.runtimeAudioContext.createMediaStreamSource(
+              new MediaStream([track.mediaStreamTrack]),
+            );
+            const analyser = window.runtimeAudioContext.createAnalyser();
+            analyser.fftSize = 2048;
+            const silentOutput = window.runtimeAudioContext.createGain();
+            silentOutput.gain.value = 0;
+            source
+              .connect(analyser)
+              .connect(silentOutput)
+              .connect(window.runtimeAudioContext.destination);
+            window.runtimeAudio.push({
+              receiver: slot,
+              analyser,
+              track,
+              source,
+              silentOutput,
+            });
+            return;
+          }
           if (track.kind !== "video") return;
           const element = track.attach();
           element.dataset.receiver = slot;
@@ -724,6 +921,7 @@ try {
           document.body.appendChild(element);
           void element.play();
         });
+        await window.runtimeAudioContext.resume();
         await peer.connect(serverUrl, token, {
           autoSubscribe: true,
           maxRetries: 0,
@@ -732,6 +930,26 @@ try {
           rtcConfig: { iceServers: [{ urls: localStun }] },
         });
         if (publish) {
+          const destination =
+            window.runtimeAudioContext.createMediaStreamDestination();
+          const oscillator = window.runtimeAudioContext.createOscillator();
+          oscillator.frequency.value = slot === "a" ? 440 : 660;
+          const gain = window.runtimeAudioContext.createGain();
+          gain.gain.value = 0.1;
+          oscillator.connect(gain).connect(destination);
+          oscillator.start();
+          window.runtimeOscillators.push(oscillator);
+          await peer.localParticipant.publishTrack(
+            destination.stream.getAudioTracks()[0],
+            {
+              source: sdk.Track.Source.Microphone,
+              name: "synthetic-tone-" + slot,
+              audioPreset: { maxBitrate: 32000 },
+              dtx: false,
+              red: false,
+              forceStereo: false,
+            },
+          );
           const canvas = document.createElement("canvas");
           canvas.width = 160;
           canvas.height = 90;
@@ -740,6 +958,12 @@ try {
             const ctx = canvas.getContext("2d");
             ctx.fillStyle = slot === "a" ? "#158a49" : "#3255b2";
             ctx.fillRect(0, 0, 160, 90);
+            // Distinct achromatic bits survive VP8 chroma conversion. Exact RGB
+            // equality is not a transport property of a lossy video codec.
+            ctx.fillStyle = slot === "a" ? "black" : "white";
+            ctx.fillRect(96, 8, 24, 24);
+            ctx.fillStyle = slot === "a" ? "white" : "black";
+            ctx.fillRect(128, 8, 24, 24);
             ctx.fillStyle = "white";
             ctx.fillText(slot + " synthetic " + frame++, 10, 40);
           };
@@ -811,100 +1035,139 @@ try {
               video.getVideoPlaybackQuality().totalVideoFrames >= 2,
           ),
         ),
+      undefined,
       { timeout: 30000 },
     );
     receipt.media = await page.evaluate(() =>
-      Array.from(document.querySelectorAll("video")).map((video) => ({
-        receiver: video.dataset.receiver,
-        width: video.videoWidth,
-        height: video.videoHeight,
-        decodedFrames: video.getVideoPlaybackQuality().totalVideoFrames,
-      })),
+      Array.from(document.querySelectorAll("video")).map((video) => {
+        const canvas = document.createElement("canvas");
+        canvas.width = 160;
+        canvas.height = 90;
+        const context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0);
+        return {
+          receiver: video.dataset.receiver,
+          width: video.videoWidth,
+          height: video.videoHeight,
+          decodedFrames: video.getVideoPlaybackQuality().totalVideoFrames,
+          rgb: Array.from(context.getImageData(10, 10, 1, 1).data).slice(0, 3),
+          pixelSignature: [104, 136].map((x) =>
+            Array.from(context.getImageData(x, 16, 1, 1).data).slice(0, 3),
+          ),
+          expectedSignature: video.dataset.receiver === "a" ? [1, 0] : [0, 1],
+          expectedRgb:
+            video.dataset.receiver === "a" ? [50, 85, 178] : [21, 138, 73],
+        };
+      }),
     );
+    assert.equal(receipt.media.length, 2);
+    for (const video of receipt.media)
+      assert.ok(
+        video.pixelSignature.every((pixel, index) =>
+          pixel.every((channel) =>
+            video.expectedSignature[index] === 1 ? channel > 205 : channel < 50,
+          ),
+        ),
+        "Remote decoded frame must carry the other participant's two-bit signature",
+      );
+    receipt.videoAccepted = true;
+    await page.waitForFunction(
+      () => {
+        const audio = window.runtimeAudioSnapshot();
+        return ["a", "b"].every((slot) =>
+          audio.some(
+            (sample) =>
+              sample.receiver === slot &&
+              sample.rms > 0.005 &&
+              Math.abs(sample.dominantHz - sample.expectedHz) < 50 &&
+              sample.trackState === "live",
+          ),
+        );
+      },
+      undefined,
+      { timeout: 15000 },
+    );
+    receipt.audio = await page.evaluate(() => window.runtimeAudioSnapshot());
+    assert.equal(receipt.audio.length, 2);
+    receipt.audioAccepted = true;
     assert.ok(wsSeen.some((url) => url.pathname === "/rtc/v1"));
     assert.equal((await h.media.rooms.listParticipants(room.id)).length, 2);
     passed(
-      "two real /rtc/v1 WebRTC peers exchange decoded synthetic VP8 video frames",
+      "two real /rtc/v1 WebRTC peers exchange decoded synthetic VP8 frames and the expected remote Opus audio tones",
     );
     receipt.mediaAccepted = true;
+    receipt.iceDiagnostics = await page.evaluate(() =>
+      window.runtimeIceSnapshot(),
+    );
+    receipt.mediaTransports = receipt.iceDiagnostics.map((trace) => {
+      const transport = trace.stats.find(
+        (stat) => stat.type === "transport" && stat.selectedCandidatePairId,
+      );
+      assert.ok(transport, "Each peer needs a selected transport");
+      assert.equal(transport.dtlsState, "connected");
+      const pair = trace.stats.find(
+        (stat) => stat.id === transport.selectedCandidatePairId,
+      );
+      assert.equal(pair?.state, "succeeded");
+      assert.equal(pair?.nominated, true);
+      const candidate = trace.stats.find(
+        (stat) => stat.id === pair.remoteCandidateId,
+      );
+      const audio = trace.stats.find(
+        (stat) => stat.type === "inbound-rtp" && stat.kind === "audio",
+      );
+      const video = trace.stats.find(
+        (stat) => stat.type === "inbound-rtp" && stat.kind === "video",
+      );
+      assert.ok(
+        audio?.totalSamplesReceived > 0 && audio?.bytesReceived > 0,
+        "Audio must be received and decoded over RTP",
+      );
+      assert.ok(
+        video?.framesDecoded >= 2 && video?.bytesReceived > 0,
+        "Video must be received and decoded over RTP",
+      );
+      return {
+        peer: trace.index,
+        protocol: candidate.protocol,
+        remoteAddress: candidate.address,
+        dtlsState: transport.dtlsState,
+        bytesSent: pair.bytesSent,
+        bytesReceived: pair.bytesReceived,
+        audioSamples: audio.totalSamplesReceived,
+        audioBytes: audio.bytesReceived,
+        videoFrames: video.framesDecoded,
+        videoBytes: video.bytesReceived,
+      };
+    });
+    assert.equal(receipt.mediaTransports.length, 2);
+    receipt.transportProtocols = [
+      ...new Set(receipt.mediaTransports.map((item) => item.protocol)),
+    ];
+    receipt.udpAccepted = receipt.transportProtocols.includes("udp");
+    receipt.tcpAccepted = receipt.transportProtocols.includes("tcp");
   } catch (mediaError) {
     receipt.mediaAccepted = false;
     receipt.scope =
-      "isolated loopback signaling and admission only; WebRTC video attempted but NOT ACCEPTED; no real devices, mail, payments, TURN or production traffic";
+      "isolated loopback; synthetic audio/video media acceptance FAILED; no real devices, mail, payments, TURN or production traffic";
     receipt.mediaFailure = cleanText(mediaError.message || mediaError);
-    console.log("MEDIA NOT ACCEPTED; continuing explicit signaling-only scope");
-    await page.evaluate(async () => {
-      for (const timer of window.runtimeTimers) clearInterval(timer);
-      await Promise.all(
-        Object.values(window.runtimePeers).map((peer) => peer.disconnect()),
-      );
-      window.runtimePeers = {};
-      window.runtimeTimers = [];
-      for (const video of document.querySelectorAll("video")) video.remove();
-    });
-    await until(
-      async () => (await h.media.rooms.listParticipants(room.id)).length === 0,
-      15000,
+    receipt.audio = await page.evaluate(() => window.runtimeAudioSnapshot());
+    receipt.audioPlaybackErrors = await page.evaluate(
+      () => window.runtimeAudioErrors,
     );
-    await page.evaluate(
-      ({ serverUrl }) => {
-        window.runtimeConnect = async (slot, token) => {
-          const state = {
-            state: "connecting",
-            async disconnect() {
-              socket.close();
-              state.state = "disconnected";
-            },
-          };
-          const socket = new WebSocket(
-            serverUrl +
-              "/rtc?" +
-              new URLSearchParams({
-                access_token: token,
-                sdk: "js",
-                version: "2.23.0",
-                protocol: "9",
-                auto_subscribe: "0",
-              }),
-          );
-          window.runtimePeers[slot] = state;
-          socket.onclose = () => {
-            state.state = "disconnected";
-          };
-          await new Promise((resolve, reject) => {
-            const timer = setTimeout(() => {
-              socket.close();
-              reject(new Error("raw signaling timeout"));
-            }, 7000);
-            socket.onerror = () => {
-              clearTimeout(timer);
-              reject(new Error("raw signaling rejected"));
-            };
-            socket.onmessage = () => {
-              clearTimeout(timer);
-              state.state = "connected";
-              resolve();
-            };
-          });
-          return state.state;
-        };
-      },
-      { serverUrl: h.c.livekit.url },
+
+    receipt.iceDiagnostics = await page.evaluate(() =>
+      window.runtimeIceSnapshot(),
     );
-    await page.evaluate(
-      async ({ a, b }) => {
-        await window.runtimeConnect("a", a);
-        await window.runtimeConnect("b", b);
-      },
-      { a: a.token, b: b.token },
+    const diagnosticLog = spawnSync(
+      "sudo",
+      ["-n", "docker", "logs", "--tail", "160", names[0]],
+      { encoding: "utf8", timeout: 5000, maxBuffer: 262144 },
     );
-    await until(
-      async () => (await h.media.rooms.listParticipants(room.id)).length === 2,
+    receipt.livekitMediaDiagnostics = cleanText(
+      (diagnosticLog.stdout || "") + (diagnosticLog.stderr || ""),
     );
-    receipt.media = [];
-    passed(
-      "two real legacy signaling participants present in LiveKit; media explicitly unaccepted",
-    );
+    throw mediaError; // A signaling-only connection can never satisfy this media acceptance.
   }
   assert.ok(
     (receipt.signalFrames?.["/rtc/v1"] ?? 0) > 0,
@@ -1103,6 +1366,8 @@ try {
   passed("fresh API grant joins the new room generation after rotation");
   await page.evaluate(async () => {
     for (const timer of window.runtimeTimers) clearInterval(timer);
+    for (const oscillator of window.runtimeOscillators) oscillator.stop();
+    await window.runtimeAudioContext.close();
     await Promise.all(
       Object.values(window.runtimePeers).map((peer) => peer.disconnect()),
     );
@@ -1119,9 +1384,10 @@ try {
       503,
     );
   passed("admission API outage fails closed on all four real ingress paths");
-  receipt.result = receipt.mediaAccepted
-    ? "PASS_MEDIA_AND_SIGNALING"
-    : "PASS_SIGNALING_ONLY";
+  assert.equal(receipt.mediaAccepted, true);
+  assert.equal(receipt.audioAccepted, true);
+  assert.equal(receipt.videoAccepted, true);
+  receipt.result = "PASS_MEDIA_AND_SIGNALING";
 } catch (error) {
   receipt.result = "FAIL";
   receipt.error = cleanText(error.stack || error);
