@@ -1,0 +1,60 @@
+{
+  "language": "en",
+  "model": "small",
+  "expected_cases": 40,
+  "successful_inference": 40,
+  "errors": 0,
+  "recorded_cases": 40,
+  "quality_status": "unreviewed",
+  "audio_seconds": 410.44,
+  "asr_seconds": 297.08,
+  "aggregate_real_time_factor": 0.7238097188383199,
+  "word_error_rate": 0.07109557109557109,
+  "character_error_rate": 0.029707602339181287,
+  "word_errors": 61,
+  "reference_words": 858,
+  "character_errors": 127,
+  "reference_characters": 4275,
+  "per_clip_seconds": {
+    "p50": 7.1176,
+    "p95": 8.7225,
+    "max": 9.923276
+  },
+  "model_load_seconds_this_invocation": 1.469185431007645,
+  "max_rss_kib": 624172,
+  "cgroup_limits": {
+    "cpu_max": "100000 100000",
+    "memory_max": 2147483648,
+    "pids_max": "128",
+    "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-asr40-small-en-20261103T060420Z-4169926.service"
+  },
+  "fingerprints": {
+    "selection_sha256": "caf155b7d8b440132295416f7d0ebd210061add74672e39d7e929dffb60ae62a",
+    "audio_manifest_sha256": "18976d22c361d1e2dc97262b30f44d502b8b3405fe6c9f4d7b168ea809d2336c",
+    "repository": "Systran/faster-whisper-small",
+    "revision": "536b0662742c02347bc0e980a01041f333bce120",
+    "model_sha256": "3e305921506d8872816023e4c273e75d2419fb89b24da97b4fe7bce14170d671",
+    "settings": {
+      "beam_size": 5,
+      "temperature": 0.0,
+      "condition_on_previous_text": false,
+      "vad_filter": false,
+      "word_timestamps": false,
+      "compute_type": "int8",
+      "cpu_threads": 1,
+      "num_workers": 1,
+      "per_clip_seconds": 90,
+      "normalization": "NFKC + lowercase; punctuation/symbols replaced by spaces; whitespace collapsed. CER excludes whitespace. Chinese reports CER only."
+    },
+    "language": "en",
+    "runner_sha256": "d098ef4232cc983e3e551c317f37fb2563b9f17994582a7aadf93901875434f4"
+  },
+  "versions": {
+    "faster-whisper": "1.2.1",
+    "ctranslate2": "4.8.4",
+    "av": "16.0.1",
+    "tokenizers": "0.23.3"
+  },
+  "output_sha256": "62152b03139db08e7b60c44c289d70e4842ad25fdf6c047b544b4c24127cf60b",
+  "finished_at": "2026-11-03T06:10:16.818366+00:00"
+}
