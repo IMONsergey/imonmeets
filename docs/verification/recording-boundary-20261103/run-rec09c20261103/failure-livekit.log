@@ -1,0 +1,25 @@
+2026-11-03T10:27:18.656Z	INFO	livekit	redis/redis.go:145	connecting to redis	{"simple": true, "addr": "redis:6379"}
+2026-11-03T10:27:18.680Z	INFO	livekit	service/server.go:309	starting LiveKit server	{"portHttp": 7880, "nodeID": "ND_saTRKFUxCHfa", "nodeIP": "172.23.0.4", "version": "1.13.11", "bindAddresses": ["0.0.0.0"], "rtc.portTCP": 7881, "rtc.portICERange": [40000, 40004]}
+2026-11-03T10:27:18.983Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "3.118948ms", "status": "200"}
+2026-11-03T10:27:20.929Z	INFO	livekit.api	service/twirp.go:153	API Egress.StartWebEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "StartWebEgress", "egressID": "EG_u6U4rwdEbF3y", "url": "http://fixture:8080/", "outputType": "file", "duration": "630.588364ms", "status": "200"}
+2026-11-03T10:27:21.679Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "726.388µs", "status": "200"}
+2026-11-03T10:27:22.778Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "1.130975ms", "status": "200"}
+2026-11-03T10:27:23.964Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "839.161µs", "status": "200"}
+2026-11-03T10:27:25.067Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "701.459µs", "status": "200"}
+2026-11-03T10:27:25.968Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "1.210525ms", "status": "200"}
+2026-11-03T10:27:26.878Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "589.077µs", "status": "200"}
+2026-11-03T10:27:27.796Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "641.549µs", "status": "200"}
+2026-11-03T10:27:28.682Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "750.279µs", "status": "200"}
+2026-11-03T10:27:29.593Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "685.798µs", "status": "200"}
+2026-11-03T10:27:30.669Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "767.499µs", "status": "200"}
+2026-11-03T10:27:31.762Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "877.502µs", "status": "200"}
+2026-11-03T10:27:33.782Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "877.352µs", "status": "200"}
+2026-11-03T10:27:35.375Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "1.177074ms", "status": "200"}
+2026-11-03T10:27:36.375Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "821.17µs", "status": "200"}
+2026-11-03T10:27:38.555Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "84.762985ms", "status": "200"}
+2026-11-03T10:27:41.369Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "4.751879ms", "status": "200"}
+2026-11-03T10:27:43.756Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "1.491089ms", "status": "200"}
+2026-11-03T10:27:46.057Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "1.68181ms", "status": "200"}
+2026-11-03T10:27:48.260Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "81.771647ms", "status": "200"}
+2026-11-03T10:27:49.530Z	INFO	livekit.api	service/twirp.go:153	API Egress.ListEgress	{"service": "Egress", "apiKey": "[SECRET]", "method": "ListEgress", "duration": "1.108323ms", "status": "200"}
+

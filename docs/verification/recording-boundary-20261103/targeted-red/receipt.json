@@ -1,0 +1,22 @@
+{
+  "phase": "red",
+  "sourceHead": "d46de552200c87c16b4d8c604170c47f113cde54",
+  "sourceFiles": {
+    "scripts/recording-backup.py": "85de6f12e650ee3eaf00c683825d4bc6673bcaff2cb156fc6a7f121310e02025",
+    "scripts/test-recording-backup.py": "12c63a513d8ef9b1a72fb1360d7314329bb52fc1a5efcbdf35d565873b64ed79",
+    "apps/api/src/recordings.ts": "ce055669b10d602d9d5bdb74545a50b3fb88a8e7397c88429d4c7194125c6d2a",
+    "apps/api/test/recordings.test.ts": "ed8dd9cb018067dae3cd207574cc23d2209718afbcf42f5ace6551bc1cae07da",
+    "compose.recording.yml": "ca2507eb098cc79e77748cb5fbc4fe0a73e9bdc441902c035300fe936fc26d69"
+  },
+  "checks": [
+    {
+      "name": "backup",
+      "exitCode": 1
+    },
+    {
+      "name": "api",
+      "exitCode": 1
+    }
+  ],
+  "scope": "Local synthetic targeted regressions; no Docker, production, network or provider calls"
+}

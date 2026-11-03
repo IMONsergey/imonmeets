@@ -1,0 +1,28 @@
+{
+  "upstream": "https://github.com/livekit/egress",
+  "tag": "v1.15.0",
+  "commit": "171423b0b3e7c6531de270b16f1db4f7a6bd2084",
+  "image": "sha256:ac244a40268ce1dd1510fbff6eb529609ec68aceff1602343f79be8ca08c355b",
+  "files": {
+    "pkg/config/base.go": "b235d2eb2f9f9d8f7a8eeb7a201568706e3fdfee4a739427beec7530e26d75e5",
+    "pkg/pipeline/controller.go": "0a7e78e925901cbee3116c96261adbfa211caae4591bface572b9e9894e7f5c4",
+    "pkg/pipeline/sink/file.go": "0d59cb81a26b4375d09a4759a064487351f93e494f2884371ce9666e9bd619fe",
+    "pkg/pipeline/builder/file.go": "5d5d0f5f1fe88eb40e921c94c3018e026e4bf509d13507294cab4a46379c3898",
+    "pkg/config/service.go": "a605426ceb081f27cdad71e93f77041aa6325a378abe809a8549f883f958d221"
+  },
+  "findings": [
+    "file_output_max_size is a stop threshold on aggregate TmpDir disk bytes, checked every 15 seconds",
+    "limit dispatch sends EOS; sink closes and obtains final file size after finalization/upload",
+    "duration timer starts before waiting for start signal",
+    "LIMIT_REACHED does not by itself distinguish duration and size in the public status"
+  ],
+  "liveObservedLimits": {
+    "file_output_max_duration": "30m",
+    "file_output_max_size": 367001600,
+    "workerMemoryBytes": 4294967296,
+    "workerCpus": 2,
+    "tmpfsOutputBytes": 536870912,
+    "backupHardObjectBytes": 367001600,
+    "backupCacheBytes": 1073741824
+  }
+}

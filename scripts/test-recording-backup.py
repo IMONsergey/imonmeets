@@ -8,6 +8,7 @@ import io
 import json
 import os
 import pathlib
+import re
 import shutil
 import subprocess
 import tempfile
@@ -301,6 +302,44 @@ class RecordingBackupTests(unittest.TestCase):
             backup.validate_entries([{**self.item, "bytes": backup.MAX_OBJECT_BYTES + 1}], encrypted=False)
         with patch.object(backup, "MAX_CACHE_BYTES", 128), self.assertRaises(ValueError):
             backup.validate_entries([self.item], encrypted=False)
+
+    def test_backup_object_bound_matches_hard_egress_output_mount(self):
+        # This is the hard staging bound, not the periodically sampled capture stop.
+        compose = (pathlib.Path(__file__).resolve().parent.parent / "compose.recording.yml").read_text()
+        mount = re.search(r"/home/egress/tmp:size=(\d+)m,", compose)
+        self.assertIsNotNone(mount)
+        self.assertEqual(backup.MAX_OBJECT_BYTES, int(mount.group(1)) * 1024 * 1024)
+        self.assertEqual(pull.backup.MAX_OBJECT_BYTES, backup.MAX_OBJECT_BYTES)
+        backup.validate_entries([{**self.item, "bytes": 350 * 1024 * 1024 + 434046}], encrypted=False)
+        backup.validate_entries([{**self.item, "bytes": backup.MAX_OBJECT_BYTES}], encrypted=False)
+        with self.assertRaisesRegex(ValueError, "Invalid recording size"):
+            backup.validate_entries([{**self.item, "bytes": backup.MAX_OBJECT_BYTES + 1}], encrypted=False)
+
+    def test_two_recordings_keep_aggregate_ciphertext_capacity_guard(self):
+        def entry(rid, size):
+            return {**self.item, "id": rid, "objectKey": "recordings/" + WORKSPACE + "/" + rid + ".mp4", "bytes": size}
+        # Two pilot-size files with measured short-fixture overshoot still fit the
+        # unchanged cache. Two objects at the hard staging bound cannot both fit.
+        two_pilot = [entry(RID, 350 * 1024 * 1024 + 434046), entry(RID2, 350 * 1024 * 1024 + 434046)]
+        backup.validate_entries(two_pilot, encrypted=False)
+        self.assertEqual(backup.MAX_CACHE_BYTES, 1024 * 1024 * 1024)
+        too_large = [entry(RID, 512 * 1024 * 1024), entry(RID2, 512 * 1024 * 1024)]
+        with self.assertRaisesRegex(ValueError, "Recording backup capacity exceeded"):
+            backup.validate_entries(too_large, encrypted=False)
+        self.source.items = too_large
+        with self.assertRaisesRegex(ValueError, "Recording backup capacity exceeded"):
+            self.snapshot()
+        self.assertEqual(self.source.downloads, 0)
+
+    def test_hard_bound_free_space_reserve_precedes_download(self):
+        self.assertLess(backup.cipher_limit(backup.MAX_OBJECT_BYTES), backup.MAX_OBJECT_BYTES + 64 * 1024 * 1024)
+        self.cache.mkdir(parents=True)
+        usage = shutil.disk_usage(self.cache)
+        insufficient = usage._replace(free=backup.MAX_OBJECT_BYTES + 64 * 1024 * 1024 - 1)
+        with patch.object(backup.shutil, "disk_usage", return_value=insufficient), self.assertRaisesRegex(ValueError, "Insufficient backup disk space"):
+            backup.encrypt_object(self.source, {**self.item, "bytes": backup.MAX_OBJECT_BYTES}, self.cache, self.mac / "recipient.pem")
+        self.assertEqual(self.source.downloads, 0)
+        self.assertFalse(list(self.cache.iterdir()))
 
     def test_authenticated_allowlist_and_no_request_logging(self):
         self.snapshot()

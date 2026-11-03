@@ -1,0 +1,3 @@
+2026-11-03T10:24:47.985Z	INFO	livekit	redis/redis.go:145	connecting to redis	{"simple": true, "addr": "redis:6379"}
+2026-11-03T10:24:48.045Z	INFO	livekit	service/server.go:309	starting LiveKit server	{"portHttp": 7880, "nodeID": "ND_7XLEeoTPDbqQ", "nodeIP": "172.23.0.4", "version": "1.13.11", "bindAddresses": ["0.0.0.0"], "rtc.portTCP": 7881, "rtc.portICERange": [40000, 40004]}
+

@@ -1,0 +1,34 @@
+{
+  "result": "FAIL",
+  "runId": "rec09a20261103",
+  "startedAt": "2026-11-03T10:23:13.833Z",
+  "sourceHead": "d46de552200c87c16b4d8c604170c47f113cde54",
+  "sourceHash": "d4015e03292078ea765d4e150eccf1505681f187eeb18e0fd6f7b4c003ac6ed9",
+  "upstreamSourceCommit": "171423b0b3e7c6531de270b16f1db4f7a6bd2084",
+  "scope": "Short WebEgress runs using the same pinned MP4 file pipeline; synthetic moving canvas and tone; local file output and real encrypted backup/restore. No production or external media.",
+  "productionBoundaryAccepted": false,
+  "limits": {
+    "cpuQuota": "100%",
+    "memoryMax": 2147483648,
+    "tasksMax": 512,
+    "workers": 1,
+    "aggregateSlice": "imonrecrec09a20261103.slice"
+  },
+  "encoding": {
+    "width": 1280,
+    "height": 720,
+    "framerate": 15,
+    "video": "H264_MAIN",
+    "videoKbps": 1200,
+    "audio": "AAC",
+    "audioKbps": 64,
+    "audioHz": 48000,
+    "keyFrameInterval": 4
+  },
+  "runs": [],
+  "checks": [],
+  "error": "Error: sudo: Error response from daemon: No such image: node:24.21.0-bookworm-slim\n\n    at run (file:///home/sergey/imonmeets-recording-boundary-20261103/scripts/test-egress-boundary.mjs:62:11)\n    at docker (file:///home/sergey/imonmeets-recording-boundary-20261103/scripts/test-egress-boundary.mjs:68:3)\n    at file:///home/sergey/imonmeets-recording-boundary-20261103/scripts/test-egress-boundary.mjs:266:31\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)",
+  "cleanupVerified": true,
+  "finishedAt": "2026-11-03T10:23:16.256Z",
+  "outerCleanupVerified": true
+}

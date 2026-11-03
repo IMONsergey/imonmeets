@@ -71,3 +71,21 @@ test("modern egress request correlates by exact output path", () => {
   assert.equal(matchesRecording(info, key), true);
   assert.equal(matchesRecording(info, "different"), false);
 });
+
+// Egress v1.15 uses the same status/error for its duration and storage limits.
+// The real short size fixture finalized a valid MP4 at 1,482,622 bytes after a
+// 1 MiB stop threshold; the product must not invent a duration-only cause.
+test("a completed size-limited capture does not claim a duration-only stop", () => {
+  const info = new EgressInfo({
+    status: EgressStatus.EGRESS_LIMIT_REACHED,
+    error: "Session limit reached",
+    details: "End reason: Session limit reached",
+    fileResults: [{ filename: key, size: 1482622n }],
+  });
+  const result = recordingTransition("active", info, key);
+  assert.equal(result?.status, "complete");
+  assert.equal(
+    result?.error,
+    "Запись завершена по лимиту длительности или размера файла.",
+  );
+});

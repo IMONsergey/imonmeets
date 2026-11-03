@@ -16,7 +16,11 @@ import threading
 import time
 
 MAX_CACHE_BYTES = 1024 * 1024 * 1024
-MAX_OBJECT_BYTES = 350 * 1024 * 1024
+# Egress samples its 350 MiB capture stop every 15 seconds and finalizes after
+# EOS. The completed file can exceed that soft threshold. This hard ceiling
+# matches the existing /home/egress/tmp tmpfs in compose.recording.yml; capture,
+# storage and the aggregate encrypted cache limits are not increased.
+MAX_OBJECT_BYTES = 512 * 1024 * 1024
 MAX_OBJECTS = 2048
 MAX_MANIFEST_BYTES = 2 * 1024 * 1024
 MAX_AGE_SECONDS = 600

@@ -1,0 +1,50 @@
+{
+  "egressId": "EG_u6U4rwdEbF3y",
+  "status": "EGRESS_LIMIT_REACHED",
+  "file": {
+    "filename": "/out/duration.mp4",
+    "startedAt": "1793701660459400308",
+    "endedAt": "1793701666464099248",
+    "size": "1335257",
+    "location": "/out/duration.mp4",
+    "duration": "6004698940"
+  },
+  "error": "Session limit reached",
+  "startedAt": "1793701640919042382",
+  "endedAt": "1793701666462334935",
+  "web": {
+    "url": "http://fixture:8080/",
+    "advanced": {
+      "width": 1280,
+      "height": 720,
+      "framerate": 15,
+      "audioCodec": "AAC",
+      "audioBitrate": 64,
+      "audioFrequency": 48000,
+      "videoCodec": "H264_MAIN",
+      "videoBitrate": 1200,
+      "keyFrameInterval": 4
+    },
+    "fileOutputs": [
+      {
+        "fileType": "MP4",
+        "filepath": "/out/duration.mp4",
+        "disableManifest": true
+      }
+    ],
+    "awaitStartSignal": true
+  },
+  "fileResults": [
+    {
+      "filename": "/out/duration.mp4",
+      "startedAt": "1793701660459400308",
+      "endedAt": "1793701666464099248",
+      "size": "1335257",
+      "location": "/out/duration.mp4",
+      "duration": "6004698940"
+    }
+  ],
+  "updatedAt": "1793701666462334935",
+  "details": "End reason: Session limit reached",
+  "errorCode": 413
+}

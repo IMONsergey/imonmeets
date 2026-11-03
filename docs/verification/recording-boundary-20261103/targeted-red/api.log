@@ -1,0 +1,38 @@
+✔ recording lifecycle cannot regress and completion requires exact output (6.046465ms)
+✔ correlation requires exact recording object key, including before file results exist (5.598049ms)
+✔ limit-reached preserves a matching recorded file and warns about truncation (0.551997ms)
+✔ modern egress request correlates by exact output path (0.981222ms)
+✖ a completed size-limited capture does not claim a duration-only stop (6.351499ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1638.14062
+
+✖ failing tests:
+
+test at apps/api/test/recordings.test.ts:1:2275
+✖ a completed size-limited capture does not claim a duration-only stop (6.351499ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'Запись завершена по лимиту длительности.'
+  - 'Запись завершена по лимиту длительности или размера файла.'
+  
+      at TestContext.<anonymous> (/home/sergey/imonmeets-recording-boundary-20261103/apps/api/test/recordings.test.ts:87:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Запись завершена по лимиту длительности.',
+    expected: 'Запись завершена по лимиту длительности или размера файла.',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

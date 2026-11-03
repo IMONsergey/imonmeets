@@ -21,12 +21,27 @@ is atomically renamed to its SHA256 filename. Failed and interrupted writes are
 cleaned on the next run under the worker lock.
 
 The dedicated `backups/recordings` cache is bounded to 1 GiB of encrypted objects,
-including conservatively reserved CMS overhead. A single source object is limited
-to 350 MiB, matching the pilot recording limit. The worker checks free space and
-requires at least 64 MiB beyond the incoming object's declared size. A catalog
-is limited to 2 MiB and 2,048 records. This creates at most approximately 1 GiB of
-additional server data, not another plaintext archive on every run. Unchanged
-objects are reused; only their hashes and eligibility are checked again.
+including conservatively reserved CMS overhead. A single completed source object
+has a hard ceiling of 512 MiB, matching the existing `/home/egress/tmp` tmpfs in
+`compose.recording.yml`. Egress v1.15 samples its 350 MiB capture stop threshold
+every 15 seconds and then finalizes the MP4; the resulting file can exceed that
+soft threshold. The backup ceiling therefore follows the hard staging bound.
+The capture profile, 30-minute duration, 350 MiB stop threshold and recording
+filesystem remain at their existing limits.
+
+The aggregate guard includes the projected ciphertext overhead before starting
+any transfer. Two 512 MiB objects are rejected by the unchanged 1 GiB cache limit;
+a larger per-object ceiling does not reserve room for two maximum-size objects.
+The worker requires at least 64 MiB of free space beyond each incoming object's
+declared size. This covers the conservative CMS overhead at the 512 MiB ceiling.
+A catalog is limited to 2 MiB and 2,048 records. Unchanged objects are reused;
+only their hashes and eligibility are checked again. Backup reads the recording
+filesystem and writes its separate encrypted cache; storage capacity for a new
+recording still requires independent admission and free-space acceptance.
+
+The [boundary verification](verification/recording-boundary-20261103.md) records
+real short Egress output and a separate 512 MiB crypto/mirror/restore test. It does
+not establish a full 30-minute RoomComposite capture or offsite network result.
 
 Deletion requests withdraw cached objects before a new transfer starts. The
 worker re-reads database eligibility after transfers, so a deletion occurring
@@ -36,6 +51,12 @@ reports backup failure until a complete catalog is available. If a new recording
 appears during collection, the next run includes it.
 
 ## Deployment
+
+Deploy the same updated `recording-backup.py` validator to the server worker,
+exporter and receiver before accepting larger completed objects. A receiver with
+the former 350 MiB ceiling rejects those catalog entries. Preserve keys and verify
+a nonempty encrypted sync and restore after the paired update. A source commit
+alone does not update the installed copies on either machine.
 
 1. Preserve the existing `/etc/imonmeets/backup-recipient.pem` and matching Mac
    `recipient.key` / `recipient.pem`. Do not generate a replacement key pair as

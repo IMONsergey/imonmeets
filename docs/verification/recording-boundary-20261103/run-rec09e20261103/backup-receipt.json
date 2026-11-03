@@ -1,0 +1,28 @@
+{
+  "scope": "Actual short Egress MP4 bytes encrypted and restored locally; no offsite receiver or full production-size claim",
+  "sourceHash": "bea6f233adb41d516b5e6d053b5f07d082831b5fdc87be0e0df2ae550d2bc07e",
+  "hardObjectLimitBytes": 536870912,
+  "cacheLimitBytes": 1073741824,
+  "runs": [
+    {
+      "phase": "duration",
+      "sha256": "10e2779efe3c7a40e4628f9819ba264b33c168baf39886726e625bfcc240a791",
+      "bytes": 1275174,
+      "cipherBytes": 1276858,
+      "completeManifest": true,
+      "restoredByteIdentical": true,
+      "productionHardCeilingMetadataRejectsPlusOne": true
+    },
+    {
+      "phase": "size",
+      "sha256": "4b6d018c8282e0a2fde51950310f4cf42aa40cb8a1053d98f1e264da983e17b1",
+      "bytes": 1640898,
+      "cipherBytes": 1642942,
+      "completeManifest": true,
+      "restoredByteIdentical": true,
+      "scaledEqualStopAndBackupCeilingAccepts": false,
+      "scaledRejection": "Invalid recording size",
+      "productionHardCeilingMetadataRejectsPlusOne": true
+    }
+  ]
+}

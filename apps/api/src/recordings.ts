@@ -56,7 +56,7 @@ export function recordingTransition(
       return matchingOutput(info, key)
         ? {
             status: "complete",
-            error: "Запись завершена по лимиту длительности.",
+            error: "Запись завершена по лимиту длительности или размера файла.",
           }
         : {
             status: "failed",

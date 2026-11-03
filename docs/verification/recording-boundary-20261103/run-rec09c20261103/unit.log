@@ -1,0 +1,7 @@
+Running as unit: imonrecrec09c20261103.service; invocation ID: 570121abcdad4d81861d56fb7aa5cf04
+Finished with result: exit-code
+Main processes terminated with: code=exited/status=1
+Service runtime: 43.804s
+CPU time consumed: 4.700s
+Memory peak: 340.0K
+Memory swap peak: 0B

@@ -1,0 +1,43 @@
+{
+  "result": "FAIL",
+  "runId": "rec09c20261103",
+  "startedAt": "2026-11-03T10:27:10.321Z",
+  "sourceHead": "d46de552200c87c16b4d8c604170c47f113cde54",
+  "sourceHash": "f970829099bab96c92f0fa3594c64614acf039a64df61d5a0ee33d801cf350f6",
+  "upstreamSourceCommit": "171423b0b3e7c6531de270b16f1db4f7a6bd2084",
+  "scope": "Short WebEgress runs using the same pinned MP4 file pipeline; synthetic moving canvas and tone; local file output and real encrypted backup/restore. No production or external media.",
+  "productionBoundaryAccepted": false,
+  "limits": {
+    "cpuQuota": "100%",
+    "memoryMax": 2147483648,
+    "tasksMax": 512,
+    "workers": 1,
+    "aggregateSlice": "imonrecrec09c20261103.slice"
+  },
+  "encoding": {
+    "width": 1280,
+    "height": 720,
+    "framerate": 15,
+    "video": "H264_MAIN",
+    "videoKbps": 1200,
+    "audio": "AAC",
+    "audioKbps": 64,
+    "audioHz": 48000,
+    "keyFrameInterval": 4
+  },
+  "runs": [],
+  "checks": [
+    "isolated API/Redis/fixture ready; no public ports or production credentials"
+  ],
+  "images": {
+    "egress": "sha256:ac244a40268ce1dd1510fbff6eb529609ec68aceff1602343f79be8ca08c355b",
+    "livekit": "sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20",
+    "redis": "sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f",
+    "fixture": "sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20"
+  },
+  "cgroup": "ControlGroup=/imonrecrec09c20261103.slice\nCPUQuotaPerSecUSec=1s\nMemoryMax=2147483648\nTasksMax=512",
+  "error": "Error: sudo: Error response from daemon: Could not find the file /out/duration.mp4 in container imonrec-rec09c20261103-egress\n\n    at run (file:///home/sergey/imonmeets-recording-boundary-20261103/scripts/test-egress-boundary.mjs:62:11)\n    at docker (file:///home/sergey/imonmeets-recording-boundary-20261103/scripts/test-egress-boundary.mjs:68:3)\n    at file:///home/sergey/imonmeets-recording-boundary-20261103/scripts/test-egress-boundary.mjs:541:5",
+  "cleanupVerified": true,
+  "finishedAt": "2026-11-03T10:27:53.545Z",
+  "outerCleanupVerified": true
+}

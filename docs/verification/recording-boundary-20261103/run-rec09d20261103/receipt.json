@@ -1,0 +1,564 @@
+{
+  "result": "PASS_SCALED_EGRESS_BOUNDARY_AND_BACKUP",
+  "runId": "rec09d20261103",
+  "startedAt": "2026-11-03T10:30:01.283Z",
+  "sourceHead": "d46de552200c87c16b4d8c604170c47f113cde54",
+  "sourceHash": "522215decf5653efce70c214655b528eaa6e60be22430bb983bf4f7c101e9d85",
+  "upstreamSourceCommit": "171423b0b3e7c6531de270b16f1db4f7a6bd2084",
+  "scope": "Short WebEgress runs using the same pinned MP4 file pipeline; synthetic moving canvas and tone; local file output and real encrypted backup/restore. No production or external media.",
+  "productionBoundaryAccepted": false,
+  "limits": {
+    "cpuQuota": "100%",
+    "memoryMax": 2147483648,
+    "tasksMax": 512,
+    "workers": 1,
+    "aggregateSlice": "imonrecrec09d20261103.slice"
+  },
+  "encoding": {
+    "width": 1280,
+    "height": 720,
+    "framerate": 15,
+    "video": "H264_MAIN",
+    "videoKbps": 1200,
+    "audio": "AAC",
+    "audioKbps": 64,
+    "audioHz": 48000,
+    "keyFrameInterval": 4
+  },
+  "runs": [
+    {
+      "phase": "duration",
+      "durationLimitSeconds": 12,
+      "stopThresholdBytes": 67108864,
+      "finalBytes": 1320948,
+      "durationSeconds": 10.602,
+      "audioRms": 0.03520547239812527,
+      "sha256": "0c5c30c073b695cb01227bb396c93187d9267604ca03e8455df5780643fbcedd",
+      "status": "EGRESS_LIMIT_REACHED",
+      "sizeOvershootBytes": 0,
+      "observations": [
+        {
+          "at": "2026-11-03T10:30:15.455Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:16.936Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:17.847Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:18.865Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:20.459Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:22.439Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:24.538Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:25.553Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:26.540Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:29.730Z",
+          "status": "EGRESS_ACTIVE",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:32.731Z",
+          "status": "EGRESS_ACTIVE",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:35.142Z",
+          "status": "EGRESS_ACTIVE",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:37.641Z",
+          "status": "EGRESS_ACTIVE",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:39.746Z",
+          "status": "EGRESS_ACTIVE",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:40.512Z",
+          "status": "EGRESS_LIMIT_REACHED",
+          "bytes": "1320948",
+          "error": "Session limit reached"
+        }
+      ],
+      "probe": {
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "aac",
+            "codec_long_name": "AAC (Advanced Audio Coding)",
+            "profile": "LC",
+            "codec_type": "audio",
+            "codec_tag_string": "mp4a",
+            "codec_tag": "0x6134706d",
+            "sample_fmt": "fltp",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 0,
+            "initial_padding": 0,
+            "id": "0x1",
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/48000",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 505856,
+            "duration": "10.538667",
+            "bit_rate": "80582",
+            "nb_frames": "494",
+            "extradata_size": 2,
+            "disposition": {
+              "default": 1,
+              "dub": 0,
+              "original": 0,
+              "comment": 0,
+              "lyrics": 0,
+              "karaoke": 0,
+              "forced": 0,
+              "hearing_impaired": 0,
+              "visual_impaired": 0,
+              "clean_effects": 0,
+              "attached_pic": 0,
+              "timed_thumbnails": 0,
+              "non_diegetic": 0,
+              "captions": 0,
+              "descriptions": 0,
+              "metadata": 0,
+              "dependent": 0,
+              "still_image": 0
+            },
+            "tags": {
+              "creation_time": "2026-11-03T10:30:24.000000Z",
+              "language": "und",
+              "handler_name": "SoundHandler",
+              "vendor_id": "[0][0][0][0]"
+            }
+          },
+          {
+            "index": 1,
+            "codec_name": "h264",
+            "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+            "profile": "Main",
+            "codec_type": "video",
+            "codec_tag_string": "avc1",
+            "codec_tag": "0x31637661",
+            "width": 1280,
+            "height": 720,
+            "coded_width": 1280,
+            "coded_height": 720,
+            "closed_captions": 0,
+            "film_grain": 0,
+            "has_b_frames": 2,
+            "sample_aspect_ratio": "1:1",
+            "display_aspect_ratio": "16:9",
+            "pix_fmt": "yuv420p",
+            "level": 31,
+            "color_range": "tv",
+            "color_space": "bt709",
+            "color_transfer": "bt709",
+            "color_primaries": "bt709",
+            "chroma_location": "left",
+            "field_order": "progressive",
+            "refs": 1,
+            "is_avc": "true",
+            "nal_length_size": "4",
+            "id": "0x2",
+            "r_frame_rate": "15/1",
+            "avg_frame_rate": "15/1",
+            "time_base": "1/1500",
+            "start_pts": 3,
+            "start_time": "0.002000",
+            "duration_ts": 15900,
+            "duration": "10.600000",
+            "bit_rate": "912547",
+            "bits_per_raw_sample": "8",
+            "nb_frames": "159",
+            "extradata_size": 43,
+            "disposition": {
+              "default": 1,
+              "dub": 0,
+              "original": 0,
+              "comment": 0,
+              "lyrics": 0,
+              "karaoke": 0,
+              "forced": 0,
+              "hearing_impaired": 0,
+              "visual_impaired": 0,
+              "clean_effects": 0,
+              "attached_pic": 0,
+              "timed_thumbnails": 0,
+              "non_diegetic": 0,
+              "captions": 0,
+              "descriptions": 0,
+              "metadata": 0,
+              "dependent": 0,
+              "still_image": 0
+            },
+            "tags": {
+              "creation_time": "2026-11-03T10:30:24.000000Z",
+              "language": "und",
+              "handler_name": "VideoHandler",
+              "vendor_id": "[0][0][0][0]"
+            }
+          }
+        ],
+        "format": {
+          "filename": "/home/sergey/.local/state/imonmeets-commercial-20261103/recording-boundary-20261103/run-rec09d20261103/duration.mp4",
+          "nb_streams": 2,
+          "nb_programs": 0,
+          "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+          "format_long_name": "QuickTime / MOV",
+          "start_time": "0.000000",
+          "duration": "10.602000",
+          "size": "1320948",
+          "bit_rate": "996753",
+          "probe_score": 100,
+          "tags": {
+            "major_brand": "mp42",
+            "minor_version": "0",
+            "compatible_brands": "mp42mp41isomiso2",
+            "creation_time": "2026-11-03T10:30:24.000000Z",
+            "encoder": "x264"
+          }
+        }
+      }
+    },
+    {
+      "phase": "size",
+      "durationLimitSeconds": 90,
+      "stopThresholdBytes": 1048576,
+      "finalBytes": 1482622,
+      "durationSeconds": 13.546667,
+      "audioRms": 0.03650157618922938,
+      "sha256": "74a48030969df4b17c05d92804594d20d881580bd0c9f7645a7bdb9f4764155f",
+      "status": "EGRESS_LIMIT_REACHED",
+      "sizeOvershootBytes": 434046,
+      "observations": [
+        {
+          "at": "2026-11-03T10:30:46.759Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:47.969Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:48.960Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:49.954Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:51.269Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:53.641Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:54.830Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:55.757Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:30:58.141Z",
+          "status": "EGRESS_STARTING",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:31:01.233Z",
+          "status": "EGRESS_ACTIVE",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:31:04.939Z",
+          "status": "EGRESS_ACTIVE",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:31:07.942Z",
+          "status": "EGRESS_ACTIVE",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:31:10.531Z",
+          "status": "EGRESS_ACTIVE",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:31:12.552Z",
+          "status": "EGRESS_ACTIVE",
+          "bytes": "0",
+          "error": ""
+        },
+        {
+          "at": "2026-11-03T10:31:13.912Z",
+          "status": "EGRESS_LIMIT_REACHED",
+          "bytes": "1482622",
+          "error": "Session limit reached"
+        }
+      ],
+      "probe": {
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "aac",
+            "codec_long_name": "AAC (Advanced Audio Coding)",
+            "profile": "LC",
+            "codec_type": "audio",
+            "codec_tag_string": "mp4a",
+            "codec_tag": "0x6134706d",
+            "sample_fmt": "fltp",
+            "sample_rate": "48000",
+            "channels": 2,
+            "channel_layout": "stereo",
+            "bits_per_sample": 0,
+            "initial_padding": 0,
+            "id": "0x1",
+            "r_frame_rate": "0/0",
+            "avg_frame_rate": "0/0",
+            "time_base": "1/48000",
+            "start_pts": 0,
+            "start_time": "0.000000",
+            "duration_ts": 650240,
+            "duration": "13.546667",
+            "bit_rate": "59064",
+            "nb_frames": "424",
+            "extradata_size": 2,
+            "disposition": {
+              "default": 1,
+              "dub": 0,
+              "original": 0,
+              "comment": 0,
+              "lyrics": 0,
+              "karaoke": 0,
+              "forced": 0,
+              "hearing_impaired": 0,
+              "visual_impaired": 0,
+              "clean_effects": 0,
+              "attached_pic": 0,
+              "timed_thumbnails": 0,
+              "non_diegetic": 0,
+              "captions": 0,
+              "descriptions": 0,
+              "metadata": 0,
+              "dependent": 0,
+              "still_image": 0
+            },
+            "tags": {
+              "creation_time": "2026-11-03T10:30:53.000000Z",
+              "language": "und",
+              "handler_name": "SoundHandler",
+              "vendor_id": "[0][0][0][0]"
+            }
+          },
+          {
+            "index": 1,
+            "codec_name": "h264",
+            "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+            "profile": "Main",
+            "codec_type": "video",
+            "codec_tag_string": "avc1",
+            "codec_tag": "0x31637661",
+            "width": 1280,
+            "height": 720,
+            "coded_width": 1280,
+            "coded_height": 720,
+            "closed_captions": 0,
+            "film_grain": 0,
+            "has_b_frames": 2,
+            "sample_aspect_ratio": "1:1",
+            "display_aspect_ratio": "16:9",
+            "pix_fmt": "yuv420p",
+            "level": 31,
+            "color_range": "tv",
+            "color_space": "bt709",
+            "color_transfer": "bt709",
+            "color_primaries": "bt709",
+            "chroma_location": "left",
+            "field_order": "progressive",
+            "refs": 1,
+            "is_avc": "true",
+            "nal_length_size": "4",
+            "id": "0x2",
+            "r_frame_rate": "15/1",
+            "avg_frame_rate": "15/1",
+            "time_base": "1/1500",
+            "start_pts": 13,
+            "start_time": "0.008667",
+            "duration_ts": 20300,
+            "duration": "13.533333",
+            "bit_rate": "813688",
+            "bits_per_raw_sample": "8",
+            "nb_frames": "203",
+            "extradata_size": 43,
+            "disposition": {
+              "default": 1,
+              "dub": 0,
+              "original": 0,
+              "comment": 0,
+              "lyrics": 0,
+              "karaoke": 0,
+              "forced": 0,
+              "hearing_impaired": 0,
+              "visual_impaired": 0,
+              "clean_effects": 0,
+              "attached_pic": 0,
+              "timed_thumbnails": 0,
+              "non_diegetic": 0,
+              "captions": 0,
+              "descriptions": 0,
+              "metadata": 0,
+              "dependent": 0,
+              "still_image": 0
+            },
+            "tags": {
+              "creation_time": "2026-11-03T10:30:53.000000Z",
+              "language": "und",
+              "handler_name": "VideoHandler",
+              "vendor_id": "[0][0][0][0]"
+            }
+          }
+        ],
+        "format": {
+          "filename": "/home/sergey/.local/state/imonmeets-commercial-20261103/recording-boundary-20261103/run-rec09d20261103/size.mp4",
+          "nb_streams": 2,
+          "nb_programs": 0,
+          "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+          "format_long_name": "QuickTime / MOV",
+          "start_time": "0.000000",
+          "duration": "13.546667",
+          "size": "1482622",
+          "bit_rate": "875564",
+          "probe_score": 100,
+          "tags": {
+            "major_brand": "mp42",
+            "minor_version": "0",
+            "compatible_brands": "mp42mp41isomiso2",
+            "creation_time": "2026-11-03T10:30:53.000000Z",
+            "encoder": "x264"
+          }
+        }
+      }
+    }
+  ],
+  "checks": [
+    "isolated API/Redis/fixture ready; no public ports or production credentials",
+    "duration: actual Egress limit, exact file metadata, H264/AAC, complete decode and audible synthetic tone",
+    "size: actual Egress limit, exact file metadata, H264/AAC, complete decode and audible synthetic tone",
+    "actual short MP4 encrypted and restored byte-for-byte; equal soft-stop/hard-backup ceiling rejected"
+  ],
+  "images": {
+    "egress": "sha256:ac244a40268ce1dd1510fbff6eb529609ec68aceff1602343f79be8ca08c355b",
+    "livekit": "sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20",
+    "redis": "sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f",
+    "fixture": "sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20"
+  },
+  "cgroup": "ControlGroup=/imonrecrec09d20261103.slice\nCPUQuotaPerSecUSec=1s\nMemoryMax=2147483648\nTasksMax=512",
+  "backup": {
+    "scope": "Actual short Egress MP4 bytes encrypted and restored locally; no offsite receiver or full production-size claim",
+    "sourceHash": "85de6f12e650ee3eaf00c683825d4bc6673bcaff2cb156fc6a7f121310e02025",
+    "hardObjectLimitBytes": 367001600,
+    "cacheLimitBytes": 1073741824,
+    "runs": [
+      {
+        "phase": "duration",
+        "sha256": "0c5c30c073b695cb01227bb396c93187d9267604ca03e8455df5780643fbcedd",
+        "bytes": 1320948,
+        "cipherBytes": 1322678,
+        "completeManifest": true,
+        "restoredByteIdentical": true,
+        "productionHardCeilingMetadataRejectsPlusOne": true
+      },
+      {
+        "phase": "size",
+        "sha256": "74a48030969df4b17c05d92804594d20d881580bd0c9f7645a7bdb9f4764155f",
+        "bytes": 1482622,
+        "cipherBytes": 1484498,
+        "completeManifest": true,
+        "restoredByteIdentical": true,
+        "scaledEqualStopAndBackupCeilingAccepts": false,
+        "scaledRejection": "Invalid recording size",
+        "productionHardCeilingMetadataRejectsPlusOne": true
+      }
+    ]
+  },
+  "cleanupVerified": true,
+  "finishedAt": "2026-11-03T10:31:20.430Z",
+  "outerCleanupVerified": true
+}

@@ -1,0 +1,13 @@
+✔ recording lifecycle cannot regress and completion requires exact output (4.119492ms)
+✔ correlation requires exact recording object key, including before file results exist (7.104748ms)
+✔ limit-reached preserves a matching recorded file and warns about truncation (0.539006ms)
+✔ modern egress request correlates by exact output path (0.8625ms)
+✔ a completed size-limited capture does not claim a duration-only stop (0.351295ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1271.343719

@@ -1,0 +1,11 @@
+{
+  "image": "sha256:ac244a40268ce1dd1510fbff6eb529609ec68aceff1602343f79be8ca08c355b",
+  "ReadonlyRootfs": true,
+  "Tmpfs": {
+    "/home/egress": "size=128m,uid=1001,gid=0,mode=0700",
+    "/home/egress/tmp": "size=512m,uid=1001,gid=0,mode=0700",
+    "/tmp": "size=128m,mode=1777"
+  },
+  "ShmSize": 268435456,
+  "scope": "Read-only observation of production mounts, no changes or capture"
+}

@@ -1,0 +1,23 @@
+FE.
+======================================================================
+ERROR: test_two_recordings_keep_aggregate_ciphertext_capacity_guard (__main__.RecordingBackupTests.test_two_recordings_keep_aggregate_ciphertext_capacity_guard)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/sergey/imonmeets-recording-boundary-20261103/scripts/test-recording-backup.py", line 324, in test_two_recordings_keep_aggregate_ciphertext_capacity_guard
+    backup.validate_entries(two_pilot, encrypted=False)
+  File "/home/sergey/imonmeets-recording-boundary-20261103/scripts/recording-backup.py", line 96, in validate_entries
+    raise ValueError("Invalid recording size")
+ValueError: Invalid recording size
+
+======================================================================
+FAIL: test_backup_object_bound_matches_hard_egress_output_mount (__main__.RecordingBackupTests.test_backup_object_bound_matches_hard_egress_output_mount)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/sergey/imonmeets-recording-boundary-20261103/scripts/test-recording-backup.py", line 311, in test_backup_object_bound_matches_hard_egress_output_mount
+    self.assertEqual(backup.MAX_OBJECT_BYTES, int(mount.group(1)) * 1024 * 1024)
+AssertionError: 367001600 != 536870912
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.266s
+
+FAILED (failures=1, errors=1)
