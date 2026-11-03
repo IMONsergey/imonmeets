@@ -203,11 +203,17 @@ class EngineAdapterLifecycleTests(unittest.IsolatedAsyncioTestCase):
                                     str(self.directory / f"{name}-started"), str(self.directory / f"{name}-late"))
             engine.stage.terminate_grace_seconds = .03
         self.results = []
+        self.participants = {}
         self.adapter = TranslationStreamAdapter(self.asr, self.mt, on_result=self.results.append)
         self.handle = self.register()
 
     def register(self, participant="p", track="mic"):
-        return self.adapter.register_track(participant, track, "en", "ru", session=self.adapter.session)
+        key = self.adapter.session, participant
+        captured = self.participants.get(key)
+        if not self.adapter.is_current_participant(captured):
+            captured = self.adapter.register_participant(participant, session=self.adapter.session)
+            self.participants[key] = captured
+        return self.adapter.register_track(captured, track, "en", "ru")
 
     async def submit(self, handle, sequence, audio, **kwargs):
         return await self.adapter.submit(handle, audio, sequence=sequence, duration_seconds=.1, **kwargs)
@@ -259,7 +265,7 @@ class EngineAdapterLifecycleTests(unittest.IsolatedAsyncioTestCase):
         self.adapter.reconnect(old_session)
         replacement = self.register()
         self.assertFalse(self.adapter.unregister_track(self.handle))
-        self.assertEqual(self.adapter.participant_left(old_session, "p"), 0)
+        self.assertEqual(self.adapter.participant_left(self.handle.participant), 0)
         self.assertFalse(await self.adapter.room_left(old_session))
         with self.assertRaises(UnknownTrackError):
             await self.submit(self.handle, 2, b"late source")

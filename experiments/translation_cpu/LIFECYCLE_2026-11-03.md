@@ -18,7 +18,7 @@ queue age, and close explicitly cancelled only the active caller.
 
 The current implementation provides:
 
-- Identity-bound `RoomSession` and `TrackHandle` objects. Old unregister,
+- Identity-bound `RoomSession`, `ParticipantHandle` and `TrackHandle` objects. Old unregister,
   participant-leave, room-leave and audio callbacks cannot act on a new connection
   or on a new track with the same participant/track IDs. There is no identity-only
   compatibility path in production code.
@@ -100,7 +100,8 @@ streaming codec decoding or acoustic echo cancellation.
 ```python
 adapter = TranslationStreamAdapter(asr_engine, mt_engine, room_id="isolated-room")
 session = adapter.session
-track = adapter.register_track("participant", "microphone", "en", "ru", session=session)
+participant = adapter.register_participant("participant", session=session)
+track = adapter.register_track(participant, "microphone", "en", "ru")
 try:
     pending = await adapter.submit_wav(track, verified_wav_bytes, sequence=1)
     result = await pending
@@ -110,7 +111,7 @@ finally:
 ```
 
 The room integration must call `unregister_track(captured_track)` for a track
-unsubscribe, `participant_left(captured_session, participant_id)` for participant
+unsubscribe, `participant_left(captured_participant)` for participant
 departure, and `await room_left(captured_session)` for final room departure.
 `disconnect(captured_session)` invalidates the connection; `reconnect(captured_session)`
 atomically invalidates it and returns a new session for fresh registration. A warm
@@ -184,7 +185,7 @@ The complete remote receipt and real smoke result are stored separately under
 `data/lifecycle/`. Read their exact status and source hashes before treating a run
 as verified. A successful control receipt leaves `model_quality_gate: BLOCKED`.
 
-## Completed bounded verification
+## Historical bounded verification before participant review
 
 The final run is `data/lifecycle/lifecycle-20261103t085141z-1429281/`:
 
@@ -239,3 +240,23 @@ and mismatched frame counts. The failed attempt remains visible; it is not a mod
 quality result. Independent review also identified the previously unproven reap
 edge; a real-child test with fault-injected wait timeout now proves quarantine,
 reservation retention, no replacement admission and later cleanup recovery.
+
+## Independent participant review
+
+The review based on 6813ad9 identified a stale-participant-leave defect within the
+same room session. Room-session identity alone did not identify a specific
+participant connection. The current API requires a separately registered
+`ParticipantHandle` for track registration and participant leave. Keep the same
+participant token during microphone replacement, capture it in every callback,
+and obtain a new one only for a new authenticated participant connection. There
+is no current-ID lookup or identity-only leave fallback. Idle participants count
+towards the participant cap and explicit leave/disconnect/close removes them.
+
+The negative reproducer failed before the change, then six new regression tests
+and the complete 93-test control suite passed under CPU1/RAM2GiB. The prior real
+model smoke remains historical evidence; it was not rerun for this API change.
+See `COMMERCIAL_REVIEW_2026-11-03.md` and the `participant-*` receipts for exact
+results and scope. That independent review also identified an OPEN process-group
+ownership issue: `_stop()` can signal a numeric PGID after leader wait/reap.
+The ordinary descendant test does not prove safety against PGID reuse. No claim
+of complete native-process ownership acceptance is made while that issue remains.

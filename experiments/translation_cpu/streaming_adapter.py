@@ -45,6 +45,13 @@ class RoomSession:
 
 
 @dataclass(frozen=True, eq=False)
+class ParticipantHandle:
+    session: RoomSession
+    participant_id: str
+    generation: int
+
+
+@dataclass(frozen=True, eq=False)
 class TrackHandle:
     session: RoomSession
     participant_id: str
@@ -52,6 +59,7 @@ class TrackHandle:
     source_language: str
     target_language: str
     generation: int
+    participant: ParticipantHandle
 
 
 @dataclass(frozen=True)
@@ -200,6 +208,7 @@ class TranslationStreamAdapter:
         self._generation = 0
         self._session = None
         self._tracks: dict[tuple[str, str], _TrackState] = {}
+        self._participants: dict[str, ParticipantHandle] = {}
         self._queue: deque[_Work] = deque()
         self._ready_participants: deque[str] = deque()
         self._last_participant = None
@@ -238,6 +247,7 @@ class TranslationStreamAdapter:
             "buffered_bytes": self._buffered_bytes,
             "buffered_audio_seconds": self._buffered_audio_seconds,
             "revision_entries": len(self._revisions), "tracks": len(self._tracks),
+            "participants": len(self._participants),
             "playback_ids": len(self._playback_ids), "closed": self._closed,
             "connected": self._session is not None, "failure": self._failure,
         }
@@ -259,13 +269,36 @@ class TranslationStreamAdapter:
         if self._closed or not isinstance(handle, TrackHandle) or handle.session is not self._session:
             return False
         state = self._tracks.get((handle.participant_id, handle.track_id))
-        return state is not None and state.handle is handle
+        return state is not None and state.handle is handle and self.is_current_participant(handle.participant)
 
-    def register_track(self, participant_id, track_id, source_language, target_language, *, session):
+    def is_current_participant(self, participant):
+        return (
+            not self._closed and isinstance(participant, ParticipantHandle)
+            and participant.session is self._session
+            and self._participants.get(participant.participant_id) is participant
+        )
+
+    def register_participant(self, participant_id, *, session):
         if self._closed:
             raise RuntimeError("adapter is closed")
         if session is None or session is not self._session:
             raise StaleFrameError("registration belongs to a disconnected room session")
+        _identifier(participant_id, "participant_id")
+        if participant_id in self._participants:
+            raise ValueError("participant connection is already registered")
+        if len(self._participants) >= self._limits["max_participants"]:
+            raise BackpressureError("participant limit")
+        self._generation += 1
+        participant = ParticipantHandle(session, participant_id, self._generation)
+        self._participants[participant_id] = participant
+        return participant
+
+    def register_track(self, participant, track_id, source_language, target_language):
+        if self._closed:
+            raise RuntimeError("adapter is closed")
+        if not self.is_current_participant(participant):
+            raise StaleFrameError("track registration belongs to a previous participant connection")
+        participant_id = participant.participant_id
         values = [participant_id, track_id, source_language, target_language]
         for value, name in zip(values, ["participant_id", "track_id", "source_language", "target_language"]):
             _identifier(value, name)
@@ -274,11 +307,8 @@ class TranslationStreamAdapter:
             raise ValueError("track is already registered")
         if len(self._tracks) >= self._limits["max_tracks"]:
             raise BackpressureError("track limit")
-        participants = {key[0] for key in self._tracks}
-        if participant_id not in participants and len(participants) >= self._limits["max_participants"]:
-            raise BackpressureError("participant limit")
         self._generation += 1
-        handle = TrackHandle(session, *values, self._generation)
+        handle = TrackHandle(participant.session, *values, self._generation, participant)
         self._tracks[key] = _TrackState(handle)
         return handle
 
@@ -294,12 +324,14 @@ class TranslationStreamAdapter:
         del self._tracks[(handle.participant_id, handle.track_id)]
         return True
 
-    def participant_left(self, session, participant_id):
-        if session is None or session is not self._session:
+    def participant_left(self, participant):
+        if not self.is_current_participant(participant):
             return 0
-        handles = [state.handle for key, state in self._tracks.items() if key[0] == participant_id]
+        handles = [state.handle for state in self._tracks.values()
+                   if state.handle.participant is participant]
         for handle in handles:
             self.unregister_track(handle)
+        del self._participants[participant.participant_id]
         return len(handles)
 
     def disconnect(self, session):
@@ -308,6 +340,7 @@ class TranslationStreamAdapter:
         self._session = None
         self._cancel_matching(lambda work: True)
         self._tracks.clear()
+        self._participants.clear()
         self._playback_ids.clear()
         self._last_participant = None
         return True
@@ -621,6 +654,7 @@ class TranslationStreamAdapter:
         self._session = None
         self._cancel_matching(lambda work: True)
         self._tracks.clear()
+        self._participants.clear()
         self._playback_ids.clear()
         if self._close_task is None:
             self._close_task = asyncio.create_task(self._finish_close(), name="translation-close")

@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "base_commit": "6813ad9391a48e9fe137f00766c46c0b13d47e85",
+  "reviewed_at": "2026-11-03T09:25:41.555976+00:00",
+  "source_sha256": {
+    "streaming_adapter.py": "e517ca8c830168a4c718455f1bb93feee4d5fd572098553161fb797070b42904",
+    "tests/test_participant_identity.py": "818c94d55f52a4922c6d4973bcdc4742d75841e0e0941dffca6ab4114730096c",
+    "tests/test_lifecycle_bounds.py": "7aa93b3144bf7268654b14fc8a23a644e808c3d845b9cc4f74ccfc77204f2723",
+    "tests/test_streaming_adapter.py": "973857b1c0b5f097ebde2c31ca4f938366201d67cad7f56e93b13dadfe10ce67",
+    "tests/test_worker_lifecycle.py": "7671e2d9dbd6663da9eba1afa989330cd9d748aba84978d0fefdbc8b0bedfed8",
+    "tools/run_adapter_lifecycle_smoke.py": "82a25745fe412222c62474cc1ed27870a1a59deec686746c459100ddaa6f5c13"
+  },
+  "full_control_receipt_sha256": "372452339ff1fcb1ca72b02cb05cfe0c6ab40bfcfafd421170c5aa1e5d11d41f",
+  "test_count": 93,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "existing_tracked_raw_evidence_unchanged": true,
+  "preserved_raw_tree": "dfdfe76655fbd671c2a3667fdf427cca411e14ac",
+  "real_model_inference_rerun": false,
+  "production_changes": false,
+  "known_open_blockers": [
+    "model_quality",
+    "required_ru_pivot_directions",
+    "tts_license_chain",
+    "livekit_integration",
+    "pgid_ownership_after_reap"
+  ],
+  "archived_red_test": {
+    "original_path": "experiments/translation_cpu/tests/test_participant_identity.py",
+    "archived_path": "data/review_20261103/participant_identity_before_fix.py",
+    "sha256": "c8eeed662fda36a47c86bbf7c27ae93e6d159f06652f517a3c5804e26f3f8da2",
+    "source_base_commit": "6813ad9391a48e9fe137f00766c46c0b13d47e85",
+    "receipt": "imonmeets-mt-participant-red-20261103T091939Z-1672144.json"
+  }
+}

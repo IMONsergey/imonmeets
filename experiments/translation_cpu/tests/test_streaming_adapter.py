@@ -14,12 +14,17 @@ class TranslationStreamAdapter(BoundedAdapter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.handles = {}
+        self.participants = {}
         self.source_sequences = {}
         self.utterance_sequences = {}
 
     def register_track(self, participant_id, track_id, source, target):
+        participant = self.participants.get(participant_id)
+        if not self.is_current_participant(participant):
+            participant = self.register_participant(participant_id, session=self.session)
+            self.participants[participant_id] = participant
         self.handles[participant_id, track_id] = super().register_track(
-            participant_id, track_id, source, target, session=self.session)
+            participant, track_id, source, target)
 
     async def submit(self, participant_id, track_id, audio, **kwargs):
         key = participant_id, track_id

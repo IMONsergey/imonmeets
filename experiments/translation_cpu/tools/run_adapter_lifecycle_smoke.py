@@ -66,7 +66,8 @@ async def main(destination):
         adapter = TranslationStreamAdapter(asr, mt, room_id="isolated-lifecycle-smoke",
                                             on_result=publications.append, max_latency_seconds=45,
                                             max_queue_seconds=5)
-        handle = adapter.register_track("fixture-participant", "fixture-mic", "en", "ru", session=adapter.session)
+        participant = adapter.register_participant("fixture-participant", session=adapter.session)
+        handle = adapter.register_track(participant, "fixture-mic", "en", "ru")
 
         async def translate(current, sequence, label):
             started = time.monotonic()
@@ -115,7 +116,8 @@ async def main(destination):
         }
         old_session = adapter.session
         adapter.reconnect(old_session)
-        fresh = adapter.register_track("fixture-participant", "fixture-mic", "en", "ru", session=adapter.session)
+        participant = adapter.register_participant("fixture-participant", session=adapter.session)
+        fresh = adapter.register_track(participant, "fixture-mic", "en", "ru")
         if adapter.unregister_track(handle) or await adapter.room_left(old_session):
             raise AssertionError("Stale leave affected replacement")
         try:

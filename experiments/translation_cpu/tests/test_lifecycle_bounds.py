@@ -60,6 +60,7 @@ class Engines:
 class BoundsTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         self.adapters = []
+        self.participants = {}
 
     async def asyncTearDown(self):
         for adapter in self.adapters:
@@ -78,7 +79,12 @@ class BoundsTests(unittest.IsolatedAsyncioTestCase):
         return adapter, engines, results
 
     def track(self, adapter, participant="p", track="t"):
-        return adapter.register_track(participant, track, "en", "ru", session=adapter.session)
+        key = id(adapter), adapter.session, participant
+        captured = self.participants.get(key)
+        if not adapter.is_current_participant(captured):
+            captured = adapter.register_participant(participant, session=adapter.session)
+            self.participants[key] = captured
+        return adapter.register_track(captured, track, "en", "ru")
 
     async def submit(self, adapter, handle, sequence, data=b"a", duration=.1, **kwargs):
         return await adapter.submit(handle, data, sequence=sequence, duration_seconds=duration, **kwargs)
@@ -386,9 +392,11 @@ class BoundsTests(unittest.IsolatedAsyncioTestCase):
         queued = await self.submit(adapter, old, 2, b"queued")
         new_session = adapter.reconnect(old_session)
         with self.assertRaises(StaleFrameError):
-            adapter.register_track("p", "t", "en", "ru", session=old_session)
+            adapter.register_track(old.participant, "t", "en", "ru")
+        with self.assertRaises(StaleFrameError):
+            adapter.register_participant("p", session=old_session)
         new = self.track(adapter)
-        self.assertEqual(adapter.participant_left(old_session, "p"), 0)
+        self.assertEqual(adapter.participant_left(old.participant), 0)
         self.assertFalse(await adapter.room_left(old_session))
         self.assertFalse(adapter.disconnect(old_session))
         self.assertIs(adapter.session, new_session)
@@ -409,7 +417,7 @@ class BoundsTests(unittest.IsolatedAsyncioTestCase):
         await engines.started.wait()
         queued = await self.submit(adapter, b, 1, b"b")
         surviving = await self.submit(adapter, other, 1, b"survive")
-        self.assertEqual(adapter.participant_left(adapter.session, "p"), 2)
+        self.assertEqual(adapter.participant_left(a.participant), 2)
         self.assertEqual(adapter.stats["tracks"], 1)
         engines.release.set()
         await surviving

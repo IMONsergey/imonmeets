@@ -1,0 +1,17 @@
+{
+  "unit": "imonmeets-mt-pgid-review-proof-20261103T092243Z-1700877",
+  "started_at": "2026-11-03T09:22:43Z",
+  "finished_at": "2026-11-03T09:22:44.082540+00:00",
+  "runtime_max_seconds": 15,
+  "exit_code": 0,
+  "command": [
+    "/usr/bin/python3",
+    "tools/probe_process_group_reap.py"
+  ],
+  "log": "imonmeets-mt-pgid-review-proof-20261103T092243Z-1700877.log",
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 128,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock"
+}

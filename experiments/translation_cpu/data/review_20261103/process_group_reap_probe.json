@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "scope": "deterministic fake process, mocked killpg; no OS signal or model inference",
+  "source_sha256": "8898ee3a251f9f2b11b76eb9b7d7c46664d45f41a8108bfc52ba7f04664ddc40",
+  "signals": [
+    {
+      "pgid": 123456789,
+      "signal": "SIGTERM",
+      "wait_already_returned": false
+    },
+    {
+      "pgid": 123456789,
+      "signal": "SIGKILL",
+      "wait_already_returned": true
+    }
+  ],
+  "signal_after_successful_wait": true,
+  "actual_pid_reuse_observed": false,
+  "finding": "OPEN: group identity is not retained after leader wait; prevent numeric PGID reuse before cleanup"
+}
