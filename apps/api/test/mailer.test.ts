@@ -42,10 +42,13 @@ class MemoryLedger {
   failNextUpdate = false;
   failNextInsert = false;
 
-  async connect() { return { query: this.query.bind(this), release() {} }; }
+  async connect() {
+    return { query: this.query.bind(this), release() {} };
+  }
 
   async query(sql: string, values: unknown[] = []) {
-    if (["BEGIN", "COMMIT", "ROLLBACK"].includes(sql)) return { rowCount: 0, rows: [] };
+    if (["BEGIN", "COMMIT", "ROLLBACK"].includes(sql))
+      return { rowCount: 0, rows: [] };
     if (sql.startsWith("INSERT INTO im_rate_limits"))
       return { rowCount: 1, rows: [{ count: 1, retry_after: 3600 }] };
     if (sql.startsWith("INSERT INTO im_email_deliveries")) {
@@ -401,7 +404,9 @@ test(
           "retry_after_seconds integer, created_at timestamptz NOT NULL DEFAULT now(), " +
           "updated_at timestamptz NOT NULL DEFAULT now())",
       );
-      await pool.query("CREATE TABLE im_rate_limits(key text PRIMARY KEY,count integer NOT NULL,expires_at timestamptz NOT NULL)");
+      await pool.query(
+        "CREATE TABLE im_rate_limits(key text PRIMARY KEY,count integer NOT NULL,expires_at timestamptz NOT NULL)",
+      );
       await pool.query((await import("../src/mail-schema.js")).mailSchema);
       let calls = 0;
       let release!: (response: Response) => void;
