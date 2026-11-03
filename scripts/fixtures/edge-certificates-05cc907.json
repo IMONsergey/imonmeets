@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "sourceCommit": "05cc907784afe09c156026cc822d3f6bf08bd4c3",
+  "generatorSha256": "0d08764c46646deeb04a1d8c01180e4d290243f420e5faff57105f2aedcbf142",
+  "capturedBeforeRefactor": true,
+  "pureGenerationOnly": true,
+  "contextsAreSyntheticNotDeploymentConfiguration": true,
+  "baseEnv": {
+    "EDGE_PUBLIC_IP": "93.184.216.34",
+    "VPN_PUBLIC_IP": "93.184.216.35",
+    "EDGE_TUNNEL_LOCAL_IP": "10.255.254.1",
+    "EDGE_MAIN_TUNNEL_IP": "10.255.254.2",
+    "APP_URL": "https://app.example.test",
+    "LIVEKIT_URL": "wss://rtc.example.test",
+    "TURN_PUBLIC_HOST": "turn.example.test",
+    "EDGE_WITNESS_HOST": "witness.example.test",
+    "RECORDING_ENABLED": "true",
+    "S3_PUBLIC_ENDPOINT": "https://recordings.example.test",
+    "S3_BUCKET": "imon-recordings",
+    "LIVEKIT_SIGNALING_AUTH_ENABLED": "true",
+    "TLS_CERT_NAME": "fixture-edge-main",
+    "EDGE_WITNESS_TLS_CERT_NAME": "fixture-edge-witness",
+    "EDGE_MAIN_ACME_PORT": "18080",
+    "EDGE_MANAGED_TLS": "true",
+    "ACME_EMAIL": "ops@example.test",
+    "EDGE_MAIN_RENEWAL_CONTEXT": "{\"node\":\"/usr/bin/node\",\"codeDirectory\":\"/opt/fixture/main/scripts\",\"projectDirectory\":\"/opt/fixture/runtime\",\"projectName\":\"imonmeets-fixture\",\"envFile\":\"/etc/fixture/runtime.env\",\"composeFiles\":[\"/opt/fixture/runtime/compose.yml\",\"/opt/fixture/runtime/compose.turn.yml\"],\"turnDirectory\":\"/opt/fixture/runtime/deploy/turn-private\"}",
+    "EDGE_WITNESS_RENEWAL_CONTEXT": "{\"node\":\"/usr/bin/node\",\"codeDirectory\":\"/opt/fixture/witness/scripts\"}"
+  },
+  "cases": [
+    {
+      "name": "recording",
+      "overrides": {},
+      "filesSha256": {
+        "nginx.edge-http.conf": "9dbb738bcfcdc09b07f459042c9e74f839cab51f13b96addb0b92d72ba2308a5",
+        "nginx.main-acme.conf": "0991594df26ef8c80cd49e3d8900d26df41c70600f8b2a812126b73de706f756",
+        "nginx.edge-witness-tls.conf": "2f0e6ef96f085251c9eba24e442fc6b546011acacff911c4d028f2b0899d384b",
+        "nginx.edge.conf": "3cb06581f745fe05ce822c5a4a5f680dd2e2cf51dad0d946824b44a8c12fe7d2",
+        "imonmeets-edge-nginx.service": "91a6961a257f7f36ff7fd36b43f9a93d0de8ad091ce9610aad49503ea0ca8220",
+        "main-renewal.json": "810c5ac671306bdbd3edb24abe16bb2055496a05a1d21427a02f531d74e8b3a3",
+        "main-certbot.ini": "24013abb0a5f18329d8a55264e04ec652c55630e3ef9de8a0cbee69704790cc6",
+        "imonmeets-main-cert-renew.service": "1921c4fe02d9ccaff1da1940e237a55bc2ad558c784ac268f1967c843865d7ab",
+        "imonmeets-main-cert-renew.timer": "d44ac647d8d969c7d2e3afce56ed7823205c6331b41de2add0f56c7caa344759",
+        "witness-renewal.json": "8af01bb8dfb7337f1718825c4c4929412d234a9886210c887999aba53ef68aab",
+        "witness-certbot.ini": "24013abb0a5f18329d8a55264e04ec652c55630e3ef9de8a0cbee69704790cc6",
+        "imonmeets-witness-cert-renew.service": "0bebf99a0efb9a2c9db0fcbfb0524d274f57ed24678330c3986c5b00b5bf6d10",
+        "imonmeets-witness-cert-renew.timer": "2f0f7fbedd6ad24de7507c9d59ad7c9b468baebd7f08ae999f1b525bbf631143"
+      },
+      "planSha256": "cd134e5001db4ee1c74f3bc468d88ddbd1d3bda84b69d39d6e5ce82d56d1d0b9"
+    },
+    {
+      "name": "recording-disabled",
+      "overrides": {
+        "RECORDING_ENABLED": "false"
+      },
+      "filesSha256": {
+        "nginx.edge-http.conf": "9f7b3e0b042f7b3d9153a8f3e31b5396b3a5d60f9a79145d87d134e65883ea46",
+        "nginx.main-acme.conf": "f37ab53430a004772ffe08d190ea4bb16ea586d6a39021f66e03e744b8c33a32",
+        "nginx.edge-witness-tls.conf": "2f0e6ef96f085251c9eba24e442fc6b546011acacff911c4d028f2b0899d384b",
+        "nginx.edge.conf": "3cb06581f745fe05ce822c5a4a5f680dd2e2cf51dad0d946824b44a8c12fe7d2",
+        "imonmeets-edge-nginx.service": "91a6961a257f7f36ff7fd36b43f9a93d0de8ad091ce9610aad49503ea0ca8220",
+        "main-renewal.json": "8129646752d01ea3027d64baeffde31555408c1ef62d076193c238c52fafa4d5",
+        "main-certbot.ini": "24013abb0a5f18329d8a55264e04ec652c55630e3ef9de8a0cbee69704790cc6",
+        "imonmeets-main-cert-renew.service": "1921c4fe02d9ccaff1da1940e237a55bc2ad558c784ac268f1967c843865d7ab",
+        "imonmeets-main-cert-renew.timer": "d44ac647d8d969c7d2e3afce56ed7823205c6331b41de2add0f56c7caa344759",
+        "witness-renewal.json": "8af01bb8dfb7337f1718825c4c4929412d234a9886210c887999aba53ef68aab",
+        "witness-certbot.ini": "24013abb0a5f18329d8a55264e04ec652c55630e3ef9de8a0cbee69704790cc6",
+        "imonmeets-witness-cert-renew.service": "0bebf99a0efb9a2c9db0fcbfb0524d274f57ed24678330c3986c5b00b5bf6d10",
+        "imonmeets-witness-cert-renew.timer": "2f0f7fbedd6ad24de7507c9d59ad7c9b468baebd7f08ae999f1b525bbf631143"
+      },
+      "planSha256": "b96df6e34d529b45ee5e1aba0f4835ea8c9b74450c47f307ab0b2e630bd852d0"
+    },
+    {
+      "name": "planned-topology-synthetic-runtime",
+      "overrides": {
+        "EDGE_PUBLIC_IP": "94.249.188.77",
+        "VPN_PUBLIC_IP": "94.249.186.240",
+        "EDGE_TUNNEL_LOCAL_IP": "10.203.77.1",
+        "EDGE_MAIN_TUNNEL_IP": "10.203.77.2",
+        "APP_URL": "https://meets.imon.world",
+        "LIVEKIT_URL": "wss://rtc.imon.world",
+        "TURN_PUBLIC_HOST": "turn.imon.world",
+        "EDGE_WITNESS_HOST": "witness.imon.world",
+        "S3_PUBLIC_ENDPOINT": "https://recordings.imon.world"
+      },
+      "filesSha256": {
+        "nginx.edge-http.conf": "7868ed4569150a732a183456144765ed6347ebffea3e32dc2ece4f75e32b1291",
+        "nginx.main-acme.conf": "c5a2f1d186646a45e242905040360000227a308ea0d9da3c5fc913d3565a333d",
+        "nginx.edge-witness-tls.conf": "21f277ed9fb3a443d0685a1b4d9b4bf9f252b877276f2df3e8a06fc750dfc191",
+        "nginx.edge.conf": "3cb06581f745fe05ce822c5a4a5f680dd2e2cf51dad0d946824b44a8c12fe7d2",
+        "imonmeets-edge-nginx.service": "91a6961a257f7f36ff7fd36b43f9a93d0de8ad091ce9610aad49503ea0ca8220",
+        "main-renewal.json": "8d869b9c7ee6c7e858940e0bd5765fa09f727d366da90326213320430682fa28",
+        "main-certbot.ini": "24013abb0a5f18329d8a55264e04ec652c55630e3ef9de8a0cbee69704790cc6",
+        "imonmeets-main-cert-renew.service": "1921c4fe02d9ccaff1da1940e237a55bc2ad558c784ac268f1967c843865d7ab",
+        "imonmeets-main-cert-renew.timer": "d44ac647d8d969c7d2e3afce56ed7823205c6331b41de2add0f56c7caa344759",
+        "witness-renewal.json": "61863bb88ea5de8329aec38cc9eab695d248cdb4a18ff184f0d47e6730b64fb8",
+        "witness-certbot.ini": "24013abb0a5f18329d8a55264e04ec652c55630e3ef9de8a0cbee69704790cc6",
+        "imonmeets-witness-cert-renew.service": "0bebf99a0efb9a2c9db0fcbfb0524d274f57ed24678330c3986c5b00b5bf6d10",
+        "imonmeets-witness-cert-renew.timer": "2f0f7fbedd6ad24de7507c9d59ad7c9b468baebd7f08ae999f1b525bbf631143"
+      },
+      "planSha256": "16b06d85b92f2aaaffb09e8d2672abfbdf6264c52c8bd0e208549366a873d887"
+    }
+  ]
+}

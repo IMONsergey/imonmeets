@@ -5,25 +5,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildEdgeVpsCandidate } from "./prepare-edge-vps-ingress.mjs";
 import { ACME_MAIN_PORT, absolutePath, certificateName, renewalConfig, required } from "./edge-certificate-policy.mjs";
+import { quiet, renderEdgeHttp, renderLoopbackMainAcme } from "./edge-http-config.mjs";
 
 const sha = (s) => createHash("sha256").update(s).digest("hex");
-const quiet = "    access_log off;\n    error_log /dev/null crit;\n    server_tokens off;";
-const token = "^/\\.well-known/acme-challenge/[A-Za-z0-9_-]{22,128}$";
-function challenge(body) {
-  return `    location ~ "${token}" {
-        if ($request_uri !~ "${token}") { return 404; }
-        if ($request_method !~ "^(GET|HEAD)$") { return 405; }
-${body}
-    }
-    location /.well-known/ { return 404; }`;
-}
-function localChallenge(root) {
-  return challenge(`        root ${root};
-        disable_symlinks on;
-        default_type text/plain;
-        add_header Cache-Control "no-store" always;
-        try_files $uri =404;`);
-}
 function witnessLocation(uri, method, host) {
   return `    location = ${uri} {
         if ($request_uri != "${uri}") { return 404; }
@@ -93,56 +77,8 @@ export function buildEdgeCertificateCandidate(env) {
   const witness = renewalConfig("witness", witnessName, [witnessHost], contexts[1]);
   const mainWebroot = "/var/lib/imonmeets-acme";
   const witnessWebroot = "/var/lib/imonmeets-witness-acme";
-  const edgeHttp = `# Candidate HTTP bootstrap. No certificate is required for this file.
-server {
-    listen ${edge.publicListener.address}:80 default_server;
-    server_name _;
-${quiet}
-    return 404;
-}
-${mainHosts.map((host) => `server {
-    listen ${edge.publicListener.address}:80;
-    server_name ${host};
-${quiet}
-${challenge(`        proxy_bind ${edge.tunnel.localIp};
-        proxy_pass http://${edge.tunnel.mainIp}:${ACME_MAIN_PORT};
-        proxy_pass_request_headers off;
-        proxy_pass_request_body off;
-        proxy_set_header Host ${host};
-        proxy_set_header Content-Length "";
-        proxy_connect_timeout 2s;
-        proxy_read_timeout 5s;
-        proxy_send_timeout 5s;
-        proxy_buffering off;`)}
-    location / { return 308 https://${host}$request_uri; }
-}`).join("\n")}
-server {
-    listen ${edge.publicListener.address}:80;
-    server_name ${witnessHost};
-${quiet}
-${localChallenge(witnessWebroot)}
-    location / { return 308 https://${witnessHost}$request_uri; }
-}
-`;
-  const mainAcme = `# Candidate loopback handler. The source-ACL TCP bridge owns the WG bind.
-server {
-    listen 127.0.0.1:${ACME_MAIN_PORT} default_server;
-    server_name _;
-${quiet}
-    return 404;
-}
-server {
-    listen 127.0.0.1:${ACME_MAIN_PORT};
-    server_name ${mainHosts.join(" ")};
-${quiet}
-    set_real_ip_from 127.0.0.1;
-    real_ip_header proxy_protocol;
-    allow 127.0.0.1/32;
-    deny all;
-${localChallenge(mainWebroot)}
-    location / { return 404; }
-}
-`;
+  const edgeHttp = renderEdgeHttp({ edge, mainHosts, witnessHost, witnessWebroot });
+  const mainAcme = renderLoopbackMainAcme({ mainHosts, mainWebroot });
   const witnessTls = `# Install only after the initial managed witness snapshot exists.
 server {
     listen 127.0.0.1:8446 ssl default_server;

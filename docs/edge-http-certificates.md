@@ -6,6 +6,12 @@ change DNS, start listeners, enroll the witness or reload any running service.
 The implementation uses Node built-ins, the existing TURN preparation script,
 and the operator's already installed nginx/Certbot/Compose tools.
 
+When the final renewal context or main Docker path is not ready, the separate
+[native HTTP-only bootstrap](edge-http-native-bootstrap.md) can prepare just the
+HTTP challenge path. It uses its own main and edge nginx services, no TLS files
+or certificate hooks, and requires explicit ownership handoff before a future
+main bridge binds port 18080. The full candidate described below is unchanged.
+
 ## Observed starting point and bootstrap order
 
 Read-only main-host inspection on 2026-11-03 found nginx 1.24.0 listening on

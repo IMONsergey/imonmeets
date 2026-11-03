@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "status": "PASS_LOCAL_HTTP_ONLY_CANDIDATE_NOT_DEPLOYED",
+  "checkedAt": "2026-11-03T17:45:46.863985+00:00",
+  "baseCommit": "05cc907784afe09c156026cc822d3f6bf08bd4c3",
+  "operationsSourceMustHaveSeparateIdentity": true,
+  "applicationImageUnchanged": "sha256:b6057fb8c0824423dc4825a439a73fb1e8e0f228e9f9dabd0fe0c20328b51ab1",
+  "sourceSha256": {
+    "scripts/prepare-edge-http-bootstrap.mjs": "ac6677753252acc0f800aa0cb9ba6a8ef2964a29b671ecbcb94e44677a6cd041",
+    "scripts/edge-http-config.mjs": "faf775c26f021ca5524480f939abf77f62ce786157fbcc746cb9690fa9da1097",
+    "scripts/prepare-edge-certificates.mjs": "cce73d605633988bb62c5792b0b125b333fd5e98af31ba0fbfc94ca84ee8e3ec",
+    "scripts/prepare-edge-vps-ingress.mjs": "8668b841bd9a2dcde7b8509494b9d7e1ffe60429e9486a35624c8b311fc91828",
+    "scripts/prepare-ingress443.mjs": "2e8812bd2721f9b63b20b74252ad12a104c4e152829feb2d9000a90400f125a7",
+    "scripts/ingress-nginx-tls.mjs": "7ab6007bd7f162e3fd4917fad47733a8f929baafe8f6147bf5f23b29d932da8c",
+    "scripts/edge-certificate-policy.mjs": "649d3ea75d5ddabeb47868c10adc4e18a9d4d550298da9ecbe262e84dbad4514",
+    "scripts/test-edge-http-bootstrap.mjs": "50e9c725fd2c020e9c54ba30215612f94e9d90e0e164470957ddace68631ba52",
+    "scripts/fixtures/edge-certificates-05cc907.json": "5a4824301e5f33601dac22c1203301d0de1a123198cbcb44e2dd8378a09aff6e",
+    ".github/workflows/ci.yml": "164d6a04616ccb04f2d9dd068b0700aa48703a8ffebef79b1520043b62a5f703"
+  },
+  "execution": {
+    "scope": "local scratch only",
+    "nodeVersion": "v24.22.1",
+    "argv": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "scripts/test-edge-http-bootstrap.mjs",
+      "scripts/test-edge-certificates.mjs",
+      "scripts/test-edge-main-ingress.mjs",
+      "scripts/test-edge-vps-ingress.mjs",
+      "scripts/test-ingress443-config.mjs"
+    ],
+    "tests": 61,
+    "passed": 61,
+    "failed": 0,
+    "skipped": 0,
+    "logSha256": "4c7bc8d6b6f4c6d630f60a81d54c372ab61a829811766cf572ecece1ce6ce66c",
+    "durationMs": 1170.261842
+  },
+  "regression": {
+    "preRefactorSourceCommit": "05cc907784afe09c156026cc822d3f6bf08bd4c3",
+    "preRefactorGeneratorSha256": "0d08764c46646deeb04a1d8c01180e4d290243f420e5faff57105f2aedcbf142",
+    "frozenFullCandidateFileHashesMatched": 39,
+    "frozenFullPlanHashesMatched": 3,
+    "legacySingleHostOutputHashesStillMatched": 12,
+    "legacyTlsOnlyHashesStillMatched": 3,
+    "historicalFixtureContextsSynthetic": true,
+    "httpOnlyBuilderReadsNoPrivateContext": true
+  },
+  "generatedTopology": {
+    "edgePublic": "94.249.188.77",
+    "mainPreservedPublic": "94.249.186.240",
+    "edgePrivate": "10.203.77.1",
+    "mainPrivate": "10.203.77.2",
+    "mainPort": 18080,
+    "hosts": [
+      "meets.imon.world",
+      "rtc.imon.world",
+      "recordings.imon.world",
+      "turn.imon.world",
+      "witness.imon.world"
+    ],
+    "configurationSha256": {
+      "nginx.main-http.conf": "47130b7991f62e78490df2a47ccf2fc041e9cab94c8e2858699d15132e7421e6",
+      "nginx.main.conf": "af6412e08cc4ca6e9caab66fa6a3c22c0bb819563d47dd8d4fd985d40cefebdf",
+      "imonmeets-main-acme-bootstrap.service": "a7fa45417e1d067d62b1ab75fea9a5f1707e90fcd2614b87a2e5300fe67167cf",
+      "nginx.edge-http.conf": "7868ed4569150a732a183456144765ed6347ebffea3e32dc2ece4f75e32b1291",
+      "nginx.edge.conf": "81e89c4012401903e24a9b812bee43fd6b36ec7fbb628817dc662265c040a24c",
+      "imonmeets-edge-http-bootstrap.service": "cb37c838fa88ad6aa30690e02c66e3ff9b847b4726db1a6a8e211ca341725f5f"
+    },
+    "planSha256": "48e7d2aae152f1b452e2351042086c324790b09d0d592f73a82dab2861598187",
+    "outputDirectoryMode": "0700",
+    "outputFileMode": "0600",
+    "installedNonsecretConfigurationOwner": "root:root",
+    "installedNonsecretConfigurationMode": "0644"
+  },
+  "workflowParsed": true,
+  "independentReview": {
+    "status": "PASS",
+    "reviewer": "cutover_sequence",
+    "appliedFindings": [
+      "own nginx -p runtime prefix and explicit early -e stderr",
+      "readable root-owned configuration parent0755",
+      "global critical startup diagnostics with quiet per-server logging"
+    ],
+    "frozenBaselineIndependentlyRecreatedFromOriginalGenerator": true,
+    "originalFullFileHashesIndependentlyMatched": 39,
+    "originalFullPlanHashesIndependentlyMatched": 3,
+    "reviewedFiles": [
+      "scripts/prepare-edge-http-bootstrap.mjs",
+      "scripts/edge-http-config.mjs",
+      "scripts/prepare-edge-certificates.mjs",
+      "scripts/test-edge-http-bootstrap.mjs",
+      "scripts/fixtures/edge-certificates-05cc907.json",
+      "docs/edge-http-native-bootstrap.md"
+    ]
+  },
+  "serverCommandsExecutedForThisCodeSlice": false,
+  "nginxInvoked": false,
+  "systemdInvoked": false,
+  "dockerInvoked": false,
+  "privateEnvironmentRead": false,
+  "servicesInstalledOrStarted": false,
+  "dnsChangedByThisSlice": false,
+  "nativeNginxAccepted": false,
+  "nativeServiceCapabilitiesAccepted": false,
+  "webrootPermissionsAccepted": false,
+  "httpChallengeAccepted": false,
+  "certificateIssued": false,
+  "renewalAccepted": false,
+  "witnessEnrolled": false,
+  "applicationDeployed": false,
+  "public443Accepted": false,
+  "remainingGates": [
+    "Separate ops-source publication and exact file installation review",
+    "Controlled edge package installation without stock service autostart",
+    "Actual standalone nginx capability/config/webroot acceptance on assigned hosts",
+    "HTTP positive/negative probes and source-bound private path",
+    "Dedicated unit lifecycle and explicit restart after transport recovery",
+    "Independent certificate issuance/staging and future listener-ownership handoffs",
+    "Existing application/Docker/renewal-context/legacyRTC/storageCORS/witness release gates remain separate"
+  ]
+}
