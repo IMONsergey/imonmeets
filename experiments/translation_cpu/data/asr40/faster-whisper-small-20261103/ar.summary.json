@@ -1,0 +1,60 @@
+{
+  "language": "ar",
+  "model": "small",
+  "expected_cases": 40,
+  "successful_inference": 40,
+  "errors": 0,
+  "recorded_cases": 40,
+  "quality_status": "unreviewed",
+  "audio_seconds": 438.34,
+  "asr_seconds": 363.613,
+  "aggregate_real_time_factor": 0.8295233243600858,
+  "word_error_rate": 0.3383152173913043,
+  "character_error_rate": 0.10498320268756998,
+  "word_errors": 249,
+  "reference_words": 736,
+  "character_errors": 375,
+  "reference_characters": 3572,
+  "per_clip_seconds": {
+    "p50": 8.7393,
+    "p95": 11.3116,
+    "max": 13.35509
+  },
+  "model_load_seconds_this_invocation": 1.5658094060054282,
+  "max_rss_kib": 624432,
+  "cgroup_limits": {
+    "cpu_max": "100000 100000",
+    "memory_max": 2147483648,
+    "pids_max": "128",
+    "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-asr40-small-ar-20261103T062350Z-143727.service"
+  },
+  "fingerprints": {
+    "selection_sha256": "caf155b7d8b440132295416f7d0ebd210061add74672e39d7e929dffb60ae62a",
+    "audio_manifest_sha256": "a5e387a7b4537f3fb1ec11292adeb087cddaf08a73ebe64d633ea3ff14c6ab4f",
+    "repository": "Systran/faster-whisper-small",
+    "revision": "536b0662742c02347bc0e980a01041f333bce120",
+    "model_sha256": "3e305921506d8872816023e4c273e75d2419fb89b24da97b4fe7bce14170d671",
+    "settings": {
+      "beam_size": 5,
+      "temperature": 0.0,
+      "condition_on_previous_text": false,
+      "vad_filter": false,
+      "word_timestamps": false,
+      "compute_type": "int8",
+      "cpu_threads": 1,
+      "num_workers": 1,
+      "per_clip_seconds": 90,
+      "normalization": "NFKC + lowercase; punctuation/symbols replaced by spaces; whitespace collapsed. CER excludes whitespace. Chinese reports CER only."
+    },
+    "language": "ar",
+    "runner_sha256": "d098ef4232cc983e3e551c317f37fb2563b9f17994582a7aadf93901875434f4"
+  },
+  "versions": {
+    "faster-whisper": "1.2.1",
+    "ctranslate2": "4.8.4",
+    "av": "16.0.1",
+    "tokenizers": "0.23.3"
+  },
+  "output_sha256": "848f848358e5b872b36ac8e7176c19a238d5e1e0f2212aff2a8cf4f4c6e24f33",
+  "finished_at": "2026-11-03T06:30:59.965439+00:00"
+}
