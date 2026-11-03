@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "started_at": "2026-11-03T08:43:40.996222+00:00",
+  "cgroup_limits": {
+    "cpu_max": "100000 100000",
+    "memory_max": 2147483648,
+    "pids_max": "256",
+    "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-tr-lifecycle-20261103t084316z-1353554.service"
+  },
+  "status": "failed",
+  "model_quality_gate": "BLOCKED",
+  "selection_sha256": "caf155b7d8b440132295416f7d0ebd210061add74672e39d7e929dffb60ae62a",
+  "results": [],
+  "checks": {},
+  "scope": "Whole-utterance real ASR/MT worker lifecycle through the room adapter. No TTS, LiveKit, first-audio latency or quality PASS.",
+  "error": {
+    "type": "ValueError",
+    "message": "Invalid WAV"
+  },
+  "completed_at": "2026-11-03T08:43:41.003984+00:00"
+}

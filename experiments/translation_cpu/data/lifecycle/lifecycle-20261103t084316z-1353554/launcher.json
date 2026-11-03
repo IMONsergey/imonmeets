@@ -1,0 +1,13 @@
+{
+  "run_id": "lifecycle-20261103t084316z-1353554",
+  "unit": "imonmeets-tr-lifecycle-20261103t084316z-1353554",
+  "exit_code": 1,
+  "completed_at": "2026-11-03T08:43:41.163478+00:00",
+  "runtime_max_seconds": 240,
+  "cpu_quota": "100%",
+  "memory_max_bytes": 2147483648,
+  "tasks_max": 256,
+  "kill_mode": "control-group",
+  "lock": "/home/sergey/.local/state/imonmeets-commercial-20261103/verify.lock",
+  "detached_regular_log": true
+}

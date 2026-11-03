@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "run_id": "lifecycle-20261103t085141z-1429281",
+  "started_at": "2026-11-03T08:51:41.747889+00:00",
+  "status": "control-checks-passed",
+  "source_base_commit": "ff685fbc9b9dcc3b39efe48dd21b9bb1b6e65c4d",
+  "expected_base": "ff685fbc9b9dcc3b39efe48dd21b9bb1b6e65c4d",
+  "preserved_raw_tree": "f292762cb5b2057215152366ae58aaf201172721",
+  "source_sha256": {
+    "streaming_adapter.py": "16dc6821bb4c836f7e966c6e44736425820845470b5c1244fce8e4898e52dc27",
+    "process_stage.py": "8898ee3a251f9f2b11b76eb9b7d7c46664d45f41a8108bfc52ba7f04664ddc40",
+    "real_engines.py": "915942a4fc8a3f7bbf25cb57b3dfa03848a5d6f50bc5b51fc9e131acf2e6c24f",
+    "tests/test_streaming_adapter.py": "b4e1cd9f9882bf581ff32b30cab897df8bf91732f4789d9115dd128810cb55e8",
+    "tests/test_process_stage.py": "ae2c92af366d2f76d17dab4d72b9a6e6613cccf0854f0251a306cbc9792668ad",
+    "tests/test_lifecycle_bounds.py": "ad1c9e175a70f5d8e01f25c5992c0202d0b3a57e7ebc0ec91821facc52d9fd1a",
+    "tests/test_worker_lifecycle.py": "08747a931c6b944cdef03933831e62a1507bf43bf90661b966fd407f68bbbd30",
+    "tools/run_adapter_lifecycle_smoke.py": "ebadc721850e3b1c1ec235fcc4d069ae29a9e413aa68c86ae5ce555a0c1918e3",
+    "tools/verify_lifecycle.py": "ea951cffa55c293daca2637c7dddb5431a74f758186815e110624dbb17b25bab"
+  },
+  "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-tr-lifecycle-20261103t085141z-1429281.service",
+  "observed_limits": {
+    "cpu.max": "100000 100000",
+    "memory.max": "2147483648",
+    "pids.max": "256"
+  },
+  "scope": "Experimental lifecycle/control verification; model quality and commercial voice gates remain blocked.",
+  "production_changes": false,
+  "model_downloads": false,
+  "tts": false,
+  "unit_tests": {
+    "run": 87,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "real_smoke_exit_code": 0,
+  "real_smoke_result_sha256": "3ae59fa622860f60fdb7de6822db21ed67a58cd01aa7b1de538eef15ab27cbcf",
+  "existing_raw_evidence_unchanged": true,
+  "source_unchanged_during_verification": true,
+  "completed_at": "2026-11-03T08:52:10.693172+00:00",
+  "memory.peak": "788766720",
+  "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "cpu.stat": "usage_usec 25574101\nuser_usec 21441940\nsystem_usec 4132161\ncore_sched.force_idle_usec 0\nnr_periods 274\nnr_throttled 38\nthrottled_usec 95182\nnr_bursts 0\nburst_usec 0",
+  "pids.peak": "19"
+}

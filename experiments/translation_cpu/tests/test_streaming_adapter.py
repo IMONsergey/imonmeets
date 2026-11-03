@@ -3,7 +3,43 @@ import sys
 import unittest
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from streaming_adapter import BackpressureError, StaleFrameError, TranslationStreamAdapter, UnknownTrackError
+from streaming_adapter import BackpressureError, StaleFrameError, TranslationStreamAdapter as BoundedAdapter, UnknownTrackError
+
+class TranslationStreamAdapter(BoundedAdapter):
+    """Port the original ten assertions to the explicit source-handle contract.
+
+    This trusted test source allocates monotonic sequences and fixed duration;
+    production has no identity-only submit path or compatibility fallback.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.handles = {}
+        self.source_sequences = {}
+        self.utterance_sequences = {}
+
+    def register_track(self, participant_id, track_id, source, target):
+        self.handles[participant_id, track_id] = super().register_track(
+            participant_id, track_id, source, target, session=self.session)
+
+    async def submit(self, participant_id, track_id, audio, **kwargs):
+        key = participant_id, track_id
+        utterance_id = kwargs.get("utterance_id")
+        utterance_key = (*key, utterance_id)
+        if utterance_id is not None and utterance_key in self.utterance_sequences:
+            sequence = self.utterance_sequences[utterance_key]
+        else:
+            sequence = self.source_sequences.get(key, 0) + 1
+            self.source_sequences[key] = sequence
+            if utterance_id is not None:
+                self.utterance_sequences[utterance_key] = sequence
+        return await super().submit(self.handles.get(key), audio, sequence=sequence,
+                                    duration_seconds=.1, **kwargs)
+
+    def cancel_track(self, participant_id, track_id):
+        return super().cancel_track(self.handles.get((participant_id, track_id)))
+
+    def mark_tts_playback(self, playback_id):
+        return super().mark_tts_playback(playback_id, session=self.session)
 
 class FakeEngines:
     def __init__(self):

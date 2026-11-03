@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "started_at": "2026-11-03T08:52:00.998842+00:00",
+  "cgroup_limits": {
+    "cpu_max": "100000 100000",
+    "memory_max": 2147483648,
+    "pids_max": "256",
+    "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-tr-lifecycle-20261103t085141z-1429281.service"
+  },
+  "status": "control-checks-passed",
+  "model_quality_gate": "BLOCKED",
+  "selection_sha256": "caf155b7d8b440132295416f7d0ebd210061add74672e39d7e929dffb60ae62a",
+  "results": [
+    {
+      "label": "before-cancel",
+      "sentence_id": 1661,
+      "direction": "en-ru",
+      "audio_sha256": "8a90dfd1aebb2b9c8315d8293c720223d7436079ace5299ad30a3ba552915081",
+      "audio_seconds": 6.36,
+      "actual_asr_text": "He did not set a figure for the cut saying they will be made based on China's economic output.",
+      "actual_mt_input": "He did not set a figure for the cut saying they will be made based on China's economic output.",
+      "translated_text": "Он не установил цифру для сокращения, сказав, что они будут сделаны на основе экономического производства Китая.",
+      "asr_worker": {
+        "text": "He did not set a figure for the cut saying they will be made based on China's economic output.",
+        "audio_duration_seconds": 6.36,
+        "language": "en",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 2.7084471059934003,
+        "worker_load_seconds": 1.5258044050133321
+      },
+      "mt_worker": {
+        "text": "Он не установил цифру для сокращения, сказав, что они будут сделаны на основе экономического производства Китая.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d",
+        "worker_inference_seconds": 0.474109820992453,
+        "worker_load_seconds": 0.4292581269983202
+      },
+      "whole_utterance_wall_seconds": 5.370605000993237,
+      "session_generation": 1,
+      "track_generation": 2,
+      "audio_output_bytes": 0,
+      "quality_status": "not-evaluated-in-lifecycle-test"
+    },
+    {
+      "label": "after-reconnect",
+      "sentence_id": 1661,
+      "direction": "en-ru",
+      "audio_sha256": "8a90dfd1aebb2b9c8315d8293c720223d7436079ace5299ad30a3ba552915081",
+      "audio_seconds": 6.36,
+      "actual_asr_text": "He did not set a figure for the cut saying they will be made based on China's economic output.",
+      "actual_mt_input": "He did not set a figure for the cut saying they will be made based on China's economic output.",
+      "translated_text": "Он не установил цифру для сокращения, сказав, что они будут сделаны на основе экономического производства Китая.",
+      "asr_worker": {
+        "text": "He did not set a figure for the cut saying they will be made based on China's economic output.",
+        "audio_duration_seconds": 6.36,
+        "language": "en",
+        "model_revision": "ebe41f70d5b6dfa9166e2c581c45c9c0cfc57b66",
+        "model_sha256": "d01c3014881c9c6f3133c182f3d2887eb6ca1c789a7538c5c007196857a0a6a9",
+        "worker_inference_seconds": 2.5941283340071095,
+        "worker_load_seconds": 0.8974821369920392
+      },
+      "mt_worker": {
+        "text": "Он не установил цифру для сокращения, сказав, что они будут сделаны на основе экономического производства Китая.",
+        "segments": 1,
+        "target_token": null,
+        "model_sha256": "a2a719b92a1d7664497bcc655534cfb7345dfa44e91774fb831f3eeaf07a1d3d",
+        "worker_inference_seconds": 0.4015961049881298,
+        "worker_load_seconds": 0.4292581269983202
+      },
+      "whole_utterance_wall_seconds": 4.041727753006853,
+      "session_generation": 3,
+      "track_generation": 4,
+      "audio_output_bytes": 0,
+      "quality_status": "not-evaluated-in-lifecycle-test"
+    }
+  ],
+  "checks": {
+    "track_leave": {
+      "worker_pid": 1431978,
+      "worker_reaped": true,
+      "active_and_queued_futures_cancelled": true,
+      "cancel_to_retired_seconds": 0.03630647899990436,
+      "native_entry_evidence": "Stage ownership and live warm worker observed; native inference entry not separately instrumented.",
+      "late_publications": 0,
+      "remaining_buffered_bytes": 0
+    },
+    "reconnect": {
+      "old_handle_rejected": true,
+      "stale_room_leave_ignored": true,
+      "fresh_handle_completed": true
+    },
+    "room_leave": {
+      "asr_and_mt_workers_reaped": true,
+      "adapter_stats": {
+        "queued": 0,
+        "active": 0,
+        "buffered_bytes": 0,
+        "buffered_audio_seconds": 0.0,
+        "revision_entries": 0,
+        "tracks": 0,
+        "playback_ids": 0,
+        "closed": true,
+        "connected": false,
+        "failure": null
+      },
+      "asr_stats": {
+        "pending": 0,
+        "pending_bytes": 0,
+        "active": 0,
+        "pid": null,
+        "closed": true,
+        "quarantined": false,
+        "cleanup_failure": null
+      },
+      "mt_stats": {
+        "pending": 0,
+        "pending_bytes": 0,
+        "active": 0,
+        "pid": null,
+        "closed": true,
+        "quarantined": false,
+        "cleanup_failure": null
+      }
+    }
+  },
+  "scope": "Whole-utterance real ASR/MT worker lifecycle through the room adapter. No TTS, LiveKit, first-audio latency or quality PASS.",
+  "completed_at": "2026-11-03T08:52:10.627382+00:00"
+}

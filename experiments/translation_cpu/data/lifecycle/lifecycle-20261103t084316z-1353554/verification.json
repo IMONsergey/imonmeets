@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "run_id": "lifecycle-20261103t084316z-1353554",
+  "started_at": "2026-11-03T08:43:20.970641+00:00",
+  "status": "failed",
+  "source_base_commit": "ff685fbc9b9dcc3b39efe48dd21b9bb1b6e65c4d",
+  "expected_base": "ff685fbc9b9dcc3b39efe48dd21b9bb1b6e65c4d",
+  "preserved_raw_tree": "f292762cb5b2057215152366ae58aaf201172721",
+  "source_sha256": {
+    "streaming_adapter.py": "5b6c6eecfbd4a49666acef8dd26b272b5ab21bbbd574a6f16f23d77529bdd4b8",
+    "process_stage.py": "0ea1c0b9ed223b2d7ddbb0b9ebd09eb00750b291b4b98afec0cda6b49bf94b68",
+    "real_engines.py": "915942a4fc8a3f7bbf25cb57b3dfa03848a5d6f50bc5b51fc9e131acf2e6c24f",
+    "tests/test_streaming_adapter.py": "b4e1cd9f9882bf581ff32b30cab897df8bf91732f4789d9115dd128810cb55e8",
+    "tests/test_process_stage.py": "ae2c92af366d2f76d17dab4d72b9a6e6613cccf0854f0251a306cbc9792668ad",
+    "tests/test_lifecycle_bounds.py": "abb996c087036270645d235b56582e0ecc24fc3fbe2f4e4eec3101ffe65b2e12",
+    "tests/test_worker_lifecycle.py": "8f9e89fcc93e2a5147111b494d8b5da1058e6ad3441a9ab300e3d162800855a9",
+    "tools/run_adapter_lifecycle_smoke.py": "2d3e0ed84981b5c88c5717c1b8f48b488b2f7a0fefcd0ba6167cce9c56c10e05",
+    "tools/verify_lifecycle.py": "ea951cffa55c293daca2637c7dddb5431a74f758186815e110624dbb17b25bab"
+  },
+  "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-tr-lifecycle-20261103t084316z-1353554.service",
+  "observed_limits": {
+    "cpu.max": "100000 100000",
+    "memory.max": "2147483648",
+    "pids.max": "256"
+  },
+  "scope": "Experimental lifecycle/control verification; model quality and commercial voice gates remain blocked.",
+  "production_changes": false,
+  "model_downloads": false,
+  "tts": false,
+  "unit_tests": {
+    "run": 83,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "real_smoke_exit_code": 1,
+  "error": {
+    "type": "RuntimeError",
+    "message": "Real adapter lifecycle smoke failed"
+  },
+  "completed_at": "2026-11-03T08:43:41.072093+00:00",
+  "memory.peak": "39272448",
+  "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "cpu.stat": "usage_usec 17013889\nuser_usec 15647918\nsystem_usec 1365971\ncore_sched.force_idle_usec 0\nnr_periods 188\nnr_throttled 7\nthrottled_usec 80827\nnr_bursts 0\nburst_usec 0",
+  "pids.peak": "3"
+}

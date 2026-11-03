@@ -14,7 +14,9 @@ class ASRProcessEngine:
         if not isinstance(audio,bytes) or len(audio)>3*1024*1024:raise ValueError('Audio byte cap')
         self.last_result=await self.stage.request({'audio_base64':base64.b64encode(audio).decode('ascii')})
         return self.last_result['text']
-    async def close(self):await self.stage.close()
+    async def close(self):
+        await self.stage.close()
+        self.last_result=None
 
 class MTProcessEngine:
     def __init__(self,python,source,target,*,timeout_seconds=45):
@@ -27,4 +29,6 @@ class MTProcessEngine:
         if not isinstance(text,str) or len(text)>8000:raise ValueError('Text character cap')
         self.last_result=await self.stage.request({'text':text})
         return self.last_result['text']
-    async def close(self):await self.stage.close()
+    async def close(self):
+        await self.stage.close()
+        self.last_result=None
