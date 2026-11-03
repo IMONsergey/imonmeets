@@ -2,11 +2,30 @@
 // Run on a second machine against a disposable, guest-enabled room.
 // No credentials, signaling payloads, screenshots or traces are retained.
 import { chromium, expect } from "@playwright/test";
+import {
+  parseTurnTlsEndpoint,
+  installMediaProbe,
+  collectMediaStats,
+  collectSafeMediaDiagnostic,
+  mediaProofIsValid,
+} from "./external-media-policy.mjs";
 
 const roomURL = process.env.MEDIA_TEST_ROOM_URL;
-if (!roomURL || new URL(roomURL).protocol !== "https:") {
+let parsedRoomURL;
+try {
+  parsedRoomURL = new URL(roomURL);
+} catch {
+  // Do not print a malformed invitation URL in an exception.
+}
+if (
+  !parsedRoomURL ||
+  parsedRoomURL.protocol !== "https:" ||
+  parsedRoomURL.username ||
+  parsedRoomURL.password
+) {
   throw new Error("Set MEDIA_TEST_ROOM_URL to a disposable HTTPS guest room");
 }
+const turn = parseTurnTlsEndpoint(process.env.MEDIA_TEST_TURN_TLS_URL);
 const browser = await chromium.launch({
   executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH,
   headless: true,
@@ -20,6 +39,7 @@ try {
   for (const relayOnly of [false, true]) {
     const contexts = [];
     const pages = [];
+    let stage = "connection-setup";
     try {
       for (let index = 0; index < 2; index++) {
         const context = await browser.newContext({
@@ -27,40 +47,10 @@ try {
           viewport: { width: 1366, height: 900 },
         });
         contexts.push(context);
-        await context.addInitScript(
-          ({ relayOnly }) => {
-            window.__imonRTCPeers = [];
-            const Native = window.RTCPeerConnection;
-            const configure = (source = {}) => {
-              if (!relayOnly) return source;
-              return {
-                ...source,
-                iceTransportPolicy: "relay",
-                iceServers: (source.iceServers || []).flatMap((server) => {
-                  const urls = (
-                    Array.isArray(server.urls) ? server.urls : [server.urls]
-                  ).filter(
-                    (url) =>
-                      typeof url === "string" &&
-                      /^turns:.*:5349(?:\?|$)/.test(url),
-                  );
-                  return urls.length ? [{ ...server, urls }] : [];
-                }),
-              };
-            };
-            window.RTCPeerConnection = new Proxy(Native, {
-              construct(Target, args) {
-                const peer = new Target(configure(args[0]));
-                const setConfiguration = peer.setConfiguration.bind(peer);
-                peer.setConfiguration = (next) =>
-                  setConfiguration(configure(next));
-                window.__imonRTCPeers.push(peer);
-                return peer;
-              },
-            });
-          },
-          { relayOnly },
-        );
+        await context.addInitScript(installMediaProbe, {
+          relayOnly,
+          allowedTurnUrls: turn.allowedTurnUrls,
+        });
         const page = await context.newPage();
         pages.push(page);
         await page.goto(roomURL, {
@@ -77,6 +67,7 @@ try {
           })
           .click();
       }
+      stage = "participants-and-video";
       for (const page of pages) {
         await expect(page.locator(".lk-participant-tile")).toHaveCount(2, {
           timeout: 40_000,
@@ -99,6 +90,7 @@ try {
           )
           .toBe(2);
       }
+      stage = "chat-delivery";
       await pages[0]
         .getByRole("button", { name: "Чат встречи", exact: true })
         .click();
@@ -116,105 +108,52 @@ try {
           .getByRole("log", { name: "Сообщения встречи" })
           .getByText("Проверка доставки между участниками", { exact: true }),
       ).toBeVisible();
+      stage = "selected-media-route";
       const stats = [];
       for (const page of pages) {
         const collect = () =>
-          page.evaluate(async () => {
-            const output = {
-              audioBytes: 0,
-              videoFrames: 0,
-              pairs: [],
-              policies: [],
-            };
-            for (const peer of window.__imonRTCPeers) {
-              if (peer.connectionState !== "connected") continue;
-              output.policies.push(peer.getConfiguration().iceTransportPolicy);
-              const reports = await peer.getStats();
-              reports.forEach((report) => {
-                if (report.type === "inbound-rtp" && report.kind === "audio")
-                  output.audioBytes += report.bytesReceived || 0;
-                if (report.type === "inbound-rtp" && report.kind === "video")
-                  output.videoFrames += report.framesDecoded || 0;
-                if (
-                  report.type !== "transport" ||
-                  !report.selectedCandidatePairId
-                )
-                  return;
-                const pair = reports.get(report.selectedCandidatePairId);
-                const local = reports.get(pair?.localCandidateId);
-                const remote = reports.get(pair?.remoteCandidateId);
-                output.pairs.push({
-                  localType: local?.candidateType,
-                  relayProtocol: local?.relayProtocol,
-                  relayServer: local?.url,
-                  remoteProtocol: remote?.protocol,
-                  remotePort: remote?.port,
-                  bytesSent: pair?.bytesSent,
-                  bytesReceived: pair?.bytesReceived,
-                });
-              });
-            }
-            return output;
+          page.evaluate(collectMediaStats, {
+            allowedTurnUrls: turn.allowedTurnUrls,
           });
         await expect
-          .poll(
-            async () => {
-              const current = await collect();
-              return (
-                current.audioBytes > 0 &&
-                current.videoFrames > 0 &&
-                current.pairs.length > 0
-              );
-            },
-            { timeout: 20_000 },
-          )
+          .poll(async () => mediaProofIsValid(await collect(), relayOnly), {
+            timeout: 20_000,
+          })
           .toBe(true);
         const current = await collect();
-        if (relayOnly) {
-          expect(current.policies.every((policy) => policy === "relay")).toBe(
-            true,
-          );
-          // Chrome may label the nominated address as peer-reflexive after a
-          // relay route is established. Require relay-only policy AND the
-          // selected candidate's relay transport, not a host/prflx shortcut.
-          expect(
-            current.pairs.every(
-              (pair) =>
-                ["relay", "prflx"].includes(pair.localType) &&
-                ["tls", "tcp"].includes(pair.relayProtocol) &&
-                /^turns:.*:5349(?:\?|$)/.test(pair.relayServer || ""),
-            ),
-          ).toBe(true);
-        }
+        // Check the retained sample too: a passing poll must not mask a route
+        // change or disconnect immediately before evidence is collected.
+        expect(mediaProofIsValid(current, relayOnly)).toBe(true);
         stats.push(current);
       }
       results.push({
-        mode: relayOnly ? "TURN TLS 5349 only" : "normal ICE",
+        mode: relayOnly ? `TURN TLS ${turn.port} only` : "normal ICE",
+        expectedTurnTlsPort: turn.port,
         participants: 2,
         chatDelivered: true,
         stats,
       });
       console.log(JSON.stringify(results.at(-1)));
-    } catch (error) {
+    } catch {
       for (const page of pages) {
+        let diagnostic;
+        try {
+          diagnostic = await page.evaluate(collectSafeMediaDiagnostic);
+        } catch {
+          diagnostic = { available: false };
+        }
         console.log(
           JSON.stringify({
             mode: relayOnly ? "relay" : "normal",
-            diagnostic: await page.evaluate(() => ({
-              screen: document.body.innerText.slice(0, 1400),
-              peers: (window.__imonRTCPeers || []).map((peer) => ({
-                connection: peer.connectionState,
-                ice: peer.iceConnectionState,
-                gathering: peer.iceGatheringState,
-                iceServers: (peer.getConfiguration().iceServers || []).map(
-                  (server) => server.urls,
-                ),
-              })),
-            })),
+            stage,
+            diagnostic,
           }),
         );
       }
-      throw error;
+      // Raw Playwright errors can contain invitation URLs and page text.
+      throw new Error(
+        `External media proof failed at ${stage} (${relayOnly ? "relay" : "normal"}); see bounded connection diagnostics`,
+      );
     } finally {
       await Promise.allSettled(contexts.map((context) => context.close()));
     }
