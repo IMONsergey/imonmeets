@@ -273,6 +273,7 @@ const receipt = {
   schema: 1,
   runId,
   result: "RUNNING",
+  waitingCancellationAccepted: false,
   startedAt: new Date().toISOString(),
   checks: [],
   limits: {
@@ -1464,6 +1465,65 @@ try {
   passed(
     "ban blocks known browser grant; fresh anonymous browser requires admission; innocent peer stays connected",
   );
+  // Use this existing waiting guest to exercise cancellation through the real
+  // protected ingress and SFU. No extra infrastructure or real device is used.
+  const cancellationCookie = cookieOf(freshGuest);
+  const allowedWaiting = await api(
+    "/api/workspaces/" +
+      wid +
+      "/rooms/" +
+      room.id +
+      "/waiting/" +
+      freshGuest.json.requestId,
+    { method: "PATCH", cookie: ownerCookie, body: { decision: "admitted" } },
+  );
+  assert.equal(allowedWaiting.status, 200, cleanText(allowedWaiting.text));
+  const waitingJoin = await api("/api/rooms/" + room.slug + "/join", {
+    method: "POST",
+    cookie: cancellationCookie,
+    body: {
+      name: "Synthetic cancellation participant",
+      waitingToken: freshGuest.json.waitingToken,
+    },
+  });
+  assert.equal(waitingJoin.status, 200, cleanText(waitingJoin.text));
+  assert.equal(waitingJoin.json.status, "joined");
+  await page.evaluate(
+    ({ token }) => window.runtimeConnect("cancelled", token, false),
+    { token: waitingJoin.json.token },
+  );
+  assert.equal(
+    await page.evaluate(() => window.runtimePeers.cancelled.state),
+    "connected",
+  );
+  assert.equal(
+    await page.evaluate(() => window.runtimePeers.a.state),
+    "connected",
+  );
+  const cancelledWaiting = await api("/api/rooms/" + room.slug + "/waiting", {
+    method: "DELETE",
+    cookie: cancellationCookie,
+    body: { waitingToken: freshGuest.json.waitingToken },
+  });
+  assert.equal(cancelledWaiting.status, 200, cleanText(cancelledWaiting.text));
+  await page.waitForFunction(
+    () => window.runtimePeers.cancelled.state === "disconnected",
+    undefined,
+    { timeout: 15000 },
+  );
+  assert.equal(
+    await page.evaluate(() => window.runtimePeers.a.state),
+    "connected",
+  );
+  passed(
+    "waiting cancellation disconnects its exact real participant while the innocent peer stays connected",
+  );
+  await denied(waitingJoin.json.token, "cancelled waiting grant original JWT");
+  await denied(
+    await signed(waitingJoin.json.identity, waitingJoin.json.roomName),
+    "freshly signed JWT for cancelled waiting identity",
+  );
+  receipt.waitingCancellationAccepted = true;
   const rotated = await api(
     "/api/workspaces/" + wid + "/rooms/" + room.id + "/rotate-link",
     { method: "POST", cookie: ownerCookie, body: {} },
@@ -1519,6 +1579,7 @@ try {
   assert.equal(receipt.mediaAccepted, true);
   assert.equal(receipt.audioAccepted, true);
   assert.equal(receipt.videoAccepted, true);
+  assert.equal(receipt.waitingCancellationAccepted, true);
   receipt.result = "PASS_MEDIA_AND_SIGNALING";
 } catch (error) {
   receipt.result = "FAIL";
