@@ -39,9 +39,24 @@ Existing Mac GitHub authentication was sufficient. No new deploy key or broader 
 
 Main and production were not advanced. The translated-text branch is preserved separately and remains experimental.
 
+### Additional isolated candidates
+
+These later candidates remain on separate branches and are not integrated into release/resumed-20261103 or deployed:
+
+| Branch | Commit | Focused evidence |
+| --- | --- | --- |
+| fix/google-oauth-scope-guard-20261103 | 34beb48afdc80d369d0242371e0cb2505c186cf5 | 6 pure Google scope-guard tests passed |
+| feature/edge-vps-ingress-20261103 | f5eb135d30c650b6a32c39a9d4c8bf124ec9ce19 | 17 pure edge-generator tests passed; runtime pending |
+
+The primary agent independently repeated all 6 Google guard tests and all 17 edge tests successfully. These checks do not replace application-image, provider-handler or real-network acceptance. The focused Google handler/provider job 20261103T124406-02299fe759 remains pending in the normal imon-job queue.
+
+The edge candidate prepares an external HAProxy on the already-paid VPS address, with original TLS streams forwarded through explicitly declared closed-tunnel endpoints to nginx and coturn on the primary host, plus a separate local witness TLS backend. It does not create the tunnel, select actual tunnel addresses, provide HTTP/ACME bootstrap, change DNS or start services. Real HAProxy/TLS routing, tunnel confinement and failure behavior, resource capacity and external TURN/media remain pending. Desktop Commander rejected a read-only Docker metadata command; runtime validation remains pending. The candidate does not establish that public port 443 is operational.
+
 ## Purchased witness VPS
 
-The SKRIME account contains an active EPYC KVM Server 1G purchased on 3 November, quoted at EUR 1.49/month and expiring 3 December. The additional IPv4 on the primary server is still not ordered. The purchase was verified in the account; this resumed work did not place another order.
+The SKRIME account contains an active EPYC KVM Server 1G purchased on 3 November, quoted at EUR 1.49/month and expiring 3 December. Its own public IPv4 is 94.249.188.77. The transaction view contained exactly five rows; the EUR 1.49 debit on 3 November was a KVM Server Bestellung for this small VPS. No separate additional-IPv4 purchase was present.
+
+The provider network table and the primary host's actual interfaces/routes each confirm one public IPv4 on the primary server: 94.249.186.240. The purchased VPS address is separate from that primary-server address. No new purchase was made. Evaluate the prepared edge alternative on the already-paid 94.249.188.77 before considering another IPv4 order; that alternative has not yet been accepted on a real network.
 
 The new VPS was accessed using its existing provider-issued credential. No password was reset and no permanent SSH key was added. The temporary SSH control socket and helper on the Mac were removed after staging. The VPS remains STAGED_NOT_ENROLLED.
 
@@ -95,6 +110,14 @@ The latest ordinary scheduled cycle after the helper update was checked at 2026-
 - automatic:true
 - recordingSyncOk:true
 
+## Google OAuth setup
+
+The user approved Google's policy acceptance. Create branding completed, followed by successful creation of the OAuth web client named IMON Meets Web. Its configured JavaScript origin is https://meets.imon.world and its redirect URI is https://meets.imon.world/api/auth/callback/google.
+
+Transfer of the client's secret into the private Meets configuration has not been completed. Downloading the credential JSON could not be confirmed: the browser tool timed out during the download action, then Chrome disconnected. Two metadata-only inspections of recent files in the standard Downloads location found no matching new credential JSON. This does not establish that the browser downloaded nothing elsewhere. No client identifier or secret is recorded in this checkpoint.
+
+Client creation and policy acceptance do not enable production Google sign-in. Credential custody, the queued handler/provider checks and a controlled login against the final HTTPS origin remain incomplete.
+
 ## Live service and remaining commissioning gates
 
 Fresh /api/health and /api/config responses returned HTTP 200 with database, media and recording configured. Registration, Google OAuth, billing, transcription and summary remain disabled. Existing external Resend configuration is present.
@@ -103,11 +126,11 @@ REG.RU access was restored and the actual imon.world zone was inspected read-onl
 
 Next steps, in order:
 
-1. Complete the priced primary-server IPv4 decision and domain/DNS work for the already-tested public-ingress topology. Do not confuse the purchased witness VPS with a second address on the primary server. Reusing the new VPS as a different ingress topology would require a separately reviewed inter-server design.
+1. Evaluate and runtime-validate the isolated edge candidate using the already-paid VPS IPv4 94.249.188.77 before considering any additional IPv4 purchase. Review actual tunnel addresses/routes, confinement and failure behavior, main-side TLS endpoints, witness co-location limits and the missing HTTP/ACME design. Preserve the primary server address, default route and VPN. Complete the applicable DNS/TLS work only after that review; the candidate alone does not resolve the public 443 blocker.
 2. Establish the witness's intended DNS/TLS endpoint and approved durable authority/key custody. Preserve existing application credentials. Enroll only an actually reviewed writer-fenced legacy baseline; never use the earlier draft's hash as approval.
 3. Render the complete candidate Compose configuration including the existing private runtime overlay and use the new static preflight before changing services.
 4. Perform the controlled migration/deployment and actual independent witness/recovery acceptance. The old 9bb2dab image cannot resume write-capable operation after deletion-authority enrollment.
-5. Complete Google policy/OAuth setup using the canonical final origin. Do not claim that creating the Google project alone completed login.
+5. Complete the existing OAuth client credential transfer into private Meets configuration, finish the queued handler/provider verification and verify a controlled Google login against the canonical final HTTPS origin and callback. Policy acceptance and client creation are already complete; production Google sign-in remains disabled.
 6. Run the updated external TURN443 audio/video/chat proof only in an authorized disposable room, followed by actual constrained-network/device checks.
 7. Complete the still-missing long RoomComposite/S3 recording acceptance. Short WebEgress and padded 512 MiB crypto receipts do not prove 30 minutes of recording.
 8. Resolve the remaining commercial identity/payment/legal and translation-quality/voice gates before enabling those features.
