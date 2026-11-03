@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "runId": "nov03runtimeac172364",
+  "result": "PASS_SIGNALING_ONLY",
+  "startedAt": "2026-11-03T07:09:03.833Z",
+  "checks": [
+    "exact local LiveKit 1.13.11 image; no pull",
+    "real API, nginx auth_request and pinned HAProxy SNI path; owned loopback ports only",
+    "real protected LiveKit validation accepts the persisted API grant",
+    "two real legacy signaling participants present in LiveKit; media explicitly unaccepted",
+    "real /rtc/v1 WebSocket receives LiveKit server signaling frames",
+    "real LiveKit accepts /rtc/validate",
+    "real LiveKit accepts /rtc/v1/validate",
+    "real legacy /rtc WebSocket upgrade and server join response",
+    "public internal authorization and management paths remain blocked",
+    "targeted kick disconnects only the selected real participant",
+    "kicked original JWT: all four signal paths reject, actual SDK reconnect rejects",
+    "freshly signed JWT for kicked identity: all four signal paths reject, actual SDK reconnect rejects",
+    "kick permits a new authorized API grant with a new identity",
+    "banned original JWT: all four signal paths reject, actual SDK reconnect rejects",
+    "ban blocks known browser grant; fresh anonymous browser requires admission; innocent peer stays connected",
+    "original JWT after room generation rotation: all four signal paths reject, actual SDK reconnect rejects",
+    "freshly signed JWT with old identity for new generation: all four signal paths reject, actual SDK reconnect rejects",
+    "fresh API grant joins the new room generation after rotation",
+    "admission API outage fails closed on all four real ingress paths"
+  ],
+  "limits": {
+    "verifierCpu": 1,
+    "verifierMemoryMiB": 2048,
+    "verifierTasks": 256,
+    "livekitCpu": 0.5,
+    "livekitMemoryMiB": 256,
+    "haproxyCpu": 0.1,
+    "haproxyMemoryMiB": 64
+  },
+  "scope": "isolated loopback signaling and admission only; WebRTC video attempted but NOT ACCEPTED; no real devices, mail, payments, TURN or production traffic",
+  "nodeVersion": "v24.21.0",
+  "coreCommit": "2a6c4ac7913e2f9509d39331c954771f91c8a183",
+  "generatorSha256": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+  "haproxyImage": "haproxy:3.0-alpine@sha256:f06f6cc1c25c7071e62d955d8e67a33d6935066ced8fac496cdd0ad9ffdd17f3",
+  "livekitImage": "sha256:25cd902de7cacbd5f1f779f6a6ac1eae20ba8f56b0935934ce6b0ab80d1e3d20",
+  "livekitVersion": "livekit-server version 1.13.11",
+  "serverBindings": [
+    {
+      "containerPort": "40652/udp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "40652"
+    },
+    {
+      "containerPort": "42285/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "42285"
+    },
+    {
+      "containerPort": "7880/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "43223"
+    }
+  ],
+  "legacyValidationPreflight": {
+    "status": 200,
+    "body": "success"
+  },
+  "browserTransport": [
+    {
+      "type": "websocket-error",
+      "message": "Error during WebSocket handshake: Unexpected response code: 403"
+    },
+    {
+      "type": "failed",
+      "host": "rtc.imon-runtime.test",
+      "path": "/rtc/v1/validate",
+      "reason": "net::ERR_FAILED"
+    },
+    {
+      "type": "websocket-error",
+      "message": "Error during WebSocket handshake: Unexpected response code: 403"
+    },
+    {
+      "type": "failed",
+      "host": "rtc.imon-runtime.test",
+      "path": "/rtc/v1/validate",
+      "reason": "net::ERR_FAILED"
+    },
+    {
+      "type": "websocket-error",
+      "message": "Error during WebSocket handshake: Unexpected response code: 403"
+    },
+    {
+      "type": "failed",
+      "host": "rtc.imon-runtime.test",
+      "path": "/rtc/v1/validate",
+      "reason": "net::ERR_FAILED"
+    },
+    {
+      "type": "websocket-error",
+      "message": "Error during WebSocket handshake: Unexpected response code: 403"
+    },
+    {
+      "type": "failed",
+      "host": "rtc.imon-runtime.test",
+      "path": "/rtc/v1/validate",
+      "reason": "net::ERR_FAILED"
+    },
+    {
+      "type": "websocket-error",
+      "message": "Error during WebSocket handshake: Unexpected response code: 403"
+    },
+    {
+      "type": "failed",
+      "host": "rtc.imon-runtime.test",
+      "path": "/rtc/v1/validate",
+      "reason": "net::ERR_FAILED"
+    }
+  ],
+  "signalFrames": {
+    "/rtc/v1": 14,
+    "/rtc": 28
+  },
+  "mediaAccepted": false,
+  "mediaFailure": "page.evaluate: ConnectionError: could not establish pc connection\n    at Zo.internal (<anonymous>:1:153605)\n    at <anonymous>:1:295218",
+  "media": [],
+  "cleanupVerified": true,
+  "completedAt": "2026-11-03T07:09:30.251Z",
+  "outerCleanupVerified": true
+}
