@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "checkedAt": "2026-11-03T13:03:53.035341+00:00",
+  "status": "PASS_FOCUSED_STATIC_CANDIDATE_NOT_DEPLOYED",
+  "branch": "feature/edge-vps-ingress-20261103",
+  "baseCommit": "b780f59824bed2f828e7a75e4b314072e48bdb8e",
+  "candidateScope": "Separate TLS-only VPS HAProxy generator, standalone Compose candidate and runbook",
+  "testExecution": {
+    "environment": "isolated scratch host",
+    "nodeVersion": "v24.22.1",
+    "command": "node --test --test-reporter=tap scripts/test-edge-vps-ingress.mjs",
+    "tests": 17,
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "tcpListenersOpened": false,
+    "networkRequests": false,
+    "sharedServerHeavyJobsStarted": 0
+  },
+  "tddEvidence": {
+    "initialStub": {
+      "tests": 16,
+      "passed": 1,
+      "failed": 15,
+      "exitCode": 1
+    },
+    "reviewRegressions": {
+      "tests": 17,
+      "passed": 15,
+      "failed": 2,
+      "exitCode": 1
+    },
+    "reviewFindingsFixed": [
+      "Reject non-ASCII before case normalization, including Kelvin-sign origins",
+      "Explicit startup UID/GID for root-owned 0600 configuration"
+    ],
+    "finalSourceBytes": "Formatted on isolated server worktree, copied back and tested byte-for-byte"
+  },
+  "staticCompose": {
+    "status": "PASS_STATIC_YAML_ONLY",
+    "parser": "PyYAML 6.0.3",
+    "services": ["edge-ingress443"],
+    "started": false,
+    "composeCliValidated": false
+  },
+  "independentReview": "Read-only review confirmed fixes, transport/source/proxy scope and documented limitations; no runtime evidence",
+  "sourceFilesSha256": {
+    "scripts/prepare-edge-vps-ingress.mjs": "8668b841bd9a2dcde7b8509494b9d7e1ffe60429e9486a35624c8b311fc91828",
+    "scripts/test-edge-vps-ingress.mjs": "8a61f6e7e84f4b3b8d249b1858e0d948afd2861f3e6751833300328750c7bd66",
+    "compose.edge-vps-ingress.yml": "8d079590bb2bf7f2f1fc0abea0396f5135d036efd56f00c94ac7c93928c0ce12",
+    "docs/edge-vps-ingress.md": "700a3243e0aa36028f9f7d643fd38e2dadc865f10a73bbdf8ec12bcb7224ad7a"
+  },
+  "unchangedOriginalFilesSha256": {
+    "scripts/prepare-ingress443.mjs": "9999b614d95e81662613a738163fb1fe0168b951c2ac5cc9eb537edd759bc866",
+    "compose.ingress443.yml": "67339f6a051810c5977c394a3e60481eefeac939236e2e8b3b25ddc3c1021f62"
+  },
+  "evidenceSha256": {
+    "red.log": "72e8bd1523bbcfa876691748b3a0e9e4fb367481e63884bcb1188bce883f726d",
+    "red-review.log": "0c52dd84c8c23f2294bd762d13d2c6e7c4143f16d3fc97e564212ba3a2453fa1",
+    "green-final.log": "bf6a460e1bc71e727ca7ee63e4639d243e63af08ebab213d5b7d7dba46b5306f",
+    "compose-static.json": "7222182d4e42deb7bd3c673d1903c9ce7f12ef79b15164265c7f2e3c948b0fa1"
+  },
+  "privateEvidenceDirectory": "/home/sergey/.local/state/imonmeets-edge-vps-20261103",
+  "runtimeChecks": {
+    "pinnedHaproxySyntax": "PENDING_NOT_RUN",
+    "composeCliAndContainerStartup": "PENDING_NOT_RUN",
+    "realTlsAndProxyProtocolRouting": "PENDING_NOT_RUN",
+    "tunnelAddressSelectionAndConfinement": "PENDING_NOT_RUN",
+    "tunnelLossNoFallback": "PENDING_NOT_RUN",
+    "mainClientIpSignalingAndSignedRecordings": "PENDING_NOT_RUN",
+    "httpAcmeAndCertificateRenewal": "OUT_OF_SCOPE_PENDING",
+    "dnsCutover": "PENDING_NOT_RUN",
+    "witnessTlsEnrollmentAndRecovery": "PENDING_NOT_RUN",
+    "externalTurnMediaAndResourceCapacity": "PENDING_NOT_RUN"
+  },
+  "limitations": [
+    "Private addresses and source binding do not establish authenticated transport or tunnel-only routing.",
+    "The static routing oracle is not a HAProxy parser or a real ClientHello acceptance test.",
+    "No actual tunnel IPs or tunnel technology have been selected for these hosts.",
+    "Only the edge generator is prepared; main-side tunnel endpoints and witness TLS wrapper are operator prerequisites.",
+    "Witness and ingress share a host failure/compromise domain; the VPS remains STAGED_NOT_ENROLLED.",
+    "Existing single-host acceptance is not two-host runtime acceptance."
+  ],
+  "productionChanges": false,
+  "deployed": false,
+  "public443Accepted": false,
+  "tunnelsConfigured": false,
+  "keysCreated": false,
+  "dnsChanged": false,
+  "servicesStarted": false,
+  "witnessEnrolled": false,
+  "purchasesMade": false
+}
