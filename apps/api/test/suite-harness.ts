@@ -33,6 +33,7 @@ export function responseCookie(r: LightMyRequestResponse, previous = "") {
 export async function harness(
   env: Record<string, string> = {},
   paymentRequest?: typeof fetch,
+  sendMail?: (to: string, subject: string, text: string) => Promise<void>,
 ) {
   const admin = new Pool({ connectionString: process.env.TEST_DATABASE_URL }),
     ns = `im_suite_${randomUUID().replaceAll("-", "")}`;
@@ -71,6 +72,7 @@ export async function harness(
     media,
     logger: false,
     paymentRequest,
+    sendMail,
   });
   async function request(
     method: "GET" | "POST" | "PATCH" | "DELETE",

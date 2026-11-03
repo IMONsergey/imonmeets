@@ -21,7 +21,7 @@ Use an existing private application environment and the installed repository/run
 1. Run `node scripts/reconcile-mail.mjs --list`. This reads at most 50 unresolved rows, without recipients or message contents.
 2. Review the provider's delivery event/log against the exact logical message and time. Record evidence privately and calculate its SHA-256. A missing log is not proof that a message was unsent. For accepted/delivery events, identify the provider's exact message ID. For an unresolvable outcome choose `abandoned`.
 3. Prepare a private JSON file with `idempotencyKey`, `expectedVersion`, `action`, `operatorId`, `evidenceSha256`, and optionally `providerId` (required for acceptance unless already recorded). Allowed actions are `accepted`, `abandoned`, `delivered`, `bounced`, `complained`.
-4. Run `node scripts/reconcile-mail.mjs --apply --file /private/reconciliation.json`. Active sends, stale versions, identifier mismatches, repeated/backward delivery transitions and invalid inputs are rejected. Each successful transition appends immutable reconciliation evidence and increments the ledger version in the same transaction.
+4. Run `node scripts/reconcile-mail.mjs --apply --file /private/reconciliation.json`. Active sends, stale versions, identifier mismatches, repeated/backward delivery transitions and invalid inputs are rejected. Each successful transition appends an audit row with reconciliation evidence and increments the ledger version in the same transaction.
 
 There is no public reconciliation endpoint and no `retry`, `reset`, or delete-ledger operation. Provider webhook automation is not implied by this manual operator workflow.
 
@@ -35,3 +35,8 @@ Isolated PostgreSQL schema per test on the disposable local test container; no p
 
 - Before the fix: three focused tests failed for the expected MAIL-01 defects (unknown-recipient request budget, missing transport budget, concurrent last-slot race).
 - After the fix: 19 mail unit/integration tests passed, including real PostgreSQL concurrency/restart, SMTP acceptance/uncertainty, anti-enumeration on exhausted quota, CAS reconciliation, active-lease refusal, replay prevention and no secret/body leakage.
+
+
+Public authentication mail now uses Better Auth's supported background task handler. Recovery HTTP responses do not wait for the provider. Tasks are tracked and drained for up to 25 seconds on graceful shutdown; configure the API container with at least a 35-second stop grace period. This is not a durable outbox: a crash before the attempt is reserved can lose that request, and an interrupted provider attempt remains unresolved and must not be automatically replayed. A user may request a fresh recovery link within the normal limits.
+
+Final combined identity/mail regression: 35 API tests passed, including a held mock provider proving that recovery returns before provider completion and shutdown retains the pending task. No real mail was sent.

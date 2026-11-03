@@ -12,6 +12,7 @@ import type { User } from "../api";
 import { Button, ErrorBox, Field, Modal } from "../ui";
 import type { Session } from "../ui";
 import { downloadPrivateFile } from "./DataSettings";
+import { PasswordGate } from "./PasswordGate";
 
 export function AuthenticatorSettings({
   user,
@@ -218,135 +219,44 @@ export function AuthenticatorSettings({
           >
             <p className="modal-intro">
               {action === "disable"
-                ? "Для входа останется только пароль. Подтвердите изменение текущим паролем."
+                ? "Второй фактор перестанет запрашиваться при входе с паролем и через Google. Подтвердите изменение паролем IMON Meets."
                 : action === "codes"
                   ? "Создание новых резервных кодов отменит все предыдущие. Каждый код можно использовать один раз."
                   : "Добавьте IMON Meets в приложение-аутентификатор и подтвердите настройку шестизначным кодом."}
             </p>
             <ErrorBox error={error} focus />
-            {!setup ? (
-              <form
-                onSubmit={async (event) => {
-                  event.preventDefault();
-                  if (busy) return;
-                  setBusy(true);
-                  setError("");
-                  const password = new FormData(event.currentTarget).get(
-                    "password",
-                  );
-                  try {
-                    if (action === "disable") {
-                      await api("/auth/two-factor/disable", { password });
-                      await refresh();
-                      setAction(undefined);
-                      notify("Второй фактор отключен");
-                    } else if (action === "codes") {
-                      const data = await api<{ backupCodes: string[] }>(
-                        "/auth/two-factor/generate-backup-codes",
-                        { password },
-                      );
-                      setSetup(data);
-                      setVerified(true);
-                    } else {
-                      setSetup(
-                        await api<{ totpURI: string; backupCodes: string[] }>(
-                          "/auth/two-factor/enable",
-                          { password, method: "totp" },
-                        ),
-                      );
-                    }
-                  } catch (e) {
-                    setError((e as Error).message);
-                  } finally {
-                    setBusy(false);
-                  }
-                }}
-              >
-                <Field label="Текущий пароль">
-                  <input
-                    type="password"
-                    name="password"
-                    required
-                    autoComplete="current-password"
-                  />
-                </Field>
-                <div className="modal-actions">
-                  <Button type="button" disabled={busy} onClick={close}>
-                    Отмена
-                  </Button>
-                  <Button
-                    type="submit"
-                    className={action === "disable" ? "danger" : "primary"}
-                    busy={busy}
-                  >
-                    {action === "disable"
-                      ? "Отключить"
-                      : action === "codes"
-                        ? "Создать новые коды"
-                        : "Продолжить"}
-                  </Button>
-                </div>
-              </form>
-            ) : !verified ? (
-              <>
-                <div className="mfa-qr">
-                  <canvas
-                    ref={canvas}
-                    aria-label="QR-код для настройки приложения-аутентификатора"
-                    role="img"
-                  />
-                </div>
-                {qrError && (
-                  <p className="form-note">
-                    Не удалось показать QR-код. Добавьте аккаунт вручную с
-                    помощью ключа ниже.
-                  </p>
-                )}
-                <Field
-                  label="Ключ для ручного ввода"
-                  hint="В приложении выберите код на основе времени (TOTP)."
-                >
-                  <div className="copy-field">
-                    <input
-                      value={manualSecret}
-                      readOnly
-                      autoComplete="off"
-                      spellCheck={false}
-                    />
-                    <Button
-                      type="button"
-                      aria-label="Скопировать ключ настройки"
-                      onClick={async () => {
-                        try {
-                          await navigator.clipboard.writeText(manualSecret);
-                          notify("Ключ скопирован");
-                        } catch {
-                          setError("Выделите ключ и скопируйте вручную.");
-                        }
-                      }}
-                    >
-                      <Copy size={17} />
-                    </Button>
-                  </div>
-                </Field>
-                <p className="form-note">
-                  QR-код создается в вашем браузере. Не передавайте этот ключ
-                  другим людям.
-                </p>
+            <PasswordGate>
+              {!setup ? (
                 <form
                   onSubmit={async (event) => {
                     event.preventDefault();
                     if (busy) return;
                     setBusy(true);
                     setError("");
+                    const password = new FormData(event.currentTarget).get(
+                      "password",
+                    );
                     try {
-                      await api("/auth/two-factor/verify-totp", {
-                        code: new FormData(event.currentTarget).get("code"),
-                        trustDevice: false,
-                      });
-                      await refresh();
-                      setVerified(true);
-                      notify("Двухфакторная аутентификация включена");
+                      if (action === "disable") {
+                        await api("/auth/two-factor/disable", { password });
+                        await refresh();
+                        setAction(undefined);
+                        notify("Второй фактор отключен");
+                      } else if (action === "codes") {
+                        const data = await api<{ backupCodes: string[] }>(
+                          "/auth/two-factor/generate-backup-codes",
+                          { password },
+                        );
+                        setSetup(data);
+                        setVerified(true);
+                      } else {
+                        setSetup(
+                          await api<{ totpURI: string; backupCodes: string[] }>(
+                            "/auth/two-factor/enable",
+                            { password, method: "totp" },
+                          ),
+                        );
+                      }
                     } catch (e) {
                       setError((e as Error).message);
                     } finally {
@@ -354,93 +264,190 @@ export function AuthenticatorSettings({
                     }
                   }}
                 >
-                  <Field label="Код из приложения">
+                  <Field label="Текущий пароль">
                     <input
-                      name="code"
-                      inputMode="numeric"
-                      pattern="[0-9]{6}"
-                      maxLength={6}
-                      autoComplete="one-time-code"
+                      type="password"
+                      name="password"
                       required
-                      placeholder="000000"
+                      autoComplete="current-password"
                     />
                   </Field>
                   <div className="modal-actions">
                     <Button type="button" disabled={busy} onClick={close}>
-                      Настроить позже
+                      Отмена
                     </Button>
-                    <Button type="submit" className="primary" busy={busy}>
-                      Подтвердить код
+                    <Button
+                      type="submit"
+                      className={action === "disable" ? "danger" : "primary"}
+                      busy={busy}
+                    >
+                      {action === "disable"
+                        ? "Отключить"
+                        : action === "codes"
+                          ? "Создать новые коды"
+                          : "Продолжить"}
                     </Button>
                   </div>
                 </form>
-              </>
-            ) : (
-              <>
-                <div className="workspace-confirmation">
-                  <CheckCircle2 size={20} />
-                  <span>
-                    {action === "codes"
-                      ? "Новые резервные коды созданы"
-                      : "Второй фактор включен"}
-                  </span>
-                </div>
-                <p className="form-note">
-                  Сохраните коды в надежном месте. Они показываются только
-                  сейчас и дают доступ к аккаунту.
-                </p>
-                <div className="backup-code-list" aria-label="Резервные коды">
-                  {setup.backupCodes.map((code) => (
-                    <code key={code}>{code}</code>
-                  ))}
-                </div>
-                <Button
-                  onClick={() =>
-                    downloadPrivateFile(
-                      {
-                        service: "IMON Meets",
-                        email: user.email,
-                        backupCodes: setup.backupCodes,
-                      },
-                      "imonmeets-recovery-codes.json",
-                    )
-                  }
-                >
-                  <ArrowDownToLine size={17} />
-                  Скачать коды
-                </Button>
-                <Button
-                  onClick={async () => {
-                    try {
-                      await navigator.clipboard.writeText(
-                        setup.backupCodes.join("\n"),
-                      );
-                      notify("Резервные коды скопированы");
-                    } catch {
-                      setError(
-                        "Не удалось скопировать коды. Скачайте файл или выделите их вручную.",
-                      );
+              ) : !verified ? (
+                <>
+                  <div className="mfa-qr">
+                    <canvas
+                      ref={canvas}
+                      aria-label="QR-код для настройки приложения-аутентификатора"
+                      role="img"
+                    />
+                  </div>
+                  {qrError && (
+                    <p className="form-note">
+                      Не удалось показать QR-код. Добавьте аккаунт вручную с
+                      помощью ключа ниже.
+                    </p>
+                  )}
+                  <Field
+                    label="Ключ для ручного ввода"
+                    hint="В приложении выберите код на основе времени (TOTP)."
+                  >
+                    <div className="copy-field">
+                      <input
+                        value={manualSecret}
+                        readOnly
+                        autoComplete="off"
+                        spellCheck={false}
+                      />
+                      <Button
+                        type="button"
+                        aria-label="Скопировать ключ настройки"
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(manualSecret);
+                            notify("Ключ скопирован");
+                          } catch {
+                            setError("Выделите ключ и скопируйте вручную.");
+                          }
+                        }}
+                      >
+                        <Copy size={17} />
+                      </Button>
+                    </div>
+                  </Field>
+                  <p className="form-note">
+                    QR-код создается в вашем браузере. Не передавайте этот ключ
+                    другим людям.
+                  </p>
+                  <form
+                    onSubmit={async (event) => {
+                      event.preventDefault();
+                      if (busy) return;
+                      setBusy(true);
+                      setError("");
+                      try {
+                        await api("/auth/two-factor/verify-totp", {
+                          code: new FormData(event.currentTarget).get("code"),
+                          trustDevice: false,
+                        });
+                        await refresh();
+                        setVerified(true);
+                        notify("Двухфакторная аутентификация включена");
+                      } catch (e) {
+                        setError((e as Error).message);
+                      } finally {
+                        setBusy(false);
+                      }
+                    }}
+                  >
+                    <Field label="Код из приложения">
+                      <input
+                        name="code"
+                        inputMode="numeric"
+                        pattern="[0-9]{6}"
+                        maxLength={6}
+                        autoComplete="one-time-code"
+                        required
+                        placeholder="000000"
+                      />
+                    </Field>
+                    <div className="modal-actions">
+                      <Button type="button" disabled={busy} onClick={close}>
+                        Настроить позже
+                      </Button>
+                      <Button type="submit" className="primary" busy={busy}>
+                        Подтвердить код
+                      </Button>
+                    </div>
+                  </form>
+                </>
+              ) : (
+                <>
+                  <div className="workspace-confirmation">
+                    <CheckCircle2 size={20} />
+                    <span>
+                      {action === "codes"
+                        ? "Новые резервные коды созданы"
+                        : "Второй фактор включен"}
+                    </span>
+                  </div>
+                  <p className="form-note">
+                    Сохраните коды в надежном месте. Они показываются только
+                    сейчас и дают доступ к аккаунту.
+                  </p>
+                  <div className="backup-code-list" aria-label="Резервные коды">
+                    {setup.backupCodes.map((code) => (
+                      <code key={code}>{code}</code>
+                    ))}
+                  </div>
+                  <Button
+                    onClick={() =>
+                      downloadPrivateFile(
+                        {
+                          service: "IMON Meets",
+                          email: user.email,
+                          backupCodes: setup.backupCodes,
+                        },
+                        "imonmeets-recovery-codes.json",
+                      )
                     }
-                  }}
-                >
-                  <Copy size={17} />
-                  Скопировать коды
-                </Button>
-                <label className="checkbox-row">
-                  <input
-                    type="checkbox"
-                    checked={saved}
-                    onChange={(event) => setSaved(event.target.checked)}
-                  />
-                  <span>Я сохранил резервные коды</span>
-                </label>
-                <div className="modal-actions">
-                  <Button className="primary" disabled={!saved} onClick={close}>
-                    Готово
+                  >
+                    <ArrowDownToLine size={17} />
+                    Скачать коды
                   </Button>
-                </div>
-              </>
-            )}
+                  <Button
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(
+                          setup.backupCodes.join("\n"),
+                        );
+                        notify("Резервные коды скопированы");
+                      } catch {
+                        setError(
+                          "Не удалось скопировать коды. Скачайте файл или выделите их вручную.",
+                        );
+                      }
+                    }}
+                  >
+                    <Copy size={17} />
+                    Скопировать коды
+                  </Button>
+                  <label className="checkbox-row">
+                    <input
+                      type="checkbox"
+                      checked={saved}
+                      onChange={(event) => setSaved(event.target.checked)}
+                    />
+                    <span>Я сохранил резервные коды</span>
+                  </label>
+                  <div className="modal-actions">
+                    <Button
+                      className="primary"
+                      disabled={!saved}
+                      onClick={close}
+                    >
+                      Готово
+                    </Button>
+                  </div>
+                </>
+              )}
+            </PasswordGate>
           </Modal>
         )}
       </section>

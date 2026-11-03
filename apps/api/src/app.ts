@@ -12,7 +12,13 @@ import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import { TrackSource } from "livekit-server-sdk";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
-import { createAuth, createMailer, MailDeliveryError } from "./auth.js";
+import {
+  createAuth,
+  createMailer,
+  MailDeliveryError,
+  drainAuthTasks,
+} from "./auth.js";
+import { registerIdentityRoutes } from "./identity.js";
 import type { Config } from "./config.js";
 import { createPool, transaction } from "./db.js";
 import {
@@ -116,12 +122,13 @@ export async function createApp(
     limiter?: RateLimiter;
     paymentRequest?: typeof fetch;
     auth?: ReturnType<typeof createAuth>;
+    sendMail?: ReturnType<typeof createMailer>;
   } = {},
 ) {
   const pool = options.pool || createPool(c.databaseUrl),
-    auth = options.auth || createAuth(c, pool),
+    sendMail = options.sendMail ?? createMailer(c, pool),
+    auth = options.auth || createAuth(c, pool, sendMail),
     media = options.media || createMedia(c),
-    sendMail = createMailer(c, pool),
     limiter = options.limiter ?? postgresLimiter(pool);
   const app = Fastify({
     logger: options.logger ?? true,
@@ -628,6 +635,7 @@ export async function createApp(
       document: docs[kind],
     };
   });
+  registerIdentityRoutes(app, { c, pool, auth, limiter, sendMail });
   app.get("/api/config", async () => ({
     publicInformation: publicInformationSummary(c.publicInformation),
     appName: "IMON Meets",
@@ -2245,6 +2253,10 @@ export async function createApp(
     clearInterval(recordingRetryTimer);
   });
   app.addHook("onClose", async () => {
+    if (!(await drainAuthTasks(auth)))
+      app.log.warn(
+        "Authentication tasks reached the shutdown deadline; unresolved deliveries remain blocked by the ledger",
+      );
     if (!options.pool) await pool.end();
   });
   return app;

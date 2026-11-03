@@ -4,6 +4,7 @@ import { api, notifyAuthChange } from "../api";
 import type { Member, User, Workspace } from "../api";
 import { Button, ErrorBox, Field, Modal, go } from "../ui";
 import type { Session } from "../ui";
+import { PasswordGate } from "./PasswordGate";
 
 export function downloadPrivateFile(data: unknown, filename: string) {
   const url = URL.createObjectURL(
@@ -104,67 +105,71 @@ export function DataSettings({
             обезличен. Резервные копии удаляются по сроку хранения.
           </p>
           <ErrorBox error={error} focus />
-          <form
-            onSubmit={async (event) => {
-              event.preventDefault();
-              if (busy || confirmation !== "DELETE") return;
-              setBusy("delete");
-              setError("");
-              try {
-                await api(
-                  "/me",
-                  {
-                    password: new FormData(event.currentTarget).get("password"),
-                    confirmation,
-                  },
-                  "DELETE",
-                  { timeoutMs: 30_000 },
-                );
-                notifyAuthChange("signed-out");
-                go("/login");
-                notify("Аккаунт удален");
-              } catch (e) {
-                setError((e as Error).message);
-              } finally {
-                setBusy("");
-              }
-            }}
-          >
-            <Field label="Текущий пароль">
-              <input
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-              />
-            </Field>
-            <Field label="Введите DELETE для подтверждения">
-              <input
-                value={confirmation}
-                onChange={(event) => setConfirmation(event.target.value)}
-                autoComplete="off"
-                required
-                spellCheck={false}
-              />
-            </Field>
-            <div className="modal-actions">
-              <Button
-                type="button"
-                disabled={!!busy}
-                onClick={() => setDeleting(false)}
-              >
-                Отмена
-              </Button>
-              <Button
-                className="danger"
-                type="submit"
-                busy={busy === "delete"}
-                disabled={confirmation !== "DELETE"}
-              >
-                Удалить навсегда
-              </Button>
-            </div>
-          </form>
+          <PasswordGate>
+            <form
+              onSubmit={async (event) => {
+                event.preventDefault();
+                if (busy || confirmation !== "DELETE") return;
+                setBusy("delete");
+                setError("");
+                try {
+                  await api(
+                    "/me",
+                    {
+                      password: new FormData(event.currentTarget).get(
+                        "password",
+                      ),
+                      confirmation,
+                    },
+                    "DELETE",
+                    { timeoutMs: 30_000 },
+                  );
+                  notifyAuthChange("signed-out");
+                  go("/login");
+                  notify("Аккаунт удален");
+                } catch (e) {
+                  setError((e as Error).message);
+                } finally {
+                  setBusy("");
+                }
+              }}
+            >
+              <Field label="Текущий пароль">
+                <input
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                />
+              </Field>
+              <Field label="Введите DELETE для подтверждения">
+                <input
+                  value={confirmation}
+                  onChange={(event) => setConfirmation(event.target.value)}
+                  autoComplete="off"
+                  required
+                  spellCheck={false}
+                />
+              </Field>
+              <div className="modal-actions">
+                <Button
+                  type="button"
+                  disabled={!!busy}
+                  onClick={() => setDeleting(false)}
+                >
+                  Отмена
+                </Button>
+                <Button
+                  className="danger"
+                  type="submit"
+                  busy={busy === "delete"}
+                  disabled={confirmation !== "DELETE"}
+                >
+                  Удалить навсегда
+                </Button>
+              </div>
+            </form>
+          </PasswordGate>
         </Modal>
       )}
     </>
@@ -257,92 +262,97 @@ export function WorkspaceOwnership({
               : `Пространство «${workspace.name}», встречи и история чата будут удалены. Активные звонки будут завершены. Сначала остановите и удалите все записи.`}
           </p>
           <ErrorBox error={error} focus />
-          <form
-            onSubmit={async (event) => {
-              event.preventDefault();
-              if (busy || (action === "delete" && confirmation !== "DELETE"))
-                return;
-              const form = new FormData(event.currentTarget);
-              setBusy(true);
-              setError("");
-              try {
-                if (action === "transfer")
-                  await api(`/workspaces/${workspace.id}/transfer-ownership`, {
-                    memberId: form.get("memberId"),
-                    password: form.get("password"),
-                  });
-                else
-                  await api(
-                    `/workspaces/${workspace.id}`,
-                    { password: form.get("password"), confirmation },
-                    "DELETE",
-                    { timeoutMs: 45_000 },
+          <PasswordGate>
+            <form
+              onSubmit={async (event) => {
+                event.preventDefault();
+                if (busy || (action === "delete" && confirmation !== "DELETE"))
+                  return;
+                const form = new FormData(event.currentTarget);
+                setBusy(true);
+                setError("");
+                try {
+                  if (action === "transfer")
+                    await api(
+                      `/workspaces/${workspace.id}/transfer-ownership`,
+                      {
+                        memberId: form.get("memberId"),
+                        password: form.get("password"),
+                      },
+                    );
+                  else
+                    await api(
+                      `/workspaces/${workspace.id}`,
+                      { password: form.get("password"), confirmation },
+                      "DELETE",
+                      { timeoutMs: 45_000 },
+                    );
+                  await refresh();
+                  notify(
+                    action === "transfer"
+                      ? "Владение передано"
+                      : "Пространство удалено",
                   );
-                await refresh();
-                notify(
-                  action === "transfer"
-                    ? "Владение передано"
-                    : "Пространство удалено",
-                );
-                setAction(undefined);
-              } catch (e) {
-                setError((e as Error).message);
-              } finally {
-                setBusy(false);
-              }
-            }}
-          >
-            {action === "transfer" && (
-              <Field label="Новый владелец">
-                <select name="memberId" required>
-                  <option value="">Выберите участника</option>
-                  {members?.map((member) => (
-                    <option key={member.id} value={member.id}>
-                      {member.name} · {member.email}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-            )}
-            <Field label="Текущий пароль">
-              <input
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-              />
-            </Field>
-            {action === "delete" && (
-              <Field label="Введите DELETE для подтверждения">
+                  setAction(undefined);
+                } catch (e) {
+                  setError((e as Error).message);
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            >
+              {action === "transfer" && (
+                <Field label="Новый владелец">
+                  <select name="memberId" required>
+                    <option value="">Выберите участника</option>
+                    {members?.map((member) => (
+                      <option key={member.id} value={member.id}>
+                        {member.name} · {member.email}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              )}
+              <Field label="Текущий пароль">
                 <input
-                  value={confirmation}
-                  onChange={(event) => setConfirmation(event.target.value)}
-                  autoComplete="off"
-                  spellCheck={false}
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
                   required
                 />
               </Field>
-            )}
-            <div className="modal-actions">
-              <Button
-                type="button"
-                disabled={busy}
-                onClick={() => setAction(undefined)}
-              >
-                Отмена
-              </Button>
-              <Button
-                className={action === "delete" ? "danger" : "primary"}
-                type="submit"
-                busy={busy}
-                disabled={action === "delete" && confirmation !== "DELETE"}
-              >
-                {action === "transfer"
-                  ? "Передать владение"
-                  : "Удалить навсегда"}
-              </Button>
-            </div>
-          </form>
+              {action === "delete" && (
+                <Field label="Введите DELETE для подтверждения">
+                  <input
+                    value={confirmation}
+                    onChange={(event) => setConfirmation(event.target.value)}
+                    autoComplete="off"
+                    spellCheck={false}
+                    required
+                  />
+                </Field>
+              )}
+              <div className="modal-actions">
+                <Button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => setAction(undefined)}
+                >
+                  Отмена
+                </Button>
+                <Button
+                  className={action === "delete" ? "danger" : "primary"}
+                  type="submit"
+                  busy={busy}
+                  disabled={action === "delete" && confirmation !== "DELETE"}
+                >
+                  {action === "transfer"
+                    ? "Передать владение"
+                    : "Удалить навсегда"}
+                </Button>
+              </div>
+            </form>
+          </PasswordGate>
         </Modal>
       )}
     </section>

@@ -7,6 +7,8 @@ import {
   authCallbackURL,
   getReturnTo,
   takeReturnTo,
+  rememberReturnTo,
+  notifyAuthChange,
 } from "../api";
 import type { Config, User, Workspace } from "../api";
 import { Brand, Button, ErrorBox, Field, Link, go } from "../ui";
@@ -39,7 +41,8 @@ export function Auth({
   );
   const isRegister = path === "/register",
     isForgot = path === "/forgot-password",
-    isReset = path === "/reset-password",
+    isSetPassword = path === "/set-password",
+    isReset = path === "/reset-password" || isSetPassword,
     isVerify = path === "/verify-email";
   const reviewMode =
     config.emailDelivery === "capture" && !config.registrationEnabled;
@@ -48,6 +51,7 @@ export function Auth({
     (isForgot || isVerify) && (reviewMode || !config.emailConfigured);
   useEffect(() => {
     const params = new URLSearchParams(location.search);
+    const mfaRedirect = params.get("twoFactor") === "1";
     const oauthError = params.get("error") || params.get("error_description");
     if (oauthError) {
       const messages: Record<string, string> = {
@@ -76,9 +80,22 @@ export function Auth({
     } else {
       setError("");
     }
+    if (mfaRedirect) {
+      const resumed = new URLSearchParams(location.hash.slice(1)).get(
+        "returnTo",
+      );
+      if (resumed) rememberReturnTo(resumed);
+      params.delete("twoFactor");
+      const query = params.toString();
+      history.replaceState(
+        history.state,
+        "",
+        `${location.pathname}${query ? `?${query}` : ""}`,
+      );
+    }
     setSuccess("");
     setNeedsVerification(false);
-    setTwoFactor(false);
+    setTwoFactor(mfaRedirect);
     setRecoveryCode(false);
     getReturnTo();
   }, [path]);
@@ -158,6 +175,25 @@ export function Auth({
         );
         await onSession();
         go(takeReturnTo());
+      } else if (isSetPassword) {
+        if (!session)
+          throw new Error(
+            "Откройте ссылку в том же браузере и сеансе, где запросили добавление пароля. Если сеанс завершен, войдите и запросите новую ссылку.",
+          );
+        const token = new URLSearchParams(location.hash.slice(1)).get("token");
+        if (!token)
+          throw new Error(
+            "В ссылке нет подтверждения. Запросите новую ссылку в настройках безопасности.",
+          );
+        await api("/me/password/complete", {
+          token,
+          newPassword: values.get("password"),
+        });
+        history.replaceState(history.state, "", location.pathname);
+        notifyAuthChange("signed-out");
+        setSuccess(
+          "Пароль IMON Meets добавлен. Все сеансы завершены. Войдите заново и повторите нужное действие. Вход через Google и двухфакторная защита сохранены.",
+        );
       } else if (isForgot) {
         await api("/auth/request-password-reset", {
           email,
@@ -258,7 +294,9 @@ export function Auth({
         : isForgot
           ? "Восстановить доступ"
           : isReset
-            ? "Новый пароль"
+            ? isSetPassword
+              ? "Добавить пароль IMON Meets"
+              : "Новый пароль"
             : isVerify
               ? "Подтвердите вашу почту"
               : "Войти";
@@ -294,7 +332,9 @@ export function Auth({
                       ? "В этой версии восстановить доступ можно через администратора."
                       : "Отправим ссылку для смены пароля на вашу почту."
                     : isReset
-                      ? "Придумайте надежный пароль от 10 символов."
+                      ? isSetPassword
+                        ? "Создайте отдельный пароль IMON Meets от 10 символов. Подтверждение работает только в том же сеансе, где вы запросили письмо."
+                        : "Придумайте надежный пароль от 10 символов."
                       : isVerify
                         ? reviewMode
                           ? "Для подтверждения адреса обратитесь к администратору."

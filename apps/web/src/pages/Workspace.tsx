@@ -39,6 +39,7 @@ import type { PageProps, Session } from "../ui";
 import { PageHeading } from "./Meetings";
 import { DataSettings, WorkspaceOwnership } from "./DataSettings";
 import { AuthenticatorSettings } from "./AuthenticatorSettings";
+import { PasswordGate } from "./PasswordGate";
 import { Transcript } from "./Transcript";
 import { PlanSettings } from "./Billing";
 const recordingLabels: Record<Recording["status"], string> = {
@@ -356,6 +357,7 @@ export function Team({
   const [invite, setInvite] = useState(false);
   const [busy, setBusy] = useState("");
   const [inviteUrl, setInviteUrl] = useState("");
+  const [inviteDelivery, setInviteDelivery] = useState("");
   const load = useCallback(
     () =>
       api<{ members: Member[]; invitations: Invitation[] }>(
@@ -581,7 +583,11 @@ export function Team({
             <>
               <div className="workspace-confirmation">
                 <CheckCircle2 size={21} />
-                <span>Приглашение создано. Передайте ссылку коллеге.</span>
+                <span>
+                  {inviteDelivery === "accepted"
+                    ? "Приглашение создано. Письмо принято почтовым сервисом."
+                    : "Приглашение создано. Отправка письма не подтверждена — передайте ссылку коллеге."}
+                </span>
               </div>
               <Field label="Личная ссылка приглашения">
                 <div className="workspace-copy-field">
@@ -617,11 +623,15 @@ export function Team({
                 setBusy("invite");
                 try {
                   const f = new FormData(e.currentTarget);
-                  const r = await api<{ inviteUrl?: string }>(
-                    `/workspaces/${workspace.id}/invitations`,
-                    { email: f.get("email"), role: f.get("role") },
-                  );
+                  const r = await api<{
+                    inviteUrl?: string;
+                    emailDelivery?: string;
+                  }>(`/workspaces/${workspace.id}/invitations`, {
+                    email: f.get("email"),
+                    role: f.get("role"),
+                  });
                   await load();
+                  setInviteDelivery(r.emailDelivery ?? "");
                   if (r.inviteUrl) setInviteUrl(r.inviteUrl);
                   else {
                     setInvite(false);
@@ -1078,57 +1088,61 @@ export function AccountSettings({
               <h2>Безопасность</h2>
               <ShieldCheck size={18} />
             </div>
-            <p className="workspace-settings-description">
-              Для смены пароля укажите текущий пароль. Другие сеансы будут
-              завершены.
-            </p>
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                const form = e.currentTarget;
-                const f = new FormData(form);
-                setBusy("password");
-                try {
-                  await api("/auth/change-password", {
-                    currentPassword: f.get("currentPassword"),
-                    newPassword: f.get("newPassword"),
-                    revokeOtherSessions: true,
-                  });
-                  form.reset();
-                  notify("Пароль изменен");
-                } catch (e) {
-                  notify((e as Error).message, true);
-                } finally {
-                  setBusy("");
-                }
-              }}
-            >
-              <Field label="Текущий пароль">
-                <input
-                  type="password"
-                  name="currentPassword"
-                  autoComplete="current-password"
-                  required
-                />
-              </Field>
-              <Field label="Новый пароль" hint="Не менее 10 символов">
-                <input
-                  type="password"
-                  name="newPassword"
-                  autoComplete="new-password"
-                  required
-                  minLength={10}
-                  maxLength={128}
-                />
-              </Field>
-              <Button
-                type="submit"
-                className="primary"
-                busy={busy === "password"}
-              >
-                Обновить пароль
-              </Button>
-            </form>
+            {section === "security" && (
+              <PasswordGate>
+                <p className="workspace-settings-description">
+                  Для смены пароля укажите текущий пароль. Другие сеансы будут
+                  завершены.
+                </p>
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const form = e.currentTarget;
+                    const f = new FormData(form);
+                    setBusy("password");
+                    try {
+                      await api("/auth/change-password", {
+                        currentPassword: f.get("currentPassword"),
+                        newPassword: f.get("newPassword"),
+                        revokeOtherSessions: true,
+                      });
+                      form.reset();
+                      notify("Пароль изменен");
+                    } catch (e) {
+                      notify((e as Error).message, true);
+                    } finally {
+                      setBusy("");
+                    }
+                  }}
+                >
+                  <Field label="Текущий пароль">
+                    <input
+                      type="password"
+                      name="currentPassword"
+                      autoComplete="current-password"
+                      required
+                    />
+                  </Field>
+                  <Field label="Новый пароль" hint="Не менее 10 символов">
+                    <input
+                      type="password"
+                      name="newPassword"
+                      autoComplete="new-password"
+                      required
+                      minLength={10}
+                      maxLength={128}
+                    />
+                  </Field>
+                  <Button
+                    type="submit"
+                    className="primary"
+                    busy={busy === "password"}
+                  >
+                    Обновить пароль
+                  </Button>
+                </form>
+              </PasswordGate>
+            )}
             {section === "security" && (
               <>
                 <AuthenticatorSettings

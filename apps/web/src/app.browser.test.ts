@@ -6,6 +6,7 @@ import { chromium, expect } from "@playwright/test";
 import "./suite.browser.test";
 import "./rooms.browser.test";
 import "./embed.browser.test";
+import "./identity.browser.test";
 
 // All requests are intercepted. This exercises the production React bundle and
 // browser state, without a server, production account, email or media connection.
@@ -88,6 +89,10 @@ test(
             mediaConfigured: false,
             recordingConfigured: false,
           },
+        });
+      if (path === "/api/me/security")
+        return route.fulfill({
+          json: { hasPassword: true, addPasswordAvailable: true },
         });
       if (path === "/api/me")
         return route.fulfill(

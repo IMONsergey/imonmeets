@@ -1,38 +1,62 @@
 import { betterAuth } from "better-auth";
-import { twoFactor } from "better-auth/plugins";
+import { unifiedTwoFactor } from "./auth-mfa.js";
 import type { Pool } from "pg";
 import { postgresLimiter } from "./limits.js";
 import type { Config } from "./config.js";
 import { createMailer, MailDeliveryError } from "./mail.js";
-export { createMailer, MailDeliveryError, resendIdempotencyKey } from "./mail.js";
-export function createAuth(c: Config, pool: Pool) {
-  const transport = createMailer(c, pool);
+export {
+  createMailer,
+  MailDeliveryError,
+  resendIdempotencyKey,
+} from "./mail.js";
+const pendingByAuth = new WeakMap<object, Set<Promise<unknown>>>();
+
+export async function drainAuthTasks(auth: object, deadlineMs = 25_000) {
+  const pending = pendingByAuth.get(auth);
+  if (!pending?.size) return true;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    await Promise.race([
+      Promise.allSettled([...pending]),
+      new Promise<void>((resolve) => {
+        timer = setTimeout(resolve, deadlineMs);
+        timer.unref();
+      }),
+    ]);
+    return pending.size === 0;
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+export function createAuth(
+  c: Config,
+  pool: Pool,
+  transport = createMailer(c, pool),
+) {
   const send = async (to: string, subject: string, text: string) => {
-    try { await transport(to, subject, text); }
-    catch (error) {
+    try {
+      await transport(to, subject, text);
+    } catch (error) {
       // Preserve the same public response for existing and unknown accounts,
       // including provider failures and exhausted actual-delivery budgets.
       if (!(error instanceof MailDeliveryError)) throw error;
+      console.warn(
+        JSON.stringify({
+          event: "auth.email_delivery_failed",
+          kind: error.kind,
+        }),
+      );
     }
   };
-  return betterAuth({
+  const pending = new Set<Promise<unknown>>();
+  const auth = betterAuth({
     appName: "IMON Meets",
     baseURL: c.appUrl,
     basePath: "/api/auth",
     secret: c.authSecret,
     database: pool,
-    plugins: [
-      twoFactor({
-        issuer: "IMON Meets",
-        skipVerificationOnEnable: false,
-        backupCodeOptions: { storeBackupCodes: "encrypted" },
-        accountLockout: {
-          enabled: true,
-          maxFailedAttempts: 8,
-          durationSeconds: 900,
-        },
-      }),
-    ],
+    plugins: [unifiedTwoFactor(c.appUrl)],
     trustedOrigins: [c.appUrl],
     account: {
       accountLinking: {
@@ -96,8 +120,22 @@ export function createAuth(c: Config, pool: Pool) {
     },
     session: { expiresIn: 60 * 60 * 24 * 7, updateAge: 60 * 60 * 24 },
     advanced: {
+      backgroundTasks: {
+        handler(task) {
+          // Recovery must not expose whether a provider call was necessary.
+          // Keep tasks alive through graceful shutdown; the mail ledger still
+          // reserves every provider attempt before any network side effect.
+          const settled = task.catch(() => {
+            console.error("Authentication background task failed");
+          });
+          pending.add(settled);
+          void settled.then(() => pending.delete(settled));
+        },
+      },
       useSecureCookies: c.appUrl.startsWith("https://"),
       ipAddress: { ipAddressHeaders: ["x-imon-client-ip"] },
     },
   });
+  pendingByAuth.set(auth, pending);
+  return auth;
 }

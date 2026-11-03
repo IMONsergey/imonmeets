@@ -258,6 +258,7 @@ export default function App() {
     "/register",
     "/forgot-password",
     "/reset-password",
+    "/set-password",
     "/verify-email",
   ].includes(path);
   const publicPath = publicPaths.includes(path) || (path === "/" && !session);
