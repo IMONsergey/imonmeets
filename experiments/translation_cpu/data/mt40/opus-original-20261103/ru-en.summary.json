@@ -1,0 +1,49 @@
+{
+  "run_id": "opus-original-20261103",
+  "direction": "ru-en",
+  "config_id": "a0ec356f17b4e5ce22a42f60857e5799911375a46df144137086bcefc21d031d",
+  "expected_cases": 55,
+  "gold_cases": 40,
+  "recorded_cases": 55,
+  "successful_inference": 55,
+  "errors": 0,
+  "quality_status": "unreviewed",
+  "model_load_seconds_this_invocation": 0.353172,
+  "stage_seconds": {
+    "p50": 0.4072,
+    "p95": 0.7716,
+    "max": 0.995964
+  },
+  "max_rss_kib": 160396,
+  "cgroup_limits": {
+    "cpu_max": "100000 100000",
+    "memory_max": 2147483648,
+    "pids_max": "128",
+    "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/imonmeets-mt-mt40-ru-en-20261103T053842Z-3942298.service"
+  },
+  "fingerprints": {
+    "selection_sha256": "caf155b7d8b440132295416f7d0ebd210061add74672e39d7e929dffb60ae62a",
+    "cases_sha256": "7b55f4ef874a556e974fc632d3847efed33fad8c4d0b84fcb15db35ca44a658a",
+    "model_sha256": "96804810a5bdecd5e118f6b67fb979025c10670cb4bad56f887511c4fb76cd89",
+    "first_model_sha256": null,
+    "target_token": null,
+    "settings": {
+      "beam_size": 6,
+      "length_penalty": 1.0,
+      "max_input_tokens": 512,
+      "max_output_tokens": 512,
+      "per_item_seconds": 45,
+      "intra_threads": 1,
+      "inter_threads": 1,
+      "compute_type": "int8",
+      "normalization": "NFKC, remove non-printing characters, collapse whitespace; SentencePiece internal normalization"
+    }
+  },
+  "versions": {
+    "ctranslate2": "4.8.4",
+    "sentencepiece": "0.2.2",
+    "numpy": "2.5.4"
+  },
+  "finished_at": "2026-11-03T05:39:06.181638+00:00",
+  "output_sha256": "d2edc3d854ef729d459eb30031388dd9f798a4d79b17a62e81345c4242590d16"
+}
