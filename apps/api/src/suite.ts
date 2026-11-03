@@ -9,9 +9,9 @@ import type { FastifyInstance, FastifyRequest } from "fastify";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
 import { z } from "zod";
 import type { Config } from "./config.js";
-import type { Media } from "./media.js";
+import { mediaRoomName, type Media } from "./media.js";
 import { transaction } from "./db.js";
-import { assert, canManage, type Role } from "./policy.js";
+import { ApiError, assert, canManage, type Role } from "./policy.js";
 import { requireBudget, type RateLimiter } from "./limits.js";
 
 type Row = QueryResultRow;
@@ -39,6 +39,11 @@ export type SuiteDependencies = {
   limiter: RateLimiter;
   deletionJournal?: DeletionJournal;
   paymentRequest?: typeof fetch;
+  drainParticipantRemovals?: (
+    roomId?: string,
+    maxJobs?: number,
+    onlyIdentity?: string,
+  ) => Promise<boolean>;
   user: (req: FastifyRequest, required?: boolean) => Promise<User | null>;
   membership: (
     workspaceId: string,
@@ -88,7 +93,7 @@ export async function admissionForJoin(
   limiter: RateLimiter,
   guestKeyHash?: string,
 ) {
-  if (!room.waiting_room || manager) return { name, guestKeyHash };
+  // A supplied ticket remains authoritative even when admission policy changes.
   if (waitingToken) {
     const row = (
       await db.query(
@@ -133,6 +138,7 @@ export async function admissionForJoin(
       },
     };
   }
+  if (!room.waiting_room || manager) return { name, guestKeyHash };
   const queued = (
     await db.query(
       "SELECT count(*)::int AS n FROM im_waiting_requests WHERE room_id=$1 AND status='waiting' AND expires_at>now()",
@@ -278,11 +284,72 @@ export async function registerSuite(
     };
   });
   app.delete("/api/rooms/:slug/waiting", async (req) => {
-    const { row } = await waitingTicket(req, pool);
-    await pool.query(
-      "UPDATE im_waiting_requests SET status='denied' WHERE id=$1 AND used_at IS NULL",
-      [row.id],
-    );
+    waitingBody.parse(req.body);
+    const cancelled = await transaction(pool, async (db) => {
+      // Match /join lock order. A cancellation either prevents consumption or
+      // sees the exact grant committed by the racing join, never a stale ticket.
+      const discovered = (
+        await db.query("SELECT workspace_id FROM im_rooms WHERE slug=$1", [
+          params(req).slug,
+        ])
+      ).rows[0];
+      assert(discovered, 404, "ROOM_NOT_FOUND", "Встреча не найдена.");
+      await db.query(
+        "SELECT id FROM im_workspaces WHERE id=$1 FOR NO KEY UPDATE",
+        [discovered.workspace_id],
+      );
+      const { r, row } = await waitingTicket(req, db, true);
+      // Old consumed tickets have no exact link. Never guess from a browser,
+      // account or display name and revoke other participants' sessions.
+      assert(
+        !row.used_at || row.issued_identity,
+        409,
+        "WAITING_CANCELLATION_UNVERIFIED",
+        "Для старого запроса нельзя подтвердить отзыв выданного доступа. Обратитесь к организатору.",
+      );
+      await db.query(
+        "UPDATE im_waiting_requests SET status='denied' WHERE id=$1",
+        [row.id],
+      );
+      const identity = row.issued_identity as string | null;
+      if (identity) {
+        await db.query(
+          "UPDATE im_chat_sessions SET revoked_at=COALESCE(revoked_at,now()) WHERE room_id=$1 AND media_generation=$2 AND identity=$3",
+          [r.id, row.media_generation, identity],
+        );
+        await db.query(
+          "INSERT INTO im_participant_removals(room_id,media_name,identity) VALUES($1,$2,$3) ON CONFLICT(media_name,identity) DO UPDATE SET next_attempt_at=now(),revision=im_participant_removals.revision+1",
+          [
+            r.id,
+            mediaRoomName({ id: r.id, media_generation: row.media_generation }),
+            identity,
+          ],
+        );
+      }
+      await audit(db, r.workspace_id, row.user_id, "waiting.cancelled", row.id);
+      return { roomId: r.id as string, identity };
+    });
+    if (cancelled.identity) {
+      // A direct self-hosted LiveKit bypass cannot revoke an already signed JWT.
+      // Keep the durable cancellation, but do not claim enforced revocation.
+      if (!c.livekit.signalingAuthEnabled)
+        throw new ApiError(
+          503,
+          "WAITING_REVOCATION_UNAVAILABLE",
+          "Отмена сохранена, но сервер пока не может подтвердить отзыв доступа. Автоматический вход остановлен.",
+        );
+      const disconnected = await d.drainParticipantRemovals?.(
+        cancelled.roomId,
+        1,
+        cancelled.identity,
+      );
+      if (!disconnected)
+        throw new ApiError(
+          503,
+          "WAITING_CANCELLATION_PENDING",
+          "Доступ отозван. Отключение еще выполняется. Повторите отмену или вернитесь к проверке устройств.",
+        );
+    }
     return { ok: true };
   });
   app.get("/api/workspaces/:workspaceId/rooms/:roomId/waiting", async (req) => {

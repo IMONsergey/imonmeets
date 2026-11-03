@@ -1,0 +1,21 @@
+
+> imonmeets@0.1.0 typecheck
+> npm run typecheck --workspaces && tsc -p tsconfig.e2e.json
+
+
+> @imonmeets/api@0.1.0 typecheck
+> tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json
+
+test/waiting-cancellation.integration.test.ts(228,7): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+npm error Lifecycle script `typecheck` failed with error:
+npm error code 2
+npm error path /home/sergey/imonmeets-calls-ui-audit-20261103/apps/api
+npm error workspace @imonmeets/api@0.1.0
+npm error location /home/sergey/imonmeets-calls-ui-audit-20261103/apps/api
+npm error command failed
+npm error command sh -c tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json
+
+
+> @imonmeets/web@0.1.0 typecheck
+> tsc --noEmit
+

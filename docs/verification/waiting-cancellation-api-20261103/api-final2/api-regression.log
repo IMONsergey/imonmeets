@@ -1,0 +1,85 @@
+2026-11-03T09:41:52.474Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1875054) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ strict signaling gate, durable kick/ban, stale chat/tickets, account and anonymous reentry, role isolation and pending media retries (2423.60246ms)
+2026-11-03T09:41:54.756Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1875054) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ only open rooms consume quota; closed-room archive preserves history and pages are bounded and scoped (1424.643056ms)
+2026-11-03T09:41:56.224Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1875054) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✖ waiting room, real SDK, persistent chat, tenant isolation and revoked generations (1281.257357ms)
+2026-11-03T09:41:57.457Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1875054) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ authenticator enrollment verifies code, invalidates older sessions, challenges login, and consumes backup code once (1907.010288ms)
+2026-11-03T09:41:59.368Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1875054) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ recording retention/deletion prevents downloads immediately and retries external cleanup; analysis is tenant scoped (1301.341764ms)
+2026-11-03T09:42:00.670Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1875054) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ personal export omits credentials; ownership transfer, deletion and stale sessions enforce account lifecycle (2504.598599ms)
+2026-11-03T09:42:03.173Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1875054) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ account JSON export paginates complete personal data and client abort releases database resources (1835.803608ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18357.845002
+
+✖ failing tests:
+
+test at apps/api/test/suite.integration.test.ts:1:1001
+✖ waiting room, real SDK, persistent chat, tenant isolation and revoked generations (1281.257357ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  403 !== 200
+  
+      at TestContext.<anonymous> (/home/sergey/imonmeets-calls-ui-audit-20261103/apps/api/test/suite.integration.test.ts:70:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 403,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

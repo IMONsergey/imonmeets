@@ -74,8 +74,16 @@ test(
             waitingToken: queued.waitingToken,
           })
         ).statusCode,
+        403,
+      ); // A supplied ticket is always bound to its own room and attempt.
+      assert.equal(
+        (
+          await h.request("POST", `/api/rooms/${otherRoom.slug}/join`, {
+            name: "New explicit public-room join",
+          })
+        ).statusCode,
         200,
-      ); // No waiting gate in this independent room.
+      ); // A fresh request without the unrelated ticket follows this room policy.
       assert.equal(
         (
           await h.request(

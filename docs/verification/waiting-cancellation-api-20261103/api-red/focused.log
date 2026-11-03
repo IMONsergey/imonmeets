@@ -1,0 +1,89 @@
+2026-11-03T09:33:31.616Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1801383) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ waiting cancel revokes exactly its consumed grant, preserves another tab, and is idempotent (1565.149325ms)
+2026-11-03T09:33:33.062Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1801383) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✖ cancel and join serialize across a real locked PostgreSQL transaction (874.135225ms)
+2026-11-03T09:33:33.904Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1801383) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✖ cancellation before admission is final; uncertain removal retains a precise durable retry (822.646462ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9407.286673
+
+✖ failing tests:
+
+test at apps/api/test/waiting-cancellation.integration.test.ts:1:2124
+✖ waiting cancel revokes exactly its consumed grant, preserves another tab, and is idempotent (1565.149325ms)
+  AssertionError [ERR_ASSERTION]: A consumed ticket cancellation must revoke its already-issued media grant
+  
+  204 !== 403
+  
+      at TestContext.<anonymous> (/home/sergey/imonmeets-calls-ui-audit-20261103/apps/api/test/waiting-cancellation.integration.test.ts:72:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 204,
+    expected: 403,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at apps/api/test/waiting-cancellation.integration.test.ts:1:4464
+✖ cancel and join serialize across a real locked PostgreSQL transaction (874.135225ms)
+  AssertionError [ERR_ASSERTION]: The completed cancellation must invalidate the grant committed by the racing join
+  
+  204 !== 403
+  
+      at TestContext.<anonymous> (/home/sergey/imonmeets-calls-ui-audit-20261103/apps/api/test/waiting-cancellation.integration.test.ts:133:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 204,
+    expected: 403,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at apps/api/test/waiting-cancellation.integration.test.ts:1:6112
+✖ cancellation before admission is final; uncertain removal retains a precise durable retry (822.646462ms)
+  AssertionError [ERR_ASSERTION]: Uncertain media removal must not report a completed disconnect
+  
+  200 !== 503
+  
+      at TestContext.<anonymous> (/home/sergey/imonmeets-calls-ui-audit-20261103/apps/api/test/waiting-cancellation.integration.test.ts:161:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 503,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -195,12 +195,16 @@ export async function registerModeration(
     }
   });
 
-  async function drainRemovals(roomId?: string, maxJobs = 20) {
+  async function drainRemovals(
+    roomId?: string,
+    maxJobs = 20,
+    onlyIdentity?: string,
+  ) {
     if (!c.mediaConfigured) return false;
     const jobs = await transaction(pool, async (db) => {
       const rows = await db.query(
-        "SELECT * FROM im_participant_removals WHERE ($1::text IS NULL OR room_id=$1) AND next_attempt_at<=now() ORDER BY next_attempt_at LIMIT $2 FOR UPDATE SKIP LOCKED",
-        [roomId ?? null, maxJobs],
+        "SELECT * FROM im_participant_removals WHERE ($1::text IS NULL OR room_id=$1) AND ($3::text IS NULL OR identity=$3) AND next_attempt_at<=now() ORDER BY next_attempt_at LIMIT $2 FOR UPDATE SKIP LOCKED",
+        [roomId ?? null, maxJobs, onlyIdentity ?? null],
       );
       for (const row of rows.rows)
         await db.query(
@@ -232,8 +236,8 @@ export async function registerModeration(
       );
     return !(
       await pool.query(
-        "SELECT 1 FROM im_participant_removals WHERE $1::text IS NULL OR room_id=$1 LIMIT 1",
-        [roomId ?? null],
+        "SELECT 1 FROM im_participant_removals WHERE ($1::text IS NULL OR room_id=$1) AND ($2::text IS NULL OR identity=$2) LIMIT 1",
+        [roomId ?? null, onlyIdentity ?? null],
       )
     ).rowCount;
   }
@@ -430,5 +434,5 @@ export async function registerModeration(
   app.addHook("onClose", async () => {
     clearInterval(timer);
   });
-  return { rejectRevokedJoin };
+  return { rejectRevokedJoin, drainRemovals };
 }

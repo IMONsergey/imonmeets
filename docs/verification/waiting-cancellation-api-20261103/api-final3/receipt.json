@@ -1,0 +1,38 @@
+{
+  "sourceHead": "d8101a32effd55e89c54f0a539a92d9588828c71",
+  "sourceFiles": {
+    "apps/api/src/suite.ts": "2aed012cb69bfbd3079e94c21a6b16495bb6fb812d4d19b4b5d2ebd76c90ce70",
+    "apps/api/src/app.ts": "6ba7e6bea9ffb79d94e329ca1eeafb006b70d1ef93799dd2ff8e4aa63c08ea22",
+    "apps/api/src/moderation.ts": "03ce24791b69073acf96c482688334ad302d045ef8f17b3807cd914f805e4031",
+    "apps/api/src/suite-schema.ts": "bb2e8b0a56ff6996cfaca549af80d9d9df0e67db14cea3a17faaefbdbaeffe71",
+    "apps/api/test/waiting-cancellation.integration.test.ts": "a5a6fbba7116a60ba6299099c731da57b7d8254260d39b3def271d3cfe9aadc3",
+    "apps/api/test/suite.integration.test.ts": "2585b82efb8ee08907d335f2e7e49076074136fad72865e7adffdb73be4ae994"
+  },
+  "checks": [
+    {
+      "name": "focused",
+      "exitCode": 0,
+      "startedAt": "2026-11-03T09:43:31.687249+00:00",
+      "finishedAt": "2026-11-03T09:43:43.279717+00:00"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "startedAt": "2026-11-03T09:43:43.280256+00:00",
+      "finishedAt": "2026-11-03T09:44:20.794168+00:00"
+    },
+    {
+      "name": "api-regression",
+      "exitCode": 0,
+      "startedAt": "2026-11-03T09:44:20.794573+00:00",
+      "finishedAt": "2026-11-03T09:44:38.416085+00:00"
+    }
+  ],
+  "scope": "Unique PostgreSQL schemas, mocked media; no external or production actions",
+  "limits": {
+    "cpuQuota": "100%",
+    "memoryMax": "2G",
+    "tasksMax": 256,
+    "workers": 1
+  }
+}

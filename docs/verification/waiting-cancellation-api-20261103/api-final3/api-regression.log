@@ -1,0 +1,65 @@
+2026-11-03T09:44:26.139Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1897875) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ strict signaling gate, durable kick/ban, stale chat/tickets, account and anonymous reentry, role isolation and pending media retries (2396.064429ms)
+2026-11-03T09:44:28.452Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1897875) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ only open rooms consume quota; closed-room archive preserves history and pages are bounded and scoped (1308.158743ms)
+2026-11-03T09:44:29.756Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1897875) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ waiting room, real SDK, persistent chat, tenant isolation and revoked generations (1889.124683ms)
+2026-11-03T09:44:31.651Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1897875) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ authenticator enrollment verifies code, invalidates older sessions, challenges login, and consumes backup code once (1895.431501ms)
+2026-11-03T09:44:33.548Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1897875) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ recording retention/deletion prevents downloads immediately and retries external cleanup; analysis is tenant scoped (922.503733ms)
+2026-11-03T09:44:34.493Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1897875) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ personal export omits credentials; ownership transfer, deletion and stale sessions enforce account lifecycle (2089.302854ms)
+2026-11-03T09:44:36.558Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1897875) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ account JSON export paginates complete personal data and client abort releases database resources (1747.848019ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17396.614172

@@ -1,0 +1,12 @@
+
+> imonmeets@0.1.0 typecheck
+> npm run typecheck --workspaces && tsc -p tsconfig.e2e.json
+
+
+> @imonmeets/api@0.1.0 typecheck
+> tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json
+
+
+> @imonmeets/web@0.1.0 typecheck
+> tsc --noEmit
+

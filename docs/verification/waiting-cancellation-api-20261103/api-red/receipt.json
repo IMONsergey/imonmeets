@@ -1,0 +1,25 @@
+{
+  "sourceHead": "d8101a32effd55e89c54f0a539a92d9588828c71",
+  "sourceFiles": {
+    "apps/api/src/suite.ts": "64aee641f6bb1f8fd8728abd6735a442949bc24dd311c9aa93b63cbfc5550f86",
+    "apps/api/src/app.ts": "5d9073d50736c86dcbd6275115f56a0b2928d5863ac1a3209f953860cb369a8e",
+    "apps/api/src/moderation.ts": "88a0c4d540d0945291afa77cabffeb63b451c7439a1030fd984d6cee5b295718",
+    "apps/api/src/suite-schema.ts": "09ae013ef9ce64dac80622b1feef7a5638e7a35ad30a8b4be282431618106d59",
+    "apps/api/test/waiting-cancellation.integration.test.ts": "10c6adee6c2ed49c2d6e41be8190b50f4434823f697fe6f32e01323ca69cc4be"
+  },
+  "checks": [
+    {
+      "name": "focused",
+      "exitCode": 1,
+      "startedAt": "2026-11-03T09:33:25.188787+00:00",
+      "finishedAt": "2026-11-03T09:33:34.794841+00:00"
+    }
+  ],
+  "scope": "Unique PostgreSQL schemas, mocked media; no external or production actions",
+  "limits": {
+    "cpuQuota": "100%",
+    "memoryMax": "2G",
+    "tasksMax": 256,
+    "workers": 1
+  }
+}

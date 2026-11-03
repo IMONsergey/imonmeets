@@ -1325,8 +1325,8 @@ export async function createApp(
         );
         if (admission.requestId)
           await db.query(
-            "UPDATE im_waiting_requests SET used_at=now() WHERE id=$1",
-            [admission.requestId],
+            "UPDATE im_waiting_requests SET used_at=now(),issued_identity=$2 WHERE id=$1",
+            [admission.requestId, identity],
           );
         return {
           status: "joined",
@@ -2054,7 +2054,10 @@ export async function createApp(
     paymentRequest: options.paymentRequest,
   };
   const moderation = await registerModeration(app, suiteDependencies);
-  await registerSuite(app, suiteDependencies);
+  await registerSuite(app, {
+    ...suiteDependencies,
+    drainParticipantRemovals: moderation.drainRemovals,
+  });
   await registerBilling(app, suiteDependencies);
   await registerOperationReview(app, suiteDependencies);
   await registerAnalysis(app, suiteDependencies);

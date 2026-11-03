@@ -1,0 +1,57 @@
+2026-11-03T09:40:33.384Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1863708) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ waiting cancel revokes exactly its consumed grant, preserves another tab, and is idempotent (1647.41411ms)
+2026-11-03T09:40:34.959Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1863708) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ cancel and join serialize across a real locked PostgreSQL transaction (993.758057ms)
+2026-11-03T09:40:35.977Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1863708) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ cancellation before admission is final; uncertain removal retains a precise durable retry (1008.829054ms)
+2026-11-03T09:40:37.020Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1863708) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ a presented waiting ticket stays bound when the room stops requiring admission (896.027222ms)
+2026-11-03T09:40:37.878Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1863708) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ legacy consumed tickets do not guess identities or revoke sibling grants (895.188891ms)
+2026-11-03T09:40:38.785Z ERROR [Better Auth]: Database schema mismatch
+
+  Missing tables
+    user, session, account, verification, twoFactor
+
+  help: Run `npx auth migrate` to add the missing tables and columns.
+(node:1863708) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.
+✔ disabled signaling protection cannot claim enforced revocation of a consumed ticket (906.508741ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11953.563645

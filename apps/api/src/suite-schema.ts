@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS im_waiting_requests (
  created_at timestamptz NOT NULL DEFAULT now(),expires_at timestamptz NOT NULL,
  decided_by text,used_at timestamptz
 );
+ALTER TABLE im_waiting_requests ADD COLUMN IF NOT EXISTS issued_identity text;
+CREATE UNIQUE INDEX IF NOT EXISTS im_waiting_issued_identity ON im_waiting_requests(issued_identity) WHERE issued_identity IS NOT NULL;
 CREATE INDEX IF NOT EXISTS im_waiting_room ON im_waiting_requests(room_id,created_at) WHERE used_at IS NULL;
 CREATE TABLE IF NOT EXISTS im_chat_sessions (
  token_hash text PRIMARY KEY,room_id text NOT NULL REFERENCES im_rooms(id) ON DELETE CASCADE,
