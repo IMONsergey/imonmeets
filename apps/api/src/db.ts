@@ -1,4 +1,5 @@
 import { Pool, type PoolClient } from "pg";
+import { moderationSchema } from "./moderation-schema.js";
 import { suiteSchema } from "./suite-schema.js";
 import { analysisSchema } from "./analysis-schema.js";
 import { billingSchema } from "./billing-schema.js";
@@ -46,6 +47,7 @@ UPDATE im_rooms r SET media_started=true WHERE media_generation=0 AND EXISTS(SEL
 INSERT INTO im_media_retirements(name,workspace_id) SELECT CASE WHEN media_generation=0 THEN id ELSE id||'-g'||media_generation END,workspace_id FROM im_rooms WHERE status='closed' AND media_closed=false ON CONFLICT DO NOTHING;
 CREATE TABLE IF NOT EXISTS im_webhook_events (id text PRIMARY KEY,created_at timestamptz NOT NULL DEFAULT now());
 ${suiteSchema}
+${moderationSchema}
 ${billingSchema}
 ${analysisSchema}
 `;

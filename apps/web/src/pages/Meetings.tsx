@@ -632,6 +632,12 @@ function RoomEditor({
             <small>Организатор разрешает вход участников и гостей</small>
           </span>
         </label>
+        {room?.guestAdmissionRequired && (
+          <p className="form-note">
+            После блокировки участника новые гости входят только с разрешения
+            организатора.
+          </p>
+        )}
         {resetsAccess && (
           <p className="form-note">
             Сохранение этих настроек прервет текущие подключения. Участникам
@@ -721,7 +727,7 @@ function ShareRoom({
       )}
       <p className="form-note">
         {room.allowGuests
-          ? room.waitingRoom
+          ? room.waitingRoom || room.guestAdmissionRequired
             ? "Человек с этой ссылкой сможет запросить вход. Организатор разрешит или отклонит его запрос."
             : "Любой человек с этой ссылкой сможет войти, указав свое имя."
           : "Отправьте ссылку коллегам, которые состоят в вашем пространстве."}
@@ -953,7 +959,7 @@ export function Rooms({
                       )}{" "}
                       {room.allowGuests ? "Вход по ссылке" : "Только команда"}
                     </span>
-                    {(room.waitingRoom) && (
+                    {(room.waitingRoom || room.guestAdmissionRequired) && (
                       <span>
                         <ShieldCheck size={14} />
                         Зал ожидания

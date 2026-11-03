@@ -81,8 +81,9 @@ export async function admissionForJoin(
   name: string,
   waitingToken: string | undefined,
   limiter: RateLimiter,
+  guestKeyHash?: string,
 ) {
-  if (!room.waiting_room || manager) return { name };
+  if (!room.waiting_room || manager) return { name, guestKeyHash };
   if (waitingToken) {
     const row = (
       await db.query(
@@ -111,9 +112,14 @@ export async function admissionForJoin(
       "Организатор отклонил запрос на вход.",
     );
     if (row.status === "admitted")
-      return { name: String(row.name), requestId: String(row.id) };
+      return {
+        name: String(row.name),
+        requestId: String(row.id),
+        guestKeyHash: row.guest_key_hash as string | undefined,
+      };
     return {
       name: String(row.name),
+      guestKeyHash: row.guest_key_hash as string | undefined,
       pending: {
         status: "waiting" as const,
         requestId: row.id,
@@ -146,12 +152,21 @@ export async function admissionForJoin(
     id = randomUUID();
   const row = (
     await db.query(
-      "INSERT INTO im_waiting_requests(id,room_id,token_hash,user_id,name,media_generation,status,expires_at) VALUES($1,$2,$3,$4,$5,$6,'waiting',now()+interval '30 minutes') RETURNING expires_at",
-      [id, room.id, hash(token), user?.id ?? null, name, room.media_generation],
+      "INSERT INTO im_waiting_requests(id,room_id,token_hash,user_id,name,media_generation,guest_key_hash,status,expires_at) VALUES($1,$2,$3,$4,$5,$6,$7,'waiting',now()+interval '30 minutes') RETURNING expires_at",
+      [
+        id,
+        room.id,
+        hash(token),
+        user?.id ?? null,
+        name,
+        room.media_generation,
+        guestKeyHash ?? null,
+      ],
     )
   ).rows[0];
   return {
     name,
+    guestKeyHash,
     pending: {
       status: "waiting" as const,
       requestId: id,
@@ -166,10 +181,11 @@ export async function createChatSession(
   user: User | null,
   identity: string,
   name: string,
+  guestKeyHash?: string,
 ) {
   const token = secret();
   await db.query(
-    "INSERT INTO im_chat_sessions(token_hash,room_id,user_id,identity,name,media_generation,expires_at) VALUES($1,$2,$3,$4,$5,$6,now()+interval '24 hours')",
+    "INSERT INTO im_chat_sessions(token_hash,room_id,user_id,identity,name,media_generation,guest_key_hash,expires_at) VALUES($1,$2,$3,$4,$5,$6,$7,now()+interval '24 hours')",
     [
       hash(token),
       room.id,
@@ -177,6 +193,7 @@ export async function createChatSession(
       identity,
       name,
       room.media_generation,
+      guestKeyHash ?? null,
     ],
   );
   return token;
@@ -336,7 +353,7 @@ export async function registerSuite(
     assert(r.status === "open", 409, "ROOM_CLOSED", "Встреча закрыта.");
     const session = (
       await db.query(
-        "SELECT * FROM im_chat_sessions WHERE token_hash=$1 AND room_id=$2 AND media_generation=$3 AND expires_at>now()",
+        "SELECT * FROM im_chat_sessions WHERE token_hash=$1 AND room_id=$2 AND media_generation=$3 AND expires_at>now() AND revoked_at IS NULL",
         [hash(token), r.id, r.media_generation],
       )
     ).rows[0];

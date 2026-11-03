@@ -76,6 +76,15 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
   const mediaConfigured = Boolean(
     env.LIVEKIT_URL && env.LIVEKIT_API_KEY && env.LIVEKIT_API_SECRET,
   );
+  const signalingAuthEnabled = env.LIVEKIT_SIGNALING_AUTH_ENABLED === "true";
+  const signalingAuthSecret = env.LIVEKIT_SIGNALING_AUTH_SECRET || "";
+  if (
+    signalingAuthEnabled &&
+    (!mediaConfigured || signalingAuthSecret.length < 32)
+  )
+    throw new Error(
+      "LiveKit signaling auth requires media configuration and LIVEKIT_SIGNALING_AUTH_SECRET of at least 32 characters",
+    );
   const recordingConfigured =
     mediaConfigured &&
     env.RECORDING_ENABLED === "true" &&
@@ -216,6 +225,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
       from: env.SMTP_FROM,
     },
     livekit: {
+      signalingAuthEnabled,
+      signalingAuthSecret,
       url: env.LIVEKIT_URL || "",
       internalUrl:
         env.LIVEKIT_INTERNAL_URL ||

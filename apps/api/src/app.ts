@@ -28,6 +28,12 @@ import { clientIp, proxySecretMatches, rateLimitIp } from "./proxy.js";
 import { registerSuite, admissionForJoin, createChatSession } from "./suite.js";
 import { registerAnalysis } from "./analysis.js";
 import { registerBilling, workspaceLimits } from "./billing.js";
+import {
+  assertRoomUnblocked,
+  participantModeration,
+  registerModeration,
+  roomVisitorKey,
+} from "./moderation.js";
 import { framePolicy, isEmbedPath } from "./embedding.js";
 
 type Row = QueryResultRow;
@@ -61,6 +67,7 @@ const roomJson = (r: Row) => ({
   durationMinutes: r.duration_minutes,
   allowGuests: r.allow_guests,
   waitingRoom: r.waiting_room,
+  guestAdmissionRequired: Boolean(r.guest_admission_required),
   maxParticipants: r.max_participants,
   status: r.status,
   createdBy: r.created_by,
@@ -129,6 +136,14 @@ export async function createApp(
       ),
   });
   app.setErrorHandler((e, req, reply) => {
+    if (req.url.split("?")[0] === "/api/internal/livekit/authorize")
+      return reply
+        .code(
+          e instanceof ApiError && [401, 403].includes(e.status)
+            ? e.status
+            : 503,
+        )
+        .send();
     if (e instanceof ApiError) {
       if (e.retryAfter) reply.header("Retry-After", String(e.retryAfter));
       return reply
@@ -604,6 +619,7 @@ export async function createApp(
     recordingConfigured: c.recordingConfigured,
     waitingRoomConfigured: true,
     persistentChatConfigured: true,
+    participantModerationConfigured: c.livekit.signalingAuthEnabled,
     mfaConfigured: true,
     recordingRetentionDays: c.recordingRetentionDays,
     chatRetentionDays: c.chatRetentionDays,
@@ -1151,7 +1167,7 @@ export async function createApp(
         startsAt: r.starts_at,
         durationMinutes: r.duration_minutes,
         allowGuests: r.allow_guests,
-        waitingRoom: r.waiting_room,
+        waitingRoom: r.waiting_room || r.guest_admission_required,
         maxParticipants: r.max_participants,
         status: r.status,
       },
@@ -1162,7 +1178,7 @@ export async function createApp(
   app.post(
     "/api/rooms/:slug/join",
     { config: { rateLimit: false } },
-    async (req) => {
+    async (req, reply) => {
       const b = z
         .object({
           name: z.string().trim().min(1).max(100).optional(),
@@ -1180,6 +1196,15 @@ export async function createApp(
         "Видеосвязь пока не настроена.",
       );
       const joiningUser = await user(req, false);
+      const guestKeyHash = joiningUser
+        ? undefined
+        : roomVisitorKey(req, reply, c.appUrl.startsWith("https://"));
+      await requireBudget(
+        limiter,
+        `join-subject:${joiningUser?.id ?? guestKeyHash}`,
+        20,
+        60,
+      );
       return transaction(pool, async (db) => {
         const discovered = (
           await db.query("SELECT workspace_id FROM im_rooms WHERE slug=$1", [
@@ -1199,15 +1224,22 @@ export async function createApp(
         );
         assert(r.status === "open", 409, "ROOM_CLOSED", "Встреча закрыта.");
         assert(u || b.name, 400, "NAME_REQUIRED", "Укажите ваше имя.");
+        await assertRoomUnblocked(db, r.id, u?.id ?? null, guestKeyHash);
         const admission = await admissionForJoin(
           db,
-          r,
+          {
+            ...r,
+            waiting_room: r.waiting_room || (!m && r.guest_admission_required),
+          },
           u,
           manage,
           u?.name || b.name!,
           b.waitingToken,
           limiter,
+          guestKeyHash,
         );
+        const admittedGuestKey = admission.guestKeyHash ?? guestKeyHash;
+        await assertRoomUnblocked(db, r.id, u?.id ?? null, admittedGuestKey);
         if (admission.pending) return admission.pending;
         const identity = u
           ? `user:${u.id}:${randomUUID()}`
@@ -1250,6 +1282,7 @@ export async function createApp(
           u,
           identity,
           admission.name,
+          admittedGuestKey,
         );
         if (admission.requestId)
           await db.query(
@@ -1307,11 +1340,22 @@ export async function createApp(
               "Сервер видеосвязи недоступен.",
             );
         }
+        const moderation = await participantModeration(
+          db,
+          r,
+          u,
+          m.role,
+          c.livekit.signalingAuthEnabled,
+        );
         return {
+          moderationConfigured: c.livekit.signalingAuthEnabled,
+          blocked: moderation.blocked,
           participants: participants.map((p) => ({
             identity: p.identity,
             name: p.name,
-            isGuest: p.identity.startsWith("guest:"),
+            isGuest: moderation.permissions.get(p.identity)?.isGuest ?? true,
+            canRemove:
+              moderation.permissions.get(p.identity)?.canRemove ?? false,
             microphoneMuted: !p.tracks.some(
               (t) => t.source === TrackSource.MICROPHONE && !t.muted,
             ),
@@ -1947,6 +1991,7 @@ export async function createApp(
     drainRetirements,
     paymentRequest: options.paymentRequest,
   };
+  const moderation = await registerModeration(app, suiteDependencies);
   await registerSuite(app, suiteDependencies);
   await registerBilling(app, suiteDependencies);
   await registerAnalysis(app, suiteDependencies);
@@ -2042,6 +2087,15 @@ export async function createApp(
             );
         }
       });
+      if (
+        event.event === "participant_joined" &&
+        event.room?.name &&
+        event.participant?.identity
+      )
+        await moderation.rejectRevokedJoin(
+          event.room.name,
+          event.participant.identity,
+        );
       return { ok: true };
     });
   });

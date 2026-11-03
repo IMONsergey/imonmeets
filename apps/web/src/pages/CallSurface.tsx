@@ -33,6 +33,7 @@ type ManagedParticipant = {
   identity: string;
   name: string;
   isGuest: boolean;
+  canRemove?: boolean;
   microphoneMuted: boolean;
   cameraEnabled: boolean;
   screenSharing: boolean;
@@ -98,6 +99,9 @@ export function CallSurface({
   const [participantsOpen, setParticipantsOpen] = useState(false);
   const [managedParticipants, setManagedParticipants] =
     useState<ManagedParticipant[]>();
+  const [blockedParticipants, setBlockedParticipants] = useState<
+    { id: string; name: string }[]
+  >([]);
   const [participantError, setParticipantError] = useState("");
   const [moderating, setModerating] = useState("");
   const [participantRefresh, setParticipantRefresh] = useState(0);
@@ -175,7 +179,10 @@ export function CallSurface({
       if (inFlight) return;
       inFlight = true;
       try {
-        const data = await api<{ participants: ManagedParticipant[] }>(
+        const data = await api<{
+          participants: ManagedParticipant[];
+          blocked?: { id: string; name: string }[];
+        }>(
           `/workspaces/${management.workspaceId}/rooms/${management.roomId}/participants`,
           undefined,
           undefined,
@@ -183,6 +190,7 @@ export function CallSurface({
         );
         if (!controller.signal.aborted) {
           setManagedParticipants(data.participants);
+          setBlockedParticipants(data.blocked ?? []);
           setParticipantError("");
         }
       } catch (e) {
@@ -437,8 +445,83 @@ export function CallSurface({
                         ? "Микрофон выключен"
                         : "Выключить микрофон"}
                     </Button>
+                    {participant.canRemove && (
+                      <div className="call-participant-actions">
+                        {[false, true].map((ban) => (
+                          <Button
+                            key={String(ban)}
+                            disabled={
+                              Boolean(moderating) || Boolean(participantError)
+                            }
+                            className={ban ? "danger-quiet" : ""}
+                            aria-label={`${ban ? "Заблокировать" : "Удалить"}: ${participant.name || "Участник"}`}
+                            onClick={async () => {
+                              const explanation = ban
+                                ? "Участник будет отключен. Повторный вход с прежними данными доступа запрещен. Новые гости будут ждать разрешения организатора."
+                                : "Участник будет отключен от встречи. Он сможет запросить новый вход по ссылке.";
+                              if (!confirm(explanation)) return;
+                              setModerating(participant.identity);
+                              try {
+                                await api(
+                                  `/workspaces/${management.workspaceId}/rooms/${management.roomId}/participants/${encodeURIComponent(participant.identity)}/remove`,
+                                  { ban },
+                                );
+                                notify(
+                                  ban
+                                    ? "Участник заблокирован в этой встрече"
+                                    : "Участник удален из встречи",
+                                );
+                              } catch (e) {
+                                notify((e as Error).message, true);
+                              } finally {
+                                setModerating("");
+                                setParticipantRefresh((value) => value + 1);
+                              }
+                            }}
+                          >
+                            {ban ? "Заблокировать" : "Удалить"}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
+                {blockedParticipants.length > 0 && (
+                  <section aria-label="Заблокированные участники">
+                    <p className="chat-privacy">
+                      Заблокированы в этой встрече. После отмены блокировки
+                      потребуется новый вход; прежний сеанс останется закрытым.
+                    </p>
+                    {blockedParticipants.map((blocked) => (
+                      <div className="call-participant-row" key={blocked.id}>
+                        <strong>{blocked.name}</strong>
+                        <Button
+                          disabled={Boolean(moderating)}
+                          onClick={async () => {
+                            setModerating(blocked.id);
+                            try {
+                              await api(
+                                `/workspaces/${management.workspaceId}/rooms/${management.roomId}/blocked/${blocked.id}`,
+                                undefined,
+                                "DELETE",
+                              );
+                              notify(
+                                "Блокировка отменена. Участник может запросить новый вход.",
+                              );
+                            } catch (e) {
+                              notify((e as Error).message, true);
+                            } finally {
+                              setModerating("");
+                              setParticipantRefresh((value) => value + 1);
+                            }
+                          }}
+                        >
+                          Отменить блокировку
+                        </Button>
+                      </div>
+                    ))}
+                  </section>
+                )}
               </>
             ) : (
               participants.map((participant) => (

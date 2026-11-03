@@ -21,6 +21,7 @@ export type Room = {
   durationMinutes: number;
   allowGuests: boolean;
   waitingRoom?: boolean;
+  guestAdmissionRequired?: boolean;
   maxParticipants: number;
   status: "open" | "closed";
   archivedAt?: string | null;
@@ -49,6 +50,7 @@ export type Config = {
   emailDelivery: "capture" | "external";
   googleOAuthConfigured?: boolean;
   mediaConfigured: boolean;
+  participantModerationConfigured?: boolean;
   recordingConfigured: boolean;
   transcriptionConfigured?: boolean;
   summaryConfigured?: boolean;
