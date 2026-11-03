@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { request as httpRequest } from "node:http";
 import { request as httpsRequest } from "node:https";
 import { setTimeout as delay } from "node:timers/promises";
@@ -22,6 +22,61 @@ export class AnalysisWorkerBusyError extends Error {
   }
 }
 
+const modelDigest = z.string().regex(/^[a-f0-9]{64}$/);
+const artifactSchema = z
+  .object({
+    path: z
+      .string()
+      .min(1)
+      .max(256)
+      .regex(/^[A-Za-z0-9_./-]+$/)
+      .refine((path) =>
+        path
+          .split("/")
+          .every((part) => part !== "" && part !== "." && part !== ".."),
+      ),
+    sha256: modelDigest,
+    bytes: z
+      .number()
+      .int()
+      .positive()
+      .max(16 * 1024 * 1024 * 1024),
+  })
+  .strict();
+export const analysisProvenanceSchema = z
+  .object({
+    schema: z.literal(1),
+    manifestSha256: modelDigest,
+    whisper: z
+      .object({
+        sha256: modelDigest,
+        files: z
+          .array(artifactSchema)
+          .min(3)
+          .max(128)
+          .refine(
+            (files) =>
+              new Set(files.map((file) => file.path)).size === files.length &&
+              ["model.bin", "config.json", "tokenizer.json"].every((name) =>
+                files.some((file) => file.path === name),
+              ),
+          ),
+      })
+      .strict(),
+    summary: z
+      .object({
+        sha256: modelDigest,
+        bytes: z
+          .number()
+          .int()
+          .min(24)
+          .max(16 * 1024 * 1024 * 1024),
+      })
+      .strict()
+      .optional(),
+  })
+  .strict();
+
 export const analysisResultSchema = z.object({
   text: z.string().max(500_000),
   segments: z
@@ -40,7 +95,58 @@ export const analysisResultSchema = z.object({
   model: z.string().min(1).max(160),
   summary: z.string().max(30_000).optional(),
   summaryModel: z.string().max(160).optional(),
+  // Historical rows may predate provenance. New worker results must pass the gate below.
+  provenance: analysisProvenanceSchema.optional(),
 });
+
+/** New results require measured identities bound to this release's approved manifest. */
+export function verifyAnalysisProvenance(
+  value: unknown,
+  expectedManifest: string,
+  summaryRequested: boolean,
+) {
+  const result = analysisResultSchema.parse(value);
+  const provenance = result.provenance;
+  if (
+    !/^[a-f0-9]{64}$/.test(expectedManifest) ||
+    !provenance ||
+    provenance.manifestSha256 !== expectedManifest
+  )
+    throw new Error("Analysis model manifest mismatch");
+  const files = [...provenance.whisper.files]
+    .sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0))
+    .map((file) => ({
+      bytes: file.bytes,
+      path: file.path,
+      sha256: file.sha256,
+    }));
+  const measuredInventory = createHash("sha256")
+    .update(JSON.stringify(files))
+    .digest("hex");
+  if (
+    provenance.whisper.sha256 !== measuredInventory ||
+    result.model !== "faster-whisper-sha256-" + measuredInventory
+  )
+    throw new Error("Analysis model identity mismatch");
+  if (
+    provenance.summary
+      ? result.summaryModel !== "gguf-sha256-" + provenance.summary.sha256
+      : result.summaryModel !== undefined
+  )
+    throw new Error("Analysis summary identity mismatch");
+  if (
+    summaryRequested &&
+    result.text.trim() &&
+    (!result.summary?.trim() || !provenance.summary)
+  )
+    throw new Error("Verified summary is missing");
+  if (
+    !summaryRequested &&
+    (result.summary !== undefined || provenance.summary || result.summaryModel)
+  )
+    throw new Error("Unexpected summary processing");
+  return result;
+}
 
 export async function readAnalysisResponse(response: Response) {
   if (!response.ok || !response.body)
@@ -505,6 +611,11 @@ export async function registerAnalysis(
             current.controller.signal,
           ),
         current.controller.signal,
+      );
+      verifyAnalysisProvenance(
+        result,
+        c.analysis.modelManifestSha256,
+        job.with_summary,
       );
       if (job.with_summary && !result.summary)
         throw new Error("Summary missing");

@@ -56,6 +56,7 @@ test(
       TRANSCRIPTION_ENABLED: "true",
       ANALYSIS_WORKER_URL: "http://127.0.0.1:" + address.port,
       ANALYSIS_WORKER_SECRET: "synthetic-analysis-worker-secret-only",
+      ANALYSIS_MODEL_MANIFEST_SHA256: "a".repeat(64),
     });
     async function until<T>(check: () => Promise<T> | T, message: string) {
       for (let attempt = 0; attempt < 400; attempt++) {

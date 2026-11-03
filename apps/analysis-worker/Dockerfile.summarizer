@@ -1,0 +1,13 @@
+# LLAMA_SERVER_IMAGE must be the official ggml-org server image pinned by digest.
+# Verify the build argument with scripts/check-analysis-images.py first.
+ARG LLAMA_SERVER_IMAGE
+FROM ${LLAMA_SERVER_IMAGE}
+USER 0
+RUN apt-get update && apt-get install -y --no-install-recommends python3 ca-certificates && rm -rf /var/lib/apt/lists/*
+WORKDIR /opt/imon-analysis
+COPY apps/analysis-worker/provenance.py apps/analysis-worker/summary_launcher.py ./
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 HF_HUB_OFFLINE=1 HF_HUB_DISABLE_TELEMETRY=1
+USER 10001:10001
+EXPOSE 8080
+ENTRYPOINT ["python3", "/opt/imon-analysis/summary_launcher.py"]
+CMD []

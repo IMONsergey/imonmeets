@@ -1,0 +1,45 @@
+# Include with compose.analysis.yml only when AI_SUMMARY_ENABLED=true.
+services:
+  summarizer:
+    image: ${SUMMARY_WORKER_IMAGE:?Set the built immutable summary image}
+    build:
+      context: .
+      dockerfile: apps/analysis-worker/Dockerfile.summarizer
+      args:
+        LLAMA_SERVER_IMAGE: ${LLAMA_SERVER_IMAGE:?Set the official ggml-org image pinned by digest}
+    environment:
+      ANALYSIS_MODEL_MANIFEST_PATH: /models/analysis-manifest.json
+      ANALYSIS_MODEL_MANIFEST_SHA256: ${ANALYSIS_MODEL_MANIFEST_SHA256:?Set the measured manifest digest}
+      SUMMARY_CONTEXT_TOKENS: "8192"
+      SUMMARY_THREADS: "2"
+    volumes:
+      - type: bind
+        source: ${ANALYSIS_MODELS_PATH:?Set the prepared immutable models directory}
+        target: /models
+        read_only: true
+        bind: { create_host_path: false }
+    read_only: true
+    tmpfs: ["/tmp:size=64m,uid=10001,gid=10001,mode=0700"]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    pids_limit: 128
+    cpus: 2
+    mem_limit: 3g
+    memswap_limit: 3g
+    restart: unless-stopped
+    stop_grace_period: 15s
+    healthcheck:
+      test:
+        [
+          CMD,
+          python3,
+          -c,
+          "import json,urllib.request; r=urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=5); assert json.load(r)['status']=='ok'",
+        ]
+      interval: 30s
+      timeout: 7s
+      retries: 3
+      start_period: 120s
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }

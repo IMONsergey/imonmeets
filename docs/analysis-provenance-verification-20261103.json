@@ -1,0 +1,81 @@
+{
+  "scope": "AI-01 synthetic artifact provenance",
+  "verifiedAt": "2026-11-03T06:34:37.750406+00:00",
+  "limits": {
+    "cpu": "1",
+    "memory": "2GiB",
+    "tasks": 128
+  },
+  "baseline": {
+    "expectedFailures": 2,
+    "liveBeforeFix": true
+  },
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "apps/analysis-worker",
+        "-p",
+        "test*.py",
+        "-v"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "/opt/imon-runtime/node/bin/node",
+        "node_modules/prettier/bin/prettier.cjs",
+        "--write",
+        "apps/api/src/analysis.ts",
+        "apps/api/src/config.ts",
+        "apps/api/test/analysis-fixtures.ts",
+        "apps/api/test/analysis-provenance.test.ts",
+        "apps/api/test/analysis-provenance.integration.test.ts",
+        "apps/api/test/analysis.integration.test.ts",
+        "compose.analysis.yml",
+        "compose.summary.yml",
+        "docs/analysis-model-provenance.md"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "/opt/imon-runtime/node/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "/home/sergey/.local/state/imonmeets-commercial-20261103/identity-ai-tests-tsconfig.json"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "/opt/imon-runtime/node/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-isolation=none",
+        "apps/api/test/analysis.test.ts",
+        "apps/api/test/analysis-provenance.test.ts",
+        "apps/api/test/analysis.integration.test.ts",
+        "apps/api/test/analysis-provenance.integration.test.ts"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0
+    }
+  ],
+  "realModelsLoaded": false,
+  "modelDownloads": false,
+  "productionChanges": false,
+  "liveAcceptance": "not performed"
+}

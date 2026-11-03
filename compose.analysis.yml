@@ -1,0 +1,52 @@
+# Optional private ASR overlay. Add compose.summary.yml only for AI summaries.
+# Preparation, image gates and acceptance: docs/analysis-model-provenance.md.
+services:
+  analysis-worker:
+    image: ${ANALYSIS_WORKER_IMAGE:?Set the built immutable worker image}
+    build:
+      context: .
+      dockerfile: apps/analysis-worker/Dockerfile
+      args:
+        PYTHON_IMAGE: ${PYTHON_IMAGE:?Set the official Python image pinned by digest}
+    environment:
+      ANALYSIS_WORKER_SECRET: ${ANALYSIS_WORKER_SECRET:?Set the private worker secret}
+      ANALYSIS_MODEL_MANIFEST_PATH: /models/analysis-manifest.json
+      ANALYSIS_MODEL_MANIFEST_SHA256: ${ANALYSIS_MODEL_MANIFEST_SHA256:?Set the measured manifest digest}
+      AI_SUMMARY_ENABLED: ${AI_SUMMARY_ENABLED:-false}
+      SUMMARY_URL: http://summarizer:8080
+      S3_ENDPOINT: ${S3_ENDPOINT:?Set the private recording store endpoint}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      S3_BUCKET: ${S3_BUCKET:?Set the recording bucket}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?Set the private recording credentials}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?Set the private recording credentials}
+    volumes:
+      - type: bind
+        source: ${ANALYSIS_MODELS_PATH:?Set the prepared immutable models directory}
+        target: /models
+        read_only: true
+        bind: { create_host_path: false }
+    read_only: true
+    tmpfs: ["/tmp:size=640m,uid=10001,gid=10001,mode=0700"]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    pids_limit: 128
+    cpus: 2
+    mem_limit: 3g
+    memswap_limit: 3g
+    restart: unless-stopped
+    stop_grace_period: 15s
+    healthcheck:
+      test:
+        [
+          CMD,
+          python,
+          -c,
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8090/health', timeout=10)",
+        ]
+      interval: 30s
+      timeout: 12s
+      retries: 3
+      start_period: 120s
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }

@@ -126,6 +126,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
   const analysis = {
     workerUrl: env.ANALYSIS_WORKER_URL || "",
     workerSecret: env.ANALYSIS_WORKER_SECRET || "",
+    modelManifestSha256: env.ANALYSIS_MODEL_MANIFEST_SHA256 || "",
     enabled: env.TRANSCRIPTION_ENABLED === "true",
     summaryEnabled: env.AI_SUMMARY_ENABLED === "true",
   };
@@ -133,7 +134,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     analysis.enabled &&
     recordingConfigured &&
     Boolean(analysis.workerUrl) &&
-    analysis.workerSecret.length >= 32;
+    analysis.workerSecret.length >= 32 &&
+    /^[a-f0-9]{64}$/.test(analysis.modelManifestSha256);
   const billing = {
     commercial:
       env.BILLING_MODE === "commercial" || env.BILLING_ENABLED === "true",

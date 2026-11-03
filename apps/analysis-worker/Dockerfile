@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg ca-certi
 WORKDIR /app
 COPY apps/analysis-worker/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt && useradd --uid 10001 --no-create-home --shell /usr/sbin/nologin worker
-COPY apps/analysis-worker/worker.py ./worker.py
+COPY apps/analysis-worker/worker.py apps/analysis-worker/provenance.py ./
 USER 10001:10001
 EXPOSE 8090
 CMD ["python", "worker.py"]
