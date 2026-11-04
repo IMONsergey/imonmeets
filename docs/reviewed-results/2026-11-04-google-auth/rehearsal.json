@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "scope": "ISOLATED_AUTH_SCHEMA_AND_LEGACY_READ_COMPATIBILITY",
+  "startedAt": "2026-11-04T09:19:37.810150+00:00",
+  "finishedAt": "2026-11-04T09:20:56.385674+00:00",
+  "candidateImage": "sha256:9c4b8abe99d816d215152ad75405d5a0b549dbd510ddcd5a594b57d5b8321a87",
+  "sourceCommit": "a3d816ff28cb4692d07c950d92642207a57f9a58",
+  "legacyImage": "sha256:601b62bbf561c82cc369f7ff8e920320f0745b9acfb4c8872fd94e3df623879e",
+  "productionDatabaseWritten": false,
+  "productionTrafficChanged": false,
+  "network": "none; application shares only disposable PostgreSQL network namespace",
+  "portsPublished": false,
+  "combinedCpuLimit": 0.5,
+  "combinedMemoryLimitMiB": 896,
+  "newProductionAuthWritesRollbackCertified": false,
+  "ok": true,
+  "stage": "complete",
+  "candidateReadCompatible": true,
+  "legacyRollbackReadCompatible": true,
+  "schemaDetails": {
+    "identityMarkers": 1,
+    "passwordEnrollments": 0,
+    "mailColumns": 4,
+    "acceptedMailRows": 0
+  },
+  "cleanupComplete": true,
+  "remainingDisposableContainers": [],
+  "before": {
+    "readOnly": "on",
+    "users": 7,
+    "accounts": 7,
+    "sessions": 23,
+    "verifications": 0,
+    "workspaces": 6,
+    "rooms": 18,
+    "members": 6,
+    "recordings": 2,
+    "invitations": 1,
+    "mfaUsers": 0,
+    "mfaSessions": 0,
+    "mfaChallenges": 0,
+    "emailRows": 0,
+    "acceptedMailRows": 0,
+    "identityTable": false,
+    "enrollmentTable": false,
+    "mailReconciliationTable": false,
+    "deletionBindingTable": false
+  },
+  "after": {
+    "readOnly": "on",
+    "users": 7,
+    "accounts": 7,
+    "sessions": 23,
+    "verifications": 0,
+    "workspaces": 6,
+    "rooms": 18,
+    "members": 6,
+    "recordings": 2,
+    "invitations": 1,
+    "mfaUsers": 0,
+    "mfaSessions": 0,
+    "mfaChallenges": 0,
+    "emailRows": 0,
+    "acceptedMailRows": 0,
+    "identityTable": true,
+    "enrollmentTable": true,
+    "mailReconciliationTable": true,
+    "deletionBindingTable": false
+  },
+  "afterLegacy": {
+    "readOnly": "on",
+    "users": 7,
+    "accounts": 7,
+    "sessions": 23,
+    "verifications": 0,
+    "workspaces": 6,
+    "rooms": 18,
+    "members": 6,
+    "recordings": 2,
+    "invitations": 1,
+    "mfaUsers": 0,
+    "mfaSessions": 0,
+    "mfaChallenges": 0,
+    "emailRows": 0,
+    "acceptedMailRows": 0,
+    "identityTable": true,
+    "enrollmentTable": true,
+    "mailReconciliationTable": true,
+    "deletionBindingTable": false
+  },
+  "routes": {
+    "candidate-read": [
+      {
+        "route": "/api/health",
+        "status": 200,
+        "expected": 200
+      },
+      {
+        "route": "/api/config",
+        "status": 200,
+        "expected": 200
+      },
+      {
+        "route": "/api/auth/get-session",
+        "status": 200,
+        "expected": 200
+      },
+      {
+        "route": "/api/me",
+        "status": 401,
+        "expected": 401
+      }
+    ],
+    "legacy-read": [
+      {
+        "route": "/api/health",
+        "status": 200,
+        "expected": 200
+      },
+      {
+        "route": "/api/config",
+        "status": 200,
+        "expected": 200
+      },
+      {
+        "route": "/api/auth/get-session",
+        "status": 200,
+        "expected": 200
+      },
+      {
+        "route": "/api/me",
+        "status": 401,
+        "expected": 401
+      }
+    ]
+  },
+  "evidenceLimit": "Compatibility of migrated current data and read routes only. No actual Google provider login, new auth enrollment, production traffic or writes were exercised.",
+  "previousFixtureAttempts": [
+    "Attempt1: readiness targeted temporary PostgreSQL init socket; changed to final TCP readiness. No candidate migration ran.",
+    "Attempt2: fixture assumed nonexistent GET /api/workspaces; corrected to actual protected GET /api/me. Migration and schema checks passed."
+  ]
+}

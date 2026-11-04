@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "scope": "POST_CUTOVER_EXISTING_BACKUP_SERVICE",
+  "checkedAt": "2026-11-04T09:37:05.598689+00:00",
+  "requestedAt": "2026-11-04T09:37:03.774851+00:00",
+  "action": "start-once",
+  "service": "imonmeets-backup.service",
+  "serviceResult": {
+    "Result": "success",
+    "ExecMainStartTimestamp": "Wed 2026-11-04 12:37:03 MSK",
+    "ExecMainExitTimestamp": "Wed 2026-11-04 12:37:05 MSK",
+    "ExecMainStatus": "0",
+    "ActiveState": "inactive",
+    "SubState": "dead",
+    "InvocationID": "90f13028ffbe4ca58f0338a151c97512"
+  },
+  "backup": {
+    "createdAt": "2026-11-04T09:37:05.253435+00:00",
+    "file": "imonmeets-20261104T093703Z.dump",
+    "bytes": 75325,
+    "sha256": "e13171681d0ba142cb671a9c197c489e3f7a4604fbc06dec09b23e046e52698b"
+  },
+  "catalogVerified": true,
+  "newIdentityAndMailSchemaInCatalog": true,
+  "encryptedBundlePresent": true,
+  "encryptedBundleBytes": 24288,
+  "encryptedBundleSha256": "fff8ab1efbab3c2ea4161c7c4b63fcdc6ad6619d67e8d7c75dec0568abcf8a56",
+  "decryptionTested": false,
+  "productionDatabaseManuallyChanged": false
+}

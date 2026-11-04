@@ -1,0 +1,237 @@
+{
+  "source": "a3d816ff28cb4692d07c950d92642207a57f9a58",
+  "baseImage": "sha256:601b62bbf561c82cc369f7ff8e920320f0745b9acfb4c8872fd94e3df623879e",
+  "verificationJob": "20261104T090727-b8258688ea",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "9d8f0e31938629baa8844c3667c418b21a53a01689bea46731dae2e9cb2027ca",
+      "bytes": 445
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "181bc8edda2fea2eb096444b6ade024f885953314ad14312d69f5e1b5f20896d",
+      "bytes": 7785
+    },
+    {
+      "path": "apps/api/dist/account-export.js",
+      "sha256": "954e16b954f163171f6ac37b0a21060c9eca41a84baa593bd01b622663fe2299",
+      "bytes": 4272
+    },
+    {
+      "path": "apps/api/dist/analysis-schema.js",
+      "sha256": "ba8419b9da1b50b7005072629fa8e26dc85429201c216129f9e5347372387fd2",
+      "bytes": 897
+    },
+    {
+      "path": "apps/api/dist/analysis.js",
+      "sha256": "c89ad3f66981b94f24e63c2a0d476490f97906771ef036bba9af389ad5e2e81e",
+      "bytes": 19810
+    },
+    {
+      "path": "apps/api/dist/app.js",
+      "sha256": "2b860b1ff93fbd2aa4b4554db53c2fde3c751ad3c83e034e1e2e9e551ccdf7ed",
+      "bytes": 71259
+    },
+    {
+      "path": "apps/api/dist/auth-mfa.js",
+      "sha256": "1586ae44b9a9a43a325be2ae9c164f85a996d66f84887b7bb015112a1886fa58",
+      "bytes": 3995
+    },
+    {
+      "path": "apps/api/dist/auth.js",
+      "sha256": "99d380bf34ee0b8809333088c1f4c055fdc21b1f3e9898ff498c8a86a3a1c81d",
+      "bytes": 4614
+    },
+    {
+      "path": "apps/api/dist/billing-schema.js",
+      "sha256": "087866b12d4104e6e7e38b34e65414d0b7f0bb53cd1a78ce2129d9c3417df561",
+      "bytes": 1247
+    },
+    {
+      "path": "apps/api/dist/billing.js",
+      "sha256": "dcca68ba3d97223ff08fdd1508a618ca5e78b2677b0cde19828a72b0ee841f59",
+      "bytes": 15540
+    },
+    {
+      "path": "apps/api/dist/config.js",
+      "sha256": "b61963ba8d49af27175de90d9a915a24d3a99088b2423eb45b008cc7585402e2",
+      "bytes": 9585
+    },
+    {
+      "path": "apps/api/dist/db.js",
+      "sha256": "c7fc41e184f9b6aa0240d74227173af94d2c06fd9da629b29874ab3cb8268fac",
+      "bytes": 5882
+    },
+    {
+      "path": "apps/api/dist/embedding.js",
+      "sha256": "5e4ed1a383c361bff7449ee31dc2ba4e14aa07608d4abff4b100f84425b9ff71",
+      "bytes": 1702
+    },
+    {
+      "path": "apps/api/dist/google-oauth-policy.js",
+      "sha256": "da20e34e7737ce99dc4aec6749aa858d16cb3e1586573a15a2c63ea15dcf3922",
+      "bytes": 1399
+    },
+    {
+      "path": "apps/api/dist/identity-schema.js",
+      "sha256": "e38521585f51b10f790e99b4bf872ea09f55a8f45dd8ee1acfe8b60e1a8e40b3",
+      "bytes": 1348
+    },
+    {
+      "path": "apps/api/dist/identity.js",
+      "sha256": "428200cfbd43d8fc46350a16ff9a37f3a8dc5031abedf41233f82bfe1e1fd559",
+      "bytes": 6098
+    },
+    {
+      "path": "apps/api/dist/limits.js",
+      "sha256": "79621c013a409337a2c47745ba460fd02854ddb8fd36dc823955a46db6e3e65b",
+      "bytes": 1290
+    },
+    {
+      "path": "apps/api/dist/mail-reconciliation.js",
+      "sha256": "bd463162437a87071c4bea64594de75b4d5854d496f36697a6b1090dc7860e44",
+      "bytes": 4144
+    },
+    {
+      "path": "apps/api/dist/mail-schema.js",
+      "sha256": "5ac9f3d27f6d12150b06dc08836eefce2aae5be4afbe2844d21e9c67a0de5f5a",
+      "bytes": 1242
+    },
+    {
+      "path": "apps/api/dist/mail.js",
+      "sha256": "97538b72c7403f26bb9677d766e05fd9783a88c9baaf2546530537d5915b3fca",
+      "bytes": 10683
+    },
+    {
+      "path": "apps/api/dist/media.js",
+      "sha256": "5acf5c4df1738991eaaf3a3abe7c211e4bd1d4fe27a3b951de5e47a51bf79bf7",
+      "bytes": 5080
+    },
+    {
+      "path": "apps/api/dist/migrate.js",
+      "sha256": "565b8fd1a9d16e46b750b8e7368344aced0d505f35b5059c53cfdb11d52314b2",
+      "bytes": 1259
+    },
+    {
+      "path": "apps/api/dist/payments.js",
+      "sha256": "cb5468687398cd91ca07be4cca02532c74750801ba30720cc4bd73d248777c9e",
+      "bytes": 9695
+    },
+    {
+      "path": "apps/api/dist/policy.js",
+      "sha256": "3fcaae59671d459ec9ef88c1067c495e4b677ebde6f400eec27c3bfc6d1e59b8",
+      "bytes": 815
+    },
+    {
+      "path": "apps/api/dist/proxy.js",
+      "sha256": "99bf266184eb8c48c24b2f2358973357028a807c0d1f27bfda668eb7703ab2bd",
+      "bytes": 1648
+    },
+    {
+      "path": "apps/api/dist/recordings.js",
+      "sha256": "e2a63870421df2df84ef12939f3d0dea4899066308eb5bef9a3034ff71d731ab",
+      "bytes": 2986
+    },
+    {
+      "path": "apps/api/dist/server.js",
+      "sha256": "a8ac4b9856d0af191f2d061b1837a19e9a1a69769d946aa6cfa89b878876c6ba",
+      "bytes": 343
+    },
+    {
+      "path": "apps/api/dist/suite-schema.js",
+      "sha256": "09ae013ef9ce64dac80622b1feef7a5638e7a35ad30a8b4be282431618106d59",
+      "bytes": 2547
+    },
+    {
+      "path": "apps/api/dist/suite.js",
+      "sha256": "5bf4ae81706ae0049749e45ddf2cfaafda76aad25f64ba9ff294dbbdbb9b223d",
+      "bytes": 25635
+    },
+    {
+      "path": "apps/api/package.json",
+      "sha256": "8b426037370eaabcc9e2972f9b0f0f16dbcc14f32e43ab56aa84bc125fa564c2",
+      "bytes": 959
+    },
+    {
+      "path": "apps/web/dist/assets/App-Cz-h5KYA.js",
+      "sha256": "fc22e018456c7faf5ffd388b89378c535f0d53b06fac1b1c55b98298a3dfc44b",
+      "bytes": 124339
+    },
+    {
+      "path": "apps/web/dist/assets/Embed-DoGlTbHB.js",
+      "sha256": "d9aee968df92fb3e38f0539ad2e17dd90aac30cebd4a2b488b90373510967b31",
+      "bytes": 4379
+    },
+    {
+      "path": "apps/web/dist/assets/Join-DI5HxBpw.js",
+      "sha256": "83394e1ef199803272bf3419a5e3c56374f4104c44e2354dbd2e7028257d1296",
+      "bytes": 693366
+    },
+    {
+      "path": "apps/web/dist/assets/api-PTcAdrzu.js",
+      "sha256": "65961c7c7a2487828d52e6b776f994517c314a5b8978cb2bd32d55279a8aecee",
+      "bytes": 9368
+    },
+    {
+      "path": "apps/web/dist/assets/browser-COyxp469.js",
+      "sha256": "0ca12be68ae74f5ee63b4f1871da9f8ef83b3f519df9c20af3f5f9e2f7fd1707",
+      "bytes": 23467
+    },
+    {
+      "path": "apps/web/dist/assets/index-B8UkhI5s.js",
+      "sha256": "b9a4156258df26043e8973ef047441e94e3a19b288af7e42df881e046b57ceb5",
+      "bytes": 230144
+    },
+    {
+      "path": "apps/web/dist/assets/index-DftWfW-a.css",
+      "sha256": "5c1cb36c336ce7455eabdcfed74ab2b52473b7fea0881d296758667891e2e33f",
+      "bytes": 77688
+    },
+    {
+      "path": "apps/web/dist/assets/rolldown-runtime-WkwZ5CU-.js",
+      "sha256": "2629f2ad3cb75a57d98de697127f5af7d777ef572bbcdfa6e3ce8f438cd4527e",
+      "bytes": 599
+    },
+    {
+      "path": "apps/web/dist/index.html",
+      "sha256": "5885f2b267bb85c7f8f080640d9fa7fef09111720a222b47c08155064ba00890",
+      "bytes": 694
+    },
+    {
+      "path": "apps/web/dist/sdk/v1/embed-protocol.js",
+      "sha256": "0aa1ee34027593c4a2bb5730e49ff51d086b1a3b21df59275dcb3c9a3eac4993",
+      "bytes": 2560
+    },
+    {
+      "path": "apps/web/dist/sdk/v1/embed.js",
+      "sha256": "f898e8efcf03fa2e8db067a3c0eb4f3ddae39fccfbe3ce64fe96f4d7f39b3805",
+      "bytes": 4786
+    },
+    {
+      "path": "apps/web/dist/sdk/v1/index.js",
+      "sha256": "2e523e343cb2633ac9107ce0c3fc3c33903a665bc214c0b750866b33a6fc4928",
+      "bytes": 5263
+    },
+    {
+      "path": "apps/web/dist/third-party-licenses.txt",
+      "sha256": "888c1a76141bc8446595e112575266da17f743eb23d3a68e82df5bae9cd103ae",
+      "bytes": 557764
+    },
+    {
+      "path": "apps/web/package.json",
+      "sha256": "770ab239f8256099fb8d33140262a47be594103f09eb6c9a45b32f36ffde8262",
+      "bytes": 672
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "e105a3e90736e3264327ce8f3d3d5a0afb7addbf452def12f5cd657f4416629e",
+      "bytes": 141116
+    },
+    {
+      "path": "package.json",
+      "sha256": "bc7e5f8ab1425d78382fd21d8c4938fc6ec595f43bda55b53536c96216c26526",
+      "bytes": 1376
+    }
+  ]
+}

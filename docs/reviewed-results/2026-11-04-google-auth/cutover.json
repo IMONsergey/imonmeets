@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "phase": "live_verified",
+  "at": "2026-11-04T09:34:58.453946+00:00",
+  "source": "a3d816ff28cb4692d07c950d92642207a57f9a58",
+  "image": "sha256:9c4b8abe99d816d215152ad75405d5a0b549dbd510ddcd5a594b57d5b8321a87",
+  "previousImage": "sha256:601b62bbf561c82cc369f7ff8e920320f0745b9acfb4c8872fd94e3df623879e",
+  "coreCounts": {
+    "users": 7,
+    "accounts": 7,
+    "sessions": 23,
+    "workspaces": 6,
+    "rooms": 18,
+    "members": 6,
+    "recordings": 2,
+    "invitations": 1,
+    "mfaUsers": 0,
+    "mailRows": 0,
+    "deletionBinding": false
+  },
+  "googleOAuthConfigured": true,
+  "registrationEnabled": true,
+  "dataPreserved": true,
+  "realGoogleAccountLoginVerified": false,
+  "precutoverBackupAvailable": true,
+  "evidenceLimit": "Runtime cutover, public configuration, preserved core counts and health only. A real Google account callback is a separate verification."
+}
