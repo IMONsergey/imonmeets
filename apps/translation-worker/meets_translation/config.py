@@ -86,6 +86,7 @@ class Settings:
     state_dir: Path = Path("ops-state/soniox-pilot")
     stt_model: str = "stt-rt-v6"
     tts_model: str = "tts-rt-v2"
+    ip_family: str = "auto"
     endpoint_delay_ms: int = 2000
     context: dict | None = field(default=None, repr=False)
 
@@ -105,6 +106,7 @@ class Settings:
             enabled=env.get("MEETS_TRANSLATION_ENABLED") == "true",
             api_key=env.get("SONIOX_API_KEY", ""),
             voice=env.get("SONIOX_VOICE", "Adrian"),
+            ip_family=env.get("SONIOX_IP_FAMILY", "auto"),
             stt_model=env.get("SONIOX_STT_MODEL", "stt-rt-v6"),
             endpoint_delay_ms=integer("SONIOX_ENDPOINT_DELAY_MS", 2000, 3000),
             context=load_context(Path(env["SONIOX_CONTEXT_FILE"])) if env.get("SONIOX_CONTEXT_FILE") else None,
@@ -118,6 +120,8 @@ class Settings:
         )
         if not 1 <= len(settings.voice) <= 100 or any(ord(c) < 32 for c in settings.voice):
             raise PilotError("INVALID_VOICE")
+        if settings.ip_family not in ("auto", "ipv4"):
+            raise PilotError("INVALID_IP_FAMILY")
         if settings.stt_model not in ("stt-rt-v6", "stt-rt-v5"):
             raise PilotError("UNSUPPORTED_STT_MODEL")
         if settings.endpoint_delay_ms < 500:

@@ -80,7 +80,7 @@ class WebSocketTests(unittest.IsolatedAsyncioTestCase):
                 await asyncio.sleep(0.01)
         async def sink(pcm): chunks.append(pcm)
         async with provider_fixture() as (connector, counts):
-            pipeline = SonioxPipeline(Settings(enabled=True, api_key="local-fixture-only"), "ru", "en", connector=connector)
+            pipeline = SonioxPipeline(Settings(enabled=True, api_key="local-fixture-only", ip_family="ipv4"), "ru", "en", connector=connector)
             metrics = await pipeline.run(source(), sink)
         self.assertEqual(counts, {"stt_bytes": 3200, "tts_streams": 1, "authenticated": 2})
         self.assertEqual(b"".join(chunks), tone(24000, 720, 1.0))

@@ -6,6 +6,7 @@ from dataclasses import dataclass, asdict, field
 import json
 import re
 import time
+import socket
 import uuid
 from .config import PilotError, STT_URL, TTS_URL, validate_route
 
@@ -150,6 +151,10 @@ class SonioxPipeline:
                     open_timeout=8, close_timeout=2, max_size=1_048_576,
                     max_queue=8, ping_interval=20, ping_timeout=10, proxy=None,
                     happy_eyeballs_delay=0.25, interleave=1)
+        if self.settings.ip_family == "ipv4":
+            # Per-worker choice for hosts with a broken IPv6/DNS path. Keep
+            # hostname resolution and TLS verification; never pin provider IPs.
+            opts["family"] = socket.AF_INET
         queue = asyncio.Queue(maxsize=8)
         segments = Segmenter(self.target, self.settings.max_text_chars)
         input_done = asyncio.Event()

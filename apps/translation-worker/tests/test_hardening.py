@@ -3,6 +3,7 @@ from dataclasses import replace
 import json
 import unittest
 import tempfile
+import socket
 from pathlib import Path
 
 from meets_translation.config import Settings, PilotError, STT_URL, load_context
@@ -50,7 +51,7 @@ class SegmentationTests(unittest.TestCase):
         self.assertFalse(args.with_speech)
         self.assertEqual(Settings.from_env({}).endpoint_delay_ms, 2000)
         for env in ({"SONIOX_ENDPOINT_DELAY_MS": "499"}, {"SONIOX_ENDPOINT_DELAY_MS": "3001"},
-                    {"SONIOX_STT_MODEL": "stt-unknown"}):
+                    {"SONIOX_STT_MODEL": "stt-unknown"}, {"SONIOX_IP_FAMILY": "guess"}):
             with self.assertRaises(PilotError):
                 Settings.from_env(env)
 
@@ -162,3 +163,20 @@ class ContextTransportTests(unittest.IsolatedAsyncioTestCase):
                 self.assertNotIn("context", config)
             else:
                 self.assertEqual(config["context"], context)
+
+
+class NetworkProfileTests(unittest.IsolatedAsyncioTestCase):
+    async def test_ipv4_is_explicit_and_never_pins_provider_addresses(self):
+        for family in ("auto", "ipv4"):
+            provider = FakeProvider([])
+            p = SonioxPipeline(Settings(enabled=True, api_key="test", ip_family=family), "ru", "en",
+                               connector=provider.connect, speech=False)
+            await p.run(frames(), None)
+            url, opts = provider.calls[0]
+            self.assertEqual(url, STT_URL)
+            if family == "ipv4":
+                self.assertEqual(opts["family"], socket.AF_INET)
+            else:
+                self.assertNotIn("family", opts)
+            self.assertNotIn("host", opts)
+            self.assertNotIn("ssl", opts)

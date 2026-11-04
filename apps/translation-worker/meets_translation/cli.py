@@ -68,7 +68,7 @@ async def run_wav(args, settings, run_id):
         receipt = {"run_id": run_id, "status": status, "source": args.source,
                    "target": args.target, "provider": "soniox", "error_code": error_code,
                    "stt_model": settings.stt_model, "tts_model": settings.tts_model,
-                   "endpoint_delay_ms": settings.endpoint_delay_ms,
+                   "endpoint_delay_ms": settings.endpoint_delay_ms, "ip_family": settings.ip_family,
                    "context_sha256": hashlib.sha256(json.dumps(settings.context, sort_keys=True).encode()).hexdigest() if settings.context else None,
                    **metrics.receipt()}
         (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
@@ -108,7 +108,7 @@ def main(argv=None):
                               "key_present": bool(settings.api_key), "voice": settings.voice,
                               "stt_model": settings.stt_model, "tts_model": settings.tts_model,
                               "context_present": bool(settings.context),
-                              "endpoint_delay_ms": settings.endpoint_delay_ms,
+                              "endpoint_delay_ms": settings.endpoint_delay_ms, "ip_family": settings.ip_family,
                               "routes": sorted(ROUTES), "max_input_seconds": settings.max_input_seconds,
                               "max_output_seconds": settings.max_output_seconds,
                               "max_text_chars": settings.max_text_chars,
