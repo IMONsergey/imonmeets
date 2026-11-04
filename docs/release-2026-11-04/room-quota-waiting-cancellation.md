@@ -45,16 +45,25 @@ current room policy.
 
 ## Verification checkpoint
 
-Source review and `git diff --check` passed. Independent review accepted both
-changes, subject to executed validation. At this checkpoint, local tests are
-queued and **are not reported as passing**.
+Source review and `git diff --check` passed. The integrated runtime source is
+`44355fda9350b392dee12e7c8bf16ec50c6b5a35`; both changes passed independent review.
 
-Frozen quota RED job: `20261104T094646-d41ef2755e`, using an archive of the exact
-`a3d816` baseline with the new regression file. The earlier mutable-worktree job
-`20261104T094422-a8a53fe109` was cancelled before execution. Shared unrelated
-running jobs were left alone. The integrated release owner runs one combined
-GREEN/PostgreSQL/browser/typecheck/build job plus mandatory GitHub CI; those
-receipts belong to the integrated release checkpoint.
+Frozen quota RED job `20261104T094646-d41ef2755e` ran the exact `a3d816` baseline
+with the new regression file. Both pilot and commercial cases reached the
+closure assertion and failed as intended: usage was 2 instead of 1. There were
+2 tests, 2 expected failures and no skips. The earlier mutable-worktree job
+`20261104T094422-a8a53fe109` was cancelled before execution.
+
+The integrated GREEN job `20261104T101010-8b97ef52fc` passed 11 API checks and
+5 browser checks (the parent fixture and four scenarios), with no failures or
+skips. Formatting, all TypeScript checks and API/web builds also passed.
+[GitHub Actions 41812430093](https://github.com/IMONsergey/imonmeets/actions/runs/41812430093)
+passed every workflow step for the same source: API 83/83, web 18/18, SDK 7/7,
+readiness 14/14 and browser 9/9. The existing concurrency fixture was aligned to
+open-room usage in `44355fd` while preserving its strict `[200, 409]` result.
+See [the sanitized integrated receipt](../reviewed-results/2026-11-04-google-auth/followup-verification.json)
+for source identity, counts and compiled hashes. No deployment was performed by
+these verification steps.
 
 The local test environment is restricted to the disposable commercial-test
 PostgreSQL container at loopback port 55441, with a new random schema for each

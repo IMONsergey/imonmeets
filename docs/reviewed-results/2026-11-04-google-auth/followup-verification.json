@@ -1,0 +1,61 @@
+{
+  "commit": "44355fda9350b392dee12e7c8bf16ec50c6b5a35",
+  "finishedAt": "2026-11-04T10:23:34.840770+00:00",
+  "passed": [
+    "changed_source_format",
+    "all_typechecks",
+    "quota_waiting_suite_api",
+    "waiting_cancellation_browser",
+    "api_web_build",
+    "official_png_dist_byte_identity"
+  ],
+  "artifacts": {
+    "apps/api/dist/app.js": "7601c4bdec6390a5261bce0856960ca40ed79699c81ebf516295faae4f101c91",
+    "apps/web/dist/index.html": "8394350ee31fae285d09fbbd58b22133c07072961b0d5559f5fb420f9fb3f4c1",
+    "apps/web/dist/brand/google-signin-light-icon.png": "33f5ab7c3d6b6af7c8cdd3e917e4475d9a2ffd407a7667a68747140b290bdeb8",
+    "apps/web/dist/brand/google-signin-light-icon@2x.png": "707f430da8d0de13091baa30729a49475cd84af6b1d849b2a76aeabe0c093397"
+  },
+  "deploymentPerformed": false,
+  "localJob": {
+    "id": "20261104T101010-8b97ef52fc",
+    "exitCode": 0,
+    "apiTests": {
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    "browserTests": {
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    "database": "disposable PostgreSQL schemas"
+  },
+  "ci": {
+    "runId": 41812430093,
+    "url": "https://github.com/IMONsergey/imonmeets/actions/runs/41812430093",
+    "commit": "44355fda9350b392dee12e7c8bf16ec50c6b5a35",
+    "status": "completed",
+    "conclusion": "success",
+    "apiPassed": 83,
+    "webPassed": 18,
+    "sdkPassed": 7,
+    "readinessPassed": 14,
+    "browserPassed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "allWorkflowStepsSucceeded": true
+  },
+  "quotaRegressionBaseline": {
+    "job": "20261104T094646-d41ef2755e",
+    "commit": "a3d816ff28cb4692d07c950d92642207a57f9a58",
+    "tests": 2,
+    "passed": 0,
+    "failed": 2,
+    "skipped": 0,
+    "expectedFailure": true,
+    "assertion": "a closed room must release one slot in both enforcement and the displayed usage",
+    "actual": 2,
+    "expected": 1
+  }
+}
