@@ -1,0 +1,18 @@
+Google Sign in brand asset
+
+File: google-signin-light-icon.svg
+Source: https://developers.google.com/static/identity/images/signin-assets.zip
+Archive entry: Android + Web/SVG/Light/Theme=Light, Show text=No, Shape=Square, Platform=Android+Web.svg
+Retrieved: 2026-11-04
+Archive SHA-256: ba884069e12093b06bcfd776915081254a7c95094b80d50be2c5dc6bac1c1da1
+SVG SHA-256: 6587b180203a99da15c0a041018e15c94ffd9556c4b9855bdc69806081a93791
+
+The SVG is copied byte-for-byte from Google's pre-approved Android + Web
+light, square, icon-only button. CSS displays its original central 20 x 20
+Google G artwork, without rescaling or changing its paths or colors.
+
+Google and the Google G are Google brand features. Their use here identifies
+Google sign-in and is subject to Google's branding guidelines, not the
+application's license:
+https://developers.google.com/identity/branding-guidelines
+https://www.google.com/permissions/guidelines.html

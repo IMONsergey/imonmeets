@@ -530,9 +530,14 @@ export function Auth({
                   }
                   onClick={signInWithGoogle}
                 >
-                  <span className="google-mark" aria-hidden="true">
-                    G
-                  </span>
+                  <img
+                    className="google-mark"
+                    src="/brand/google-signin-light-icon.svg"
+                    width={20}
+                    height={20}
+                    alt=""
+                    aria-hidden="true"
+                  />
                   Продолжить с Google
                 </Button>
                 {isRegister && (
