@@ -74,8 +74,8 @@ test(
             waitingToken: queued.waitingToken,
           })
         ).statusCode,
-        200,
-      ); // No waiting gate in this independent room.
+        403,
+      ); // Supplying a ticket never bypasses its room binding.
       assert.equal(
         (
           await h.request(

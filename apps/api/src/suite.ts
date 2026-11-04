@@ -82,7 +82,7 @@ export async function admissionForJoin(
   waitingToken: string | undefined,
   limiter: RateLimiter,
 ) {
-  if (!room.waiting_room || manager) return { name };
+  // A supplied ticket remains authoritative when admission policy changes.
   if (waitingToken) {
     const row = (
       await db.query(
@@ -122,6 +122,7 @@ export async function admissionForJoin(
       },
     };
   }
+  if (!room.waiting_room || manager) return { name };
   const queued = (
     await db.query(
       "SELECT count(*)::int AS n FROM im_waiting_requests WHERE room_id=$1 AND status='waiting' AND expires_at>now()",
@@ -255,12 +256,35 @@ export async function registerSuite(
     };
   });
   app.delete("/api/rooms/:slug/waiting", async (req) => {
-    const { row } = await waitingTicket(req, pool);
-    await pool.query(
-      "UPDATE im_waiting_requests SET status='denied' WHERE id=$1 AND used_at IS NULL",
-      [row.id],
-    );
-    return { ok: true };
+    waitingBody.parse(req.body);
+    return transaction(pool, async (db) => {
+      // Match /join's workspace -> room -> ticket lock order. A concurrent
+      // admission either sees this cancellation or finishes before this read.
+      const discovered = (
+        await db.query("SELECT workspace_id FROM im_rooms WHERE slug=$1", [
+          params(req).slug,
+        ])
+      ).rows[0];
+      assert(discovered, 404, "ROOM_NOT_FOUND", "Встреча не найдена.");
+      await db.query(
+        "SELECT id FROM im_workspaces WHERE id=$1 FOR NO KEY UPDATE",
+        [discovered.workspace_id],
+      );
+      const { row } = await waitingTicket(req, db, true);
+      // This release has no protected signaling revocation. Never report that
+      // an already-issued media grant was cancelled or disconnect other users.
+      assert(
+        !row.used_at,
+        409,
+        "WAITING_CANCELLATION_UNVERIFIED",
+        "Вход уже был разрешен. Отмену на сервере подтвердить не удалось. Вернитесь к проверке устройств.",
+      );
+      await db.query(
+        "UPDATE im_waiting_requests SET status='denied' WHERE id=$1",
+        [row.id],
+      );
+      return { ok: true };
+    });
   });
   app.get("/api/workspaces/:workspaceId/rooms/:roomId/waiting", async (req) => {
     const u = (await user(req))!,
