@@ -407,6 +407,23 @@ export async function createApp(
     url: "/api/auth/*",
     config: { rateLimit: false },
     handler: async (req, reply) => {
+      const authPath = req.url.split("?")[0]!;
+      const authUrl = new URL(req.url, c.appUrl);
+      // Every policy check and the provider handler must see the same path.
+      // WHATWG URL parsing removes dot segments and rewrites backslashes; a
+      // raw HTTP client can otherwise skip exact-path guards before forwarding.
+      assert(
+        authUrl.origin === c.appUrl &&
+          authUrl.pathname === authPath &&
+          authPath.startsWith("/api/auth/") &&
+          !authPath.includes("%") &&
+          !authPath.includes("\\") &&
+          !authPath.includes("//") &&
+          !authPath.endsWith("/"),
+        400,
+        "INVALID_AUTH_PATH",
+        "Некорректный путь запроса.",
+      );
       if (
         !c.emailConfigured &&
         (req.url.includes("request-password-reset") ||
@@ -418,18 +435,11 @@ export async function createApp(
           "Отправка почты не настроена.",
         );
       if (
-        req.url.split("?")[0] === "/api/auth/change-password" &&
+        authPath === "/api/auth/change-password" &&
         req.body &&
         typeof req.body === "object"
       )
         req.body = { ...req.body, revokeOtherSessions: true };
-      const authPath = req.url.split("?")[0]!;
-      assert(
-        !authPath.includes("%"),
-        400,
-        "INVALID_AUTH_PATH",
-        "Некорректный путь запроса.",
-      );
       if (req.method === "POST")
         assert(
           googleOAuthRequestAllowed(req.body),
@@ -511,7 +521,7 @@ export async function createApp(
           )
         ).rows[0]?.value;
       const response = await auth.handler(
-        new Request(new URL(req.url, c.appUrl), {
+        new Request(authUrl, {
           method: req.method,
           headers,
           ...(req.body ? { body: JSON.stringify(req.body) } : {}),
@@ -559,7 +569,7 @@ export async function createApp(
             [changedId],
           );
       }
-      const action = req.url.split("?")[0]!.slice("/api/auth/".length);
+      const action = authPath.slice("/api/auth/".length);
       if (
         [
           "sign-in/email",
