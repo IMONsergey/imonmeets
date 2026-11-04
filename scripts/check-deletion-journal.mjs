@@ -8,7 +8,7 @@ import { parseEnv } from "node:util";
 import { fileURLToPath } from "node:url";
 import { configurationHash } from "./check-launch-readiness.mjs";
 
-async function readEnv(file) {
+export async function readEnv(file) {
   const handle = await fs.open(file, constants.O_RDONLY | constants.O_NOFOLLOW);
   try {
     const before = await handle.stat();
