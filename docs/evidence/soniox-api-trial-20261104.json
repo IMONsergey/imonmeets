@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-04",
+  "scope": "first fixed FLEURS sentence in RU and EN; RU repeated once for diagnosis; not a benchmark",
+  "provider": "soniox",
+  "models": {
+    "stt": "stt-rt-v6",
+    "tts": "tts-rt-v2",
+    "voice": "Adrian"
+  },
+  "model_discovery_http_status": 200,
+  "inputs": {
+    "source": "Google FLEURS",
+    "upstream": "https://huggingface.co/datasets/google/fleurs",
+    "license": "CC-BY-4.0",
+    "revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+    "sentence_id": 1661,
+    "selection": "first manifest sentence, fixed before provider execution",
+    "clips": [
+      {
+        "language": "ru",
+        "original_sha256": "b0e4f0f98baeec754e723542ddb704f0c67aeeb0cb7528f648dc6842edac143f",
+        "pcm_sha256": "21f98e207db0d70f5b45fae074b1bdaf5cd328c12d421580306c0089dd45e9d6",
+        "duration_seconds": 9.06,
+        "reference": "Он не назвал цифру для сокращений бюджетов, сказав, что они будут сделаны исходя из производительности экономики Китая.",
+        "changes": "converted source WAV to PCM16 mono16000, no trimming"
+      },
+      {
+        "language": "en",
+        "original_sha256": "8a90dfd1aebb2b9c8315d8293c720223d7436079ace5299ad30a3ba552915081",
+        "pcm_sha256": "bbb6095bc6428245c5334a7776ec78d0678f9861c7e75498849c633f3495d7cc",
+        "duration_seconds": 6.36,
+        "reference": "He did not set a figure for the cuts, saying they will be made based on China's economic output.",
+        "changes": "converted source WAV to PCM16 mono16000, no trimming"
+      }
+    ]
+  },
+  "trials": [
+    {
+      "run_id": "e317798e-aec1-49b1-ac2a-19b3b6ef82ce",
+      "status": "failed",
+      "source": "ru",
+      "target": "en",
+      "provider": "soniox",
+      "input_bytes": 0,
+      "output_bytes": 0,
+      "translated_chars": 0,
+      "synthesis_streams": 0,
+      "first_translation_ms": null,
+      "first_audio_ms": null,
+      "max_queue_age_ms": 0,
+      "input_seconds": 0.0,
+      "output_seconds": 0.0,
+      "timing_scope": "since_pipeline_start_not_listener_latency",
+      "transcription_segments": null,
+      "translation_segments": [],
+      "saved_wav": {
+        "sha256": "712618020da1c97986d60975b6a279bb8b4f90b4ab392fa5d278df7fb89c5cc0",
+        "sample_rate": 24000,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 0
+      }
+    },
+    {
+      "run_id": "51f7b96b-3d13-46ed-bda6-62e62bf33a25",
+      "status": "completed",
+      "source": "ru",
+      "target": "en",
+      "provider": "soniox",
+      "input_bytes": 289920,
+      "output_bytes": 323584,
+      "translated_chars": 117,
+      "synthesis_streams": 3,
+      "first_translation_ms": 6068.198133987607,
+      "first_audio_ms": 7899.813422001898,
+      "max_queue_age_ms": 1957.620052009588,
+      "input_seconds": 9.06,
+      "output_seconds": 6.741333333333333,
+      "timing_scope": "since_pipeline_start_not_listener_latency",
+      "transcription_segments": null,
+      "translation_segments": [
+        "He gave me a figure for cutting budgets,",
+        " saying that they would be made",
+        " based on the productivity of China's economy."
+      ],
+      "saved_wav": {
+        "sha256": "d5f6b98763f5c33c6d5db5bb99bbdc27cffdd16715a57471c1999873a55e3d93",
+        "sample_rate": 24000,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 161792
+      }
+    },
+    {
+      "run_id": "69a171d4-41f2-48ec-8a12-4e2071e6a5ee",
+      "status": "failed",
+      "source": "en",
+      "target": "ru",
+      "provider": "soniox",
+      "input_bytes": 203520,
+      "output_bytes": 0,
+      "translated_chars": 103,
+      "synthesis_streams": 1,
+      "first_translation_ms": 3982.66542199417,
+      "first_audio_ms": null,
+      "max_queue_age_ms": 819.0815660054795,
+      "input_seconds": 6.36,
+      "output_seconds": 0.0,
+      "timing_scope": "since_pipeline_start_not_listener_latency",
+      "transcription_segments": [
+        "He did not set a figure for the cuts,",
+        " saying they will be made based on China's economic output."
+      ],
+      "translation_segments": [
+        "Он не назвал сумму за срезы,"
+      ],
+      "saved_wav": {
+        "sha256": "712618020da1c97986d60975b6a279bb8b4f90b4ab392fa5d278df7fb89c5cc0",
+        "sample_rate": 24000,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 0
+      }
+    },
+    {
+      "run_id": "435368bc-599d-4b0e-ae91-7e7fda30fcb1",
+      "status": "completed",
+      "source": "ru",
+      "target": "en",
+      "provider": "soniox",
+      "input_bytes": 289920,
+      "output_bytes": 319488,
+      "translated_chars": 117,
+      "synthesis_streams": 3,
+      "first_translation_ms": 5904.170299996622,
+      "first_audio_ms": 7673.171636008192,
+      "max_queue_age_ms": 1714.476168010151,
+      "input_seconds": 9.06,
+      "output_seconds": 6.656,
+      "timing_scope": "since_pipeline_start_not_listener_latency",
+      "transcription_segments": [
+        "Он мне назвал цифру для сокращения бюджетов,",
+        " сказав, что они будут сделаны",
+        " исходя из производительности экономики Китая."
+      ],
+      "translation_segments": [
+        "He gave me a figure for cutting budgets,",
+        " saying that they would be made",
+        " based on the productivity of China's economy."
+      ],
+      "saved_wav": {
+        "sha256": "c6fb40d5e1c1dfcc8c3f90de03c8f18c152f33e1d148c73cacd0ea643545c8f6",
+        "sample_rate": 24000,
+        "channels": 1,
+        "sample_width_bytes": 2,
+        "frames": 159744
+      }
+    }
+  ],
+  "result": "initial_quality_acceptance_failed",
+  "controls": {
+    "tests_passed": 23,
+    "tests_skipped": 0,
+    "job": "20261104T183455-b6e08c55e2"
+  },
+  "reservations": {
+    "attempts": 4,
+    "reserved_cents": 200,
+    "budget_cents": 500,
+    "invoice_verified": false
+  },
+  "execution_enabled_after_trial": false,
+  "source_file_sha256": {
+    "meets_translation/soniox.py": "330a2788e1b83b4398eabc8aca211677aab70d55fe6b5dab2fd6380174378d8a",
+    "meets_translation/cli.py": "12e75236bb8846337c87836516756aab91e7e8f3186b37de4e897ca8ab317ba0",
+    "tests/test_pilot.py": "59011c3d7f9a3a94497202053dd431024df250749342015a3bb8e56e5a6cfd24"
+  }
+}

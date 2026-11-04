@@ -41,13 +41,17 @@ async def run_wav(args, settings, run_id):
     metrics = pipeline.metrics
     # Deliberate test artifacts only; ordinary room mode does not retain content.
     try:
-        with wave.open(str(output / "translated.wav"), "wb") as wav, (output / "translation.jsonl").open("x") as text:
+        with (wave.open(str(output / "translated.wav"), "wb") as wav,
+              (output / "translation.jsonl").open("x") as text,
+              (output / "transcription.jsonl").open("x") as original):
             wav.setparams((1, 2, 24000, 0, "NONE", "not compressed"))
             async def audio(pcm):
                 wav.writeframesraw(pcm)
             async def transcript(chunk):
                 text.write(json.dumps({"text": chunk}, ensure_ascii=False) + "\n")
-            await pipeline.run(wav_frames(args.input), audio, transcript)
+            async def source_transcript(chunk):
+                original.write(json.dumps({"text": chunk}, ensure_ascii=False) + "\n")
+            await pipeline.run(wav_frames(args.input), audio, transcript, on_source=source_transcript)
             status = "completed"
     finally:
         receipt = {"run_id": run_id, "status": status, "source": args.source,

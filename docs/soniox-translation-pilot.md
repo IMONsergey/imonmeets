@@ -2,6 +2,8 @@
 
 Prepared 2026-11-04 for Meets IMON. Soniox is the selected **first evaluation provider**. This is an operator-run pilot, disabled by default. It is not deployed and has not passed linguistic or production acceptance. No provider key, account purchase or paid call was used during preparation.
 
+Latest: the owner later supplied a key and a real trial was run. The initial quality trial failed; execution is paused. See [real API trial](soniox-first-api-trial-20261104.md). The original offline preparation evidence below is historical.
+
 ## Scope
 
 `apps/translation-worker` contains an isolated Python worker, a locked dependency set and a CLI. It receives PCM16/16 kHz mono, streams it to Soniox STT plus one-way translation, sends only final translated text to TTS, and emits PCM16/24 kHz mono. Supported pilot routes: RU→EN, EN→RU, RU→ZH, ZH→RU, RU→AR, AR→RU. Each run has exactly one source and one target language. The built-in voice is Adrian; no voice cloning.
@@ -65,7 +67,7 @@ cd /home/sergey/imonmeets-soniox-20261104/apps/translation-worker
 
 After the owner authorizes paid execution, run the same command with `--execute`, through `imon-job submit --cwd ... --timeout 420 -- .venv/bin/python ...`. The env file is loaded by the worker, not exposed on the command line. Use the returned job ID to inspect status; do not duplicate a slow job.
 
-Each execution creates a fresh private directory containing `translated.wav`, `translation.jsonl` and `receipt.json`. `translation.jsonl` contains candidate final text sent to synthesis, not proof that every chunk was spoken. Check the receipt status before using a WAV. Keep test artifacts private and remove them when evaluation no longer needs them. Room mode does not persist source audio or translated text. Neither mode asserts anything about provider-side retention.
+Each execution creates a fresh private directory containing `translated.wav`, `transcription.jsonl`, `translation.jsonl` and `receipt.json`. `transcription.jsonl` contains final source recognition for diagnosis. `translation.jsonl` contains candidate final text sent to synthesis, not proof that every chunk was spoken. Check the receipt status before using a WAV. Keep test artifacts private and remove them when evaluation no longer needs them. Room mode does not persist source audio or translated text. Neither mode asserts anything about provider-side retention.
 
 ## Second paid run: a dedicated Meets test room
 
@@ -85,7 +87,7 @@ Each execution creates a fresh private directory containing `translated.wav`, `t
 
 Run execution through the queue with a finite 420-second job timeout. Stop the specific job or remove the translator participant to end it early. Confirm the worker left the room; remove its grant file. The API, DB authorization and external media/TURN path require a separate real-room acceptance run with the actual key. They were not exercised by the isolated fixture.
 
-## Validation evidence
+## Initial offline validation evidence (before the key)
 
 | Check | Result on 2026-11-04 |
 | --- | --- |
@@ -99,7 +101,7 @@ Run execution through the queue with a finite 420-second job timeout. Stop the s
 
 The first isolated RTC run exposed an input-duration/buffer-boundary failure; the bridge now stops by exact PCM byte budget as well as wall time. The successful suite above is after this fix. Fake provider text/tone is deliberately synthetic and is not translation-quality evidence.
 
-To repeat the ordinary suite (20 active tests, isolated RTC skipped unless selected):
+To repeat the current suite (22 active tests, isolated RTC skipped unless selected; 23 with isolated RTC):
 
 ```bash
 /home/sergey/.local/bin/imon-job submit \

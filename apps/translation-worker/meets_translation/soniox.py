@@ -98,7 +98,7 @@ class SonioxPipeline:
         self.metrics = Metrics()
         self.used = False
 
-    async def run(self, audio, on_audio, on_text=None):
+    async def run(self, audio, on_audio, on_text=None, *, on_source=None):
         """16000 Hz mono PCM16 input -> 24000 Hz mono PCM16 output callbacks.
 
         The caller owns durable reservation, lifetime, consent and output storage.
@@ -114,7 +114,8 @@ class SonioxPipeline:
         started = self.clock()
         opts = dict(additional_headers={"Authorization": f"Bearer {self.settings.api_key}"},
                     open_timeout=8, close_timeout=2, max_size=1_048_576,
-                    max_queue=8, ping_interval=20, ping_timeout=10, proxy=None)
+                    max_queue=8, ping_interval=20, ping_timeout=10, proxy=None,
+                    happy_eyeballs_delay=0.25, interleave=1)
         queue = asyncio.Queue(maxsize=8)
         segments = Segmenter(self.target, self.settings.max_text_chars)
         input_done = asyncio.Event()
@@ -122,7 +123,13 @@ class SonioxPipeline:
         async with AsyncExitStack() as stack:
             try:
                 async with asyncio.timeout(self.settings.max_wall_seconds):
-                    stt = await stack.enter_async_context(self.connector(STT_URL, **opts))
+                    async def open_connection(url, service):
+                        try:
+                            return await stack.enter_async_context(self.connector(url, **opts))
+                        except TimeoutError:
+                            raise PilotError(f"{service}_CONNECT_TIMEOUT") from None
+
+                    stt = await open_connection(STT_URL, "STT")
                     await stt.send(json.dumps({
                         "model": self.settings.stt_model, "audio_format": "pcm_s16le",
                         "sample_rate": 16000, "num_channels": 1,
@@ -167,6 +174,13 @@ class SonioxPipeline:
                             data = message(raw)
                             for item in segments.feed(data.get("tokens", []), self.clock()):
                                 enqueue(item)
+                            if on_source is not None:
+                                original = "".join(t.get("text", "") for t in data.get("tokens", [])
+                                    if t.get("is_final") is True
+                                    and t.get("translation_status") != "translation"
+                                    and t.get("text") not in ("<end>", "<fin>"))
+                                if original:
+                                    await on_source(original)
                             self.metrics.translated_chars = segments.total
                             if segments.total and self.metrics.first_translation_ms is None:
                                 self.metrics.first_translation_ms = (self.clock() - started) * 1000
@@ -198,7 +212,7 @@ class SonioxPipeline:
                             if on_text is not None:
                                 await on_text(text)
                             if tts is None:
-                                tts = await stack.enter_async_context(self.connector(TTS_URL, **opts))
+                                tts = await open_connection(TTS_URL, "TTS")
                             stream_id = str(uuid.uuid4())
                             self.metrics.synthesis_streams += 1
                             await tts.send(json.dumps({

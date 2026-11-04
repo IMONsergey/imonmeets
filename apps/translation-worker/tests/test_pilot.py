@@ -107,6 +107,21 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         _, _, text = await self.run_pipeline(provider)
         self.assertEqual(text, ["Correct translation."])
 
+    async def test_source_diagnostics_keep_final_original_separate(self):
+        provider = FakeProvider([
+            {**final("Wrong partial."), "is_final": False, "translation_status": "original"},
+            {**final("Original."), "translation_status": "original"},
+            final("Translation."), final("<end>"),
+        ])
+        original, translated = [], []
+        async def on_source(text): original.append(text)
+        async def on_text(text): translated.append(text)
+        async def on_audio(pcm): pass
+        pipeline = SonioxPipeline(Settings(enabled=True, api_key="test"), "ru", "en", connector=provider.connect)
+        await pipeline.run(frames(), on_audio, on_text, on_source=on_source)
+        self.assertEqual(original, ["Original."])
+        self.assertEqual(translated, ["Translation."])
+
     async def test_empty_translation_never_opens_tts(self):
         provider = FakeProvider([])
         _, audio, _ = await self.run_pipeline(provider)
@@ -119,6 +134,25 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
             with self.assertRaises(PilotError):
                 await self.run_pipeline(provider, settings)
             self.assertFalse(provider.calls)
+
+    async def test_connection_timeouts_identify_service_without_retry(self):
+        class TimeoutConnection:
+            async def __aenter__(self):
+                raise TimeoutError("private transport detail")
+            async def __aexit__(self, *args):
+                pass
+        for url, service in ((STT_URL, "STT"), (TTS_URL, "TTS")):
+            with self.subTest(service=service):
+                provider = FakeProvider()
+                connect = provider.connect
+                attempts = []
+                def connector(current, **options):
+                    attempts.append(current)
+                    return TimeoutConnection() if current == url else connect(current, **options)
+                provider.connect = connector
+                with self.assertRaisesRegex(PilotError, f"^{service}_CONNECT_TIMEOUT$"):
+                    await self.run_pipeline(provider)
+                self.assertEqual(attempts.count(url), 1)
 
     async def test_unexpected_language_stops_before_tts(self):
         provider = FakeProvider([final(language="ar")])
