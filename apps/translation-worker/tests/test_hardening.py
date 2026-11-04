@@ -6,7 +6,7 @@ import tempfile
 import socket
 from pathlib import Path
 
-from meets_translation.config import Settings, PilotError, STT_URL, load_context
+from meets_translation.config import Settings, PilotError, STT_URL, TTS_URL, load_context
 from meets_translation.cli import parser
 from meets_translation.soniox import Segmenter, SonioxPipeline
 from test_pilot import FakeProvider, final, frames
@@ -180,3 +180,30 @@ class NetworkProfileTests(unittest.IsolatedAsyncioTestCase):
                 self.assertNotIn("family", opts)
             self.assertNotIn("host", opts)
             self.assertNotIn("ssl", opts)
+
+
+class SlowConnectTests(unittest.IsolatedAsyncioTestCase):
+    async def test_expired_text_during_connect_does_not_start_paid_synthesis(self):
+        now = [0.0]
+        provider = FakeProvider([final("Translation."), final("<end>")])
+        class SlowTTS:
+            async def __aenter__(self):
+                now[0] = 6.0
+                return await provider.tts.__aenter__()
+            async def __aexit__(self, *args):
+                return await provider.tts.__aexit__(*args)
+        def connect(url, **opts):
+            return SlowTTS() if url == TTS_URL else provider.stt
+        translated, synthesis = [], []
+        async def target(text): translated.append(text)
+        async def spoken(text): synthesis.append(text)
+        p = SonioxPipeline(Settings(enabled=True, api_key="test"), "ru", "en",
+                           connector=connect, clock=lambda: now[0])
+        with self.assertRaisesRegex(PilotError, "^STALE_TRANSLATION$"):
+            await p.run(frames(), None, spoken, on_translation=target)
+        self.assertEqual(translated, ["Translation."])
+        self.assertFalse(provider.tts.sent)
+        self.assertFalse(synthesis)
+        self.assertEqual(p.metrics.synthesis_streams, 0)
+        self.assertEqual(p.metrics.synthesis[0]["status"], "stale_after_connect")
+        self.assertTrue(provider.tts.closed and provider.stt.closed)

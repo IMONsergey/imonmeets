@@ -2,7 +2,7 @@
 
 Prepared 2026-11-04 for Meets IMON. Soniox is the selected **first evaluation provider**. This is an operator-run pilot, disabled by default. It is not deployed and has not passed linguistic or production acceptance. No provider key, account purchase or paid call was used during preparation.
 
-Latest: the owner later supplied a key and a real trial was run. The initial quality trial failed; execution is paused. See [real API trial](soniox-first-api-trial-20261104.md). The original offline preparation evidence below is historical.
+Latest: the owner later supplied a key and a real trial was run. The initial quality trial failed. A follow-up hardening and domain-context experiment is recorded in [quality iteration](soniox-quality-iteration-20261104.md). Persistent execution remains disabled; production quality is not accepted. See also [first real API trial](soniox-first-api-trial-20261104.md). The original offline preparation evidence below is historical.
 
 ## Scope
 
@@ -10,7 +10,7 @@ Latest: the owner later supplied a key and a real trial was run. The initial qua
 
 Two entry points are available:
 
-- `wav`: pace an existing test recording in real time, save translated WAV, candidate translation text and a receipt in a new private run directory.
+- `wav`: pace an existing test recording in real time and save source recognition, final translation and a receipt. Paid TTS is opt-in with `--with-speech`; the default paid diagnostic is text-only.
 - `room`: subscribe only to one explicitly selected participant's microphone and publish one translated microphone track to LiveKit. Use a dedicated test room. All participants subscribing to the worker hear this target language. Existing original audio is still audible: use headphones and deliberately adjust the original track for the test. There is no listener language selector, per-listener routing, automatic volume ducking or echo cancellation in this change.
 
 The bridge uses an **ordinary, revocable Meets room join grant**, with a distinct participant identity. It does not use LiveKit administrator credentials, mint production JWTs, bypass the waiting room, change ingress authorization or enable the old CPU speech path. Room closure, source departure/track replacement, worker disconnection/reconnection or an uncertain provider failure stops the pilot. No automatic reconnect, replay or provider fallback.
@@ -65,9 +65,9 @@ cd /home/sergey/imonmeets-soniox-20261104/apps/translation-worker
   --input /PRIVATE_PATH/ru-test.wav --output /PRIVATE_PATH/soniox-results
 ```
 
-After the owner authorizes paid execution, run the same command with `--execute`, through `imon-job submit --cwd ... --timeout 420 -- .venv/bin/python ...`. The env file is loaded by the worker, not exposed on the command line. Use the returned job ID to inspect status; do not duplicate a slow job.
+After the owner authorizes paid execution, run the same command with `--execute` for text-only evaluation, or `--execute --with-speech` for speech evaluation, through `imon-job submit --cwd ... --timeout 420 -- .venv/bin/python ...`. The env file is loaded by the worker, not exposed on the command line. Use the returned job ID to inspect status; do not duplicate a slow job.
 
-Each execution creates a fresh private directory containing `translated.wav`, `transcription.jsonl`, `translation.jsonl` and `receipt.json`. `transcription.jsonl` contains final source recognition for diagnosis. `translation.jsonl` contains candidate final text sent to synthesis, not proof that every chunk was spoken. Check the receipt status before using a WAV. Keep test artifacts private and remove them when evaluation no longer needs them. Room mode does not persist source audio or translated text. Neither mode asserts anything about provider-side retention.
+Each execution creates a fresh private directory containing `translated.wav`, `transcription.jsonl`, `translation.jsonl`, `synthesis.jsonl` and `receipt.json`. Text-only runs have an empty WAV and synthesis file and never open TTS. `transcription.jsonl` contains final source recognition; `translation.jsonl` retains all final target text received before termination; `synthesis.jsonl` records text admitted to synthesis, not proof that every chunk was played. An early failure can still leave an incomplete transcript. Receipts include stable error codes, model names, a context hash, connection/assembly/queue/TTS timing and received versus accepted audio bytes, including a late first chunk rejected by the freshness limit. Raw credentials, meeting context and provider error messages are not included in receipts. Check the receipt status before using a WAV. Keep test artifacts private and remove them when evaluation no longer needs them. Room mode does not persist source audio or translated text. Neither mode asserts anything about provider-side retention.
 
 ## Second paid run: a dedicated Meets test room
 
@@ -75,7 +75,7 @@ Each execution creates a fresh private directory containing `translated.wav`, `t
 2. Obtain a fresh, separate guest/participant grant for a visible translator participant using the ordinary `POST /api/rooms/:slug/join` flow with a name such as `Soniox translator [TEST]`. Preserve that guest's cookie across waiting-room requests. If pending, have the host approve it and resume the same admission flow with its waiting token; do not disable or bypass admission. Do not reuse a speaker's grant or create a service JWT. The app grant currently has a five-minute join lifetime, so obtain it immediately before connecting.
 3. Save the joined response's `serverUrl`, `roomName`, `identity`, `token` to a private JSON file, mode `600`. Do not put it in the repository or chat. Extra fields from the normal joined response are ignored. Production host validation permits only `wss://rtc.imon.world`; loopback `ws` is reserved for local fixtures.
 4. Select the speaker's exact current LiveKit participant identity from the normal room session. The worker's identity must differ. A speaker reconnect produces a new identity, so stop and obtain a fresh selection rather than replaying old audio.
-5. Dry-run first, then add `--execute` for the authorized trial:
+5. Dry-run first, then add `--execute --with-speech` for the authorized trial:
 
 ```bash
 .venv/bin/python -m meets_translation.cli \
@@ -101,7 +101,7 @@ Run execution through the queue with a finite 420-second job timeout. Stop the s
 
 The first isolated RTC run exposed an input-duration/buffer-boundary failure; the bridge now stops by exact PCM byte budget as well as wall time. The successful suite above is after this fix. Fake provider text/tone is deliberately synthetic and is not translation-quality evidence.
 
-To repeat the current suite (22 active tests, isolated RTC skipped unless selected; 23 with isolated RTC):
+To repeat the current suite (35 active tests, isolated RTC skipped unless selected; 36 with isolated RTC):
 
 ```bash
 /home/sergey/.local/bin/imon-job submit \
@@ -110,6 +110,26 @@ To repeat the current suite (22 active tests, isolated RTC skipped unless select
 ```
 
 For isolated RTC, set `MEETS_TEST_LIVEKIT_BINARY` to a verified local LiveKit binary in the queued command. The preparation reused `/livekit-server` from the already cached `livekit/livekit-server:v1.13.11` image without starting its container. Fixture credentials are ephemeral; the server binds loopback ports and is terminated in `finally`. On this worktree the ignored test-only binary is in `ops-state/soniox-test/livekit-server`. No model weights, private credentials, audio, receipts or binaries are committed.
+
+## Transport profile
+
+`SONIOX_IP_FAMILY` defaults to `auto`. Use `ipv4` only for a host with a measured slow or broken dual-stack path; it changes this worker connection family, not system networking. Hostnames and normal TLS verification remain in use. It is not a guarantee against resolver or TTS connection stalls. Freshness is rechecked after connection and before a synthesis request, so expired text is rejected without asking for paid generation.
+
+## Phrase boundaries and optional meeting context
+
+Final text is assembled until a sentence boundary or provider endpoint. Periods require lookahead because provider tokens can split decimal values or abbreviations. There is no forced cut at 0.75 seconds or 240 characters. An explicitly original-language endpoint cannot flush a target phrase. Incomplete speech text older than five seconds stops with `INCOMPLETE_TRANSLATION_STALE`; it is not voiced as a fragment. These conservative boundaries can increase latency. Text-only diagnosis is not subject to speech freshness, but retains input/text/wall-time limits. Continuous empty provider messages cannot extend the ten-second drain deadline.
+
+`SONIOX_ENDPOINT_DELAY_MS` defaults to the provider's 2000 ms setting, configurable between 500 and 3000. `SONIOX_STT_MODEL` defaults to `stt-rt-v6`; `stt-rt-v5` is available only for deliberate comparison and is deprecated by Soniox, scheduled for removal December 15, 2026. Do not adopt it as a lasting fix.
+
+Optionally set `SONIOX_CONTEXT_FILE` to an absolute private JSON file (regular file, no symlink, mode 600, at most 16 KiB). Supported fields are `general` (up to eight key/value objects), `text` (up to 4000 characters), `terms` and `translation_terms` (up to 100 entries). The file is explicitly sent to Soniox once per session and its contents are excluded from diagnostics. Use actual meeting subject and supplied terminology, not guessed speech, reference answers or automatic negation corrections. No domain context is globally hardcoded.
+
+Example of a domain-only evaluation context:
+
+```json
+{"general":[{"key":"domain","value":"Economics and government budgets"},{"key":"topic","value":"Public spending and economic indicators"}]}
+```
+
+A context tuned on a failing example does not establish general accuracy. Test held-out speech and every required language independently before enabling live speech.
 
 ## Acceptance still required
 
@@ -123,6 +143,9 @@ Production work after a successful provider trial: server-side translation entit
 
 Checked against official documentation on 2026-11-04:
 
+- https://docs.soniox.com/stt/models
+- https://docs.soniox.com/stt/concepts/context
+- https://docs.soniox.com/stt/rt/endpoint-detection
 - https://docs.soniox.com/api-reference/stt/websocket-api
 - https://docs.soniox.com/api-reference/tts/websocket-api
 - https://docs.soniox.com/tts/rt/connection-keepalive

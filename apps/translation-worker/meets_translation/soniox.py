@@ -281,10 +281,15 @@ class SonioxPipeline:
                             if age > self.settings.queue_seconds:
                                 trace["status"] = "stale_before_request"
                                 raise PilotError("STALE_TRANSLATION")
-                            if on_text is not None:
-                                await on_text(text)
                             if tts is None:
                                 tts = await open_connection(TTS_URL, "TTS")
+                            # Connecting can consume the entire freshness budget.
+                            # Recheck BEFORE sending a chargeable synthesis request.
+                            if self.clock() - born > self.settings.queue_seconds:
+                                trace["status"] = "stale_after_connect"
+                                raise PilotError("STALE_TRANSLATION")
+                            if on_text is not None:
+                                await on_text(text)
                             stream_id = str(uuid.uuid4())
                             self.metrics.synthesis_streams += 1
                             requested_at = self.clock()
