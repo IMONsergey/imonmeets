@@ -237,7 +237,7 @@ export async function registerBilling(
       );
     const usage = (
       await pool.query(
-        "SELECT (SELECT count(*)::int FROM im_rooms WHERE workspace_id=$1) AS rooms,(SELECT count(*)::int FROM im_members WHERE workspace_id=$1) AS members,(SELECT COALESCE(sum(size_bytes),0)::text FROM im_recordings WHERE workspace_id=$1 AND deleted_at IS NULL) AS recording_bytes,(SELECT count(*)::int FROM im_recordings WHERE workspace_id=$1 AND status IN ('starting','active','ending')) AS active_recordings",
+        "SELECT (SELECT count(*)::int FROM im_rooms WHERE workspace_id=$1 AND status='open') AS rooms,(SELECT count(*)::int FROM im_members WHERE workspace_id=$1) AS members,(SELECT COALESCE(sum(size_bytes),0)::text FROM im_recordings WHERE workspace_id=$1 AND deleted_at IS NULL) AS recording_bytes,(SELECT count(*)::int FROM im_recordings WHERE workspace_id=$1 AND status IN ('starting','active','ending')) AS active_recordings",
         [workspaceId],
       )
     ).rows[0];
@@ -259,6 +259,7 @@ export async function registerBilling(
             : "Пилот",
         limits: { ...limits, ...retention },
       },
+      roomsQuotaBasis: "open",
       usage: {
         rooms: usage.rooms,
         members: usage.members,

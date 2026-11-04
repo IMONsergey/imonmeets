@@ -816,7 +816,7 @@ export function Rooms({
       <PageHeading
         eyebrow="МЕСТО ДЛЯ РАЗГОВОРА"
         title="Встречи"
-        text="Запланированные встречи и постоянные комнаты вашего пространства."
+        text="В лимит входят только открытые комнаты. Завершенные встречи сохраняют историю и записи."
       >
         <Button className="primary" onClick={() => setEditor(true)}>
           <Plus size={18} />

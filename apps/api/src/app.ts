@@ -901,14 +901,14 @@ export async function createApp(
       await lockWorkspace(db, workspaceId!, u.id);
       const planLimits = await workspaceLimits(db, c, workspaceId!);
       const count = await db.query(
-        "SELECT count(*)::int AS n FROM im_rooms WHERE workspace_id=$1",
+        "SELECT count(*)::int AS n FROM im_rooms WHERE workspace_id=$1 AND status='open'",
         [workspaceId],
       );
       assert(
         count.rows[0].n < planLimits.rooms,
         409,
         "ROOM_LIMIT",
-        "Достигнут лимит комнат пространства.",
+        "Достигнут лимит открытых комнат. Завершите одну из встреч, чтобы создать новую.",
       );
       await requireBudget(limiter, `room-create:${u.id}`, 30, 3600, db);
       assert(

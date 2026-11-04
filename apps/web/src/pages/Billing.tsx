@@ -35,6 +35,7 @@ type Payment = {
 };
 type Plan = {
   plan: { id: string; name: string; limits: Limits };
+  roomsQuotaBasis: "open";
   usage: {
     rooms: number;
     members: number;
@@ -249,7 +250,10 @@ export function PlanSettings({ workspace }: { workspace: Workspace }) {
   );
   const rows = plan
     ? [
-        ["Комнаты", `${plan.usage.rooms} из ${plan.plan.limits.rooms}`],
+        [
+          "Открытые комнаты",
+          `${plan.usage.rooms} из ${plan.plan.limits.rooms}`,
+        ],
         [
           "Участники пространства",
           `${plan.usage.members} из ${plan.plan.limits.members}`,
@@ -360,8 +364,8 @@ export function PlanSettings({ workspace }: { workspace: Workspace }) {
               </div>
               <p>
                 До {plan.offer.limits.members} участников пространства и до{" "}
-                {plan.offer.limits.participants} участников встречи. Комнат:{" "}
-                {plan.offer.limits.rooms}. Хранение записей:{" "}
+                {plan.offer.limits.participants} участников встречи. Открытых
+                комнат: {plan.offer.limits.rooms}. Хранение записей:{" "}
                 {plan.offer.limits.recordingRetentionDays} дней.
               </p>
               <p className="form-note">
