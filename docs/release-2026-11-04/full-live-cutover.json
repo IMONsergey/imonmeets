@@ -1,0 +1,431 @@
+{
+  "schema": 1,
+  "purpose": "PUBLIC_SAFE_PROJECTION_OF_CONFIRMED_FULL_RELEASE_CUTOVER",
+  "applicationOrigin": "https://meets.imon.world",
+  "phase": "live_verified",
+  "liveVerifiedAt": "2026-11-04T11:56:18.507577+00:00",
+  "application": {
+    "source": "17147a6203814b5ea81de3eea547452496b2a6eb",
+    "runtimeImage": "sha256:5aac16d52549090301e8bc22d2fd423fd33dea986b5796e838680e5817bf2c29",
+    "originalBuildConfigImage": "sha256:0969e11b720d59bfafb992a8384581c5cb1ce630e5776edbfe9247eb118c0ddc",
+    "imageArchiveSha256": "a68ae4bd51608fe0e583986d8f47f8a84b50a0262c2cc002a4504a4b5fc4f2bc",
+    "sourceArchiveSha256": "89754ff6f4706c7f8e2b550744e0199770828a42043d894450077a471b8c195b",
+    "verifiedOrderedLayers": 13
+  },
+  "repository": {
+    "releaseBranch": "release/edge-transport-acme-20261103",
+    "releaseHead": "17147a6203814b5ea81de3eea547452496b2a6eb",
+    "mainFastForwardPushConfirmed": true,
+    "forcePushUsed": false,
+    "previousMain": "8439524dd27f379a6cfad893a4a00cb916488455",
+    "existingReleaseWorkflowBytesAlreadyOnGitHub": true,
+    "additionalWorkflowEditsToEnablePush": false,
+    "credentialScopesBroadened": false,
+    "mainAtApplicationFastForward": "17147a6203814b5ea81de3eea547452496b2a6eb",
+    "operatorCheckpointIntegrationBase": "17147a6203814b5ea81de3eea547452496b2a6eb",
+    "operatorContextCommitsDoNotRedeployApplication": true
+  },
+  "ci": {
+    "applicationImage": {
+      "runId": 41812641026,
+      "conclusion": "success",
+      "url": "https://github.com/IMONsergey/imonmeets/actions/runs/41812641026"
+    },
+    "operatorTooling": {
+      "runId": 41818797347,
+      "conclusion": "success",
+      "url": "https://github.com/IMONsergey/imonmeets/actions/runs/41818797347"
+    },
+    "mainAfterFastForward": {
+      "runId": 41825380740,
+      "conclusion": "success",
+      "url": "https://github.com/IMONsergey/imonmeets/actions/runs/41825380740",
+      "completedAt": "2026-11-04T12:02:36Z"
+    }
+  },
+  "operatorTooling": {
+    "codeCommit": "44eaf13d2bb400876c42b861569690e72705b150",
+    "sourceAssessmentCommit": "e3e834519b838b6db0ef3c53c7dbb75102239d5a",
+    "applicationImageRebuiltForTooling": false,
+    "originalBuildReceiptRewritten": false
+  },
+  "cutover": {
+    "allCanonicalAndLegacyApiRtcEntrypointsFenced": true,
+    "applicationAndEgressStoppedBeforeBaseline": true,
+    "original26TableColumnFingerprintsPreserved": true,
+    "baselineSha256": "3cc05d3948f25763a13bf00c6bcbcb7246b7b400f7b9cba7fee616bff2e1e101",
+    "baselineApprovalSha256": "c7f4a4d5b0839d71a6bae9605b4578dda5525473997411470c9b6ac0e16ca334",
+    "bindingPersisted": true,
+    "bindingMode": "reviewed-baseline",
+    "actualBoundBackup": {
+      "sha256": "a80e8855d5f88bf9d362cef3302355faa0dff3c8d33e8310f397784bff8f50ee"
+    },
+    "boundRecoveryAccepted": true,
+    "publicOpened": true,
+    "dataPreserved": true,
+    "admissionApiOutageFailsClosed": true,
+    "rtcUnauthenticatedGuards": [
+      {
+        "endpoint": "canonical",
+        "port": 443,
+        "path": "/rtc",
+        "status": 401
+      },
+      {
+        "endpoint": "canonical",
+        "port": 443,
+        "path": "/rtc/validate",
+        "status": 401
+      },
+      {
+        "endpoint": "canonical",
+        "port": 443,
+        "path": "/rtc/v1",
+        "status": 401
+      },
+      {
+        "endpoint": "canonical",
+        "port": 443,
+        "path": "/rtc/v1/validate",
+        "status": 401
+      },
+      {
+        "endpoint": "legacy",
+        "port": 8443,
+        "path": "/rtc",
+        "status": 401
+      },
+      {
+        "endpoint": "legacy",
+        "port": 8443,
+        "path": "/rtc/validate",
+        "status": 401
+      },
+      {
+        "endpoint": "legacy",
+        "port": 8443,
+        "path": "/rtc/v1",
+        "status": 401
+      },
+      {
+        "endpoint": "legacy",
+        "port": 8443,
+        "path": "/rtc/v1/validate",
+        "status": 401
+      }
+    ],
+    "restoredMaintenanceTimers": [
+      "imonmeets-backup.timer",
+      "imonmeets-recording-backup.timer",
+      "imonmeets-health.timer",
+      "imonmeets-restore-check.timer"
+    ],
+    "fencedInventoryPrivatelyVerified": true
+  },
+  "boundRecovery": {
+    "jobId": "20261104T115049-267ba5a95e",
+    "jobExitCode": 0,
+    "receiptSha256": "09733e6f6712b77f133c96c8b1fbf4674ed0ded6b78484d2480b39fb78a549a5",
+    "manifestSha256": "8cb3e6ddf4b8791e7d249f02ab7629e450fe53c4522c89f223812f69d7eae38e",
+    "gatesPassed": 7,
+    "all31RestoredTableFingerprintsMatched": true,
+    "immutableBindingAndApprovalMatched": true,
+    "canonicalHttpsSignedCheckpointVerified": true,
+    "wrongAuthorityRejectedBeforeWitnessContact": true,
+    "journalVersion": 0,
+    "appliedIntents": 0,
+    "checkpointRequests": 2,
+    "mediaRequests": 0,
+    "journalCopyReadOnlyAndUnchanged": true,
+    "all31TablesUnchangedAfterReplay": true,
+    "runtimeMode": "source171-pinned-tsx",
+    "immutableImageExecutedByThisRecoveryDrill": false,
+    "immutableImageStartupVerifiedSeparatelyBeforePublicOpen": true
+  },
+  "google": {
+    "configured": true,
+    "emailAuthenticationEnabled": true,
+    "registrationEnabled": true,
+    "providerOriginVerified": "https://meets.imon.world",
+    "providerRedirectVerified": "https://meets.imon.world/api/auth/callback/google",
+    "authorizationStartVerified": true,
+    "identityScopes": ["openid", "email", "profile"],
+    "secureStateCookieVerified": true,
+    "completedBrowserSignIn": "coordinator_confirmed_google_authenticated_dashboard_after_full_cutover",
+    "freshAccountSignupRepeatedAfterFullCutover": false,
+    "linkedGoogleAccountConfirmedInSecurityUi": true,
+    "passwordSetupFlowOffered": true,
+    "passwordSetupValidityMinutes": 15,
+    "passwordSetupSingleUse": true,
+    "passwordSetupEmailTriggered": false,
+    "credentialsChangedByQa": false
+  },
+  "mediaQa": {
+    "scope": "same-host production ingress only",
+    "smokeFinishedAt": "2026-11-04T12:14:14.000Z",
+    "smokeJobId": "20261104T121155-910ae1aabd",
+    "normalGuestGrants": 2,
+    "sampleMilliseconds": 10000,
+    "receivedAudioBytesAtSampleEnd": [98835, 98912],
+    "decodedVideoFramesAtSampleEnd": [149, 147],
+    "selectedProtocol": "udp",
+    "browserCleanupComplete": true,
+    "unexpectedBlockedMutations": 0,
+    "tokensOrCookiesPersistedByRunner": false,
+    "runnerSha256": "c545730773a04c13ffe51ddaff67333aef37f5efdad05bca5377cf5ee35b435f",
+    "clientToolingOfflineTests": {
+      "passed": 9,
+      "failed": 0,
+      "syntaxAndFormatting": "PASS"
+    },
+    "moderation": {
+      "status": "NOT_COMPLETED",
+      "runnerStatus": "FAIL",
+      "failureCode": "OWNER_ACK_TIMEOUT",
+      "failedStage": "awaiting_kick",
+      "finishedAt": "2026-11-04T12:18:02.990Z",
+      "jobId": "20261104T121655-fd3b05b038",
+      "browserCleanupComplete": true,
+      "unexpectedBlockedMutations": 0,
+      "kickAccepted": false,
+      "rejoinAccepted": false,
+      "banAccepted": false,
+      "endForAllAccepted": false,
+      "productFailureEstablished": false,
+      "coordinationLimitation": "Owner acknowledgement did not arrive within the fixed deadline; coordinator reported intermittent browser-control transport delays.",
+      "attempts": 2,
+      "boundedRetry": {
+        "jobId": "20261104T122255-3a61d46817",
+        "finishedAt": "2026-11-04T12:24:02.581Z",
+        "status": "FAIL",
+        "failureCode": "OWNER_ACK_TIMEOUT",
+        "failedStage": "awaiting_kick",
+        "browserCleanupComplete": true,
+        "nativeConfirmationObservedByCoordinator": true,
+        "confirmationHandlerTransportFailed": true,
+        "lateAcknowledgementSent": false,
+        "receivedAudioAndDecodedVideoProgress": true
+      },
+      "furtherRetriesPlanned": false,
+      "receivedAudioAndDecodedVideoProgress": true
+    },
+    "externalNatOrTurnAcceptance": "not_claimed",
+    "smokeStatus": "PASS",
+    "originalTestedClientToolingCommit": "bd407d72004bd332d9456c1c8ef0bac6b7857add",
+    "clientToolingIntegrationCommit": "08d14f1662cf6fd635b016f48a0d49e0bfbfeb0a",
+    "finalCleanup": {
+      "status": "PASS",
+      "targetedLiveKitRoomRecords": 0,
+      "targetedParticipants": 0,
+      "targetedActiveEgress": 0,
+      "databaseRoomStatus": "open",
+      "databaseMutationsPerformed": false,
+      "mediaEnvironmentFilesRemoved": 3,
+      "completedJobEnvironmentSnapshotsRemoved": 3,
+      "preservedEvidenceFilesUnchanged": 34
+    },
+    "receivedAudioAndDecodedVideoProgress": true,
+    "humanAudibilityVerified": false,
+    "decodedAudioSamplesMeasured": false,
+    "privilegedCredentialsUsedByMediaClient": false,
+    "blockedOutOfScopeBrowserHttpRequests": 0,
+    "browserHttpScope": "Playwright HTTP route counter for GET/HEAD requests outside approved origins; not an audit of UDP, STUN, TURN or WebSocket traffic."
+  },
+  "canonicalWitness": {
+    "httpsOrigin": "https://witness.imon.world",
+    "separateVmEndpointAndPersistentHostBindObserved": true,
+    "outsideMainPostgresRestoreLifecycle": true,
+    "restartContinuityAndSignedCheckpointVerified": true,
+    "encryptedAuthorityCustodyVerified": true,
+    "separatePhysicalHypervisorVerified": false,
+    "separateDatacenterVerified": false
+  },
+  "historicalLimits": {
+    "unresolvedWorkspaceDeletionEvents": 3,
+    "targetIdentifiersRecoveredFromBoundedArchiveInvestigation": 0,
+    "knownRecordingTargetsCheckedAbsent": 2,
+    "historicalDeletionCompleteness": false,
+    "historicalBackupErasureProven": false,
+    "prebaselineArchivesOfflineOnly": true,
+    "prebaselineArchiveReEnrollmentAllowed": false,
+    "bindingCopyIntoOlderDataAllowed": false,
+    "authorityResetAllowed": false,
+    "narrowOrJournalUnawareImageServingAfterBindingAllowed": false,
+    "offsiteDatabaseAndMediaRestoreVerifiedByThisWork": false
+  },
+  "evidenceHashes": {
+    "originalPrivateCutoverResult": "e114b5d884404758059d90b7e661a51cd97db3aee9ac58a940e178328751d6c7",
+    "performer": "a454368af714ce1f565e35eff8d296d12e9d475aff772842c0cdea9b0cd30872",
+    "finalPreflightGates": "7f79d0c4a9c8a22f08e5b313912ba09ea0f9734a3fdc3a634f4efae8ec6f97a3",
+    "performerIndependentReview": "819f5cd6d4b20291764bac3bb2935c1b59a9bffd7c0e9ecc1bc86c0f67d9c7d7",
+    "concreteBaselineIndependentReview": "79362b7b648fa8c414505d0764502da0eb2c3a029b4fe551c7bc99135f504b0d",
+    "actualBoundRecoveryIndependentReview": "4e357be13ac032ff21d1bb25fe498d8f6a44cc3a77465b783291cd1933a9d747",
+    "witnessTopologyReview": "123d8efe527f3898756d1d2f5d5dd5119fd26d4c789435bced4b873b109e0ab8",
+    "formalSourceImageManifest": "ee1dc7347032beffe84713cb8e74503cf80ef233c2e2dd09fe357d45bf93a164",
+    "disposableCleanup": "8313c49823cffbe2116e113e7e6fd9837e8754b5d22f400ef329b63031126979",
+    "postLiveLocalBackup": "e1a1f32314204e1f71ee0d7c6d9f55734bc9c0da162bade32fddf574d0d3a9bd",
+    "sameHostProductionMediaSmoke": "e9c92fd222a349e9febfa3fba84423d58c5f8acaf4612b368e9071b0d1842699",
+    "moderationIncompleteOwnerAcknowledgement": "6184d09045e8a683f92d01a06c0d320fba7738f81b549b463163538ba5db8225",
+    "completedFixtureJobEnvironmentCleanup": "03be32c110c8742b973e3a34c51929deba6165494f20c1abe73fcaad341f7afe",
+    "moderationRetryIncompleteOwnerAcknowledgement": "6878c6455a852891542266c6a999e9b3c9848af55fbe1c4ee06ee85266ceb394",
+    "mediaPrivateEnvironmentCleanup": "373310a3bf045be172dec963345dad42fe5fc8850845cb345b45144d4777ccd6"
+  },
+  "publicLaunchCertified": false,
+  "scope": "Prospective adoption of the continuously serving current live database with recorded unresolved history. This safe projection does not contain private configuration, database rows or dumps, account identifiers, MFA material, signing keys, or authority capsules.",
+  "postLiveLocalBackup": {
+    "checkedAt": "2026-11-04T12:04:09.279733+00:00",
+    "existingServiceCompleted": true,
+    "exitCode": 0,
+    "dumpSha256": "5ca82defe2dd23916320e05725933a815fa644adfc1c54b6a0435c82a3735859",
+    "schemaTableCount": 31,
+    "tableDataCount": 31,
+    "bindingRows": 1,
+    "canonicalBindingAndApprovalMatched": true,
+    "encryptedLocalCompanionProduced": true,
+    "encryptedCompanionDecryptedByThisCheck": false,
+    "newRestoreTestPerformedByThisCheck": false,
+    "retentionDays": 7,
+    "offsiteUploadsConfigured": false,
+    "existingRecipientAndPolicyUnchanged": true
+  },
+  "disposableRecoveryCleanup": {
+    "checkedAt": "2026-11-04T12:02:35.529367+00:00",
+    "status": "PASS",
+    "disposablePostgresFixturesRemoved": 2,
+    "disposableNetworksRemoved": 2,
+    "privateFixtureEnvironmentsDumpAndJournalCopyRemoved": true,
+    "originalBoundBackupAndEvidenceRetained": true,
+    "productionAppAndCanonicalMetadataUnchanged": true,
+    "productionDatabaseWrites": false,
+    "jobSnapshotFollowUp": {
+      "checkedAt": "2026-11-04T12:25:39.649934+00:00",
+      "status": "PASS",
+      "removedSnapshots": 3,
+      "copyInventoryCorrected": true,
+      "productionCredentialsChanged": false,
+      "receiptSha256": "03be32c110c8742b973e3a34c51929deba6165494f20c1abe73fcaad341f7afe"
+    }
+  },
+  "browserQa": {
+    "authenticatedDashboard": true,
+    "existingWorkspaceAccessible": true,
+    "normalUiRoomCreation": true,
+    "exactlyOneDisposableRoomCreated": true,
+    "maxParticipants": 4,
+    "durationMinutes": 60,
+    "guestAccess": true,
+    "waitingRoom": false,
+    "productCodeChangedForForm": false,
+    "privateRoomUrlPublished": false,
+    "firstUnproductiveClickRootCause": "not_established",
+    "normalGoogleAuthenticatedOrganizerJoin": true,
+    "organizerMicrophoneAndCameraOff": true,
+    "participantManagementControlsPresent": true,
+    "endForAllControlPresent": true,
+    "organizerBrowserTabsClosed": true,
+    "disposableRoomStatus": "open",
+    "manualNativeConfirmationStillRequiredToCloseRoom": true,
+    "normalCloseUiPath": "/rooms",
+    "productConfirmationBypassAdded": false
+  },
+  "visualEvidence": {
+    "file": "room-ui-after-release.jpg",
+    "sha256": "880bdc8f2e13e7f6faa8d801edbb1b29d3f86209a3b3fa1b9ee1184c69847c48",
+    "bytes": 33282,
+    "actualProductionUi": true,
+    "privacyCropIndependentlyViewed": true,
+    "accountWorkspaceHeaderExcluded": true,
+    "roomUrlIdentifiersCookiesExcluded": true,
+    "demonstrates": "Normal UI room creation; room still open awaiting manual confirmation",
+    "moderationPassClaimed": false
+  },
+  "initialProjectionPreparedAt": "2026-11-04T12:05:22.404560+00:00",
+  "updatedAt": "2026-11-04T13:12:31.721035+00:00",
+  "routineRestoreInspection": {
+    "originalSourceCommit": "d0cd68e64756f9074280654e68ad9448e9ad0188",
+    "integrationCommit": "878973d1516f087ce07fe582b4767dfaf544269a",
+    "helperSha256": "f14d68ea3d98fd8ac1e7762dc4bab6e86d07d12db8b9fb2689d1ed83b6d632ef",
+    "applicationSourceUnchanged": "17147a6203814b5ea81de3eea547452496b2a6eb",
+    "applicationDependenciesComposeAndWorkflowsUnchanged": true,
+    "offlineRegression": {
+      "status": "PASS",
+      "jobId": "20261104T125518-78d61222db",
+      "finishedAt": "2026-11-04T12:55:55.941016+00:00",
+      "testsPassed": 8,
+      "testsFailed": 0,
+      "actualDockerCalls": false,
+      "productionDatabaseQueries": false,
+      "receiptSha256": "67d37ed02530904641c0d61fc18fb52067c6bb083853dc6f5b39cef5bb9df31a"
+    },
+    "installedConfigurationLoaderProbe": {
+      "status": "PASS",
+      "checkedAt": "2026-11-04T12:58:15.958Z",
+      "receiptSha256": "3978cfee60e6f59d397dd3c019fc7cb5fccc95b24885074d428cc128b2613a16",
+      "effectiveMainComposeConfiguration": true,
+      "canonicalLocalHmacVerified": true,
+      "independentPublicVerificationKeyRetained": true,
+      "canonicalMetadataUnchanged": true,
+      "runtimeMode": "Unchanged application source through pinned tsx; compiled journal module absent",
+      "databaseQueries": false,
+      "receiverRequests": false,
+      "serviceInvoked": false
+    },
+    "actualRestoredCopyCore": {
+      "status": "PASS",
+      "checkedAt": "2026-11-04T13:06:28.970Z",
+      "jobId": "20261104T130627-84920de60b",
+      "jobExitCode": 0,
+      "fixtureReferenceCapturedAt": "2026-11-04T13:05:35.852Z",
+      "wholeArchiveRestored": true,
+      "backupSha256": "5ca82defe2dd23916320e05725933a815fa644adfc1c54b6a0435c82a3735859",
+      "tableCount": 31,
+      "publicTableCatalogMatchesCapturedReference": true,
+      "everyDiscoveredRestoredTableReadable": true,
+      "completeImmutableBindingMatched": true,
+      "canonicalLocalHmacVerified": true,
+      "journalCopyReadOnlyAndUnchanged": true,
+      "receiverRequests": false,
+      "productionDatabaseQueriesFromQueuedCore": false,
+      "productionMutations": false,
+      "enrollmentPerformed": false,
+      "replayPerformed": false,
+      "servingAuthorized": false,
+      "scheduledShellOrUnitInvoked": false,
+      "defaultDockerSqlAdapterInvoked": false,
+      "immutableApplicationImageExecuted": false,
+      "runtimeMode": "Source core with read-only PostgreSQL adapter to isolated fixture and pinned captured production catalog/binding",
+      "receiptSha256": "e06ef4679c9299d09bfd33c71f72559e6946870b6f9adec6c7e7c0030b58ac2d",
+      "fixtureManifestSha256": "6b9821bfa0e7c0f08cce4a3eac14605b260bebe6b29d3c21eb62d35660e85995",
+      "queueEvidenceSha256": "e9f29433a871c65b68b28ddcda06afdbf238379f43922ce2685cb765c8e97229"
+    },
+    "cleanup": {
+      "status": "PASS",
+      "checkedAt": "2026-11-04T13:10:15.912564+00:00",
+      "receiptSha256": "f4a4713ea0433e32385808a5c7361c6ee1ed41801d0ea55100f9f8ad26263551",
+      "ownContainerAndNetworkAbsent": true,
+      "fixtureDatabaseAndAuthorityEnvironmentsAbsent": true,
+      "readOnlyJournalCopyAbsent": true,
+      "rootFixtureDatabaseEnvironmentAbsent": true,
+      "completedJobEnvironmentSnapshotRemoved": true,
+      "requestStatusLogsReceiptsScriptsRetained": true,
+      "liveRuntimeUnchanged": true,
+      "canonicalJournalUnchanged": true,
+      "originalArchiveUnchanged": true,
+      "productionMutations": false,
+      "serviceInvoked": false,
+      "reconciliationNotes": "An initial metadata guard stopped before mutation; after successful resource deletion a wording mismatch was resolved by a separate read-only exact-resource/file absence check."
+    },
+    "activation": {
+      "mechanism": "Existing unit reads scripts from main; fast-forward activates them for the next scheduled run",
+      "systemdUnitsChanged": false,
+      "subsequentFullScheduledServiceExecutionClaimed": false,
+      "postIntegrationInstalledDefaultSqlAdapterProbe": "Separate from these pre-integration receipts"
+    },
+    "limits": [
+      "Current observed public table catalog equality is not independent application migration completeness.",
+      "No comparison of live row counts; per-table counts remain private.",
+      "No historical deletion certification, fresh independent checkpoint, replay, startup recovery, or serving authorization.",
+      "Loader probe, restored-copy core, installed default adapter, and scheduled unit execution are distinct evidence."
+    ]
+  }
+}

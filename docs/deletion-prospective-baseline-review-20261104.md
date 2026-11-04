@@ -14,7 +14,7 @@ A prospective decision can document adoption from a concrete writer fence while 
 
 ## Historical evidence that remains unresolved
 
-The retained audit reports three `workspace.deleted` events. The handler in [`suite.ts`](../apps/api/src/suite.ts) deliberately calls `audit(db, null, u.id, "workspace.deleted", null)` after deletion; those event fields do not retain the deleted workspace identity. When the target UUIDs cannot be recovered, the events alone cannot prove that those particular workspaces are absent from the current database or every backup.
+The retained audit reports three `workspace.deleted` events. The handler in [`suite.ts`](../apps/api/src/suite.ts) calls `audit(db, null, u.id, "workspace.deleted", null)` after deletion; those event fields do not retain the deleted workspace identity. When the target UUIDs cannot be recovered, the events alone cannot prove that those particular workspaces are absent from the current database or every backup.
 
 The older [preflight draft](verification/deployment-preflight-20261103.json) reports `historicalDeletedWorkspacesCurrentlyPresent: 0`. With null target identifiers, a zero match count is not an absence proof. Preserve the original draft as historical evidence; do not use that number as completed removal acceptance.
 
