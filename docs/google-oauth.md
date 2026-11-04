@@ -23,6 +23,16 @@ Authorized JavaScript origin:
 
 If the canonical APP_URL changes, derive both entries from its HTTPS origin and update the Google OAuth client to match exactly. Do not register wildcard callback paths or ephemeral Vercel preview URLs. The Google callback path is /api/auth/callback/google; the browser post-login callbackURL is a separate same-origin application path.
 
+## Permission boundary
+
+Google sign-in and linking request only `openid`, `email` and `profile`. The provider configuration explicitly fixes those scopes with `disableDefaultScope: true` and `includeGrantedScopes: false`.
+
+The API auth bridge rejects Google POST payloads that request any other scope, malformed scope lists or nonempty `additionalParams`. This check runs before session lookup or provider forwarding and covers both sign-in and linking, including route variants. The current web client does not require extra Google authorization parameters. Caller requests cannot enable incremental grants or offline access through `include_granted_scopes` or `access_type`.
+
+This restriction does not replace Better Auth's existing protection of state, PKCE, nonce, redirect URI and other reserved OAuth parameters. No redirect/state bypass is claimed or introduced.
+
+Offline policy checks: `npm run test:google-oauth-policy`. The API suite also injects real application routes with synthetic inputs and constructs an authorization URL using the actual configured provider. These checks send no request to Google and are not production OAuth acceptance.
+
 ## Account safety
 
 - Google provider requires a verified email before issuing a session.

@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { unifiedTwoFactor } from "./auth-mfa.js";
+import { googleOAuthProviderPolicy } from "./google-oauth-policy.js";
 import type { Pool } from "pg";
 import { postgresLimiter } from "./limits.js";
 import type { Config } from "./config.js";
@@ -70,6 +71,7 @@ export function createAuth(
       ? {
           socialProviders: {
             google: {
+              ...googleOAuthProviderPolicy(),
               clientId: c.google.clientId,
               clientSecret: c.google.clientSecret,
               requireEmailVerification: true,

@@ -15,6 +15,7 @@ import {
   drainAuthTasks,
 } from "./auth.js";
 import { registerIdentityRoutes } from "./identity.js";
+import { googleOAuthRequestAllowed } from "./google-oauth-policy.js";
 import type { Config } from "./config.js";
 import { createPool, transaction } from "./db.js";
 import {
@@ -429,6 +430,13 @@ export async function createApp(
         "INVALID_AUTH_PATH",
         "Некорректный путь запроса.",
       );
+      if (req.method === "POST")
+        assert(
+          googleOAuthRequestAllowed(req.body),
+          400,
+          "GOOGLE_SCOPE_NOT_ALLOWED",
+          "Для входа через Google разрешены только базовые данные аккаунта.",
+        );
       if (
         c.emailConfigured &&
         req.method === "POST" &&

@@ -156,6 +156,164 @@ test("link-social endpoint forwards only after server-side local email verificat
   }
 });
 
+test("Google scope policy rejects widened signin/link requests before forwarding", async () => {
+  const config = testConfig(false);
+  const pool = new Pool({
+    connectionString: config.databaseUrl,
+    connectionTimeoutMillis: 100,
+  });
+  const mock = mockAuth({
+    user: {
+      id: "scope-user",
+      email: "scope@example.test",
+      emailVerified: true,
+    },
+  });
+  const app = await createApp(config, {
+    pool,
+    logger: false,
+    auth: mock.auth,
+    limiter: {
+      async consume() {
+        return { allowed: true, retryAfter: null };
+      },
+    },
+  });
+  try {
+    for (const url of [
+      "/api/auth/sign-in/social",
+      "/api/auth/sign-in/social/",
+      "/api/auth/link-social",
+      "/api/auth/link-social/",
+    ]) {
+      for (const extra of [
+        { scopes: ["https://www.googleapis.com/auth/drive.readonly"] },
+        {
+          scopes: [
+            "openid",
+            "https://www.googleapis.com/auth/calendar.readonly",
+          ],
+        },
+        { additionalParams: { include_granted_scopes: "true" } },
+        { additionalParams: { access_type: "offline" } },
+        {
+          additionalParams: {
+            scope: "https://www.googleapis.com/auth/gmail.readonly",
+          },
+        },
+      ]) {
+        const response = await app.inject({
+          method: "POST",
+          url,
+          headers: {
+            origin: config.appUrl,
+            "x-imon-proxy-secret": proxySecret,
+          },
+          payload: {
+            provider: "google",
+            callbackURL: config.appUrl + "/home",
+            ...extra,
+          },
+        });
+        assert.equal(response.statusCode, 400, url);
+        assert.equal(
+          response.json().error.code,
+          "GOOGLE_SCOPE_NOT_ALLOWED",
+          url,
+        );
+        assert.deepEqual(mock.calls(), { handlerCalls: 0, sessionCalls: 0 });
+      }
+    }
+  } finally {
+    await app.close();
+    await pool.end();
+  }
+});
+
+test("Google scope policy preserves approved signin and verified linking", async () => {
+  const config = testConfig(false);
+  const pool = new Pool({
+    connectionString: config.databaseUrl,
+    connectionTimeoutMillis: 100,
+  });
+  const mock = mockAuth({
+    user: {
+      id: "scope-user",
+      email: "scope@example.test",
+      emailVerified: true,
+    },
+  });
+  const app = await createApp(config, {
+    pool,
+    logger: false,
+    auth: mock.auth,
+    limiter: {
+      async consume() {
+        return { allowed: true, retryAfter: null };
+      },
+    },
+  });
+  try {
+    for (const url of ["/api/auth/sign-in/social", "/api/auth/link-social"]) {
+      const response = await app.inject({
+        method: "POST",
+        url,
+        headers: { origin: config.appUrl, "x-imon-proxy-secret": proxySecret },
+        payload: {
+          provider: "google",
+          callbackURL: config.appUrl + "/home",
+          scopes: ["openid", "email", "profile"],
+          additionalParams: {},
+        },
+      });
+      assert.equal(response.statusCode, 200, url);
+    }
+    assert.deepEqual(mock.calls(), { handlerCalls: 2, sessionCalls: 1 });
+  } finally {
+    await app.close();
+    await pool.end();
+  }
+});
+
+test("Google scope policy configures the real provider for identity-only grants", async () => {
+  const config = testConfig(false);
+  const pool = new Pool({
+    connectionString: config.databaseUrl,
+    connectionTimeoutMillis: 100,
+  });
+  try {
+    const auth = createAuth(config, pool, async () => {
+      throw new Error("No email may be sent by this URL-only test");
+    });
+    const context = await auth.$context;
+    const provider = context.socialProviders.find(
+      (item) => item.id === "google",
+    );
+    assert(provider);
+    const url = new URL(
+      await provider.createAuthorizationURL({
+        state: "scope-fixture-state",
+        codeVerifier: "scope-fixture-verifier-".repeat(3),
+        redirectURI: "https://meets.fixture.invalid/api/auth/callback/google",
+      }),
+    );
+    assert.deepEqual(url.searchParams.get("scope")?.split(" ").sort(), [
+      "email",
+      "openid",
+      "profile",
+    ]);
+    assert.equal(url.searchParams.get("include_granted_scopes"), null);
+    assert.equal(url.searchParams.get("access_type"), null);
+    assert.equal(
+      url.searchParams.get("redirect_uri"),
+      "https://meets.fixture.invalid/api/auth/callback/google",
+    );
+    assert.equal(url.searchParams.get("code_challenge_method"), "S256");
+  } finally {
+    await pool.end();
+  }
+});
+
 async function listen(server: Server) {
   server.listen(0, "127.0.0.1");
   await once(server, "listening");
