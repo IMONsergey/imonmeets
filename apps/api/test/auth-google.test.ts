@@ -487,7 +487,7 @@ function createMockOAuthAuth(
   registrationEnabled: boolean,
   mfa = false,
 ) {
-  const database: Record<string, unknown[]> = {
+  const database: Record<string, unknown[]> & { session: unknown[] } = {
     user: [],
     session: [],
     account: [],
