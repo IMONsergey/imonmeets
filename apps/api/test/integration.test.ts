@@ -570,10 +570,14 @@ test(
       blocker.release();
       assert.equal((await staleEdit).statusCode, 403);
       // Quotas serialize concurrent room creations under the workspace lock.
-      const before = (
+      const openBefore = (
         await request("GET", `/api/workspaces/${w.id}/rooms`, undefined, owner)
-      ).json().rooms.length;
-      config.limits.rooms = before + 1;
+      )
+        .json()
+        .rooms.filter(
+          (room: { status: string }) => room.status === "open",
+        ).length;
+      config.limits.rooms = openBefore + 1;
       const concurrentRooms = await Promise.all([
         request(
           "POST",
