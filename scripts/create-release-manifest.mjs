@@ -13,6 +13,7 @@ import {
   mkdir,
   lstat,
   open,
+  realpath,
 } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -149,7 +150,7 @@ export function validateBuildReceipt(
 }
 
 /** Bounded descriptor read; reject symlinks, nonregular files and nonprivate mode. */
-export async function readBuildReceipt(file) {
+async function readBuildEvidence(file) {
   let handle;
   try {
     const before = await lstat(file);
@@ -192,11 +193,13 @@ export async function readBuildReceipt(file) {
       (after.mode & 0o777) !== 0o600
     )
       throw new Error();
-    return JSON.parse(
-      new TextDecoder("utf-8", { fatal: true }).decode(
-        buffer.subarray(0, size),
+    const raw = buffer.subarray(0, size);
+    return {
+      receipt: JSON.parse(
+        new TextDecoder("utf-8", { fatal: true }).decode(raw),
       ),
-    );
+      sha256: sha(raw),
+    };
   } catch {
     throw new Error(
       "Build receipt must be a stable private 0600 regular JSON file within 128 KiB",
@@ -204,6 +207,85 @@ export async function readBuildReceipt(file) {
   } finally {
     await handle?.close();
   }
+}
+
+export async function readBuildReceipt(file) {
+  return (await readBuildEvidence(file)).receipt;
+}
+
+/** Reverify the archive against live inspect data; a supplied JSON proof is never accepted. */
+export async function verifyContainerdImageTransfer({
+  directory,
+  commit,
+  imageInfo,
+  buildReceipt,
+  buildReceiptSha256,
+  sourceArchiveSha256,
+}) {
+  if (
+    typeof directory !== "string" ||
+    !path.isAbsolute(directory) ||
+    !record(buildReceipt) ||
+    !/^sha256:[a-f0-9]{64}$/.test(buildReceipt.imageId || "") ||
+    !/^[a-f0-9]{64}$/.test(buildReceiptSha256 || "")
+  )
+    throw new Error("Explicit immutable image transfer evidence is required");
+  const loaded = {
+    id: imageInfo.id,
+    created: imageInfo.created,
+    revision: imageInfo.revision,
+    os: imageInfo.os,
+    architecture: imageInfo.architecture,
+    rootfs: {
+      type: imageInfo.rootfs?.type,
+      diff_ids: imageInfo.rootfs?.diff_ids,
+    },
+    releaseCommit: imageInfo.releaseCommit,
+  };
+  const input = JSON.stringify(loaded);
+  const result = JSON.parse(
+    execFileSync(
+      "python3",
+      [
+        path.join(root, "scripts/verify-containerd-image-identity.py"),
+        "--directory",
+        directory,
+        "--source-commit",
+        commit,
+        "--expected-config-digest",
+        buildReceipt.imageId,
+        "--expected-build-receipt-sha256",
+        buildReceiptSha256,
+      ],
+      {
+        encoding: "utf8",
+        input,
+        timeout: 120000,
+        maxBuffer: 128 * 1024,
+        stdio: ["pipe", "pipe", "pipe"],
+        env: { ...process.env, PYTHONDONTWRITEBYTECODE: "1" },
+      },
+    ),
+  );
+  if (
+    !record(result) ||
+    result.schema !== 1 ||
+    result.status !== "PASS_ARCHIVE_TO_RUNTIME_IDENTITY" ||
+    result.sourceCommit !== commit ||
+    result.sourceArchiveSha256 !== sourceArchiveSha256 ||
+    result.imageCreatedAt !== imageInfo.created ||
+    result.legacyConfigDigest !== buildReceipt.imageId ||
+    result.runtimeManifestDigest !== imageInfo.id ||
+    result.buildReceiptSha256 !== buildReceiptSha256 ||
+    result.loadedProjectionSha256 !== sha(input) ||
+    result.loadedRootfsMatches !== true ||
+    result.imageExecuted !== false ||
+    result.originalReceiptsModified !== false
+  )
+    throw new Error(
+      "Image transfer identity proof does not match this preparation",
+    );
+  return result;
 }
 
 /** Hash the actual committed build context, without buffering an archive in RAM. */
@@ -269,14 +351,31 @@ export async function createManifest({
   commit,
   dirty,
   buildReceipt,
+  buildReceiptSha256,
   sourceArchiveSha256,
+  candidateTransfer,
+  operatorTooling,
   env = {},
   now = new Date().toISOString(),
 }) {
   const identity = validateReleaseIdentity(commit, dirty, imageInfo);
+  const imageIdentity = candidateTransfer
+    ? await verifyContainerdImageTransfer({
+        directory: candidateTransfer,
+        commit,
+        imageInfo,
+        buildReceipt,
+        buildReceiptSha256,
+        sourceArchiveSha256,
+      })
+    : undefined;
+  // Preserve the original receipt. Only the fully verified archive bridge may
+  // select its config digest for the strict receipt comparison; runtime stays pinned.
   const verifiedBuild = validateBuildReceipt(buildReceipt, {
     commit,
-    imageInfo,
+    imageInfo: imageIdentity
+      ? { ...imageInfo, id: imageIdentity.legacyConfigDigest }
+      : imageInfo,
     sourceArchiveSha256,
     now,
   });
@@ -305,6 +404,8 @@ export async function createManifest({
     applicationImage: identity.imageId,
     sourceArchiveSha256,
     buildReceipt: verifiedBuild,
+    ...(imageIdentity ? { imageIdentity } : {}),
+    ...(operatorTooling ? { operatorTooling } : {}),
     buildReceiptTrust:
       "trusted local 0600 receipt; not a cryptographic external attestation",
     configurationHashes: Object.fromEntries(
@@ -336,6 +437,15 @@ async function main() {
   const image = option("--image");
   const environment = option("--env");
   const receiptPath = option("--build-receipt");
+  const candidateTransfer = option("--candidate-transfer");
+  if (
+    candidateTransfer &&
+    (!path.isAbsolute(candidateTransfer) ||
+      !/^sha256:[a-f0-9]{64}$/.test(image || ""))
+  )
+    throw new Error(
+      "A containerd transfer requires an absolute directory and immutable runtime ID",
+    );
   if (
     !image ||
     !/^[a-z0-9][a-z0-9./:@_-]{0,255}$/.test(image) ||
@@ -343,26 +453,52 @@ async function main() {
     !receiptPath
   )
     throw new Error(
-      "Usage: --image IMAGE --env FILE --build-receipt FILE [--output FILE] [--sudo-docker]",
+      "Usage: --image IMAGE --env FILE --build-receipt FILE [--source DIR] [--candidate-transfer DIR] [--output FILE] [--sudo-docker]",
     );
-  const buildReceipt = await readBuildReceipt(receiptPath);
+  const { receipt: buildReceipt, sha256: buildReceiptSha256 } =
+    await readBuildEvidence(receiptPath);
+  const source = await realpath(option("--source") || root);
   const info = await lstat(environment);
   if (!info.isFile() || info.isSymbolicLink() || info.size > 128 * 1024)
     throw new Error("Environment file is not a bounded regular file");
   const env = parseEnv(await readFile(environment, "utf8"));
-  const git = (args) =>
+  const gitAt = (directory, args) =>
     execFileSync("git", args, {
-      cwd: root,
+      cwd: directory,
       encoding: "utf8",
       timeout: 10000,
       stdio: ["ignore", "pipe", "pipe"],
     }).trim();
+  const git = (args) => gitAt(source, args);
+  if ((await realpath(git(["rev-parse", "--show-toplevel"]))) !== source)
+    throw new Error("Release source must be the exact checkout root");
+  const toolingCommit = gitAt(root, ["rev-parse", "HEAD"]);
+  if (gitAt(root, ["status", "--porcelain"]))
+    throw new Error("Operator tooling is not clean committed source");
+  const toolingFiles = [
+    "create-release-manifest.mjs",
+    "verify-containerd-image-identity.py",
+    "ci-candidate-image.py",
+    "check-launch-readiness.mjs",
+  ];
+  const operatorTooling = {
+    commit: toolingCommit,
+    nodeVersion: process.version,
+    files: Object.fromEntries(
+      await Promise.all(
+        toolingFiles.map(async (name) => [
+          name,
+          sha(await readFile(path.join(root, "scripts", name))),
+        ]),
+      ),
+    ),
+  };
   const commit = git(["rev-parse", "HEAD"]);
   const dirty = git(["status", "--porcelain"]);
   if (dirty) throw new Error("Release source is not clean");
-  const sourceArchiveSha256 = await gitArchiveSha256(root, commit);
+  const sourceArchiveSha256 = await gitArchiveSha256(source, commit);
   const format =
-    '{"id":{{json .Id}},"created":{{json .Created}},"revision":{{json (index .Config.Labels "org.opencontainers.image.revision")}}}';
+    '{"id":{{json .Id}},"created":{{json .Created}},"revision":{{json (index .Config.Labels "org.opencontainers.image.revision")}},"os":{{json .Os}},"architecture":{{json .Architecture}},"rootfs":{"type":{{json .RootFS.Type}},"diff_ids":{{json .RootFS.Layers}}},"releaseEnv":{{json .Config.Env}}}';
   const dockerArgs = ["image", "inspect", "--format", format, image];
   const imageInfo = JSON.parse(
     execFileSync(
@@ -373,18 +509,42 @@ async function main() {
       { encoding: "utf8", timeout: 15000, stdio: ["ignore", "pipe", "pipe"] },
     ),
   );
+  if (candidateTransfer && imageInfo.id !== image)
+    throw new Error(
+      "Loaded runtime ID differs from the requested immutable ID",
+    );
+  const releaseValues = Array.isArray(imageInfo.releaseEnv)
+    ? imageInfo.releaseEnv.filter(
+        (value) =>
+          typeof value === "string" && value.startsWith("RELEASE_COMMIT="),
+      )
+    : [];
+  imageInfo.releaseCommit =
+    releaseValues.length === 1
+      ? releaseValues[0].slice("RELEASE_COMMIT=".length)
+      : undefined;
+  delete imageInfo.releaseEnv;
   const manifest = await createManifest({
+    source,
     commit,
     dirty,
     imageInfo,
     env,
     buildReceipt,
+    buildReceiptSha256,
     sourceArchiveSha256,
+    candidateTransfer,
+    operatorTooling,
   });
+  if (
+    gitAt(root, ["rev-parse", "HEAD"]) !== toolingCommit ||
+    gitAt(root, ["status", "--porcelain"])
+  )
+    throw new Error("Operator tooling changed during preparation");
   if (git(["rev-parse", "HEAD"]) !== commit || git(["status", "--porcelain"]))
     throw new Error("Release checkout changed during preparation");
   const output = path.resolve(
-    option("--output") || path.join(root, "ops-state/release-manifest.json"),
+    option("--output") || path.join(source, "ops-state/release-manifest.json"),
   );
   await mkdir(path.dirname(output), { recursive: true, mode: 0o700 });
   await writeFile(output, JSON.stringify(manifest, null, 2) + "\n", {

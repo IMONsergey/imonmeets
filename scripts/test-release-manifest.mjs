@@ -6,6 +6,7 @@ import {
   mkdtemp,
   mkdir,
   writeFile,
+  readFile,
   rm,
   chmod,
   symlink,
@@ -279,4 +280,236 @@ test("CLI fails closed without --build-receipt before any Docker operation", () 
   assert.equal(result.status, 1);
   assert.match(result.stderr, /RELEASE_MANIFEST_NOT_CREATED/);
   assert.equal(result.stderr.includes("private-missing-env"), false);
+});
+
+const bridgeTests = fileURLToPath(
+  new URL("./test-containerd-image-identity.py", import.meta.url),
+);
+const pythonOptions = {
+  encoding: "utf8",
+  timeout: 30000,
+  maxBuffer: 128 * 1024,
+  env: { ...process.env, PYTHONDONTWRITEBYTECODE: "1" },
+};
+
+test("containerd archive verifier refuses broken identity chains offline", () => {
+  assert.doesNotThrow(() =>
+    execFileSync("python3", [bridgeTests], pythonOptions),
+  );
+});
+
+test("only a freshly verified archive bridge can connect config and runtime identities", async () => {
+  const directory = await mkdtemp(
+    path.join(tmpdir(), "imon-containerd-manifest-"),
+  );
+  const candidate = path.join(directory, "candidate");
+  const fixture = JSON.parse(
+    execFileSync("python3", [bridgeTests, "fixture", candidate], pythonOptions),
+  );
+  try {
+    const source = path.join(directory, "source");
+    await mkdir(path.join(source, "apps/api/src"), { recursive: true });
+    await writeFile(
+      path.join(source, "apps/api/src/db.ts"),
+      "fixture-migration",
+    );
+    const base = {
+      source,
+      commit: fixture.sourceCommit,
+      dirty: "",
+      imageInfo: fixture.imageInfo,
+      buildReceipt: fixture.buildReceipt,
+      buildReceiptSha256: fixture.buildReceiptSha256,
+      sourceArchiveSha256: fixture.sourceArchiveSha256,
+      now,
+    };
+    const original = await readFile(path.join(candidate, "build-receipt.json"));
+    await assert.rejects(createManifest(base));
+    await assert.rejects(
+      createManifest({
+        ...base,
+        imageIdentity: {
+          status: "PASS_ARCHIVE_TO_RUNTIME_IDENTITY",
+          legacyConfigDigest: fixture.buildReceipt.imageId,
+          runtimeManifestDigest: fixture.imageInfo.id,
+        },
+      }),
+    );
+    await assert.rejects(
+      createManifest({
+        ...base,
+        candidateTransfer: candidate,
+        buildReceiptSha256: "f".repeat(64),
+      }),
+    );
+    await assert.rejects(
+      createManifest({
+        ...base,
+        candidateTransfer: candidate,
+        sourceArchiveSha256: "f".repeat(64),
+      }),
+    );
+    const manifest = await createManifest({
+      ...base,
+      candidateTransfer: candidate,
+    });
+    assert.equal(manifest.imageId, fixture.imageInfo.id);
+    assert.equal(manifest.applicationImage, fixture.imageInfo.id);
+    assert.equal(
+      manifest.requiredEnvironment.RELEASE_IMAGE_DIGEST,
+      fixture.imageInfo.id,
+    );
+    assert.equal(manifest.buildReceipt.imageId, fixture.buildReceipt.imageId);
+    assert.equal(
+      manifest.imageIdentity.buildReceiptSha256,
+      fixture.buildReceiptSha256,
+    );
+    assert.equal(manifest.imageIdentity.loadedRootfsMatches, true);
+    assert.deepEqual(
+      await readFile(path.join(candidate, "build-receipt.json")),
+      original,
+    );
+    assert.equal(manifest.deployed, false);
+    assert.equal(manifest.imageIdentity.imageExecuted, false);
+  } finally {
+    await rm(directory, { recursive: true });
+  }
+});
+
+test("operator CLI binds a separate clean release checkout and live inspect without rebuilding", async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), "imon-operator-source-"));
+  const source = path.join(directory, "source");
+  const candidate = path.join(directory, "candidate");
+  const fakeBin = path.join(directory, "bin");
+  const calls = path.join(directory, "docker-calls");
+  const script = fileURLToPath(
+    new URL("./create-release-manifest.mjs", import.meta.url),
+  );
+  const operatorRoot = fileURLToPath(new URL("../", import.meta.url));
+  const git = (args) =>
+    execFileSync("git", args, {
+      cwd: source,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    }).trim();
+  try {
+    await mkdir(path.join(source, "apps/api/src"), { recursive: true });
+    await mkdir(fakeBin);
+    await writeFile(
+      path.join(source, "apps/api/src/db.ts"),
+      "exact-release-migration\n",
+    );
+    git(["init", "-q"]);
+    git(["add", "apps/api/src/db.ts"]);
+    git([
+      "-c",
+      "user.name=Release Test",
+      "-c",
+      "user.email=release-test@example.invalid",
+      "-c",
+      "commit.gpgsign=false",
+      "-c",
+      "core.hooksPath=/dev/null",
+      "commit",
+      "-qm",
+      "release fixture",
+    ]);
+    const releaseCommit = git(["rev-parse", "HEAD"]);
+    const archiveHash = await gitArchiveSha256(source, releaseCommit);
+    const fixture = JSON.parse(
+      execFileSync(
+        "python3",
+        [bridgeTests, "fixture", candidate, releaseCommit, archiveHash],
+        pythonOptions,
+      ),
+    );
+    const inspected = {
+      ...fixture.imageInfo,
+      releaseEnv: ["RELEASE_COMMIT=" + releaseCommit],
+    };
+    await writeFile(
+      path.join(fakeBin, "docker"),
+      `#!${process.execPath}\nimport fs from "node:fs";\nfs.appendFileSync(${JSON.stringify(calls)}, "inspect\\n");\nprocess.stdout.write(JSON.stringify(${JSON.stringify(inspected)}));\n`,
+      { mode: 0o700 },
+    );
+    const environment = path.join(directory, "environment");
+    await writeFile(
+      environment,
+      `APP_URL=https://meet.example.test\nRELEASE_COMMIT=${releaseCommit}\nRELEASE_IMAGE_DIGEST=${fixture.imageInfo.id}\nSMTP_PASSWORD=private-env-fixture\n`,
+      { mode: 0o600 },
+    );
+    const output = path.join(directory, "manifest.json");
+    const args = [
+      script,
+      "--source",
+      source,
+      "--image",
+      fixture.imageInfo.id,
+      "--env",
+      environment,
+      "--build-receipt",
+      path.join(candidate, "build-receipt.json"),
+      "--candidate-transfer",
+      candidate,
+      "--output",
+      output,
+    ];
+    const options = {
+      encoding: "utf8",
+      timeout: 30000,
+      env: {
+        ...process.env,
+        PATH: fakeBin + path.delimiter + process.env.PATH,
+      },
+    };
+    const success = spawnSync(process.execPath, args, options);
+    assert.equal(success.status, 0, success.stderr);
+    const manifest = JSON.parse(await readFile(output, "utf8"));
+    const operatorCommit = execFileSync("git", ["rev-parse", "HEAD"], {
+      cwd: operatorRoot,
+      encoding: "utf8",
+    }).trim();
+    assert.equal(manifest.commit, releaseCommit);
+    assert.equal(manifest.operatorTooling.commit, operatorCommit);
+    assert.notEqual(manifest.commit, manifest.operatorTooling.commit);
+    assert.match(
+      manifest.operatorTooling.files["create-release-manifest.mjs"],
+      /^[a-f0-9]{64}$/,
+    );
+    assert.match(
+      manifest.operatorTooling.files["verify-containerd-image-identity.py"],
+      /^[a-f0-9]{64}$/,
+    );
+    assert.equal(manifest.buildReceipt.imageId, fixture.buildReceipt.imageId);
+    assert.equal(manifest.imageId, fixture.imageInfo.id);
+    assert.equal(manifest.environmentIdentityMatches, true);
+    assert.equal(
+      JSON.stringify(manifest).includes("private-env-fixture"),
+      false,
+    );
+    const unrelated = [...args];
+    unrelated[unrelated.indexOf("--image") + 1] = "sha256:" + "f".repeat(64);
+    const unrelatedResult = spawnSync(process.execPath, unrelated, options);
+    assert.equal(unrelatedResult.status, 1);
+    assert.match(unrelatedResult.stderr, /RELEASE_MANIFEST_NOT_CREATED/);
+    const callsBefore = await readFile(calls, "utf8");
+    await writeFile(
+      path.join(source, "apps/api/src/db.ts"),
+      "dirty-release-migration\n",
+    );
+    const refused = spawnSync(
+      process.execPath,
+      args.slice(0, -1).concat(path.join(directory, "refused.json")),
+      options,
+    );
+    assert.equal(refused.status, 1);
+    assert.match(refused.stderr, /RELEASE_MANIFEST_NOT_CREATED/);
+    assert.equal(
+      await readFile(calls, "utf8"),
+      callsBefore,
+      "dirty source must fail before any Docker inspection",
+    );
+  } finally {
+    await rm(directory, { recursive: true });
+  }
 });
