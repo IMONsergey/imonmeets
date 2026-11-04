@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+import hashlib
 import os
 from pathlib import Path
 import time
@@ -36,26 +37,40 @@ async def wav_frames(path):
 async def run_wav(args, settings, run_id):
     output = Path(args.output).resolve() / run_id
     output.mkdir(mode=0o700, parents=True, exist_ok=False)
-    pipeline = SonioxPipeline(settings, args.source, args.target)
-    status = "failed"
+    pipeline = SonioxPipeline(settings, args.source, args.target, speech=args.with_speech)
+    status, error_code = "failed", None
     metrics = pipeline.metrics
     # Deliberate test artifacts only; ordinary room mode does not retain content.
     try:
         with (wave.open(str(output / "translated.wav"), "wb") as wav,
               (output / "translation.jsonl").open("x") as text,
+              (output / "synthesis.jsonl").open("x") as spoken,
               (output / "transcription.jsonl").open("x") as original):
             wav.setparams((1, 2, 24000, 0, "NONE", "not compressed"))
             async def audio(pcm):
                 wav.writeframesraw(pcm)
             async def transcript(chunk):
                 text.write(json.dumps({"text": chunk}, ensure_ascii=False) + "\n")
+            async def speech_transcript(chunk):
+                spoken.write(json.dumps({"text": chunk}, ensure_ascii=False) + "\n")
             async def source_transcript(chunk):
                 original.write(json.dumps({"text": chunk}, ensure_ascii=False) + "\n")
-            await pipeline.run(wav_frames(args.input), audio, transcript, on_source=source_transcript)
+            await pipeline.run(wav_frames(args.input), audio, speech_transcript,
+                               on_source=source_transcript, on_translation=transcript)
             status = "completed"
+    except PilotError as error:
+        error_code = str(error)
+        raise
+    except asyncio.CancelledError:
+        error_code = "CANCELLED"
+        raise
     finally:
         receipt = {"run_id": run_id, "status": status, "source": args.source,
-                   "target": args.target, "provider": "soniox", **metrics.receipt()}
+                   "target": args.target, "provider": "soniox", "error_code": error_code,
+                   "stt_model": settings.stt_model, "tts_model": settings.tts_model,
+                   "endpoint_delay_ms": settings.endpoint_delay_ms,
+                   "context_sha256": hashlib.sha256(json.dumps(settings.context, sort_keys=True).encode()).hexdigest() if settings.context else None,
+                   **metrics.receipt()}
         (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     return receipt
 
@@ -69,6 +84,7 @@ def parser():
         s = sub.add_parser(command)
         s.add_argument("--source", required=True, choices=("ru", "en", "zh", "ar"))
         s.add_argument("--target", required=True, choices=("ru", "en", "zh", "ar"))
+        s.add_argument("--with-speech", action="store_true", help="Explicitly enable paid TTS; required for room audio")
         s.add_argument("--execute", action="store_true", help="Permit an enabled paid pilot")
         if command == "wav":
             s.add_argument("--input", required=True, type=Path)
@@ -91,6 +107,8 @@ def main(argv=None):
             print(json.dumps({"provider": "soniox", "enabled": settings.enabled,
                               "key_present": bool(settings.api_key), "voice": settings.voice,
                               "stt_model": settings.stt_model, "tts_model": settings.tts_model,
+                              "context_present": bool(settings.context),
+                              "endpoint_delay_ms": settings.endpoint_delay_ms,
                               "routes": sorted(ROUTES), "max_input_seconds": settings.max_input_seconds,
                               "max_output_seconds": settings.max_output_seconds,
                               "max_text_chars": settings.max_text_chars,
@@ -106,8 +124,10 @@ def main(argv=None):
             grant = JoinGrant.read(args.grant_file)
         if not args.execute:
             print(json.dumps({"status": "dry_run", "provider": "soniox", "network_calls": 0,
-                              "source": args.source, "target": args.target}))
+                              "source": args.source, "target": args.target, "speech_enabled": args.with_speech}))
             return 0
+        if args.command == "room" and not args.with_speech:
+            raise PilotError("ROOM_REQUIRES_EXPLICIT_SPEECH")
         settings.require_enabled()
         with reserve(settings) as run_id:
             if args.command == "wav":

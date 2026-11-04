@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 import os
+import json
 import stat
 
 
@@ -35,6 +36,41 @@ def load_private_env(path: Path) -> dict[str, str]:
     return result
 
 
+def load_context(path: Path):
+    """Read explicitly supplied meeting vocabulary; never guess a transcript."""
+    info = path.lstat()
+    if not path.is_absolute() or not stat.S_ISREG(info.st_mode) or info.st_mode & 0o077 or info.st_size > 16384:
+        raise PilotError("CONTEXT_MUST_BE_PRIVATE_REGULAR_FILE")
+    try:
+        value = json.loads(path.read_text())
+    except (ValueError, UnicodeError):
+        raise PilotError("INVALID_CONTEXT") from None
+    if not isinstance(value, dict) or set(value) - {"general", "text", "terms", "translation_terms"}:
+        raise PilotError("INVALID_CONTEXT")
+    def string(text, maximum):
+        if not isinstance(text, str) or not 1 <= len(text) <= maximum or any(ord(c) < 32 and c not in "\n\t" for c in text):
+            raise PilotError("INVALID_CONTEXT")
+    if "text" in value:
+        string(value["text"], 4000)
+    for name, keys, maximum in (("general", {"key", "value"}, 8),
+                                ("translation_terms", {"source", "target"}, 100),
+                                ("terms", None, 100)):
+        if name not in value:
+            continue
+        items = value[name]
+        if not isinstance(items, list) or len(items) > maximum:
+            raise PilotError("INVALID_CONTEXT")
+        for item in items:
+            if keys is None:
+                string(item, 100)
+            else:
+                if not isinstance(item, dict) or set(item) != keys:
+                    raise PilotError("INVALID_CONTEXT")
+                for text in item.values():
+                    string(text, 500 if name == "general" else 100)
+    return value
+
+
 @dataclass(frozen=True)
 class Settings:
     enabled: bool = False
@@ -50,6 +86,8 @@ class Settings:
     state_dir: Path = Path("ops-state/soniox-pilot")
     stt_model: str = "stt-rt-v6"
     tts_model: str = "tts-rt-v2"
+    endpoint_delay_ms: int = 2000
+    context: dict | None = field(default=None, repr=False)
 
     @classmethod
     def from_env(cls, env=None):
@@ -67,6 +105,9 @@ class Settings:
             enabled=env.get("MEETS_TRANSLATION_ENABLED") == "true",
             api_key=env.get("SONIOX_API_KEY", ""),
             voice=env.get("SONIOX_VOICE", "Adrian"),
+            stt_model=env.get("SONIOX_STT_MODEL", "stt-rt-v6"),
+            endpoint_delay_ms=integer("SONIOX_ENDPOINT_DELAY_MS", 2000, 3000),
+            context=load_context(Path(env["SONIOX_CONTEXT_FILE"])) if env.get("SONIOX_CONTEXT_FILE") else None,
             max_input_seconds=seconds,
             max_output_seconds=integer("MEETS_TRANSLATION_MAX_OUTPUT_SECONDS", 600, 1800),
             max_text_chars=integer("MEETS_TRANSLATION_MAX_TEXT_CHARS", 6000, 24000),
@@ -77,6 +118,10 @@ class Settings:
         )
         if not 1 <= len(settings.voice) <= 100 or any(ord(c) < 32 for c in settings.voice):
             raise PilotError("INVALID_VOICE")
+        if settings.stt_model not in ("stt-rt-v6", "stt-rt-v5"):
+            raise PilotError("UNSUPPORTED_STT_MODEL")
+        if settings.endpoint_delay_ms < 500:
+            raise PilotError("INVALID_ENDPOINT_DELAY")
         if settings.reservation_cents > settings.budget_cents:
             raise PilotError("RESERVATION_EXCEEDS_BUDGET")
         return settings

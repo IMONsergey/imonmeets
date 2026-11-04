@@ -193,7 +193,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
                 self.assertTrue(provider.stt.closed and provider.tts.closed)
 
     async def test_backlog_fails_closed(self):
-        provider = FakeProvider([final("Sentence.") for _ in range(9)])
+        provider = FakeProvider([token for _ in range(9) for token in (final("Sentence."), final("<end>"))])
         with self.assertRaisesRegex(PilotError, "TRANSLATION_BACKLOG"):
             await self.run_pipeline(provider)
 
