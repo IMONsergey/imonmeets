@@ -317,6 +317,26 @@ test(
               });
             }
             const afterLate = await snapshot(page);
+            assert.equal(
+              await page.evaluate(() =>
+                sessionStorage.getItem(
+                  "imon.waiting.waiting-cancellation-fixture",
+                ),
+              ),
+              null,
+              "Cancel intent must not resume automatically after reloading",
+            );
+            assert.equal(
+              afterLate.requests
+                .filter(
+                  (r) =>
+                    r.path.endsWith("/waiting-status") ||
+                    r.path.endsWith("/join"),
+                )
+                .every((r) => r.aborted),
+              true,
+              "Cancel must abort every pending admission request before its response",
+            );
             evidence[scenario + "-late"] = afterLate;
             assert.equal(
               afterLate.states.includes("connecting"),

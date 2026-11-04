@@ -179,6 +179,8 @@ export function WaitingGuest({
           // It also aborts an admission request already started by the poll.
           cancelRequested.current = true;
           stopAdmission.current?.();
+          // Reloading must not resume a request the user has cancelled locally.
+          if (persist) saveWaitingGrant(slug);
           setCancelling(true);
           setCancelFailed(false);
           setError("");
