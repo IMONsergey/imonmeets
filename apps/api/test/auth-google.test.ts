@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createServer, type Server } from "node:http";
+import { createServer, request, type Server } from "node:http";
 import { once } from "node:events";
 import { Pool } from "pg";
 import { betterAuth } from "better-auth";
@@ -49,6 +49,102 @@ function mockAuth(
   } as unknown as ReturnType<typeof createAuth>;
   return { auth, calls: () => ({ handlerCalls, sessionCalls }) };
 }
+
+test("auth bridge rejects noncanonical raw HTTP paths before endpoint policy can be bypassed", async () => {
+  const config = testConfig();
+  const pool = new Pool({
+    connectionString: config.databaseUrl,
+    connectionTimeoutMillis: 100,
+  });
+  const mock = mockAuth({
+    user: {
+      id: "local-unverified",
+      email: "local@example.test",
+      emailVerified: false,
+    },
+  });
+  const app = await createApp(config, {
+    pool,
+    logger: false,
+    auth: mock.auth,
+    limiter: {
+      async consume() {
+        return { allowed: true, retryAfter: null };
+      },
+    },
+  });
+  try {
+    await app.listen({ host: "127.0.0.1", port: 0 });
+    const address = app.server.address();
+    assert(address && typeof address === "object");
+    // app.inject and fetch normalize dot segments before the bridge sees them.
+    // Send the actual path bytes over loopback, as an HTTP client can do.
+    for (const path of [
+      "/api/auth/./link-social",
+      "/api/auth/x/../link-social",
+      "/api/auth/x/../change-password",
+      "/api/auth/x/../request-password-reset",
+      "/api/auth/x/../send-verification-email",
+      "/api/auth/x/../two-factor/disable",
+      "/api/auth/x/../two-factor/verify-totp",
+      "/api/auth/x/../reset-password",
+      "/api/auth/%2elink-social",
+      "/api/auth/%2e/link-social",
+      "/api/auth/link-social/",
+      "/api/auth//link-social",
+      "/api/auth/\\link-social",
+      "/api/auth/link-social#ignored",
+    ]) {
+      const payload = JSON.stringify({
+        provider: "google",
+        callbackURL: config.appUrl + "/settings",
+      });
+      const response = await new Promise<{ status: number; body: string }>(
+        (resolve, reject) => {
+          const outgoing = request(
+            {
+              hostname: "127.0.0.1",
+              port: address.port,
+              method: "POST",
+              path,
+              headers: {
+                origin: config.appUrl,
+                "x-imon-proxy-secret": proxySecret,
+                "content-type": "application/json",
+                "content-length": Buffer.byteLength(payload),
+              },
+            },
+            (incoming) => {
+              let body = "";
+              incoming.setEncoding("utf8");
+              incoming.on("data", (chunk: string) => (body += chunk));
+              incoming.on("error", reject);
+              incoming.on("end", () =>
+                resolve({ status: incoming.statusCode!, body }),
+              );
+            },
+          );
+          outgoing.on("error", reject);
+          outgoing.end(payload);
+        },
+      );
+      assert.equal(response.status, 400, path);
+      assert.equal(
+        JSON.parse(response.body).error.code,
+        "INVALID_AUTH_PATH",
+        path,
+      );
+      assert.deepEqual(
+        mock.calls(),
+        { handlerCalls: 0, sessionCalls: 0 },
+        path,
+      );
+    }
+  } finally {
+    await app.close();
+    await pool.end();
+  }
+});
 
 test("link-social endpoint rejects direct requests without a session or verified local email", async () => {
   for (const scenario of [
@@ -218,7 +314,7 @@ test("Google scope policy rejects widened signin/link requests before forwarding
         assert.equal(response.statusCode, 400, url);
         assert.equal(
           response.json().error.code,
-          "GOOGLE_SCOPE_NOT_ALLOWED",
+          url.endsWith("/") ? "INVALID_AUTH_PATH" : "GOOGLE_SCOPE_NOT_ALLOWED",
           url,
         );
         assert.deepEqual(mock.calls(), { handlerCalls: 0, sessionCalls: 0 });
