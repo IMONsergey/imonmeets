@@ -86,6 +86,8 @@ Read the current `status.json`. Act only when it asks for the matching step, the
 | `awaiting_ban`   | B has now rejoined with a fresh normal guest identity. Select **Заблокировать** for exactly B.   | `--ack ban --run-id moderation20261104a1`   |
 | `awaiting_close` | Select **Завершить для всех** and accept **Завершить встречу для всех участников?**              | `--ack close --run-id moderation20261104a1` |
 
+Both **Удалить** and **Заблокировать** also open a native browser confirmation before the server request. Accept that confirmation through the browser's supported dialog handler, observe the completed action, and only then acknowledge. An unresolved dialog is not a completed moderation action. The close action has its own confirmation as shown above.
+
 Each acknowledgement uses this full command, substituting only the shown action and actual run ID:
 
 ```sh
@@ -120,3 +122,15 @@ These tests make no network calls and do not launch a browser. Run them through 
 ```
 
 They cover canonical scope and privileged-environment refusal, mutation restrictions, normal guest-grant checks, stale acknowledgements, real media counter progress, safe error output, and independent bounded browser cleanup. Application/API integration acceptance remains the existing exact-image release evidence; these client guards do not replace it.
+
+## Recorded execution
+
+The final offline gate `20261104T115832-87adc2b7b4` passed at 12:05:50Z: nine tests, no skipped/failed tests, syntax, formatting, and diff checks. The reviewed client implementation is commit `bd407d72004bd332d9456c1c8ef0bac6b7857add`; the runner file SHA-256 is `c545730773a04c13ffe51ddaff67333aef37f5efdad05bca5377cf5ee35b435f`.
+
+The coordinator then supplied a newly created disposable room. Its invitation URL is held only in the private client environment and queue files; it is not included here.
+
+The short smoke job `20261104T121155-910ae1aabd` passed at 12:14:14Z, with exit code 0 and complete browser cleanup. Both ordinary guests received real audio and video over selected UDP candidate pairs, with a ten-second advancing-media sample. Final cumulative counters were 98,835 / 98,912 audio bytes and 149 / 147 decoded video frames. The runner made no blocked mutations, sent no chat or email, and started no recording. The private receipt is `runs/smoke20261104a1/result.json` under the state directory above, SHA-256 `e9c92fd222a349e9febfa3fba84423d58c5f8acaf4612b368e9071b0d1842699`.
+
+The moderation attempt `20261104T121655-fd3b05b038`, run `mod20261104a1`, repeated the successful audio/video baseline, then stopped with `OWNER_ACK_TIMEOUT` at `awaiting_kick` at 12:18:02Z. It exited 1 and closed both guest browsers. No kick, ban, rejoin, or room-close result was accepted, and no deadline was extended. The private receipt SHA-256 is `6184d09045e8a683f92d01a06c0d320fba7738f81b549b463163538ba5db8225`. This incomplete coordinated attempt establishes neither a moderation PASS nor a product moderation failure. The room remains the organizer's responsibility to close or use for a separately authorized retry.
+
+The smoke evidence is same-host production-ingress UDP acceptance only. It does not establish external NAT or strict TURN fallback behavior.
