@@ -277,15 +277,13 @@
   background: var(--surface-muted, #fafafa);
 }
 .google-mark {
-  display: inline-grid;
+  display: block;
+  flex: 0 0 20px;
   width: 20px;
   height: 20px;
-  place-items: center;
-  border-radius: 50%;
-  color: #4285f4;
-  font-size: 19px;
-  font-weight: 700;
-  font-family: Arial, sans-serif;
+  /* Keep the official 20px G at its original size; crop the button frame. */
+  object-fit: none;
+  object-position: center;
 }
 .google-auth .form-note {
   margin: 12px 0 0;
