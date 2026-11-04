@@ -1,0 +1,4 @@
+.venv/
+ops-state/
+pilot-results/
+*.sqlite3*

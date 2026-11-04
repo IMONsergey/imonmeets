@@ -1,0 +1,8 @@
+[project]
+name = "imonmeets-translation-pilot"
+version = "0.1.0"
+requires-python = ">=3.11,<3.14"
+dependencies = ["websockets==17.4", "livekit==1.2.0"]
+
+[tool.uv]
+package = false
