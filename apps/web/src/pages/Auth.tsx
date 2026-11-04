@@ -532,7 +532,8 @@ export function Auth({
                 >
                   <img
                     className="google-mark"
-                    src="/brand/google-signin-light-icon.svg"
+                    src="/brand/google-signin-light-icon.png"
+                    srcSet="/brand/google-signin-light-icon@2x.png 2x"
                     width={20}
                     height={20}
                     alt=""
