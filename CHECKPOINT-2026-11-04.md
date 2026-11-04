@@ -53,9 +53,11 @@ challenges while preserving factors. There were zero MFA users at cutover.
 
 No deletion/witness subsystem was introduced or disabled by this release.
 The rehearsal and live cutover both reported no existing deletion binding in the
-current database. The broader release remains separate on
-`release/google-production-20261104` / `ae03115`; its independent witness
+current database. The remote broader release remains separate on
+`release/edge-transport-acme-20261103` / `194e704`; its independent witness
 commissioning and wider product changes are not implied by this auth deployment.
+The additional `release/google-production-20261104` / `ae03115` candidate exists
+only locally; its push was blocked by workflow permissions.
 
 ## Build and checks
 
